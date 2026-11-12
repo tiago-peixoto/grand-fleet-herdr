@@ -52,6 +52,8 @@ export default class Fleet extends View {
       this.aliasInput=InputState.new({value:machineLabel(props().machine??null)});
       this.selected=null; this.role='firstmate';
     }
+    // Hidden windows can stop rendering while terminal directories keep changing.
+    if(!view) cx.timer.every(1000,()=>this.rememberShells());
     if(!view) cx.spawn(async c=>{
       for(;;) {
         const command=await nextCommand();

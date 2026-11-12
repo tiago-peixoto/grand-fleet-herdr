@@ -308,3 +308,20 @@ No second confirmation or error remained after closure.
 The record is saved in .superpowers/native/audit-runtime-result.json.
 All 86 JavaScript checks and Herdr's initial-render check pass after these corrections.
 Header click delivery remains unverified while native window capture is unavailable.
+
+## Directory tracking without sidebar rendering
+
+A live test changed a disposable personal terminal's directory after selecting another tab.
+Herdr reported the new directory, but the saved shell record retained the previous directory for the full observation period.
+The native window was unavailable for capture during this test.
+The controller only updated these records while rendering its sidebar.
+The installed guide describes live-data invalidation, but that did not produce a fresh saved record in this observed state.
+
+The sidebar now records shell directories on a one-second timer as well as during rendering.
+It writes shared state only when the records differ and does not request repeated window redraws.
+The retry updated terminal t2f's saved directory to /private/tmp/op-cwd-verification/changed directory while its tab remained unselected.
+The process retained identifier 61090, its creation time, and its live state.
+The test then closed only its disposable tab.
+The result is saved in .superpowers/native/cwd-runtime-result.json.
+All 87 JavaScript tests and Herdr's initial-render check pass after this correction.
+This establishes directory tracking without sidebar rendering, not native Restore button delivery or recovery after app termination.

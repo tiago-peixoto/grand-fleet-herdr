@@ -732,7 +732,7 @@ test('close commands reach the same confirmation flow from nextCommand',async()=
     const h=closeRoutesHost();let count=0,pending;
     h.context.props=()=>({});
     h.context.nextCommand=async()=>{if(count++) throw new Error('fixture stopped');return command;};
-    h.cx.focus_handle=()=>({});h.cx.spawn=fn=>{pending=fn(h.cx).catch(e=>assert.equal(e.message,'fixture stopped'));};
+    h.cx.timer={every(){}};h.cx.focus_handle=()=>({});h.cx.spawn=fn=>{pending=fn(h.cx).catch(e=>assert.equal(e.message,'fixture stopped'));};
     h.controller.init({},h.cx);await pending;
     assert.equal(h.calls.filter(([cmd])=>cmd==='overlay').length,1);
     assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'||cmd==='pane.close'));
@@ -1021,4 +1021,24 @@ test('a sibling added after pane confirmation prevents tab closure and survives'
   assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'));
   assert.ok(h.views.some(p=>p.pane==='new-sibling'));
   assert.equal(h.sessions.find(t=>t.address==='t5').state,'live');
+});
+
+test('sidebar records hidden terminal directory changes without a render',()=>{
+  const h=host({independent:true});
+  h.worker.program={shell:true};
+  h.workspaces.push({id:'personal',machine:null,tabs:[{id:'personal-tab'}]});
+  h.views.push({pane:'personal-pane',terminal:h.worker.address,tab:'personal-tab',cwd:'/initial'});
+  h.context.props=()=>({});
+  let tick;
+  h.cx.focus_handle=()=>({});
+  h.cx.spawn=()=>{};
+  h.cx.timer={every(_ms,callback){tick=callback;}};
+  h.controller.init({},h.cx);
+  assert.equal(typeof tick,'function');
+  tick(h.cx);
+  assert.equal(h.config().shells[0].cwd,'/initial');
+  h.views[0].cwd='/changed directory';
+  tick(h.cx);
+  assert.equal(h.config().shells[0].cwd,'/changed directory');
+  assert.equal(h.calls.length,0);
 });
