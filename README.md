@@ -3,6 +3,7 @@
 Grand Fleet is an optional One Piece interface for firstmate in Herdr.
 Its vision extends [firstmate's governing vision](https://github.com/kunchenguid/firstmate/blob/main/VISION.md).
 It keeps coordinators, workers, and personal terminals clear across machines.
+It also supports ordinary Herdr sessions in an explicitly unsupervised mode.
 This repository currently contains the vision draft, prototype, custom artwork, and design specification.
 It does not contain an installable native Herdr mod yet.
 

@@ -3,7 +3,8 @@
 This document records the prototype design and technical acceptance checks.
 VISION.md is the sole local alignment document and extends firstmate's governing vision.
 This prototype snapshot does not authorize exceptions to firstmate's command or reporting rules.
-Status: three experience decisions accepted through Lavish.
+Status: the prototype predates the vision review and retains historical interaction proposals.
+The current vision restricts supervised worker and secondmate views to inspection and adds explicit offline and unsupervised states.
 The remaining operating rules are proposed, and native integration checks remain open.
 Reviewed 2026-11-12 against the current prototype and installed Herdr documentation.
 The visual direction is accepted, but the browser prototype is not a working Herdr mod.
