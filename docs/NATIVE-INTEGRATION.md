@@ -219,7 +219,15 @@ Cancellation guards prevent later setup actions after its view closes.
 Review also reproduced navigation selecting a surviving personal terminal after its neighboring inspection pane closed.
 Inspection records now include the pane identity and rebuild missing inspection beside the surviving personal terminal.
 Regression checks exercise these cases through the simulated host.
-Native initial rendering passes, but these new interactions still require native verification.
+Native initial rendering passes.
+An isolated runtime harness subsequently invoked the actual linking and inspection methods against Herdr's live command interface.
+Linking secondmate t1c removed its writable pane and created inspection.
+Closing only inspection preserved personal terminal t1f beside it.
+Reopening inspection created a new pane in the same workspace and tab.
+Both processes retained their identifiers, creation times, and live states.
+The secondmate remained parked without a writable pane, and Herdr reported no errors or remaining overlays.
+The evidence is recorded in .superpowers/native/pane-recovery-result.json.
+This verifies live controller behavior, not clicking setup or visually inspecting the recovered layout.
 
 The offline inspection caption now says terminal output is unavailable instead of describing disconnected output as live.
 Initial rendering passed after that change, but its disconnected appearance has not been inspected again.
