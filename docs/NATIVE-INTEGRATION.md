@@ -83,7 +83,7 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 ## Remaining acceptance work
 
 - Resolve the native repaint defect documented in docs/NATIVE-RESIZE-REPRO.md.
-- Verify hidden inspection behavior.
+- Visually confirm inspection after returning from another tab.
 - Extend remote disconnection coverage to SSH and a separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
 - Verify stale registration replacement.
@@ -274,3 +274,17 @@ Herdr reported no remaining overlays or errors.
 The captured records are in .superpowers/native/close-runtime-result.json and .superpowers/native/close-inspection-result.json.
 These checks invoke the actual controller against the live terminal service.
 They do not establish button rendering, click delivery, or keyboard delivery.
+
+## Hidden inspection polling
+
+A disposable worker emitted numbered lines every quarter second without accepting input.
+A test view used the production inspection initialization, read-only editor, timer, and refresh method.
+Its instrumentation recorded editor contents and whether its tab was selected in the active space.
+The editor reached line 124 while selected, then line 202 while another tab was selected.
+After reselection, the editor reached line 251 without a read error.
+The worker retained process identifier 65671 and its original creation time throughout the test.
+Closing the test view did not target the worker process.
+The fixture exits after 120 seconds rather than leaving a permanent test process.
+Records are saved in .superpowers/native/hidden-fixture.json and .superpowers/native/hidden-result.json.
+This verifies hidden-tab polling and process preservation through the live runtime.
+It does not verify native presentation after reselection while window capture remains unavailable.
