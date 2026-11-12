@@ -1,7 +1,8 @@
 # Prototype specification snapshot
 
 This document records the prototype design and technical acceptance checks.
-VISION.md is the sole project alignment document.
+VISION.md is the sole local alignment document and extends firstmate's governing vision.
+This prototype snapshot does not authorize exceptions to firstmate's command or reporting rules.
 Status: three experience decisions accepted through Lavish.
 The remaining operating rules are proposed, and native integration checks remain open.
 Reviewed 2026-11-12 against the current prototype and installed Herdr documentation.
