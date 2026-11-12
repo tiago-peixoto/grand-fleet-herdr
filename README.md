@@ -5,8 +5,8 @@ Support for other session managers is outside this repository's scope.
 Its vision extends [firstmate's governing vision](https://github.com/kunchenguid/firstmate/blob/main/VISION.md).
 It keeps coordinators, workers, and personal terminals clear across machines.
 It also supports ordinary Herdr sessions in an explicitly unsupervised mode.
-This repository currently contains the approved vision, prototype, custom artwork, and design specification.
-It does not contain an installable native Herdr mod yet.
+This branch contains the approved vision, prototype, custom artwork, and an experimental native mod.
+The native mod is under verification and is not ready to replace your daily layout.
 
 ## Start here
 
@@ -14,6 +14,8 @@ It does not contain an installable native Herdr mod yet.
 - [Prototype specification](docs/PROTOTYPE-SPEC.md) records accepted choices, proposed operating rules, and native integration checks.
 - [Prototype inventory](docs/PROTOTYPE.md) maps every retained design stage and explains what differs from the accepted decisions.
 - [Artwork inventory](docs/ARTWORK.md) records current coverage, source prompts, and historical reference assets.
+- [Native verification](docs/NATIVE-INTEGRATION.md) separates observed behavior from remaining checks.
+- [Installation](docs/INSTALL.md) describes installation into a separate app home and removal.
 
 ## Development
 

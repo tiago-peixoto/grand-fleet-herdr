@@ -1,0 +1,113 @@
+"""Exercise the exporter and its actual files, with independent source crops."""
+import importlib.util
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPT = ROOT / 'tools/build-artwork.py'
+ASSETS = ROOT / 'mods/one-piece/assets'
+BANDS = [(41, 175), (218, 404), (447, 610), (653, 793), (820, 1029),
+         (1051, 1246), (1298, 1435), (1467, 1667), (1694, 1868)]
+RECIPES = {
+    'sunny': ('prototype/custom-trial/assets/sunny.png', 128, 116, [0, 1, 2, 3, 2, 1], [52]*6),
+    'luffy-idle': ('prototype/custom-trial/assets/luffy.png', 64, 56, list(range(4)), [175, 25, 20, 40]),
+    'luffy-working': ('prototype/custom-trial/assets/luffy.png', 64, 56, list(range(4, 8)), [33]*4),
+    'flag': ('prototype/flow/assets/straw-hat-flag.png', 32, 28, list(range(4)), [24]*4),
+}
+for character, start, limit in [('chopper', 0, 44), ('franky', 12, 56), ('pirate', 24, 56)]:
+    for state, offset, delay in [('idle', 0, 85), ('working', 4, 22), ('blocked', 8, 70)]:
+        RECIPES[f'{character}-{state}'] = (
+            'prototype/flow/assets/worker-states-v1.png', 64, limit,
+            list(range(start+offset, start+offset+4)), [delay]*4)
+
+
+def im(*args):
+    return subprocess.check_output(['magick', *map(str, args)])
+
+
+def source_boxes(path):
+    width, height = map(int, im('identify', '-format', '%w %h', path).split())
+    rows = BANDS if 'worker-states' in str(path) else (
+        [(0, 444), (444, 887)] if 'luffy' in str(path) else [(0, height)])
+    boxes = []
+    for top, bottom in rows:
+        for col in range(4):
+            left = int(col*width/4 + .5)
+            right = int((col+1)*width/4 + .5)
+            geometry = f'{right-left}x{bottom-top}+{left}+{top}'
+            box = im(path, '-crop', geometry, '+repage', '-alpha', 'extract',
+                     '-threshold', '62.745098039215686%', '-format', '%@', 'info:').decode()
+            w, h, x, y = map(int, re.fullmatch(r'(\d+)x(\d+)\+(\d+)\+(\d+)', box).groups())
+            boxes.append((w, h, x+left, y+top))
+    return boxes
+
+
+class ArtworkTests(unittest.TestCase):
+    def test_export_contract(self):
+        self.assertTrue(SCRIPT.is_file(), 'native artwork exporter is missing')
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
+            expected_names = {name+ext for name in RECIPES for ext in ('.gif', '.png')}
+            self.assertEqual({p.name for p in output.iterdir()}, expected_names)
+            before = {p.name: p.read_bytes() for p in output.iterdir()}
+            sources = {}
+            for name, (source, size, limit, order, delays) in RECIPES.items():
+                with self.subTest(name=name):
+                    path = ROOT / source
+                    if source not in sources:
+                        sources[source] = source_boxes(path)
+                    boxes = sources[source]
+                    group = boxes[(order[0]//12)*12:(order[0]//12+1)*12] if 'worker' in source else boxes
+                    scale = limit / max(max(b[0], b[1]) for b in group)
+                    gif, png = output / (name+'.gif'), output / (name+'.png')
+                    metadata = im('identify', '-format', '%w %h %T %D\n', gif).decode().splitlines()
+                    self.assertEqual(metadata, [f'{size} {size} {d} Background' for d in delays])
+                    self.assertIn(b'NETSCAPE2.0\x03\x01\x00\x00', gif.read_bytes())
+                    raw = im(gif, '-coalesce', '-depth', '8', 'rgba:-')
+                    stride = size*size*4
+                    frames = [raw[i:i+stride] for i in range(0, len(raw), stride)]
+                    self.assertEqual(len(frames), len(order))
+                    self.assertGreater(len(set(frames)), 1)
+                    for index, source_index in enumerate(order):
+                        w, h, x, y = boxes[source_index]
+                        dw, dh = int(w*scale+.5), int(h*scale+.5)
+                        dx = 2 if name == 'flag' else int((size-dw)/2+.5)
+                        dy = size-3-dh
+                        expected = im('-size', f'{size}x{size}', 'xc:none', '(', path,
+                                      '-crop', f'{w}x{h}+{x}+{y}', '+repage',
+                                      '-sample', f'{dw}x{dh}!', ')', '-geometry', f'+{dx}+{dy}',
+                                      '-compose', 'Over', '-composite', '-depth', '8', 'rgba:-')
+                        # A wrong row, column, scale, or disposal leaks into this silhouette.
+                        self.assertEqual(frames[index][3::4], bytes(255 if a >= 128 else 0 for a in expected[3::4]))
+                        self.assertIn(0, frames[index][3::4])
+                        self.assertIn(255, frames[index][3::4])
+                        self.assertFalse(any(frames[index][(size-3)*size*4+3::4]))
+                        if index == 0:
+                            actual_png = im(png, '-depth', '8', 'rgba:-')
+                            self.assertEqual(actual_png, expected)
+                    self.assertEqual((ASSETS / png.name).read_bytes(), png.read_bytes())
+                    self.assertEqual((ASSETS / gif.name).read_bytes(), gif.read_bytes())
+            subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
+            self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
+
+    def test_rejects_missing_worker_bands_and_empty_cells(self):
+        self.assertTrue(SCRIPT.is_file(), 'native artwork exporter is missing')
+        spec = importlib.util.spec_from_file_location('artwork', SCRIPT)
+        artwork = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(artwork)
+        with tempfile.TemporaryDirectory() as directory:
+            sheet = Path(directory) / 'empty.png'
+            im('-size', '40x90', 'xc:none', sheet)
+            with self.assertRaisesRegex(ValueError, 'nine worker'):
+                artwork.extract_boxes(sheet, 9, worker=True)
+            with self.assertRaisesRegex(ValueError, 'Empty frame'):
+                artwork.extract_boxes(sheet, 1)
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -9,7 +9,8 @@ The prototype and artwork live under prototype/.
 The current preview is generated from prototype/flow/app.js and prototype/flow/screen.html.
 Rebuild it with `python3 prototype/flow/build.py` rather than editing prototype/index.html.
 The docs directory contains the prototype inventory, artwork coverage, and historical specification.
-No native mod is implemented yet.
+The experimental native mod lives in mods/one-piece, with its layout in layouts/one-piece.json.
+Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 
 ## Resolve design conflicts
 
