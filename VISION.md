@@ -61,12 +61,13 @@ Each character retains the actual worker name or task beside it.
 Character assignments remain stable for surviving workers as other workers enter or leave.
 Sunny and Luffy establish the initial crew, with Chopper, Franky, and numbered generic Pirates supporting workers.
 Additional workers never depend on completing a named character catalog, and new crews preserve the same ownership and navigation rules.
-
 Animation supports recognition without concealing failures, decisions, or risks.
 
 ## Scope
 
-This project is an optional Herdr presentation extension, not a scheduler, a replacement terminal system, or a second firstmate implementation.
+This project is an optional, firstmate-specific interface for Herdr.
+Support for other session managers is outside this repository's scope.
+It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
 The same presentation can organize ordinary Herdr sessions without firstmate, explicitly labeled Unsupervised.
 Unsupervised sessions remain directly usable without claiming firstmate's supervision or guarantees.
 This mod adds no command hierarchy, merge authority, or automatic delegation policy.
