@@ -149,29 +149,22 @@ test('independent attention cannot adopt a supervised worker',async()=>{
   assert.ok(h.errors.some(e=>e.body.includes('no longer available')));
 });
 
-function closeHost() {
-  const h=host({independent:true});
-  h.context.props=()=>({overlay:'close-test',target:{terminal:'t2',created:12}});
-  h.context.closeOverlay=id=>h.calls.push(['close-overlay',id]);
-  return h;
-}
-
-test('close ends only the personal process identified by its confirmation',()=>{
-  const h=closeHost();
-  h.controller.closeTerminal();
-  assert.ok(h.calls.some(([cmd,args])=>cmd==='terminal.kill'&&args.terminal==='t2'));
+test('shared close ends only the personal pane identified by its confirmation',()=>{
+  const h=closeRoutesHost();
+  h.controller.requestClose('pane','probe-pane');h.confirm();
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='pane.close'&&args.pane==='probe-pane'));
 });
 
-test('stale close cannot end a replacement, supervised, or unavailable session',()=>{
+test('stale shared close cannot end a replacement, supervised, or unavailable session',()=>{
   for(const change of [
     h=>{h.worker.created_ms=13;},
     h=>{h.worker.labels={'firstmate.home':'home','firstmate.task':'task'};},
-    h=>{h.config().coordinators.push({terminal:'t2',created:12});},
+    h=>{h.config().coordinators.push({terminal:'t2',created:12,role:'secondmate'});},
     h=>{h.context.machines=()=>[{name:null,layout:'unavailable'}];}
   ]) {
-    const h=closeHost();change(h);
-    h.controller.closeTerminal();
-    assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'));
+    const h=closeRoutesHost();
+    h.controller.requestClose('pane','probe-pane');change(h);h.confirm();
+    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
     assert.ok(h.errors.length);
   }
 });
@@ -675,4 +668,262 @@ test('failed inspection can be retried after setup rerenders with a parked secon
   await h.link();
   assert.ok(h.config().inspections['t3:13']);
   assert.equal(h.calls.at(-1)[0],'close');
+});
+
+function closeRoutesHost() {
+  const h=host({independent:true});
+  const actions=new Map(),texts=[];
+  function element() {
+    let id;
+    const node=new Proxy({}, {get:(_target,key)=>(...args)=>{
+      if(key==='id') id=args[0];
+      if(key==='on_click') actions.set(id,args[0]);
+      if(key==='child'&&typeof args[0]==='string') texts.push(args[0]);
+      if(key==='when'&&args[0]) args[1](node);
+      return node;
+    }});
+    return node;
+  }
+  h.workspaces.push({id:'captain',machine:null,active:true,tabs:[{id:'probe',name:'Close route probe',active:true},{id:'other',name:'Other'}]});
+  h.views.push({pane:'probe-pane',tab:'probe',terminal:'t2',focused:true});
+  const run=h.context.run;
+  h.context.run=(cmd,args)=>{
+    if(cmd==='tab.close'||cmd==='pane.close') {
+      h.calls.push([cmd,args]);
+      const removed=h.views.filter(p=>cmd==='tab.close'?p.tab===args.id:p.pane===args.pane);
+      for(const pane of removed) {
+        const terminal=h.sessions.find(t=>t.address===pane.terminal);
+        if(terminal) terminal.state='finished';
+        h.views.splice(h.views.indexOf(pane),1);
+      }
+      return;
+    }
+    if(cmd==='tab.new'&&!args.mod) {h.calls.push([cmd,args]);return;}
+    run(cmd,args);
+  };
+  Object.assign(h.context,{props:()=>({view:'tabs'}),focused:()=>({pane:'probe-pane',tab:'probe',space:'captain'}),
+    div:element,h_flex:element,v_flex:element,image:element,
+    closeOverlay:id=>h.calls.push(['close-overlay',id])});
+  return {...h,actions,texts,render:()=>h.controller.render(h.cx),confirm:()=>{
+    const spec=h.calls.findLast(([cmd])=>cmd==='overlay')[1];
+    h.context.props=()=>({...spec.props,overlay:'confirmation'});
+    h.controller.render(h.cx);
+    actions.get('confirm-close')(null,h.cx);
+  }};
+}
+
+test('owned tabs route the live Close probe through confirmation before ending its process',()=>{
+  const layout=JSON.parse(readFileSync(new URL('../layouts/one-piece.json',import.meta.url)));
+  const content=layout.children[1].children.find(n=>n.id==='fleet-tabs').content;
+  assert.equal(content.mod,'one-piece');
+  assert.equal(content.props.view,'tabs');
+  const h=closeRoutesHost();h.render();
+  h.actions.get('close-tab-probe')(null,h.cx);
+  assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'));
+  h.confirm();
+  assert.ok(h.texts.some(t=>t.includes('t2')&&t.includes('local')));
+  assert.ok(h.texts.some(t=>t.includes('process')&&t.includes('obligations')));
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
+});
+
+test('close commands reach the same confirmation flow from nextCommand',async()=>{
+  for(const command of ['close-tab','close-pane']) {
+    const h=closeRoutesHost();let count=0,pending;
+    h.context.props=()=>({});
+    h.context.nextCommand=async()=>{if(count++) throw new Error('fixture stopped');return command;};
+    h.cx.focus_handle=()=>({});h.cx.spawn=fn=>{pending=fn(h.cx).catch(e=>assert.equal(e.message,'fixture stopped'));};
+    h.controller.init({},h.cx);await pending;
+    assert.equal(h.calls.filter(([cmd])=>cmd==='overlay').length,1);
+    assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'||cmd==='pane.close'));
+  }
+});
+
+test('tab confirmation rejects replacement, added pane, moved pane and offline machine',()=>{
+  for(const change of [
+    h=>{h.worker.created_ms++;},
+    h=>{h.views.push({pane:'new',tab:'probe',terminal:'t3'});h.sessions.push({address:'t3',created_ms:13,state:'live',labels:{}});},
+    h=>{h.views[0].tab='other';},
+    h=>{h.context.machines=()=>[{name:null,layout:'unavailable'}];}
+  ]) {
+    const h=closeRoutesHost();h.controller.requestClose('tab','probe');change(h);h.confirm();
+    assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'||cmd==='pane.close'||cmd==='terminal.kill'));
+    assert.ok(h.errors.length);
+  }
+});
+
+test('tab close lists personal processes and preserves the parked inspection worker',()=>{
+  const h=closeRoutesHost();
+  h.sessions.push({address:'t4',created_ms:14,state:'live',labels:{'firstmate.home':'test','firstmate.task':'worker'}});
+  h.views.push({pane:'viewer',tab:'probe',mod:'one-piece',terminal:null});
+  h.config().inspections['t4:14']={space:'captain',tab:'probe',pane:'viewer'};
+  h.controller.requestClose('tab','probe');h.confirm();
+  assert.ok(h.texts.some(t=>t.includes('t4')&&t.includes('preserved')));
+  assert.ok(h.texts.some(t=>t.includes('t2')&&t.includes('local')));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'||cmd==='hc'));
+  assert.equal(h.sessions.find(t=>t.address==='t4').state,'live');
+  assert.equal(h.worker.state,'finished');
+});
+
+test('owned tabs retain select and rename and restrict new personal tabs in worker spaces',()=>{
+  const h=closeRoutesHost();h.render();
+  h.actions.get('select-tab-other')(null,h.cx);
+  h.actions.get('rename-tab-probe')(null,h.cx);
+  h.actions.get('add-tab')(null,h.cx);
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.select'&&args.id==='other'));
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='overlay'&&args.props.view==='rename-tab'));
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.new'&&args.space==='captain'));
+  h.config().inspections['t2:12']={space:'captain',tab:'probe',pane:'viewer'};
+  h.calls.length=0;
+  h.actions.get('add-tab')(null,h.cx);
+  assert.ok(!h.calls.some(([cmd])=>cmd==='tab.new'));
+});
+
+test('pane confirmation ends only the captured pane and cancellation ends nothing',()=>{
+  const h=closeRoutesHost();
+  h.sessions.push({address:'t3',created_ms:13,state:'live',labels:{}});
+  h.views.push({pane:'neighbor',tab:'probe',terminal:'t3'});
+  h.controller.requestClose('pane','probe-pane');
+  const spec=h.calls.at(-1)[1];h.context.props=()=>({...spec.props,overlay:'confirmation'});
+  h.controller.render(h.cx);h.actions.get('cancel-close')();
+  assert.equal(h.worker.state,'live');
+  h.controller.requestClose('pane','probe-pane');
+  h.confirm();
+  assert.equal(h.worker.state,'finished');
+  assert.equal(h.sessions.find(t=>t.address==='t3').state,'live');
+  assert.ok(h.views.some(p=>p.pane==='neighbor'));
+});
+
+test('remote tab confirmation identifies every process and its machine',()=>{
+  const h=closeRoutesHost();
+  h.worker.address='hz-server/t2';h.views[0].terminal=h.worker.address;
+  h.sessions.push({address:'hz-server/t3',created_ms:13,state:'live',labels:{}});
+  h.views.push({pane:'second',tab:'probe',terminal:'hz-server/t3'});
+  h.workspaces[0].machine='hz-server';
+  h.context.machines=()=>[{name:'hz-server',layout:'ready'}];
+  h.controller.requestClose('tab','probe');
+  h.confirm();
+  assert.ok(h.texts.some(t=>t.includes('hz-server/t2 on hz-server')&&t.includes('hz-server/t3 on hz-server')));
+  assert.ok(h.sessions.every(t=>t.state==='finished'));
+});
+
+test('inspection-only close preserves its process and rejects reattached or replaced workers',()=>{
+  for(const change of [null,
+    h=>h.views.push({pane:'writable',tab:'other',terminal:'t2'}),
+    h=>{h.worker.created_ms++;}
+  ]) {
+    const h=closeRoutesHost();
+    h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};
+    h.views[0]={pane:'viewer',tab:'probe',mod:'one-piece',terminal:null};
+    h.config().inspections['t2:12']={space:'captain',tab:'probe',pane:'viewer'};
+    h.controller.requestClose('pane','viewer');
+    if(change) change(h);
+    h.confirm();
+    assert.equal(h.worker.state,'live');
+    if(change) assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
+    else {
+      assert.ok(h.calls.some(([cmd])=>cmd==='pane.close'));
+      assert.ok(h.texts.some(t=>t.includes('No terminal process ends.')&&t.includes('preserved')));
+    }
+  }
+});
+
+test('worker spaces without an inspection record cannot add personal tabs',()=>{
+  const h=closeRoutesHost();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};
+  assert.equal(h.controller.canAddTab('captain'),false);
+});
+
+test('secondmate inspection spaces can add personal tabs and reject addition after disconnection',()=>{
+  const h=closeRoutesHost();
+  h.config().coordinators.push({terminal:'t2',created:12,role:'secondmate'});
+  h.config().inspections['t2:12']={space:'captain',tab:'probe',pane:'viewer'};
+  h.render();h.actions.get('add-tab')();
+  assert.ok(h.calls.some(([cmd])=>cmd==='tab.new'));
+  h.calls.length=0;
+  h.context.machines=()=>[{name:null,layout:'unavailable'}];
+  h.actions.get('add-tab')();
+  assert.equal(h.calls.length,0);
+});
+
+test('pane confirmation rejects a replacement process and direct supervised closure',()=>{
+  const h=closeRoutesHost();
+  h.controller.requestClose('pane','probe-pane');
+  h.worker.created_ms++;h.confirm();
+  assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
+  h.calls.length=0;
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};
+  h.controller.requestClose('pane','probe-pane');
+  assert.ok(!h.calls.some(([cmd])=>cmd==='overlay'));
+});
+
+test('finished terminal panes close with already-ended wording and reject replacement identities',()=>{
+  for(const kind of ['tab','pane']) for(const replaced of [false,true]) {
+    const h=closeRoutesHost();
+    h.worker.state='finished';
+    h.controller.requestClose(kind,kind==='tab'?'probe':'probe-pane');
+    assert.ok(h.calls.some(([cmd])=>cmd==='overlay'));
+    if(replaced) {h.worker.created_ms++;h.worker.state='live';}
+    h.confirm();
+    assert.ok(h.texts.some(t=>t.includes('t2 on local: already ended')));
+    assert.ok(h.texts.includes('Close view'));
+    assert.ok(!h.texts.includes('End processes and close'));
+    assert.equal(h.calls.some(([cmd])=>cmd===`${kind}.close`),!replaced);
+  }
+});
+
+test('pane-header Close uses the shared pane confirmation',()=>{
+  const h=closeRoutesHost();
+  h.context.props=()=>({view:'pane',pane:'probe-pane'});
+  h.render();h.actions.get('close-probe-pane')();
+  const spec=h.calls.find(([cmd])=>cmd==='overlay')[1];
+  assert.equal(spec.props.view,'close-scope');
+  assert.equal(spec.props.snapshot.kind,'pane');
+  assert.equal(spec.props.snapshot.id,'probe-pane');
+  h.confirm();
+  assert.ok(h.calls.some(([cmd])=>cmd==='pane.close'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'));
+});
+
+function finishedInspectionCloseHost() {
+  const h=closeRoutesHost();
+  h.worker.state='finished';
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};
+  h.views[0]={pane:'viewer',tab:'probe',mod:'one-piece',terminal:null};
+  h.config().inspections['t2:12']={space:'captain',tab:'probe',pane:'viewer'};
+  return h;
+}
+
+test('finished worker inspection closes with already-ended copy for pane and tab',()=>{
+  for(const kind of ['pane','tab']) {
+    const h=finishedInspectionCloseHost();
+    h.controller.requestClose(kind,kind==='pane'?'viewer':'probe');
+    assert.ok(h.calls.some(([cmd])=>cmd==='overlay'));
+    h.confirm();
+    assert.ok(h.texts.some(t=>t.includes('t2 on local: already ended; only its view closes.')));
+    assert.ok(!h.texts.some(t=>t.includes('parked inspection process preserved')));
+    assert.ok(h.texts.includes('Close view'));
+    assert.ok(h.calls.some(([cmd])=>cmd===`${kind}.close`));
+    assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'||cmd==='hc'));
+    assert.equal(h.worker.state,'finished');
+  }
+});
+
+test('finished inspection rejects replaced, unavailable and deleted identities before or after confirmation opens',()=>{
+  for(const before of [false,true]) for(const change of [
+    h=>{h.worker.created_ms++;},
+    h=>{h.context.machines=()=>[{name:null,layout:'unavailable'}];},
+    h=>{h.sessions.splice(0,1);}
+  ]) {
+    const h=finishedInspectionCloseHost();
+    if(before) change(h);
+    h.controller.requestClose('pane','viewer');
+    if(before) assert.ok(!h.calls.some(([cmd])=>cmd==='overlay'));
+    else {
+      assert.ok(h.calls.some(([cmd])=>cmd==='overlay'));
+      change(h);h.confirm();
+    }
+    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'||cmd==='tab.close'||cmd==='terminal.kill'));
+    assert.ok(h.views.some(p=>p.pane==='viewer'));
+    assert.ok(h.errors.length);
+  }
 });

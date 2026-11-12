@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install only this checkout's One Piece mod and layout, with ownership checks."""
+"""Install One Piece files and scoped close shortcuts, with ownership checks."""
 import argparse
 import hashlib
 import json
@@ -15,6 +15,82 @@ LAYOUT = Path('layouts/one-piece.json')
 RECEIPT = Path('.one-piece-install.json')
 WORK = '.one-piece-install-work'
 OWNER = 'herdr-one-piece'
+KEYS = Path('keys.json')
+KEY_SECTION = 'layout:one-piece'
+BINDINGS = {'cmd-w': 'one-piece.close-tab', 'cmd-shift-w': 'one-piece.close-pane'}
+
+
+def strict_json(content):
+    def object_pairs(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f'Duplicate JSON key: {key}')
+            result[key] = value
+        return result
+
+    def invalid_constant(value):
+        raise ValueError(f'Invalid JSON constant: {value}')
+
+    return json.loads(content, object_pairs_hook=object_pairs, parse_constant=invalid_constant)
+
+
+def keys_document(content):
+    data = strict_json(content)
+    if not isinstance(data, dict) or any(not isinstance(v, dict) for v in data.values()):
+        raise ValueError('keys.json must be an object of binding sections')
+    return data
+
+
+def encode_json(data):
+    return (json.dumps(data, indent=2, ensure_ascii=True) + '\n').encode('utf-8')
+
+
+def add_bindings(data):
+    section = data.setdefault(KEY_SECTION, {})
+    for key in BINDINGS:
+        if key in section:
+            raise ValueError(f'Unknown existing binding: keys.json / {KEY_SECTION} / {key}')
+    section.update(BINDINGS)
+
+
+def validate_keys_receipt(data):
+    if (not isinstance(data, dict)
+            or set(data) != {'bindings', 'original', 'installed_sha256'}
+            or data['bindings'] != BINDINGS or not isinstance(data['original'], str)):
+        raise ValueError('Invalid shortcut ownership receipt')
+    original = keys_document(data['original'])
+    add_bindings(original)
+    if hashlib.sha256(encode_json(original)).hexdigest() != data['installed_sha256']:
+        raise ValueError('Invalid shortcut receipt fingerprint')
+
+
+def plan_keys(action, home, receipt):
+    if not (home / KEYS).exists():
+        raise ValueError('Missing keys.json: initialize this app home with Herdr first; '
+                         'refusing to omit shipped shortcuts')
+    raw = (home / KEYS).read_bytes()
+    data = keys_document(raw.decode('utf-8'))
+    ownership = receipt.get('keys') if receipt else None
+    if ownership is None:
+        add_bindings(data)
+        replacement = encode_json(data)
+        ownership = {'bindings': dict(BINDINGS), 'original': raw.decode('utf-8'),
+                     'installed_sha256': hashlib.sha256(replacement).hexdigest()}
+        return replacement, ownership
+    section = data.get(KEY_SECTION, {})
+    for key, command in ownership['bindings'].items():
+        if section.get(key) != command:
+            raise ValueError(f'Owned binding changed or missing: keys.json / {KEY_SECTION} / {key}')
+    if action == 'install':
+        return raw, ownership
+    if hashlib.sha256(raw).hexdigest() == ownership['installed_sha256']:
+        return ownership['original'].encode('utf-8'), None
+    for key in ownership['bindings']:
+        del section[key]
+    if not section and KEY_SECTION not in keys_document(ownership['original']):
+        del data[KEY_SECTION]
+    return encode_json(data), None
 
 
 def inventory(path):
@@ -39,9 +115,12 @@ def read_receipt(home):
     path = home / RECEIPT
     if not path.exists():
         return None
-    data = json.loads(path.read_text(encoding='utf-8'))
-    if (not isinstance(data, dict) or set(data) != {'owner', 'version', 'files'}
-            or data['owner'] != OWNER or data['version'] != 1
+    data = strict_json(path.read_bytes())
+    if (not isinstance(data, dict)
+            or data.get('owner') != OWNER or type(data.get('version')) is not int
+            or data['version'] not in (1, 2)
+            or set(data) != ({'owner', 'version', 'files'} if data['version'] == 1
+                             else {'owner', 'version', 'files', 'keys'})
             or not isinstance(data['files'], dict)):
         raise ValueError(f'Invalid ownership receipt: {path}')
     files = data['files']
@@ -54,7 +133,9 @@ def read_receipt(home):
                 or not (name == str(LAYOUT) or name.startswith('mods/one-piece/'))
                 or not isinstance(digest, str) or not re.fullmatch('[0-9a-f]{64}', digest)):
             raise ValueError(f'Invalid ownership entry: {name}')
-    return files
+    if data['version'] == 2:
+        validate_keys_receipt(data['keys'])
+    return data
 
 
 def source_files(repo):
@@ -95,7 +176,8 @@ def apply(action, home, repo):
     targets = (MOD, LAYOUT, RECEIPT)
     before = {str(p): inventory(home / p) if (home / p).exists()
               or (home / p).is_symlink() else None for p in targets}
-    owned = read_receipt(home)
+    receipt = read_receipt(home)
+    owned = receipt['files'] if receipt else None
     if owned is None and any(before[str(p)] is not None for p in (MOD, LAYOUT)):
         raise ValueError('Unknown existing One Piece content; no ownership receipt, refusing changes')
     for name, digest in (owned or {}).items():
@@ -105,6 +187,13 @@ def apply(action, home, repo):
             raise ValueError(f'Owned file changed or missing; preserving installation: {path}')
     if action == 'uninstall' and owned is None:
         return
+    keys_content = None
+    keys_ownership = None
+    if action == 'install' or receipt.get('version') == 2:
+        targets = (MOD, LAYOUT, KEYS, RECEIPT)
+        path = home / KEYS
+        before[str(KEYS)] = inventory(path) if path.exists() or path.is_symlink() else None
+        keys_content, keys_ownership = plan_keys(action, home, receipt)
     files = source_files(repo) if action == 'install' else {}
     for name in files:
         path = home / name
@@ -139,8 +228,10 @@ def apply(action, home, repo):
             path = stage / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content)
+        if keys_content is not None:
+            (stage / KEYS).write_bytes(keys_content)
         if action == 'install':
-            receipt = {'owner': OWNER, 'version': 1,
+            receipt = {'owner': OWNER, 'version': 2, 'keys': keys_ownership,
                        'files': {name: hashlib.sha256(data).hexdigest()
                                  for name, data in files.items()}}
             (stage / RECEIPT).write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')

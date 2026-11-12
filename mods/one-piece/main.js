@@ -46,6 +46,7 @@ export default class Fleet extends View {
       this.refresh(cx);
       cx.timer.every(1000,c=>this.refresh(c));
     }
+    if(view==='rename-tab') this.tabName=InputState.new({value:props().name});
     if(view==='setup') {
       this.homeInput=InputState.new({placeholder:'firstmate.home label, such as a1b2c3'});
       this.aliasInput=InputState.new({value:machineLabel(props().machine??null)});
@@ -60,6 +61,8 @@ export default class Fleet extends View {
           const t=terminals().find(t=>t.address===focused()?.terminal);
           if(t) await this.inspect(t,c);
         }
+        if(command==='close-tab') this.requestClose('tab',focused()?.tab);
+        if(command==='close-pane') this.requestClose('pane',focused()?.pane);
         if(command==='firstmate') this.openFirstmate();
         if(command==='restore-layout') this.openRestore();
         c.notify();
@@ -485,6 +488,94 @@ export default class Fleet extends View {
       .child(button('setup-header','Fleet setup',()=>this.setup()));
   }
 
+  canAddTab(spaceId) {
+    const space=spaces().find(s=>s.id===spaceId);
+    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return false;
+    if(terminals().some(t=>t.space===spaceId&&isWorker(t)&&!config().coordinators.some(r=>matches(t,r)))) return false;
+    const inspections=Object.entries(config().inspections).filter(([_key,i])=>i.space===spaceId);
+    return inspections.every(([key])=>config().coordinators.some(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===key));
+  }
+
+  tabsView() {
+    const space=spaces().find(s=>s.active);
+    const row=h_flex().size_full().px(8).gap(6).items_center().overflow_x_scrollbar().bg('#192e34');
+    if(!space) return row;
+    for(const tab of space.tabs) row.child(h_flex().gap(3).flex_none()
+      .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',()=>run('tab.select',{id:tab.id}),tab.active))
+      .child(button(`rename-tab-${tab.id}`,'Rename',()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:tab.name}})))
+      .child(button(`close-tab-${tab.id}`,'Close',()=>this.requestClose('tab',tab.id))));
+    if(this.canAddTab(space.id)) row.child(button('add-tab','+ Your terminal',()=>{if(this.canAddTab(space.id)) run('tab.new',{space:space.id});}));
+    return row;
+  }
+
+  renameTabView() {
+    return v_flex().size_full().p(20).gap(12).bg('#192f35').text_color('#dce6e3')
+      .child(div().child('Rename tab')).child(Input.new(this.tabName).h(34))
+      .child(h_flex().gap(8).justify_end()
+        .child(button('cancel-rename','Cancel',()=>closeOverlay(props().overlay)))
+        .child(button('save-rename','Save',()=>{
+          const p=props(),space=spaces().find(s=>s.id===p.space&&s.tabs.some(t=>t.id===p.tab));
+          if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return;
+          run('tab.rename',{id:p.tab,name:this.tabName.value().trim()});closeOverlay(p.overlay);
+        },true)));
+  }
+
+  closeSnapshot(kind,id) {
+    const all=panes();
+    const pane=kind==='pane'&&all.find(p=>p.pane===id);
+    const tab=kind==='tab'?id:pane?.tab;
+    const space=spaces().find(s=>s.tabs.some(t=>t.id===tab));
+    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) throw new Error('The close target changed or its machine is unavailable. Nothing was closed.');
+    const affected=all.filter(p=>kind==='tab'?p.tab===tab:p.pane===id);
+    if(!affected.length) throw new Error('The close target is no longer available. Nothing was closed.');
+    const live=terminals();
+    const records=affected.map(p=>{
+      const terminal=p.terminal&&live.find(t=>t.address===p.terminal&&['live','finished'].includes(t.state));
+      if(p.terminal&&(!terminal||!Number.isFinite(terminal.created_ms)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready'))) throw new Error('A terminal changed or became unavailable. Nothing was closed.');
+      if(terminal?.state==='live'&&(isWorker(terminal)||config().coordinators.some(r=>r.role==='secondmate'&&matches(terminal,r)))) throw new Error('Open this supervised session in inspection before closing its view. Nothing was closed.');
+      return {pane:p.pane,mod:p.mod??null,terminal:terminal?.address??null,created:terminal?.created_ms??null,state:terminal?.state??null};
+    }).sort((a,b)=>a.pane.localeCompare(b.pane));
+    const preserved=Object.entries(config().inspections).filter(([_key,i])=>i.tab===tab&&affected.some(p=>p.mod==='one-piece'&&(!i.pane||p.pane===i.pane)))
+      .map(([key])=>{
+        const terminal=live.find(t=>identity(t)===key);
+        if(!terminal||!['live','finished'].includes(terminal.state)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')||all.some(p=>p.terminal===terminal.address)||terminal.keep||terminal.labels?.['herdr.space']) throw new Error('The inspected session changed or became unavailable. Nothing was closed.');
+        return {terminal:terminal.address,created:terminal.created_ms,state:terminal.state};
+      }).sort((a,b)=>a.terminal.localeCompare(b.terminal));
+    return {kind,id,tab,space:space.id,machine:space.machine,panes:records,preserved};
+  }
+
+  requestClose(kind,id) {
+    try {
+      const snapshot=this.closeSnapshot(kind,id);
+      openOverlay({mod:'one-piece',kind:'dialog',width:580,height:380,props:{view:'close-scope',snapshot}});
+    } catch(error) {notifyError(error);}
+  }
+
+  closeScope() {
+    const p=props(),snapshot=p.snapshot;
+    try {
+      if(JSON.stringify(this.closeSnapshot(snapshot.kind,snapshot.id))!==JSON.stringify(snapshot)) throw new Error('The close target changed. Review it again. Nothing was closed.');
+      if(snapshot.kind==='tab') run('tab.close',{id:snapshot.id,confirmed:true});
+      else run('pane.close',{pane:snapshot.id});
+      closeOverlay(p.overlay);
+    } catch(error) {notifyError(error);}
+  }
+
+  closeScopeView() {
+    const snapshot=props().snapshot;
+    const processes=snapshot.panes.filter(p=>p.terminal&&p.state==='live');
+    const lines=snapshot.panes.filter(p=>p.terminal).map(p=>`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended; only its view closes.':'process ends.'}`);
+    for(const p of snapshot.preserved) lines.push(`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended':'parked inspection process preserved'}; only its view closes.`);
+    if(!processes.length) lines.push('No terminal process ends.');
+    lines.push('Firstmate obligations remain unchanged.');
+    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
+      .child(div().text_size(20).child(`Close ${snapshot.kind}?`))
+      .child(div().flex_1().min_h(0).overflow_y_scrollbar().text_size(12).child(lines.join('\n')))
+      .child(h_flex().gap(10).justify_end()
+        .child(button('cancel-close','Cancel',()=>closeOverlay(props().overlay)))
+        .child(button('confirm-close',processes.length?'End processes and close':'Close view',()=>this.closeScope(),true)));
+  }
+
   paneHeader() {
     const pane=panes().find(p=>p.pane===props().pane);
     if(!pane) return div();
@@ -495,38 +586,20 @@ export default class Fleet extends View {
       .when(Boolean(coordinator),el=>el.child(art('luffy',terminal.status,30)))
       .child(div().flex_1().truncate().text_size(11).child(coordinator?`Luffy · ${label(terminal)}`:supervisor?`${label(terminal)} · open inspection from the fleet`:pane.mod?'Inspection only':`${terminal?label(terminal):pane.title} · ${(config().shells??[]).some(r=>r.terminal===terminal?.address&&r.created===terminal?.created_ms&&r.newProcess)?'New shell':'Your terminal'}`))
       .when(paneReady(pane.pane),el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>paneReady(pane.pane)&&run('pane.zoom',{pane:pane.pane}))))
-      .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`close-${pane.pane}`,'Close',()=>paneReady(pane.pane)&&openOverlay({mod:'one-piece',kind:'dialog',width:460,height:240,props:{view:'close',name:label(terminal),target:{terminal:terminal.address,created:terminal.created_ms}}}))));
-  }
-
-  closeTerminal() {
-    const target=props().target;
-    const terminal=terminals().find(t=>matches(t,target));
-    if(!terminal||isWorker(terminal)||config().coordinators.some(r=>matches(terminal,r))||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')) {
-      notifyError(new Error('This personal session changed or became unavailable. No process was ended.'));
-      return;
-    }
-    run('terminal.kill',{terminal:terminal.address});
-    closeOverlay(props().overlay);
-  }
-
-  closeView() {
-    const target=props().target;
-    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
-      .child(div().text_size(20).font_semibold().child(`Close ${props().name}?`))
-      .child(div().flex_1().text_size(12).text_color('#a4bbb8').child(`This ends the process in ${target.terminal} on ${machineOf(target.terminal)??'local'}. Firstmate obligations remain unchanged.`))
-      .child(h_flex().gap(10).justify_end().child(button('cancel-close','Keep running',()=>closeOverlay(props().overlay)))
-        .child(button('confirm-close','End process',()=>this.closeTerminal(),true)));
+      .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`close-${pane.pane}`,'Close',()=>this.requestClose('pane',pane.pane))));
   }
 
   render(cx) {
     switch(props()?.view) {
+      case 'tabs':return this.tabsView();
+      case 'rename-tab':return this.renameTabView();
+      case 'close-scope':return this.closeScopeView();
       case 'header':return this.header();
       case 'pane':return this.paneHeader();
       case 'inspect':return this.inspectView();
       case 'setup':return this.setupView(cx);
       case 'firstmates':return this.firstmatesView();
       case 'restore':return this.restoreView();
-      case 'close':return this.closeView();
       default:return this.sidebar(cx);
     }
   }

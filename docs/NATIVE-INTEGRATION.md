@@ -211,7 +211,7 @@ These timing checks use a simulated host and still need native interaction valid
 
 ## Current verification limits
 
-All 63 JavaScript checks and 17 Python checks pass for this draft.
+The initial draft passed 63 JavaScript checks and 17 Python checks.
 Review reproduced secondmate registration leaving its original terminal writable.
 Linking now parks that terminal before registration and waits for inspection before closing setup.
 Failed inspection leaves the process running without direct input, and setup retains the registered session for retry.
@@ -234,3 +234,26 @@ Initial rendering passed after that change, but its disconnected appearance has 
 Native window access subsequently returned cgWindowNotFound while the isolated application remained running and responsive through its command interface.
 That observation failure does not invalidate previously recorded interactions or establish a new native pass.
 The application was not restarted to work around it.
+
+## Built-in tab closure gap
+
+The original layout included Herdr's shipped tab bar, whose close control calls tab.close directly.
+The installed global Cmd-W binding calls the same command.
+A disposable non-final tab held terminal t1g with process identifier 62989 and creation time 1794525281611.
+Calling tab.close ended that shell with reason killed and showed no confirmation overlay.
+The custom pane-header confirmation therefore does not satisfy the Close requirement for every normal entry point.
+Layout-specific shortcut bindings are documented, but live in the shared keys.json file.
+Editing that file also stops Herdr from automatically replacing untouched default shortcuts during upgrades.
+The implementation must account for that installation consequence and preserve unrelated user bindings.
+
+The layout now uses One Piece tab controls and one shared confirmation flow for tab and pane closure.
+The dialog identifies affected terminals and machines, distinguishes preserved inspection processes, and revalidates identities before closing.
+The installer adds layout-specific Cmd-W and Cmd-Shift-W bindings while preserving unrelated bindings.
+Ownership records support upgrades, rollback, and removal without claiming ownership of the entire keys file.
+See docs/INSTALL.md for shortcut precedence and the effect on automatic default-shortcut updates.
+Direct host commands and more-specific user bindings can still bypass the mod.
+Native click-through and shortcut delivery for the new controls remain unverified because window capture is unavailable.
+
+After the close-control changes, all 78 JavaScript tests and 30 Python tests pass.
+Herdr's initial-render check also passes for the updated mod.
+These checks do not establish native shortcut delivery or click behavior.
