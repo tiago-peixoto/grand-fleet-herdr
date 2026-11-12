@@ -57,6 +57,16 @@ The next diagnostic must compare cache decisions, text layout, and glyph emissio
 No instrumented failing frame has been captured.
 The evidence does not yet identify a specific cache, clipping, or graphics defect.
 
+Upstream commit d6f6106cec444f82c1d59bd8a25f107990ec0d85 is 47 commits beyond v0.1.15.
+Comparison found no changes in the inspected native text, view-cache, scene, or Metal rendering files.
+The newer terminal glyph-centering change affects terminal rendering rather than ordinary mod text.
+No matching upstream fix was identified.
+
+The native shot command renders the previously recorded scene without repeating layout.
+During the window-capture outage, a shot still showed remote-worker after live state selected the newly recovered secondmate inspection.
+That stale scene cannot verify the current layout or diagnose a new resize attempt.
+Current visual verification requires native presentation to resume.
+
 ## Independent header correction
 
 A separate header defect used the focused pane to decide whether to offer Restore grid.
