@@ -325,3 +325,20 @@ The test then closed only its disposable tab.
 The result is saved in .superpowers/native/cwd-runtime-result.json.
 All 87 JavaScript tests and Herdr's initial-render check pass after this correction.
 This establishes directory tracking without sidebar rendering, not native Restore button delivery or recovery after app termination.
+
+## Remote restoration controller
+
+An isolated runtime test supplied a missing-shell record for op-remote-lab beside a surviving disposable shell.
+The test invoked the production restoreShell method through Herdr's live command interface.
+The record was deliberately supplied to test restoration, rather than produced by a simulated machine failure.
+Herdr created op-remote-lab/t8 in the recorded remote tab and directory, including a directory name containing a space.
+The remote labels used local workspace identifiers without duplicating the machine prefix.
+The saved record identified the shell as a new process on op-remote-lab.
+Calling restoration again with the original missing record created no duplicate shell.
+The neighboring remote shell and local firstmate retained their process identifiers, creation times, and live states throughout restoration.
+The test then closed its disposable remote tab and confirmed both disposable shells finished.
+Herdr reported no remaining overlays or errors.
+The captured evidence is saved in .superpowers/native/remote-restore-result.json.
+
+This verifies controller behavior across two isolated Herdr cores connected through the local command transport.
+It does not verify an SSH connection, a separate physical machine, failure detection, or clicking the native Restore button.
