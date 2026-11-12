@@ -1,0 +1,46 @@
+async () => {
+ await ready;const checks=[];
+ const check=(name,ok)=>{if(!ok)throw Error(name);checks.push(name)};
+ const click=s=>{const el=$(s);if(!el)throw Error('Missing '+s);el.click()};
+ const type=(s,v)=>{const el=$(s);el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}))};
+ const add=name=>{click('#addPane');$('#terminalName').value=name;$('#terminalForm').requestSubmit();return sessions.at(-1)};
+ check('island icons removed',!$('.machine-heading .island'));
+ check('Luffy is pinned first',sessions.filter(s=>s.kind==='coordinator').every(s=>document.querySelector('#crew-'+s.id+' > button').dataset.open===s.id));
+ check('Sunny is not a session selector',[...document.querySelectorAll('[data-ship]')].every(b=>!b.dataset.open&&!b.hasAttribute('aria-current')));
+ type('[data-input="firstmate"]','collapse draft');
+ click('[data-ship="firstmate"]');check('collapse does not switch workspace',active==='firstmate'&&$('#crew-firstmate').hidden);
+ check('collapse preserves draft',get('firstmate').draft==='collapse draft');
+ click('[data-ship="firstmate"]');check('expand restores characters',!$('#crew-firstmate').hidden);
+ click('[data-ship="artemis"]');check('other ship collapse does not select',active==='firstmate');click('[data-ship="artemis"]');
+ check('worker sheets have three four-frame states',['chopper','franky','pirate'].every(name=>frames[name].length===12));
+ for(const name of ['chopper','franky','pirate']){check(name+' sleeping frames',animationFrame(name,'idle')<4);check(name+' walking frames',animationFrame(name,'working')>=4&&animationFrame(name,'working')<8);check(name+' sitting frames',animationFrame(name,'blocked')>=8);}
+ check('all machines displayed',$('#machines').textContent.includes('local')&&$('#machines').textContent.includes('hz-server'));
+ check('every coordinator starts with one chat',sessions.filter(s=>s.kind==='coordinator').every(s=>s.panes.length===1));
+ check('single pane uses full grid',$('#grid').classList.contains('single'));
+ type('[data-input="firstmate"]','captain draft');const t1=add('editor');
+ check('terminal inherits workspace and machine',t1.owner==='firstmate'&&t1.host==='local');
+ check('terminal has no workers',!t1.workers);
+ type(`[data-input="${t1.id}"]`,'hostname');$(`[data-form="${t1.id}"]`).requestSubmit();
+ check('terminal executes simulated local command',t1.lines.at(-1).output==='local');
+ type(`[data-input="${t1.id}"]`,'draft terminal');const t2=add('tests');
+ check('coordinator plus two terminals',visible().length===3);
+ click('#equal');check('equal grid remembered',workspace().layout==='equal');
+ click('[data-open="artemis"]');check('remote coordinator has only its chat',visible().join()==='artemis');
+ check('other workspace terminals absent',!$('#terminals').textContent.includes('editor'));
+ const t3=add('editor');check('same name allowed in different workspace',t3.owner==='artemis'&&t3.host==='hz-server');
+ type(`[data-input="${t3.id}"]`,'hostname');$(`[data-form="${t3.id}"]`).requestSubmit();check('remote host retained',t3.lines.at(-1).output==='hz-server');
+ click('[data-open="firstmate"]');check('workspace panes restored',visible().join()===['firstmate',t1.id,t2.id].join());
+ check('layout restored',workspace().layout==='equal');check('captain draft retained',$('[data-input="firstmate"]').value==='captain draft');check('terminal draft retained',$(`[data-input="${t1.id}"]`).value==='draft terminal');
+ click('[data-worker="2"]');check('worker has dedicated workspace',active==='worker2'&&visible().join()==='worker2');check('worker has owner and machine',workspace().owner==='firstmate'&&workspace().host==='local');check('worker has no secondary terminals UI',$('#addPane').hidden&&$('#terminalSection').hidden);
+ const original=get('firstmate').messages.length;type('[data-input="worker2"]','worker note');$('[data-form="worker2"]').requestSubmit();check('worker chat isolated',get('firstmate').messages.length===original&&workspace().messages.some(m=>m.text==='worker note'));
+ click('[data-approve="worker2"]');check('worker approval updates shared state',get('firstmate').workers[1].status==='working');
+ click('[data-pane="worker2"] [data-open="firstmate"]');check('return restores coordinator grid',active==='firstmate'&&visible().length===3);
+ click(`[data-max="${t1.id}"]`);check('maximize terminal',visible().join()===t1.id);click('#restore');check('restore workspace grid',visible().length===3);
+ click(`[data-hide="${t1.id}"]`);check('hide terminal',!visible().includes(t1.id));click(`[data-open="${t1.id}"]`);check('reopen retains draft',t1.draft==='draft terminal');
+ click('[data-rename="hz-server"]');$('#machineName').value='Alabasta';$('#machineForm').requestSubmit();check('rename changes display only',machineName('hz-server')==='Alabasta'&&t3.host==='hz-server');
+ click('[data-open="artemis"]');check('renamed island visible in workspace',$('#workspaceHint').textContent.includes('Alabasta / hz-server'));
+ click('#addPane');$('#terminalName').value='EDITOR';$('#terminalForm').requestSubmit();check('duplicate in same workspace rejected',$('#terminalDialog').open&&$('#terminalError').textContent.length>0);$('#terminalDialog').close();
+ click('[data-open="firstmate"]');const rects=[...document.querySelectorAll('[data-pane]')].map(el=>el.getBoundingClientRect());check('panes never overlap',rects.every((a,i)=>rects.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top)));
+ check('no horizontal overflow',document.documentElement.scrollWidth<=innerWidth);check('six art sheets loaded',Object.keys(loaded).length===6);
+ return {status:'passed',count:checks.length,checks};
+}

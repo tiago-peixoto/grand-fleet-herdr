@@ -1,0 +1,10 @@
+{
+  "tool": "built-in image_gen",
+  "asset": "assets/worker-states-v1.png",
+  "references": [
+    "../custom-trial/assets/chopper.png",
+    "assets/franky-v2.png",
+    "../custom-trial/assets/pirate.png"
+  ],
+  "prompt": "Create ONE transparent pixel-art animation atlas matching these three reference characters exactly: Chopper pink hat blue shorts, Franky blue hair red floral shirt massive blue forearms, generic pirate teal bandana brown vest. 4 columns and 9 equal rows, 36 cells total. Each row consists of FOUR animation frames of one character, evenly spaced exact equal grid, no lines labels or text. Rows 1-3 Chopper: row1 sleeping curled horizontally on ground eyes closed, slight breathing four frames; row2 walking in place upright, alternating legs arms four distinct walk frames; row3 sitting on ground awake waiting, four subtle head movement frames. Rows4-6 Franky same order sleeping, walking, sitting. Rows7-9 generic pirate same order sleeping, walking, sitting. Maintain exact character identity outfit proportions palette and crisp pixel edges from references. All characters fully inside cells, generous transparent gutters, consistent scale within each character across poses, ground baseline same relative to each cell. No props, no shadows, no scenery, no text. Portrait atlas aspect 4:9, equal square cells. This is a production sprite sheet, strict grid placement essential."
+}
