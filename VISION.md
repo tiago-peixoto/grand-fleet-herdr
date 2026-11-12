@@ -73,7 +73,7 @@ Unsupervised sessions remain directly usable without claiming firstmate's superv
 This mod adds no command hierarchy, merge authority, or automatic delegation policy.
 Personal preferences, credentials, and fleet records remain private to the captain's home.
 The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.
-This extension remains a draft pending author approval.
+The author approved this vision on 2026-11-12.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
 A change should be resisted when visual convenience creates competing command paths, hides uncertainty, assumes consent, or makes firstmate depend on this interface.
