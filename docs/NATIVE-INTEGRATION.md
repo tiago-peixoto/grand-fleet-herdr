@@ -257,3 +257,20 @@ Native click-through and shortcut delivery for the new controls remain unverifie
 After the close-control changes, all 78 JavaScript tests and 30 Python tests pass.
 Herdr's initial-render check also passes for the updated mod.
 These checks do not establish native shortcut delivery or click behavior.
+
+## Live shared Close controller
+
+An isolated runtime harness loaded the production controller and invoked closeScope with captured target records.
+The first attempt rejected an incomplete app record while a new terminal was still appearing.
+No process was closed during that rejection.
+After both terminal records became available, pane closure ended only the selected disposable process.
+The neighboring process retained its identifier, creation time, and live state.
+Tab closure then ended the remaining disposable process.
+
+Closing secondmate inspection through the same method preserved secondmate t1c and neighboring personal terminal t1f.
+Their process identifiers remained 59304 and 64244, respectively, with unchanged creation times.
+Reopening inspection restored a new pane in the original tab without exposing a writable secondmate pane.
+Herdr reported no remaining overlays or errors.
+The captured records are in .superpowers/native/close-runtime-result.json and .superpowers/native/close-inspection-result.json.
+These checks invoke the actual controller against the live terminal service.
+They do not establish button rendering, click delivery, or keyboard delivery.
