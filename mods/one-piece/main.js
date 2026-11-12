@@ -426,6 +426,10 @@ export default class Fleet extends View {
     };
     try {
       let terminal=validate();
+      if(role==='firstmate') {
+        if(isWorker(terminal)) throw new Error('A supervised worker cannot be linked as firstmate.');
+        if(!terminal.space||!terminal.tab||!panes().some(p=>p.terminal===terminal.address&&p.tab===terminal.tab)) throw new Error('This session has no writable workspace. Open it in Herdr before linking as firstmate.');
+      }
       if(role==='secondmate') {
         await this.park(terminal,cx);
         terminal=validate();
@@ -479,10 +483,15 @@ export default class Fleet extends View {
     const inspection=Object.entries(config().inspections).find(([_key,i])=>i.space===space?.id);
     const inspected=Boolean(inspection);
     const secondmate=inspection&&config().coordinators.find(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===inspection[0]);
+    const canAddTerminal=()=>{
+      const pane=panes().find(p=>p.pane===current?.pane);
+      const owner=pane&&spaces().find(s=>s.tabs.some(t=>t.id===pane.tab));
+      return Boolean(pane&&paneReady(pane.pane)&&this.canAddTab(owner?.id));
+    };
     return h_flex().size_full().px(18).gap(12).items_center().bg('#192e34')
       .child(div().flex_1().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
       .child(div().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`))
-      .when(Boolean(current?.pane&&paneReady(current.pane)&&(!inspected||secondmate)),el=>el.child(button('new-terminal','+ Your terminal',()=>paneReady(current.pane)&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
+      .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
       .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>paneReady(zoom.pane)&&run('pane.zoom',{pane:zoom.pane}))))
       .child(button('restore-layout','Restore layout',()=>this.openRestore()))
       .child(button('setup-header','Fleet setup',()=>this.setup()));
@@ -538,9 +547,9 @@ export default class Fleet extends View {
     const preserved=Object.entries(config().inspections).filter(([_key,i])=>i.tab===tab&&affected.some(p=>p.mod==='one-piece'&&(!i.pane||p.pane===i.pane)))
       .map(([key])=>{
         const terminal=live.find(t=>identity(t)===key);
-        if(!terminal||!['live','finished'].includes(terminal.state)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')||all.some(p=>p.terminal===terminal.address)||terminal.keep||terminal.labels?.['herdr.space']) throw new Error('The inspected session changed or became unavailable. Nothing was closed.');
+        if(!terminal||!['live','finished'].includes(terminal.state)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')||all.some(p=>p.terminal===terminal.address)||terminal.keep||terminal.labels?.['herdr.space']) return null;
         return {terminal:terminal.address,created:terminal.created_ms,state:terminal.state};
-      }).sort((a,b)=>a.terminal.localeCompare(b.terminal));
+      }).filter(Boolean).sort((a,b)=>a.terminal.localeCompare(b.terminal));
     return {kind,id,tab,space:space.id,machine:space.machine,panes:records,preserved};
   }
 
@@ -554,8 +563,12 @@ export default class Fleet extends View {
   closeScope() {
     const p=props(),snapshot=p.snapshot;
     try {
-      if(JSON.stringify(this.closeSnapshot(snapshot.kind,snapshot.id))!==JSON.stringify(snapshot)) throw new Error('The close target changed. Review it again. Nothing was closed.');
+      // Inspection processes are informational; only actual panes authorize closure.
+      const {preserved:_previous,...target}=snapshot;
+      const {preserved:_current,...current}=this.closeSnapshot(snapshot.kind,snapshot.id);
+      if(JSON.stringify(current)!==JSON.stringify(target)) throw new Error('The close target changed. Review it again. Nothing was closed.');
       if(snapshot.kind==='tab') run('tab.close',{id:snapshot.id,confirmed:true});
+      else if(panes().filter(p=>p.tab===snapshot.tab).length===1) run('tab.close',{id:snapshot.tab,confirmed:true});
       else run('pane.close',{pane:snapshot.id});
       closeOverlay(p.overlay);
     } catch(error) {notifyError(error);}
@@ -565,7 +578,10 @@ export default class Fleet extends View {
     const snapshot=props().snapshot;
     const processes=snapshot.panes.filter(p=>p.terminal&&p.state==='live');
     const lines=snapshot.panes.filter(p=>p.terminal).map(p=>`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended; only its view closes.':'process ends.'}`);
-    for(const p of snapshot.preserved) lines.push(`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended':'parked inspection process preserved'}; only its view closes.`);
+    for(const pane of snapshot.panes.filter(p=>p.mod&&!p.terminal)) lines.push(`Pane ${pane.pane}: only its view closes; no terminal targeted.`);
+    let preserved=[];
+    try {preserved=this.closeSnapshot(snapshot.kind,snapshot.id).preserved;} catch {}
+    for(const p of preserved) lines.push(`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended':'parked inspection process preserved'}; only its view closes.`);
     if(!processes.length) lines.push('No terminal process ends.');
     lines.push('Firstmate obligations remain unchanged.');
     return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')

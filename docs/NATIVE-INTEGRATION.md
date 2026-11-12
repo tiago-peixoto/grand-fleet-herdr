@@ -288,3 +288,23 @@ The fixture exits after 120 seconds rather than leaving a permanent test process
 Records are saved in .superpowers/native/hidden-fixture.json and .superpowers/native/hidden-result.json.
 This verifies hidden-tab polling and process preservation through the live runtime.
 It does not verify native presentation after reselection while window capture remains unavailable.
+
+## Workspace and inspection closure corrections
+
+Controller review reproduced personal-terminal creation inside a writable worker workspace through the header.
+The header now uses the same ownership guard as the tab bar during rendering and activation.
+Firstmate registration rejects parked sessions without a writable workspace and rechecks worker labels before saving.
+Inspection closure validates the actual view independently of a removed or replaced inspected process.
+Its confirmation does not claim an unavailable process remains preserved.
+
+A live regression found that pane.close on a tab's final inspection pane opened Herdr's own confirmation after the mod's confirmation.
+After validating the target, final-pane closure now uses confirmed tab.close.
+When sibling panes exist, closure still targets only the selected pane.
+Regression checks include a sibling appearing after confirmation opens and preservation of unrelated tabs.
+
+The isolated runtime rejected promotion of parked secondmate t1c without changing coordinator registration.
+It created inspection for disposable worker t21, ended and removed that worker, and closed the remaining inspection successfully.
+No second confirmation or error remained after closure.
+The record is saved in .superpowers/native/audit-runtime-result.json.
+All 86 JavaScript checks and Herdr's initial-render check pass after these corrections.
+Header click delivery remains unverified while native window capture is unavailable.

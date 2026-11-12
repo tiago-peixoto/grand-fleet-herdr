@@ -151,6 +151,7 @@ test('independent attention cannot adopt a supervised worker',async()=>{
 
 test('shared close ends only the personal pane identified by its confirmation',()=>{
   const h=closeRoutesHost();
+  h.views.push({pane:'neighbor',tab:'probe',mod:'one-piece',terminal:null});
   h.controller.requestClose('pane','probe-pane');h.confirm();
   assert.ok(h.calls.some(([cmd,args])=>cmd==='pane.close'&&args.pane==='probe-pane'));
 });
@@ -164,7 +165,7 @@ test('stale shared close cannot end a replacement, supervised, or unavailable se
   ]) {
     const h=closeRoutesHost();
     h.controller.requestClose('pane','probe-pane');change(h);h.confirm();
-    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
+    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'||cmd==='tab.close'));
     assert.ok(h.errors.length);
   }
 });
@@ -806,7 +807,7 @@ test('remote tab confirmation identifies every process and its machine',()=>{
   assert.ok(h.sessions.every(t=>t.state==='finished'));
 });
 
-test('inspection-only close preserves its process and rejects reattached or replaced workers',()=>{
+test('inspection-only close targets only its pane even if the worker reattaches or is replaced',()=>{
   for(const change of [null,
     h=>h.views.push({pane:'writable',tab:'other',terminal:'t2'}),
     h=>{h.worker.created_ms++;}
@@ -819,9 +820,9 @@ test('inspection-only close preserves its process and rejects reattached or repl
     if(change) change(h);
     h.confirm();
     assert.equal(h.worker.state,'live');
-    if(change) assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
-    else {
-      assert.ok(h.calls.some(([cmd])=>cmd==='pane.close'));
+    assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
+    if(!change) {
+      assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
       assert.ok(h.texts.some(t=>t.includes('No terminal process ends.')&&t.includes('preserved')));
     }
   }
@@ -849,7 +850,7 @@ test('pane confirmation rejects a replacement process and direct supervised clos
   const h=closeRoutesHost();
   h.controller.requestClose('pane','probe-pane');
   h.worker.created_ms++;h.confirm();
-  assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'||cmd==='tab.close'));
   h.calls.length=0;
   h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};
   h.controller.requestClose('pane','probe-pane');
@@ -867,7 +868,7 @@ test('finished terminal panes close with already-ended wording and reject replac
     assert.ok(h.texts.some(t=>t.includes('t2 on local: already ended')));
     assert.ok(h.texts.includes('Close view'));
     assert.ok(!h.texts.includes('End processes and close'));
-    assert.equal(h.calls.some(([cmd])=>cmd===`${kind}.close`),!replaced);
+    assert.equal(h.calls.some(([cmd])=>cmd==='tab.close'),!replaced);
   }
 });
 
@@ -880,7 +881,7 @@ test('pane-header Close uses the shared pane confirmation',()=>{
   assert.equal(spec.props.snapshot.kind,'pane');
   assert.equal(spec.props.snapshot.id,'probe-pane');
   h.confirm();
-  assert.ok(h.calls.some(([cmd])=>cmd==='pane.close'));
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
   assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'));
 });
 
@@ -902,28 +903,122 @@ test('finished worker inspection closes with already-ended copy for pane and tab
     assert.ok(h.texts.some(t=>t.includes('t2 on local: already ended; only its view closes.')));
     assert.ok(!h.texts.some(t=>t.includes('parked inspection process preserved')));
     assert.ok(h.texts.includes('Close view'));
-    assert.ok(h.calls.some(([cmd])=>cmd===`${kind}.close`));
+    assert.ok(h.calls.some(([cmd])=>cmd==='tab.close'));
     assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.kill'||cmd==='hc'));
     assert.equal(h.worker.state,'finished');
   }
 });
 
-test('finished inspection rejects replaced, unavailable and deleted identities before or after confirmation opens',()=>{
-  for(const before of [false,true]) for(const change of [
+test('inspection closure ignores removed or replaced targets before and after confirmation',()=>{
+  for(const kind of ['pane','tab']) for(const before of [false,true]) for(const change of [
     h=>{h.worker.created_ms++;},
-    h=>{h.context.machines=()=>[{name:null,layout:'unavailable'}];},
     h=>{h.sessions.splice(0,1);}
   ]) {
     const h=finishedInspectionCloseHost();
     if(before) change(h);
-    h.controller.requestClose('pane','viewer');
-    if(before) assert.ok(!h.calls.some(([cmd])=>cmd==='overlay'));
-    else {
-      assert.ok(h.calls.some(([cmd])=>cmd==='overlay'));
-      change(h);h.confirm();
-    }
-    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'||cmd==='tab.close'||cmd==='terminal.kill'));
-    assert.ok(h.views.some(p=>p.pane==='viewer'));
+    h.controller.requestClose(kind,kind==='pane'?'viewer':'probe');
+    assert.ok(h.calls.some(([cmd])=>cmd==='overlay'));
+    if(!before) change(h);
+    h.confirm();
+    assert.ok(h.calls.some(([cmd])=>cmd==='tab.close'));
+    assert.ok(h.texts.some(t=>t.includes('only its view closes')&&t.includes('no terminal targeted')));
+    assert.ok(!h.texts.some(t=>t.includes('process preserved')));
+    assert.equal(h.errors.length,0);
+  }
+});
+
+test('inspection target may be offline while its actual pane remains on an available machine',()=>{
+  const h=finishedInspectionCloseHost();
+  h.worker.address='remote/t2';
+  delete h.config().inspections['t2:12'];
+  h.config().inspections['remote/t2:12']={space:'captain',tab:'probe',pane:'viewer'};
+  h.context.machines=()=>[{name:null,layout:'ready'},{name:'remote',layout:'unavailable'}];
+  h.controller.requestClose('pane','viewer');h.confirm();
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
+  assert.ok(!h.texts.some(t=>t.includes('process preserved')));
+});
+
+test('inspection closure still rejects unavailable host or changed actual pane',()=>{
+  for(const change of [
+    h=>{h.context.machines=()=>[{name:null,layout:'unavailable'}];},
+    h=>{h.views[0].pane='replacement';},
+    h=>{h.views[0].terminal='t2';},
+    h=>{h.views[0].tab='other';}
+  ]) {
+    const h=finishedInspectionCloseHost();
+    h.controller.requestClose('pane','viewer');change(h);h.confirm();
+    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.close'||cmd==='tab.close'));
     assert.ok(h.errors.length);
   }
+});
+
+test('firstmate registration rejects a parked secondmate without changing its role or input',async()=>{
+  const h=host({independent:true,registrations:[{terminal:'t2',created:12,home:'test',role:'secondmate'}]});
+  await h.controller.inspect(h.worker,h.cx);
+  h.context.closeOverlay=id=>h.calls.push(['close',id]);
+  h.calls.length=0;
+  await h.controller.linkCoordinator(h.worker,'test','firstmate','setup',h.cx);
+  assert.equal(h.config().coordinators[0].role,'secondmate');
+  assert.match(h.controller.error,/Open it in Herdr before linking as firstmate/);
+  assert.equal(h.calls.length,0);
+  assert.ok(!h.views.some(p=>p.terminal==='t2'));
+});
+
+test('firstmate registration rechecks worker labels after setup rendered',async()=>{
+  const h=registrationHost([]);
+  h.sessions.find(t=>t.address==='t3').labels={'firstmate.home':'test','firstmate.task':'worker'};
+  await h.link();
+  assert.equal(h.config().coordinators.length,0);
+  assert.match(h.controller.error,/worker/i);
+  assert.ok(!h.calls.some(([cmd])=>cmd==='close'));
+});
+
+test('worker ownership blocks header personal terminals at render and after render',()=>{
+  for(const before of [false,true]) {
+    const h=closeRoutesHost();
+    const makeWorker=()=>{h.worker.labels={'firstmate.home':'test','firstmate.task':'worker'};};
+    if(before) makeWorker();
+    h.controller.header();
+    if(before) assert.ok(!h.actions.has('new-terminal'));
+    else {makeWorker();h.actions.get('new-terminal')();}
+    assert.ok(!h.calls.some(([cmd])=>cmd==='pane.split'));
+  }
+});
+
+test('orphan inspection in the final tab closes without a second native confirmation',()=>{
+  const h=finishedInspectionCloseHost();
+  h.sessions.length=0;
+  h.workspaces[0].tabs.splice(1);
+  const nativeRun=h.context.run;
+  let nativeConfirmation=false;
+  h.context.run=(cmd,args)=>{
+    if(cmd==='pane.close') {nativeConfirmation=true;return;}
+    nativeRun(cmd,args);
+  };
+  h.controller.requestClose('pane','viewer');h.confirm();
+  assert.equal(nativeConfirmation,false);
+  assert.ok(!h.views.some(p=>p.pane==='viewer'));
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
+});
+
+test('sole-pane closure preserves terminals in other tabs',()=>{
+  const h=finishedInspectionCloseHost();
+  h.sessions.push({address:'t5',created_ms:15,state:'live',labels:{}});
+  h.views.push({pane:'other-pane',tab:'other',terminal:'t5'});
+  h.controller.requestClose('pane','viewer');h.confirm();
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.close'&&args.id==='probe'&&args.confirmed===true));
+  assert.ok(h.views.some(p=>p.pane==='other-pane'));
+  assert.equal(h.sessions.find(t=>t.address==='t5').state,'live');
+});
+
+test('a sibling added after pane confirmation prevents tab closure and survives',()=>{
+  const h=finishedInspectionCloseHost();
+  h.controller.requestClose('pane','viewer');
+  h.sessions.push({address:'t5',created_ms:15,state:'live',labels:{}});
+  h.views.push({pane:'new-sibling',tab:'probe',terminal:'t5'});
+  h.confirm();
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='pane.close'&&args.pane==='viewer'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'));
+  assert.ok(h.views.some(p=>p.pane==='new-sibling'));
+  assert.equal(h.sessions.find(t=>t.address==='t5').state,'live');
 });
