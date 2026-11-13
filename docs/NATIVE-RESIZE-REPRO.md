@@ -109,3 +109,15 @@ Further capture attempts failed with cgWindowNotFound for both isolated applicat
 No application was restarted to address that capture failure.
 The next useful diagnostic correlates a missing-label frame with graphics texture lookup and draw submission.
 No production rendering change is justified by this trace.
+
+## Unlocked native trace reproduction
+
+After unlocking, the existing diagnostic process showed both labels in the split view.
+Zooming the diagnostic pane reproduced both missing labels while its yellow rectangle remained visible.
+The native screenshot came from the application window, not the last-frame command.
+The immediately copied trace is saved at .superpowers/native/text-trace-unlocked-missing.log.
+Its final text passes have valid bounds, clipping masks, and full opacity.
+They submit 33 monochrome glyph sprites for the static label and 16 for the interactive label.
+Native view-cache reuse remained disabled.
+This narrows the investigation beyond text layout and sprite submission but does not identify the rendering failure.
+No runtime workaround is included in the mod.

@@ -409,7 +409,7 @@ It is presentation behavior, not a security boundary.
 
 Fresh verification passed 101 JavaScript tests, 30 Python tests, native initial rendering, and git diff --check.
 The controller tests cover late supervision changes, unavailable machines, parking failure, mixed personal panes, and independent workspace attachment.
-Native click verification of these changes remains pending because window capture stopped working for both isolated applications.
+Native click verification initially stopped because window capture failed for both isolated applications.
 
 Review reproduced cancellation when parking destroyed the pane header that initiated inspection.
 Both Focus controls now dispatch to the persistent sidebar controller before opening inspection.
@@ -421,4 +421,28 @@ Their process identifiers, 6648 and 62063, and creation times remained unchanged
 Comparison also preserved all 28 unrelated live sessions.
 Evidence is saved in .superpowers/native/navigation-independent-runtime-result.json and .superpowers/native/navigation-independent-preservation-result.json.
 These controller checks do not verify native Focus command delivery or clicks.
-The corrected source has not yet replaced the installed One Piece mod in Grand Fleet Lab.
+The corrected source was subsequently installed and checked through native interactions, as recorded below.
+
+## Native navigation verification after unlocking
+
+The installer upgraded the isolated Grand Fleet Lab home to commit 8c571bb with its window closed.
+Only the isolated application was relaunched.
+The terminal core remained running.
+
+Clicking the pane header Focus control on worker t2m opened its inspection workspace.
+Typing a distinctive shell command into the inspection did not deliver it to the terminal.
+A subsequent terminal read contained no marker.
+The worker retained process identifier 61998 and creation time 1794538606650.
+The temporary cleanup indicator disappeared when the asynchronous transition completed.
+
+A fresh independent terminal, t2s, appeared in the sidebar without an existing workspace.
+Clicking its row attached that same session to a personal workspace.
+The native pane displayed its name and Your terminal.
+Its process identifier 37460 and creation time 1794568707485 remained unchanged.
+
+Clicking the native tab button for fresh supervised worker t2t opened inspection instead of retaining a writable pane.
+Its process identifier 90042 and creation time 1794568744644 remained unchanged.
+The inspection displayed the direct-input-disabled explanation.
+These checks verify native command delivery for the pane header Focus control, the tab button, and the unplaced independent row.
+They do not establish every navigation entry point or eliminate the documented host-navigation limitations.
+The before-and-after terminal records are saved under .superpowers/native/ with focus-worker, unplaced-click, and tab-click prefixes.
