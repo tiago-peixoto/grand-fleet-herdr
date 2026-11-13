@@ -141,6 +141,20 @@ The user was asked to observe Sunny directly with the window in the foreground.
 Raw captures, timestamps, and crop analyses remain under `.superpowers/native/animation-captures/` and are excluded from the repository.
 Do not infer a playback pass from GIF metadata or state-selection checks.
 
+A source audit on 2026-11-13 narrowed the remaining runtime checks.
+The diagnostic Herdr checkout is based on revision `9950887361af3ba218b9ce7a347cb8ec7b66c71d`, with local rendering instrumentation.
+Its `vendor/gpui-kit/crates/shell/src/materialize.rs` gives every image an element identity, including images without an explicit JavaScript ID.
+Its `vendor/gpui-pre/src/elements/img.rs` advances frames and requests another frame only while the window is active and reduced motion is disabled.
+The active flag represents operating-system keyboard focus, not merely a raised window.
+Its `vendor/gpui-kit/crates/base/src/reduce_motion.rs` reads the macOS accessibility preference at initialization.
+The CLI status response does not expose either runtime condition.
+Reading `com.apple.universalaccess reduceMotion` returned an absent preference, which does not establish the value returned by the native accessibility API.
+The existing `animated_images_advance_with_explicit_and_implicit_ids` test explicitly simulates frame delivery and draws the window.
+That test cannot establish that the native frame scheduler continues delivering frames without input.
+A fresh native Raise and title-bar click left the window controls visually inactive in captures while the mod displayed Pause motion.
+The next distinguishing observation is continuous playback on the physical display with confirmed keyboard focus.
+No sprite workaround or redraw timer was added.
+
 ## Layout restoration capability check
 
 An isolated native test created an anchor shell in /tmp and a personal shell in the repository directory.
