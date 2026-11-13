@@ -1489,3 +1489,24 @@ Logs are saved locally as `.superpowers/native/core-0.1.21-candidate-tests.log` 
 Neither application nor the user's installed core was upgraded during this comparison.
 These tests do not verify native transient resizing, continuous worker animation, or text visibility after resizing.
 Those acceptance gates remain open.
+
+## Transient size during transport loss
+
+A disposable diagnostic on Core 0.1.21 with the candidate patch attached eight writable viewers through one transport.
+The most recently active viewer selected 109 × 33, while the others requested 200 × 120.
+A local observer on the remote core recorded every resize notification without acquiring resize authority.
+The test killed only its isolated transport process and kept the remote core running.
+
+The observer recorded exactly `[(200, 120), (109, 33)]` through disconnection and recovery.
+The self-contained diagnostic passed in 1.44 seconds.
+Its source and log are saved locally as `.superpowers/native/recovery-size-timeline-probe.rs` and `.superpowers/native/recovery-size-timeline.log`.
+The diagnostic was removed from the candidate checkout after collecting evidence.
+
+Core's `detach` calls `apply_size` when writable viewers leave.
+With no writable viewer, `apply_size` selects the configured headless size, which defaults to 200 × 120.
+The [released implementation](https://github.com/herdrdev/herdr-core/blob/v0.1.21/crates/herdr-core/src/viewers.rs) therefore explains the temporary dimensions without requiring another mod workaround.
+The candidate restores the last active viewer's size once attachment completes.
+
+This trace does not prove correct repainting in the native application.
+The earlier malformed output still requires a native reproduction with independently isolated applications.
+The remaining recovery check concerns final dimensions, readable output, process identity, and working input after reconnect.

@@ -42,7 +42,8 @@ Resolve the difference between native captures and submitted drawing output befo
 Worker animation still requires active-window evidence, not only correct image files.
 Automatic sidebar recovery now has native evidence.
 The latest isolated split recovery restored both terminal sizes within 2.14 seconds and preserved their processes.
-The temporary resize and earlier malformed wrapping remain unresolved across the complete recovery scope.
+A [transport trace](NATIVE-INTEGRATION.md#transient-size-during-transport-loss) explains the temporary resize as Core's configured size when no writable viewer remains.
+Final native wrapping and input still require verification across the complete recovery scope.
 
 Verify the new Arrange controls through native clicks, focus, close confirmation, workspace switching, and input.
 The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-implementation) preserves actual pane identifiers and avoids modifying the installed layout.
