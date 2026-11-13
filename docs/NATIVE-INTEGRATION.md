@@ -1292,3 +1292,14 @@ A subsequent core query reported 200 columns and 120 rows for `t1g`.
 Those dimensions alone do not establish whether the malformed output originated in terminal reflow, application rendering, or capture.
 Full terminal recovery remains unresolved until that discrepancy is reproduced and isolated.
 The transport override was removed by the test's cleanup block.
+
+### Recovered terminal dimension comparison
+
+The saved pre-disconnection record reports 109 columns and 33 rows for the remote firstmate.
+The post-reconnection record reports 200 columns and 120 rows.
+A direct query on the remote machine confirmed the larger dimensions.
+The core's text read had normal wrapping at that size while the native capture retained malformed fragments.
+Clicking the native terminal restored 109 columns and 33 rows without changing the process identifier or creation timestamp.
+The immediate capture still showed malformed text.
+This establishes a dimension change independently of the static-label capture discrepancy.
+It does not yet identify which connection or replay component changed the dimensions.
