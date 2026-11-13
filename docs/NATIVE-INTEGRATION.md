@@ -1712,3 +1712,24 @@ This completes the appearance comparison for the recorded inventories and window
 It does not establish arbitrary fleet sizes, every keyboard interaction, or reliable rendering across every resize.
 The initial missed machine shortcut remains unexplained despite successful subsequent navigation checks.
 The rendering discrepancy and released Core verification remain separate acceptance gates.
+
+## Merged-source Core verification
+
+The official merged commit `e12fee23768764e8c85699f30ce520e53fcffb32` built successfully with the pinned Ghostty submodule and Zig 0.16.0.
+The focused `returning_viewers_keep_the_last_active_viewers_size` regression passed with one test and no failures.
+Grand Fleet Lab then received that build through Core's atomic `update --from` command.
+The update targeted only `/tmp/op-core-recovery-source/target/debug/herdr-core` in the isolated session.
+A backup of the previous binary remains at `/tmp/op-core-before-merged-backup`.
+
+The running Core changed from process 87194 to 90655 and reports version 0.1.21.
+The installed binary and merged build have identical SHA-256 hashes: `ba1e95793d976e1314eb3c1592a4d24ddf7caf0ca6eaee5239dd980fd20245d0`.
+The existing Core identity and all 33 local live terminals survived the update.
+All 47 listed local and remote terminals returned identical `get` metadata before and after the update.
+That comparison includes process identifiers, creation timestamps, dimensions, and terminal screens.
+The remote firstmate and personal terminal retained their original processes and their current 36-column by 27-row dimensions.
+No terminal input was sent.
+
+The native capture shows both remote panes readable after the update.
+Local evidence is saved in `.superpowers/native/merged-core-before.json`, `.superpowers/native/merged-core-after.json`, and `.superpowers/native/merged-core-window.jpg`.
+This verifies the merged build's installation and preservation of existing sessions.
+It does not replace a fresh native transport interruption check or verification of an officially released build containing the patch.
