@@ -86,7 +86,8 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native presentation during SSH disconnection and reconnection on the separate physical host.
-- Complete personal-shell restoration on the physical SSH host, including native interaction.
+- Verify personal-shell restoration through native controls on the physical SSH host.
+  The production controller passed the physical SSH restoration check below.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
 - Finish the close-route audit against the installed layout and key bindings.
@@ -595,3 +596,29 @@ This does not establish whether the test task was cancelled or its continuation 
 Do not count this attempt as successful restoration or restart it solely because its result is absent.
 Native capture showed an older inspection tab while the command interface selected Physical SSH restoration.
 The unresolved task and display discrepancy require investigation before this acceptance item can pass.
+
+
+## Instrumented physical SSH personal-shell restoration
+
+The author confirmed that Grand Fleet Lab displayed the restoration test while Grand Fleet Render Lab displayed the separate resize probe.
+A subsequent native capture matched the restoration test screen.
+The two applications have separate bundle identities and processes.
+This observation confirms the earlier stale capture, but does not explain its cause.
+
+The diagnostic fixture now retains its task handle and saves each command stage.
+Reloading that fixture cancelled its previous build according to Herdr's documented lifecycle.
+A new diagnostic test reused the original anchor shell rather than creating another anchor.
+The fixture called the unchanged production restoration controller after ending a dedicated personal shell.
+It completed with PASS and a task handle reporting done=true.
+
+The restored shell used /home/firstmate and returned to its original machine-qualified tab on op-hz-lab.
+Its stored record distinguished it as a new process.
+Remote routing labels omitted the local machine prefix as required by the remote service.
+Calling restoration again with the original missing-shell record created no duplicate.
+The remote anchor and local firstmate fixture retained their process identifiers, creation times, and live state throughout restoration.
+Closing the dedicated test tab then ended only its test shells.
+Independent core queries confirmed that the anchor, ended original shell, and restored shell were finished after cleanup.
+
+Evidence is saved in .superpowers/native/ssh-restore-result.json and ssh-restore-cleanup.json.
+This verifies the production controller over physical SSH, not native Restore button delivery.
+The original fixture's missing completion result remains unexplained.
