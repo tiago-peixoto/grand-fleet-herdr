@@ -85,7 +85,6 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Extend remote disconnection coverage to SSH and a separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
-- Verify stale registration replacement.
 - Test inspection creation across remote disconnects and application termination.
 - Verify cleanup retries when a temporary shell cannot be removed.
 - Check every close route, including Herdr's built-in tab controls.
@@ -455,3 +454,19 @@ The native accessibility field disappeared during firstmate selection and return
 Separate screenshots showed the coordinator grid and the subsequent inspection view.
 This verifies visible inspection after leaving and returning through the sidebar in the tested layout.
 It does not resolve the separate enlargement discrepancy or prove every animation frame.
+
+## Native coordinator registration replacement
+
+The Fleet setup dialog linked disposable firstmate t2w to home native-registration-replacement on the local machine.
+The saved registration recorded its creation time, 1794572628250.
+After disabling shell recovery for this fixture, hc kill ended t2w.
+A fresh shell, t2x, appeared in the same workspace.
+The setup dialog excluded the ended shell and offered the replacement.
+Linking t2x to the same home closed the dialog and replaced the old registration.
+Exactly one registration remained for that home, with creation time 1794572813097.
+All four unrelated coordinator registrations remained identical.
+All 32 unrelated live terminal summaries from hc ls --all remained identical.
+Those summaries omit process identifiers, so this comparison does not independently prove process preservation.
+Evidence is saved in .superpowers/native/registration-before.json, registration-after.json, and registration-preservation-result.json.
+This verifies replacement on the local machine through native setup controls.
+It does not establish replacement across a physical remote connection.
