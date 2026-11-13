@@ -892,3 +892,24 @@ After reopening and switching to `one-piece`, the native fleet and existing grid
 A second comparison confirmed that all 39 original live terminals still retained their process identity and placement.
 The before, removed, and reinstalled inventories are stored in `.superpowers/native/removal-*.json`.
 The installation guide now explains the required backup step when generated editor files remain after removal.
+
+## Actual firstmate worker launch and inspection
+
+Firstmate's actual `bin/fm-spawn.sh` launched `native-discovery` through its `hc` backend in an isolated home and local test repository.
+The launch used a shell diagnostic command that printed `native-firstmate-discovery-ok`.
+The test disabled the spawn watcher guard in its isolated environment, following firstmate's existing backend smoke-test pattern.
+This tests the launch and terminal integration, not an AI worker completing a supervised task.
+
+The launcher created terminal `t2y` without a parent and assigned its own `firstmate.home` and `firstmate.task` labels.
+Grand Fleet Lab discovered `fm-native-discovery` without manually adding worker labels.
+Because no coordinator was registered for this isolated home, the sidebar correctly placed it under `WORKERS · LINK FIRSTMATE IN SETUP`.
+Selecting the worker opened its separate inspection workspace and visibly displayed the diagnostic output.
+The view showed `Inspection only`, `Status unavailable`, and the direct-input-disabled explanation.
+
+Inspection removed the worker's Herdr placement labels and cleared its keep flag as designed.
+Its process identifier, creation time, live state, and both firstmate ownership labels remained unchanged.
+All 19 files under the isolated firstmate state and data directories retained identical hashes.
+After inspection, firstmate's own `fm_backend_hc_capture` accepted the worker's ownership labels and read the diagnostic marker successfully.
+The before-and-after records and assertions are retained in `.superpowers/native/firstmate-integration.json`.
+
+Coordinator registration, supervised attention transitions, return navigation for this home, and task completion remain unverified in a complete firstmate workflow.
