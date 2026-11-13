@@ -913,3 +913,27 @@ After inspection, firstmate's own `fm_backend_hc_capture` accepted the worker's 
 The before-and-after records and assertions are retained in `.superpowers/native/firstmate-integration.json`.
 
 Coordinator registration, supervised attention transitions, return navigation for this home, and task completion remain unverified in a complete firstmate workflow.
+
+## Terminal block preset feasibility
+
+The installed documentation exposes `layout.set` for replacing a personal layout tree and terminal blocks for displaying existing terminal addresses.
+This provides an alternative to changing the tab's internal split tree.
+A cloned `one-piece-preset-proof` layout tested that alternative in Grand Fleet Lab.
+It displayed the existing test coordinator `t1` beside personal shells `t3` and `t4`.
+
+The first arrangement showed a full-height coordinator on the left and two stacked personal shells on the right.
+The second showed three equal cells in a two-by-two grid with an empty fourth cell.
+Both arrangements were visibly verified in native captures.
+Typing `printf 'preset-block-input-ok\n'` into the upper-right personal block produced the marker in `t3`.
+All 94 terminal inventory records retained their process identifiers, creation times, state, parents, keep flags, and labels after both layout changes.
+That inventory includes finished records and is not a claim of 94 live terminals.
+The original `one-piece` layout was restored with no reported application errors.
+Proof layouts and before-and-after inventories remain under `.superpowers/native/preset-proof/`.
+
+This changes the next implementation step: prototype presets are feasible without moving or restarting terminals.
+They remain unimplemented in the product.
+The installed `focused()` documentation says a layout terminal block has no model pane identifier.
+Implicit pane commands and split placement therefore cannot be reused unchanged for these blocks.
+Integration must target the original model panes explicitly and retain pane headers, close confirmation, focus restoration, and personal-terminal creation.
+It must also reconcile blocks on workspace changes, worker inspection, process exit, and machine disconnection.
+The proof uses fixed terminal addresses and does not verify those dynamic requirements.

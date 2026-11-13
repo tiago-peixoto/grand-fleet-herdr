@@ -16,7 +16,7 @@ The native scenarios use isolated test terminals, including a physical remote se
 | Supervised workers and secondmates cannot receive direct input through inspection | [Observed behavior](NATIVE-INTEGRATION.md#observed-in-the-isolated-application) and [remote input rejection](NATIVE-INTEGRATION.md#native-physical-server-worker-input-rejection) cover typing, paste, Return, and interrupt | Passed |
 | Personal terminals remain independent inside coordinator workspaces | [Native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) and [remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verify separate input and process identity | Passed |
 | Focus and workspace changes preserve the existing grid and sessions | [Observed behavior](NATIVE-INTEGRATION.md#observed-in-the-isolated-application) and [crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) verify the existing three-pane arrangement | Passed for that arrangement |
-| Switch between the prototype's equal-grid and chat-plus-terminals presets | [Capability check](NATIVE-INTEGRATION.md#layout-restoration-capability-check) found no documented split-tree mutation API | Not implemented; remains a prototype gap |
+| Switch between the prototype's equal-grid and chat-plus-terminals presets | [Terminal block proof](NATIVE-INTEGRATION.md#terminal-block-preset-feasibility) rendered both arrangements and preserved terminal identity and placement | Not implemented; remains a prototype gap |
 | Restore missing personal shells explicitly without claiming conversation recovery | [Remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verifies the native action, directory, new process, and surviving neighbor | Passed over SSH, the remote shell connection |
 | Close identifies its target and process-ending consequence | [Installed close routes](NATIVE-INTEGRATION.md#installed-close-routes) and [native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) cover buttons and installed shortcuts | Passed within the installed layout and shortcut scope |
 | Offline machines show no stale live crew or unavailable actions | [Persistent machine navigation](NATIVE-INTEGRATION.md#persistent-machine-navigation) verifies unavailable presentation and foreground recovery | Passed; automatic background redraw unverified |
@@ -39,7 +39,7 @@ Use an isolated home and repository so the check cannot affect the captain's wor
 Resolve the difference between native captures and submitted drawing output before making another renderer change.
 Continuous animation and background recovery require visible runtime evidence, not only correct image files or connected-machine records.
 
-Keep the two prototype grid presets open as an implementation gap.
+Implement the two prototype grid presets using the verified terminal-block capability, while reconciling focus, ownership, and machine availability.
 Existing split creation and Focus pane controls do not prove preset switching.
 Complete the large-screen visual comparison after the rendering discrepancy is resolved.
 
