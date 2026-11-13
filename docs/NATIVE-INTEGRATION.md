@@ -1643,3 +1643,21 @@ The sidebar's Set up fleet button opened the same setup dialog at this size.
 Cancel closed it without changing registrations.
 The final capture is saved locally as `.superpowers/native/toolbar-1000-after.jpg`.
 All 120 JavaScript tests and the installed mod check passed.
+
+## Remote worker navigation at compact size
+
+Grand Fleet Lab remained at 1000 × 700 while the remote coordinator was below the visible sidebar.
+The first machine shortcut attempt left the viewport unchanged.
+After manual scrolling, the remote shortcut revealed its machine heading and crew.
+Subsequent local and remote shortcut selections worked without changing the coordinator's two-pane workspace.
+The initial unchanged result remains unexplained, so this check does not establish reliable first-click behavior after activation.
+No speculative scrolling change was made.
+
+Selecting `hz-worker` opened its separate inspection workspace with readable output and direct input disabled.
+Back to firstmate returned to `hz-captain` and its existing personal terminal split.
+Selecting the remote firstmate attention card restored the recovery workspace and its personal terminal output.
+No terminal input was sent during this navigation check.
+The inspection capture is saved locally as `.superpowers/native/remote-worker-navigation.jpg`.
+
+All six upstream checks for herdr-core PR 271 passed, including Linux, macOS, Windows, lint, upgrade, and the aggregate check.
+This confirms the upstream automated checks, not acceptance or release of the patch.
