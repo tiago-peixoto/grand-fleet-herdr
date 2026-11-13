@@ -1,5 +1,13 @@
 # Install the native One Piece interface
 
+This mod remains experimental and is not ready to replace your daily layout.
+Read the [native acceptance review](ACCEPTANCE.md) before choosing an installation destination.
+Remote recovery passed with a Core build containing [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271).
+The published Core 0.1.21 release does not contain that patch.
+The installer neither supplies nor updates Core.
+Native rendering failures also remain unresolved, including an instance where terminal input executed but its output stayed invisible.
+Use a separate test home until the acceptance review confirms release and rendering validation.
+
 Run commands below from this repository with Python 3.9 or newer.
 The installer uses only Python's standard library.
 Grid presets also require `python3` on the local application's PATH at runtime.
