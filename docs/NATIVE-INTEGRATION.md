@@ -1248,3 +1248,30 @@ The worker and firstmate sessions remained running.
 All 120 JavaScript tests and the native mod check passed.
 The regression tests cover direct ownership, a different machine with the same home, stale terminal identity, and duplicate home registrations.
 This navigation check does not close the outstanding animation, resize, or autonomous remote workflow acceptance gates.
+
+## Fresh remote delegation and decision cycle
+
+On 2026-11-13, Grand Fleet Lab ran a new firstmate in `op-hz-lab/t1g` on the physical remote server.
+The primary used `/tmp/op-supervised-e3qvrys8/home` and a disposable project with one README heading.
+Native Fleet setup registered `op-remote-firstmate` under `firstmate-cc65e0cb` and connected that home's task records.
+The primary retained manual command approvals throughout the test.
+Its normal Stop hook supplied supervision notifications.
+
+Firstmate created `remote-native-flow` through its brief and spawn commands.
+The worker ran in `op-hz-lab/t1h` with its own worktree at `/home/firstmate/.treehouse/project-146149/1/project`.
+It wrote a report and opened `remote-native-checkpoint`.
+The mod discovered its separate Worker attention entry after connecting the records.
+Clicking that entry opened worker inspection with Needs you, a sitting Pirate, and explicitly disabled direct input.
+Back to firstmate returned directly to `op-remote-firstmate` without a chooser.
+
+Captain confirmation was pasted and submitted through the native firstmate terminal.
+Firstmate delivered message `001.msg` through `fm-send.sh --resolve-key`.
+The worker consumed that message, passed its completion gate, and recorded done.
+The durable status history contains needs-decision, resolved, and done in that order.
+The worker attention entry cleared while the separate Independent entry remained.
+The Stop hook automatically notified firstmate of completion, and firstmate acknowledged the delivered events.
+
+SHA-256 comparisons matched the report and project README against their pre-confirmation values.
+The worktree remained clean, and the project, report, worktree, and terminal were preserved.
+This verifies fresh remote delegation, native coordinator input, discovery, attention, inspection, direct return, and supervised resolution in the isolated fleet.
+It does not verify continuous animation, resize presentation, background connection recovery, or the complete large-screen visual experience.
