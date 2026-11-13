@@ -24,7 +24,7 @@ Fresh local and remote delegation passed within the isolated workflows described
 | Worker attention and independent attention remain distinct and usable | [Native decision records](NATIVE-INTEGRATION.md#native-decision-records-connection) and [remote decisions](NATIVE-INTEGRATION.md#remote-decision-records-and-reconnect-validation) verify appearance, inspection, and clearing beside an independent entry | Passed for real local and [remote workers](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
 | Worker identity and artwork survive changes in the fleet | Automated identity and assignment checks plus [generic Pirate state selection](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) | Passed within recorded cases |
 | Sleeping, walking, and sitting artwork reflects worker status | [Chopper](NATIVE-INTEGRATION.md#native-worker-artwork-states), [Franky](NATIVE-INTEGRATION.md#native-franky-state-and-pause-checks), and [Pirate](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) native checks | State selection passed |
-| Artwork animates continuously when enabled and stops when paused | [Animation observation limits](NATIVE-INTEGRATION.md#animation-observation-limits) found identical captures within each sample run | Continuous playback unverified |
+| Artwork animates continuously when enabled and stops when paused | [Animation observation limits](NATIVE-INTEGRATION.md#animation-observation-limits) found identical captures within each sample run | Sunny playback observed in the active native window; worker playback remains unverified |
 | Labels and artwork remain visible after resizing and pane focus | [Rendering investigation](NATIVE-RESIZE-REPRO.md#live-drawable-pixels-and-foreground-comparison) found text in submitted frames but missing from native captures | Unresolved |
 | Ordinary sessions remain usable and explicitly Unsupervised | [Native navigation](NATIVE-INTEGRATION.md#native-navigation-verification-after-unlocking) and controller routing tests | Passed within recorded cases |
 | Removing the mod preserves sessions and fleet records | [Removal and reinstallation](NATIVE-INTEGRATION.md#native-removal-and-reinstallation) compares 39 live terminals and app-home files | Passed in the isolated home |
@@ -38,9 +38,11 @@ Its report and project remained unchanged.
 The isolated workflow establishes that integration path without establishing the remaining rendering and recovery requirements.
 
 Resolve the difference between native captures and submitted drawing output before making another renderer change.
-Continuous animation requires visible runtime evidence, not only correct image files.
+[Sunny now has visible runtime evidence](NATIVE-INTEGRATION.md#independent-split-recovery-and-visible-ship-motion) from consecutive native captures.
+Worker animation still requires active-window evidence, not only correct image files.
 Automatic sidebar recovery now has native evidence.
-Malformed terminal wrapping after reconnection remains unresolved.
+The latest isolated split recovery restored both terminal sizes within 2.14 seconds and preserved their processes.
+The temporary resize and earlier malformed wrapping remain unresolved across the complete recovery scope.
 
 Verify the new Arrange controls through native clicks, focus, close confirmation, workspace switching, and input.
 The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-implementation) preserves actual pane identifiers and avoids modifying the installed layout.

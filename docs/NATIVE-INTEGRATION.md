@@ -1421,3 +1421,51 @@ A disposable local shell and the existing Sunny/text probe were then opened in t
 The native window shows only the independent renderer workspace and no fleet agents.
 The workflow terminal remained 161 columns by 43 rows after the independent renderer opened.
 The environment overrides are saved locally in `.superpowers/native/render-isolated-environment.json`.
+
+### Independent split recovery and visible ship motion
+
+Grand Fleet Lab opened a personal remote terminal beside the remote firstmate through the native `Your terminal` control.
+The personal shell printed a marker, its working directory, and its terminal dimensions without sending input to firstmate.
+Both panes reported 79 columns by 43 rows before interruption.
+An immediate recovery check observed 200 columns by 120 rows and initially failed its dimension assertion.
+A timed follow-up established that this mismatch was temporary in that cycle.
+Both terminals reported 200 columns by 120 rows at 1.11 seconds, then restored 79 columns by 43 rows at 2.14 seconds.
+All subsequent observations through 20.8 seconds retained the restored dimensions and original process identities.
+The evidence is `.superpowers/native/candidate-split-recovery-timeline.json`.
+A native screenshot after settling showed readable firstmate output and the personal shell marker in separate panes.
+The temporary resize remains a recovery concern, but this cycle does not demonstrate persistent dimension loss.
+
+With Grand Fleet Lab active, forty consecutive native screenshots captured Sunny changing without terminal input or a forced renderer redraw.
+The Sunny region contained four distinct captured images and seven transitions across the sequence.
+The sampled Luffy region remained unchanged.
+The evidence is `.superpowers/native/active-workflow-frame-comparison.json` and its numbered JPEG captures.
+This establishes visible ship motion in the active workflow window during the sample.
+It does not establish worker animation, inactive-window playback, or correctness after resizing.
+Grand Fleet Render Lab remained on its independent core throughout this observation.
+
+### Worker animation follow-up
+
+The existing disposable Franky worker ran the same status program used for the earlier native state checks.
+The core reported idle, then working, and the native sidebar displayed the corresponding artwork and text.
+Thirty-five idle captures and thirty-five working captures each contained one distinct image within the worker region.
+Another forty captures after clicking the workspace header also contained one distinct worker image.
+The native window controls appeared inactive during the working sample.
+These observations do not establish active-window worker playback or an animation defect.
+The comparison is saved in `.superpowers/native/worker-animation-comparison.json`.
+Exiting the program restored the original shell, process 21083, with no reported status.
+
+The large-screen capture also exposes two visible `Your terminal` controls, one in the workspace header and one in the tab strip.
+The prototype repeats its terminal creation action in the sidebar and workspace toolbar.
+The native controls instead perform different operations: splitting the active pane and creating a tab.
+The native layout uses a 310-point sidebar, compared with the prototype's final 255-pixel sidebar rule.
+These differences require a deliberate visual review before claiming fidelity to the approved prototype.
+
+### Distinguish terminal creation from tab creation
+
+The native tab strip now labels its creation action `New tab`.
+The workspace toolbar retains `Your terminal`, which splits the active view.
+Both controls keep their existing availability checks and commands.
+The installed Herdr declarations document `tab.new` separately from `pane.split`.
+The change passed all 120 JavaScript tests and the native initial-render check.
+After installing the file in Grand Fleet Lab, a native screenshot showed both distinct labels beside the existing remote split.
+The wider native sidebar remains under visual review rather than being changed without checking long machine and worker names.
