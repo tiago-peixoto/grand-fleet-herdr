@@ -85,7 +85,7 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native presentation during SSH disconnection and reconnection on the separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
-- Test inspection creation interrupted by a remote disconnect; application termination is covered below.
+- Verify native error presentation and retry interaction for the remote interruption cases covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
 - Check every close route, including Herdr's built-in tab controls.
 - Verify attention navigation and visible error reporting during remote transitions.
@@ -556,3 +556,23 @@ Evidence files use the ssh-interrupt prefix in the same directory.
 This verifies real application termination during remote inspection creation, persisted cleanup, and successful controller retry.
 It does not establish native Retry cleanup interaction or termination of the remote machine itself.
 The app was deliberately terminated for this lifecycle test, not restarted to address the stale native capture.
+
+
+## Physical SSH loss during inspection creation
+
+A separate disposable worker exercised connection loss after the inspection controller persisted its temporary-shell record.
+The test blocked its dedicated SSH transport and ended only that session's connection process.
+The controller returned failure and did not save a completed inspection for the worker.
+Its unresolved cleanup record remained persisted while the machine was unavailable.
+A separate connection confirmed that the worker remained live with its original process identity.
+
+After restoring the connection, the cleanup controller checked the recorded temporary-shell name.
+The remote service returned not_found, so cleanup removed the record without ending a process.
+This interruption occurred before a temporary shell could be confirmed, unlike the application-termination test that left a live temporary shell.
+Retrying inspection succeeded for the same worker and saved its machine-qualified inspection workspace.
+No pending cleanup record remained.
+
+The assert-based test is .superpowers/native/check-ssh-launch-disconnect.py.
+Its evidence files use the ssh-launch-disconnect prefix in the same directory.
+This verifies the controller's failure result, durable cleanup obligation, process preservation, and retry across a real SSH interruption.
+Native notification appearance and clicking Retry cleanup remain unverified.
