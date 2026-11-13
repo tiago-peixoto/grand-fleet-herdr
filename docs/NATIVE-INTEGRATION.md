@@ -866,3 +866,24 @@ Expanding Sunny restored the crew in the same order.
 The window was returned to 1280 × 820 after the size check.
 All 105 JavaScript tests and the native initial-render check passed.
 This comparison verifies the changed sidebar hierarchy, not every visual requirement or continuous animation playback.
+
+## Native removal and reinstallation
+
+Grand Fleet Lab switched to Herdr's shipped `terminals` layout and closed before removal.
+The installer removed its owned mod files, layout, shortcut bindings, and receipt.
+A complete regular-file comparison of the isolated app home found no changes outside those owned paths and `keys.json`.
+The `shared.json` fleet records remained byte-identical.
+Herdr reopened without the mod and displayed the existing coordinator and two personal terminals in their grid.
+
+All 39 live test terminals retained their process identifiers, creation times, commands, parents, placement labels, and keep flags.
+The inventory included local terminals and both remote test machines.
+This verifies preservation of the isolated session inventory, not arbitrary external firstmate databases.
+The installer never accesses external firstmate contract files.
+
+Reinstallation initially refused the remaining mod folder because it contained Herdr-generated `gpui-kit.d.ts` and `jsconfig.json` without an ownership receipt.
+Those files were preserved in `.superpowers/native/removal-editor-files` outside the app home.
+Installation then succeeded and left the shared fleet records unchanged.
+After reopening and switching to `one-piece`, the native fleet and existing grid returned with no application errors.
+A second comparison confirmed that all 39 original live terminals still retained their process identity and placement.
+The before, removed, and reinstalled inventories are stored in `.superpowers/native/removal-*.json`.
+The installation guide now explains the required backup step when generated editor files remain after removal.
