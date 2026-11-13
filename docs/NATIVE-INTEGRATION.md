@@ -1303,3 +1303,17 @@ Clicking the native terminal restored 109 columns and 33 rows without changing t
 The immediate capture still showed malformed text.
 This establishes a dimension change independently of the static-label capture discrepancy.
 It does not yet identify which connection or replay component changed the dimensions.
+
+### Independent connection control
+
+A disposable test used the installed core 0.1.20 with two isolated local core sessions and a framed viewer.
+The viewer attached at 100 columns and 30 rows, then sent a resize to 109 columns and 33 rows.
+Interrupting its connection changed the remote terminal to the documented headless default of 200 columns and 120 rows.
+Restoring the connection returned the terminal to 109 columns and 33 rows without another viewer resize or focus event.
+The test asserted that final size and passed.
+Both disposable cores were stopped after the check.
+
+The [0.1.20 relay implementation](https://github.com/herdrdev/herdr-core/blob/v0.1.20/crates/herdr-core/src/remote/viewers.rs) records resize frames and reuses those parameters when reconnecting.
+The control verifies that path with the installed binary, independently of native terminal rendering.
+It does not reproduce the persistent 200-by-120 size seen in Grand Fleet Lab.
+Further investigation must compare native viewer traffic or terminal replies against this passing control before changing the relay implementation.
