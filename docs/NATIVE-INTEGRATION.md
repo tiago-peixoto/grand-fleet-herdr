@@ -1733,3 +1733,22 @@ The native capture shows both remote panes readable after the update.
 Local evidence is saved in `.superpowers/native/merged-core-before.json`, `.superpowers/native/merged-core-after.json`, and `.superpowers/native/merged-core-window.jpg`.
 This verifies the merged build's installation and preservation of existing sessions.
 It does not replace a fresh native transport interruption check or verification of an officially released build containing the patch.
+
+## Merged-source remote reconnection
+
+Two isolated transport interruptions exercised the merged Core build against the physical remote test server.
+The first check asserted dimensions immediately after the machine reported connected and observed 200 columns instead of 36.
+A later read found the original dimensions restored without terminal input.
+The second check recorded the transition rather than treating connection readiness as completed viewer reattachment.
+Both remote terminals measured 200 by 120 at 2.72 seconds and recovered to 36 by 27 at 3.81 seconds.
+Every remaining recorded sample retained the baseline dimensions through 13.47 seconds.
+All samples preserved process identifiers, creation timestamps, and live state.
+The timeline is saved locally as `.superpowers/native/merged-core-reconnect-timeline.json`.
+
+The native capture after recovery showed readable firstmate and personal terminal panes.
+This confirms settled recovery, not absence of transient resizing during reattachment.
+The source reattaches viewers sequentially from oldest to newest activity, so machine connection readiness precedes completion of that sequence.
+A follow-up attempt to focus the personal terminal failed with computer-control error `windowNotFoundAtPosition`.
+No typing followed that error, and UI actions stopped.
+Independent input after recovery remains unverified for this merged-source attempt.
+The control error alone does not establish user interference or an application defect.

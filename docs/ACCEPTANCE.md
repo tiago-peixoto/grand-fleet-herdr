@@ -54,6 +54,8 @@ Fresh local and remote delegation passed within the isolated workflows described
    Upstream acceptance is complete.
    The official Core update manifest still advertises 0.1.21, whose tagged source lacks the recovery patch.
    Release validation therefore awaits a newer published Core build containing the fix.
+   The merged-source build now preserves existing sessions and settles remote dimensions after transport recovery.
+   The measured transition and interrupted native input check are recorded in [merged-source reconnection](NATIVE-INTEGRATION.md#merged-source-remote-reconnection).
 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.
