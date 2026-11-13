@@ -850,3 +850,19 @@ The capture initially retained the offline view after reconnection, including af
 Raising Grand Fleet Lab then showed the recovered crew, terminal prompt, and enabled terminal controls.
 Recovery is verified, but automatic background redraw remains unproven.
 This check does not establish layout behavior for an arbitrarily large machine inventory.
+
+## Crew hierarchy against the prototype
+
+The approved browser prototype was rendered at 1280 × 820 for comparison with Grand Fleet Lab.
+Its indented crew and selected-row outline made the ship relationship clearer than the native flat list.
+The native sidebar now groups each expanded crew under a vertical guide and reduces ship artwork from 84 to 64 logical pixels.
+Selected coordinator and worker rows use a gold outline without changing their dimensions on selection.
+Luffy remains first in each crew.
+
+The installed change passed native inspection at 1280 × 820 and 1000 × 700 logical pixels.
+Selecting the local test captain showed its existing three-pane workspace and the gold row outline.
+Collapsing Sunny hid only its crew while the same coordinator and two personal terminal panes remained visible.
+Expanding Sunny restored the crew in the same order.
+The window was returned to 1280 × 820 after the size check.
+All 105 JavaScript tests and the native initial-render check passed.
+This comparison verifies the changed sidebar hierarchy, not every visual requirement or continuous animation playback.

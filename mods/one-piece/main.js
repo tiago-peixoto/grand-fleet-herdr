@@ -359,7 +359,7 @@ export default class Fleet extends View {
 
   row(terminal,character,subtitle,action,selected=false) {
     const t=theme();
-    return h_flex().id(`session-${terminal.address}`).px(10).py(6).gap(8).rounded(8).bg(selected?'#29454c':'#16292f').hover(s=>s.bg('#243e45')).cursor_pointer().on_click(action)
+    return h_flex().id(`session-${terminal.address}`).px(10).py(6).gap(8).rounded(8).border_1().border_color(selected?'#e8bd70':'#16292f').bg(selected?'#29454c':'#16292f').hover(s=>s.bg('#243e45')).cursor_pointer().on_click(action)
       .child(art(character,terminal.status,44))
       .child(v_flex().flex_1().min_w(0).gap(3).child(div().truncate().text_size(13).font_semibold().text_color(t.foreground).child(label(terminal)))
         .child(div().truncate().text_size(10).text_color(terminal.status==='blocked'?'#edc478':'#a4b8b7').child(subtitle)))
@@ -394,17 +394,19 @@ export default class Fleet extends View {
         const collapsed=this.collapsed[coordinator.terminal];
         const ship=h_flex().id(`ship-${coordinator.terminal}`).gap(6).items_center().cursor_pointer().rounded(8).hover(s=>s.bg('#1c343b'))
           .on_click((_e,c)=>{this.collapsed[coordinator.terminal]=!collapsed;c.notify();})
-          .child(art('sunny','idle',84)).child(v_flex().flex_1().gap(4)
+          .child(art('sunny','idle',64)).child(v_flex().flex_1().gap(4)
             .child(div().text_size(11).text_color('#e8bd70').font_semibold().child('THOUSAND SUNNY'))
             .child(div().text_size(10).text_color('#9eb4b3').child(`${coordinator.role} · ${coordinator.workers.length} workers`)))
           .child(div().text_color('#a0b7b8').child(collapsed?'›':'⌄'));
         block.child(ship);
         if(!collapsed) {
-          block.child(this.row(coordinator.session,'luffy',`${coordinator.role} · ${coordinator.role==='firstmate'?'Pinned first':'Inspection only'}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
+          const crew=v_flex().ml(16).pl(6).gap(4).border_l_1().border_color('#344c51');
+          crew.child(this.row(coordinator.session,'luffy',`${coordinator.role} · ${coordinator.role==='firstmate'?'Pinned first':'Inspection only'}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
           for(const worker of coordinator.workers) {
             const character=characters[identity(worker)];
-            block.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.inspect(worker,a)),selected?.space===cfg.inspections[identity(worker)]?.space));
+            crew.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.inspect(worker,a)),selected?.space===cfg.inspections[identity(worker)]?.space));
           }
+          block.child(crew);
         }
       }
       if(machine.unassigned.length) block.child(div().mt(8).text_size(10).text_color('#e8bd70').child('WORKERS · LINK FIRSTMATE IN SETUP'));
