@@ -1341,5 +1341,8 @@ An eight-viewer integration test reproduced the defect before that correction, r
 With the correction, all 24 remote integration tests passed.
 That includes the existing test requiring a viewer active during the outage to retain size ownership.
 Formatting and whitespace checks passed.
+The full core suite stopped at two library failures: SSH agent socket refresh and process cleanup.
+Repeating the library suite on unchanged core code reproduced the process cleanup failure, while the socket test passed.
+The socket failure remains unexplained, so the full validation gate has not passed.
 The candidate has not been installed in Grand Fleet Lab or Grand Fleet Render Lab.
 Native output recovery, continuous animation, and the separate resize rendering discrepancy remain unverified.
