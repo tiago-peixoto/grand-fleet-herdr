@@ -1344,5 +1344,36 @@ Formatting and whitespace checks passed.
 The full core suite stopped at two library failures: SSH agent socket refresh and process cleanup.
 Repeating the library suite on unchanged core code reproduced the process cleanup failure, while the socket test passed.
 The socket failure remains unexplained, so the full validation gate has not passed.
-The candidate has not been installed in Grand Fleet Lab or Grand Fleet Render Lab.
-Native output recovery, continuous animation, and the separate resize rendering discrepancy remain unverified.
+The candidate was subsequently installed only in Grand Fleet Lab's isolated core session.
+Grand Fleet Render Lab and the ordinary Herdr installation were not changed.
+The restart preserved all 33 live terminals.
+An interruption then changed the test machine to unreachable before automatic reconnection.
+The remote firstmate retained process 17778, creation timestamp 1794593609763, and its 109-column by 33-row dimensions without further input.
+The saved comparison is `.superpowers/native/candidate-core-recovery.json`.
+This verifies dimension preservation for that native recovery cycle.
+The later native capture was readable, but the window dimensions had changed between captures.
+A fixed-window comparison is still required to establish visual recovery.
+
+Running the core suite serially passed all 157 library tests, with one ignored test.
+That run later failed two foreground-status tests, each receiving no status instead of working.
+Both foreground-status failures also reproduce on unchanged v0.1.20 code.
+They are tracked separately in [issue 4](https://github.com/tiago-peixoto/herdr-one-piece/issues/4).
+The remaining integration suites finished with 265 passing tests, one failure, and two ignored tests.
+The failure came from a disposable Git repository inheriting commit signing without its fixture identity's signing key.
+Disabling signing only in the test process passed all six command execution tests on both unchanged and candidate code.
+No global Git settings were changed.
+The full core validation gate, continuous animation, and the separate resize rendering discrepancy remain open.
+
+### Native animation activity trace
+
+Grand Fleet Render Lab now includes Sunny beside its static text reproduction.
+Its isolated diagnostic build logs image identity, decoded frame count, selected frame, window activity, and reduced-motion preference.
+The image decoded all six frames with reduced motion disabled.
+The trace recorded 234 active-window layout passes across frames zero through three.
+After the window became inactive, the image retained frame three and stopped requesting continuous updates.
+The renderer explicitly pauses animated images in inactive windows.
+The evidence is `.superpowers/native/image-animation-activity.log`.
+This proves frame advancement in the renderer while active, but does not prove continuous visible playback.
+Raising and clicking through the automation tool did not leave this window active in the subsequent trace.
+A focused-window visual comparison remains pending.
+The diagnostic build and probe do not change the production mod.
