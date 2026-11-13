@@ -1333,3 +1333,13 @@ The resulting tie depends on attachment order.
 A correction must also preserve the existing rule that a returning viewer cannot displace a viewer active during the outage.
 The native output still requires verification after correcting size ownership.
 The investigation is tracked in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3).
+
+### Isolated core correction
+
+A separate core checkout now contains a candidate correction that reattaches viewers from oldest to newest activity.
+An eight-viewer integration test reproduced the defect before that correction, recovering at 200-by-120 instead of 109-by-33.
+With the correction, all 24 remote integration tests passed.
+That includes the existing test requiring a viewer active during the outage to retain size ownership.
+Formatting and whitespace checks passed.
+The candidate has not been installed in Grand Fleet Lab or Grand Fleet Render Lab.
+Native output recovery, continuous animation, and the separate resize rendering discrepancy remain unverified.
