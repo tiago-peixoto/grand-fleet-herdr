@@ -83,7 +83,7 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 ## Remaining acceptance work
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
-- Extend remote disconnection coverage to SSH and a separate physical host.
+- Verify native presentation during SSH disconnection and reconnection on the separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
 - Test inspection creation across remote disconnects and application termination.
 - Verify cleanup retries when a temporary shell cannot be removed.
@@ -484,3 +484,31 @@ The production art selector uses static PNG assets while this preference is enab
 These observations verify state selection and the native pause control, not frame-by-frame animation timing.
 Clicking Play motion restored paused=false.
 Exiting the status program returned t8 to its original shell with process identifier 21083 and creation time 1794520892484.
+
+
+## Physical SSH recovery
+
+The isolated lab connected to the separate firstmate-hz machine through SSH, the encrypted remote connection protocol.
+Its test service used a dedicated session, op-hz-native-31618, and the local machine registration op-hz-lab.
+No production machine registration or remote service was replaced.
+Herdr exposed both disposable shells through its live machine and terminal data.
+A temporary machine registration was initially invisible because Herdr excludes temporary machines from its app documents.
+Registering this test connection without the temporary flag made it eligible for display.
+The app exposed it after reopening the isolated lab.
+This observation does not establish that reopening is necessary for discovery.
+
+The recovery test blocked new connections through its dedicated transport and ended only the SSH client for op-hz-native-31618.
+The test did not terminate the shared SSH connection or the remote terminal service.
+The local core reported unreachable, and the app's machines() result changed from ready to unavailable.
+A separate SSH query confirmed that both remote shells stayed live during the interruption.
+Removing the test block restored the connection, and the app reported ready again.
+The captain fixture retained process identifier 2000812 and creation time 1794573083296.
+The worker fixture retained process identifier 2001284 and creation time 1794573083999.
+Assertions checked both identities before disconnection, during disconnection, and after reconnection.
+
+Evidence is saved under .superpowers/native/ssh-before-disconnect.json, ssh-disconnected.json, and ssh-reconnected.json.
+The test script is .superpowers/native/check-ssh-recovery.py.
+This proves recovery of the real SSH transport and preservation of both remote processes.
+It does not prove native offline presentation, inspection creation, or remote coordinator registration through the setup dialog.
+Native captures continued showing an older view while the app command interface reported the newly selected observation tab.
+That capture mismatch remains unresolved.
