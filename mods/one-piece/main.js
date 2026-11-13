@@ -667,8 +667,7 @@ export default class Fleet extends View {
       .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
       .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>run(`one-piece.focus-pane:${zoom.pane}`))))
       .when(Boolean(this.presetTarget(current?.tab)),el=>el.child(button('grid-presets','Arrange',()=>openOverlay({mod:'one-piece',kind:'dialog',width:480,height:320,props:{view:'presets',tab:current.tab}}))))
-      .child(button('restore-layout','Restore layout',()=>this.openRestore()))
-      .child(button('setup-header','Fleet setup',()=>this.setup()));
+      .child(button('restore-layout','Restore layout',()=>this.openRestore()));
   }
 
   canAddTab(spaceId) {

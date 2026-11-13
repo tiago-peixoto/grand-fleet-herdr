@@ -1627,3 +1627,19 @@ Evidence is saved locally as `.superpowers/native/visual-firstmate-{focused,grid
 
 Window resizing and pane enlargement are distinct checks.
 This successful pane enlargement does not explain the earlier minimal-probe failure.
+
+## Sidebar width and compact toolbar decision
+
+A disposable 255-point sidebar was compared with the 310-point default in Grand Fleet Lab.
+The narrower candidate wrapped three machine shortcuts onto two rows and truncated the existing `inspection-failure-probe` worker name.
+The 310-point default was restored because it preserves more fleet rows and readable task identity for this inventory.
+The comparison is saved locally as `.superpowers/native/sidebar-width-255.jpg`.
+No repository layout change was retained.
+
+Resizing the native window to 1000 × 700 reproduced a separate toolbar problem.
+Its duplicate Fleet setup button squeezed the workspace subtitle until the coordinator's machine name disappeared.
+Removing that duplicate restored the complete machine identity while retaining all terminal and arrangement controls.
+The sidebar's Set up fleet button opened the same setup dialog at this size.
+Cancel closed it without changing registrations.
+The final capture is saved locally as `.superpowers/native/toolbar-1000-after.jpg`.
+All 120 JavaScript tests and the installed mod check passed.
