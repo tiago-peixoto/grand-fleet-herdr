@@ -1539,3 +1539,26 @@ The comparison files use the `worker-active-final`, `worker-paused-final`, and `
 The status probe was exited after measurement, and motion was left enabled.
 This verifies working animation and pause/resume for Franky, alongside the earlier Sunny playback evidence.
 It does not close the separate resize visibility defect or the complete visual review.
+
+## Mod window resize follow-up
+
+Grand Fleet Lab was captured at 1280 × 820 points and then expanded to 1728 × 994 points through its native zoom action.
+Both captures showed readable sidebar labels, controls, artwork, and both remote terminal panes.
+The terminal text reflowed without overlapping rows.
+No terminal input or forced CLI screenshot redraw occurred during this resize check.
+The captures are saved locally as `.superpowers/native/mod-resize-small.jpg` and `.superpowers/native/mod-resize-large.jpg`.
+This successful mod-window sample does not resolve the independently reproduced Render Lab visibility defect.
+
+## Core 0.1.21 complete test run
+
+The candidate patch passed `cargo test --locked` on the isolated 0.1.21 checkout with exit code zero.
+The suite retained its explicitly ignored test.
+The run disabled Git commit signing only through process environment variables for disposable test repositories.
+Formatting, dependency checks, native Clippy, and Windows Clippy also passed.
+Native tests and Clippy used Homebrew Rust 1.99.1.
+Windows Clippy used the isolated Rust 1.95.0 toolchain, which contains the Windows standard library target.
+An initial Windows check selected Homebrew Rust without that target and failed before checking project code.
+Selecting the isolated toolchain resolved the environment failure.
+The final logs are saved locally as `.superpowers/native/core-0.1.21-{full-tests,deny,clippy,windows-clippy}.log`.
+These checks do not constitute Windows runtime testing or resolve the native renderer defect.
+The candidate still requires final review and delivery before users can rely on this recovery behavior.
