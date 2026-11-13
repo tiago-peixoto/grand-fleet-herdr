@@ -342,3 +342,35 @@ The captured evidence is saved in .superpowers/native/remote-restore-result.json
 
 This verifies controller behavior across two isolated Herdr cores connected through the local command transport.
 It does not verify an SSH connection, a separate physical machine, failure detection, or clicking the native Restore button.
+
+## Native controls after unlocking the Mac
+
+Native screenshots and clicks worked again in the isolated Grand Fleet Lab window.
+The active layout was stale and contained a docked diagnostic panel.
+Applying the repository layout through layout.set restored the custom tab bar and removed that diagnostic panel from the layout.
+
+Clicking the worker opened its inspection workspace without offering a personal-terminal creation button.
+Back to firstmate opened the chooser because the test fleet contains two firstmates.
+Choosing test-captain returned to its existing three-pane grid.
+Clicking Your terminal created disposable terminal t2g inside that coordinator workspace.
+Its pane Close button displayed the terminal address, machine, process-ending consequence, and unchanged firstmate obligations.
+Confirming closed t2g and preserved t1, t2, t3, and t4.
+
+The isolated home had no installer receipt or scoped close shortcuts.
+After closing its window, the prior mod and layout were moved to a temporary backup.
+The installer then installed the repository assets and scoped shortcuts into the initialized home.
+The closed application process needed relaunching before its window accepted commands again.
+No core process was restarted.
+
+In the installed layout, Command-Shift-W opened the custom pane confirmation for newly created terminal t2h.
+Confirming closed only t2h.
+Command-W on the firstmate tab listed t1, t3, and t4 with their machine and process-ending consequences.
+Cancelling retained the original grid.
+A subsequent hc ls --all --json reported t2g and t2h finished and all four preserved terminals live.
+The captured terminal states are saved in .superpowers/native/native-close-resume.json.
+Command-W also closed disposable tab Native close verification after confirmation, without a second confirmation dialog.
+Sprite motion was resumed after these checks.
+
+Focusing worker inspection reproduced missing static text and artwork in the first captured frame.
+A later native frame showed the missing content again without another interaction.
+These control checks do not resolve that intermittent rendering defect or establish every remaining acceptance criterion.

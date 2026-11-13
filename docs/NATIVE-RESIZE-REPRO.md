@@ -74,3 +74,12 @@ A personal terminal can retain focus while another pane is zoomed.
 The header now selects a zoomed pane in the active tab before falling back to the focused pane.
 A regression test covers that selection, and the native header successfully restored the two-pane grid.
 That correction does not resolve disappearing text.
+
+## Reproduction after native capture resumed
+
+After unlocking the Mac, native capture and input worked again in Grand Fleet Lab.
+Focusing worker inspection reproduced missing header text, worker title, artwork, and part of its status label.
+Terminal output and the return button remained visible.
+A later native screenshot showed the missing content again without another interaction.
+This establishes intermittent presentation failure, but does not identify which rendering stage caused it.
+The next comparison should include the failed frame and spontaneous recovery frame.
