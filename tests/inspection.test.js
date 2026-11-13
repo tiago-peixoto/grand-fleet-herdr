@@ -60,6 +60,13 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   return {context,controller:new context.Fleet(),worker,sessions,workspaces,views,calls,errors,config:()=>cfg,cx:{notify(){},async sleep(){},spawn(fn){return fn(this);}}};
 }
 
+test('a completed model turn does not claim that its firstmate task finished',()=>{
+  const h=host();
+  h.worker.status='done';
+  h.context.observed=h.worker;
+  assert.equal(runInNewContext('stateLabel(observed)',h.context),'Turn complete');
+});
+
 test('preset targets the coordinator tab on its machine without launching or moving terminals',async()=>{
   const h=host({remote:true,independent:true,registrations:[{terminal:'hz-server/t2',created:12,role:'firstmate'}]});
   h.workspaces.push({id:'hz-server/s',machine:'hz-server',tabs:[{id:'hz-server/tab'}]});

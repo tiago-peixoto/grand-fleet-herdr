@@ -1,6 +1,8 @@
 # Native verification
 
 The native mod is experimental and has not passed the complete acceptance policy in VISION.md.
+A real firstmate worker exposed a failing attention check: an unresolved decision appeared as Finished and did not enter the attention list.
+Earlier blocked-status fixture checks do not establish correct presentation of durable firstmate decisions.
 Verification uses Herdr App 0.1.15 and hc 0.1.20, the command-line interface to Herdr's terminal service.
 The installed Herdr guidance and declarations define the integration contract.
 The browser prototype remains the visual baseline, with VISION.md resolving behavioral conflicts.
@@ -1087,3 +1089,31 @@ The local three-pane check establishes their different geometry with additional 
 Both remote terminals retained their process identifiers, creation times, states, parents, keep flags, and labels.
 The identity comparison used hc get before the first preset and after the second preset.
 Evidence remains in `.superpowers/native/preset-remote-ui-before.json` and `.superpowers/native/preset-remote-ui-after.json`.
+
+## Real worker decision and turn completion
+
+Firstmate launched the isolated `native-ai-flow` scout through `fm-spawn.sh` with Claude's auto permission mode.
+The worker read the fixture README, wrote its report, and recorded a keyed needs-decision event before returning to its prompt.
+Herdr reported the terminal as done while that decision remained unresolved.
+Grand Fleet showed Finished and omitted the worker from attention.
+This fails the vision's immediate blocker visibility requirement.
+The earlier blocked-status fixtures exercised native reporting, not reconciliation with firstmate's durable decisions.
+
+Firstmate's `fm-send.sh --resolve-key native-checkpoint` durably delivered the instruction to finalize the report.
+The message moved into the handled inbox and the status record gained resolved and done events.
+The worker remained in its fixture repository.
+The supervision watcher was disabled for this isolated test, so this is not a complete supervised workflow acceptance result.
+
+The mod now describes Herdr's done status as Turn complete in every shared status label.
+A regression check failed against Finished and passed after this correction.
+All 111 JavaScript tests and Herdr's initial-render check passed.
+After installation into Grand Fleet Lab, native capture showed Turn complete in the real worker inspection.
+The worker's shell identifier, Claude process identifier, creation time, ownership label, and disabled keep flag survived the app upgrade.
+The correction does not fix the missing attention entry.
+
+Firstmate already exposes authoritative task state and open decisions through `fm-fleet-snapshot.sh --json`.
+Its documented schema is `fm-fleet-snapshot.v1`.
+The command returned the completed fixture task, its exact endpoint, and an empty open-decision set after resolution.
+The mod still needs an explicit connection to this source and verification while a decision remains open.
+It must preserve machine and task identity and disclose unavailable evidence instead of guessing task completion from terminal state.
+Evidence remains in `.superpowers/native/ai-flow-authoritative-snapshot.json` and `.superpowers/native/ai-flow-after-label-upgrade.json`.
