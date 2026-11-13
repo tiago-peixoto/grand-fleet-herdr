@@ -15,7 +15,7 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   const sessions=[worker], workspaces=[], views=[], calls=[], errors=[];
   let placeholder;
   let cfg={coordinators:registrations,inspections:{}};
-  const context={...fleet,...shells,View:class{},Date,JSON,Set,Error,
+  const context={...fleet,...shells,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
     coreTerminals:()=>sessions,spaces:()=>workspaces,panes:()=>views,
     machines:()=>[{name:remote?'hz-server':null,layout:'ready'}],
     shared:()=>cfg,setShared:(_key,value)=>{cfg=value;},notify:value=>errors.push(value),

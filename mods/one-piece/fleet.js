@@ -3,6 +3,11 @@ export const identity = terminal => `${terminal.address}:${terminal.created_ms}`
 export const isWorker = terminal => Boolean(terminal.labels?.['firstmate.home'] && terminal.labels?.['firstmate.task']);
 export const matches = (terminal, registration) => Number.isFinite(registration.created) && terminal.address === registration.terminal && terminal.created_ms === registration.created && terminal.state === 'live';
 
+export function terminalLabel(terminal) {
+  const recoveryName=terminal.labels?.['one-piece.restored']==='true' && /^op-shell-\d+-\d+$/.test(terminal.name);
+  return (!recoveryName && terminal.name) || terminal.labels?.['firstmate.task'] || terminal.address;
+}
+
 export function withLocations(terminals, panes, spaces) {
   const locations=new Map(spaces.flatMap(space=>space.tabs.map(tab=>[tab.id,space.id])));
   const tabs=new Map(panes.filter(p=>p.terminal).map(p=>[p.terminal,p.tab]));

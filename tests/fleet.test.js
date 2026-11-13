@@ -1,10 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fleet, assignCharacters, inspectionTarget } from '../mods/one-piece/fleet.js';
+import { fleet, assignCharacters, inspectionTarget, terminalLabel } from '../mods/one-piece/fleet.js';
 
 const machines = [{name:null,layout:'ready'},{name:'hz-server',layout:'ready'}];
 const terminal = (address, labels = {}, extra = {}) => ({address,created_ms:12,state:'live',labels,status:null,name:address,space:'space',tab:'tab',...extra});
 const registration = {terminal:'t1',created:12,home:'home-a',role:'firstmate'};
+
+test('restored shell labels hide recovery names without changing identities or user names', () => {
+  const restored=terminal('hz-server/t14',{'one-piece.restored':'true'},{name:'op-shell-1794580847137-715826'});
+  assert.equal(terminalLabel(restored),'hz-server/t14');
+  assert.equal(restored.name,'op-shell-1794580847137-715826');
+  assert.equal(terminalLabel({...restored,name:'My terminal'}),'My terminal');
+  assert.equal(terminalLabel({...restored,labels:{}}),restored.name);
+  assert.equal(terminalLabel({...restored,labels:{...restored.labels,'firstmate.task':'Review'}}),'Review');
+  assert.equal(terminalLabel(terminal('t2',{'firstmate.task':'Review'},{name:''})),'Review');
+  assert.equal(terminalLabel(terminal('t2',{}, {name:''})),'t2');
+});
 
 test('worker home labels bind only on the coordinator machine', () => {
   const result = fleet([terminal('t1'),terminal('t2',{'firstmate.home':'home-a','firstmate.task':'fm-1'}),terminal('hz-server/t2',{'firstmate.home':'home-a','firstmate.task':'fm-1'})], machines, [registration]);

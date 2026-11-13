@@ -1,7 +1,7 @@
 import { View, div, image } from 'gpui-kit';
 import { h_flex, v_flex, Editor, EditorState, Input, InputState } from 'gpui-base';
 import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
-import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention } from './fleet.js';
+import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
 import { rememberShells, missingShells } from './shells.js';
 
 const terminals=()=>withLocations(coreTerminals(),panes(),spaces());
@@ -18,7 +18,6 @@ function paneReady(id) {
 }
 const config=()=>shared(KEY)??{coordinators:[],aliases:{},characters:{},inspections:{},paused:false};
 function save(patch) { setShared(KEY,{...config(),...patch}); }
-const label=t=>t.name||t.labels?.['firstmate.task']||t.address;
 const stateLabel=t=>t.status==='working'?'Working':t.status==='blocked'?'Needs you':t.status==='done'?'Finished':t.status==='idle'?'Idle':'Status unavailable';
 const machineLabel=name=>config().aliases[name??'local']||(name===null?'Water 7':name==='hz-server'?'Wano':name);
 const button=(id,text,action,primary=false)=>h_flex().id(id).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click(action).child(text);

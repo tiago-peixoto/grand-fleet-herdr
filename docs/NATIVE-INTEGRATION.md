@@ -85,8 +85,6 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 ## Remaining acceptance work
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
-- Verify personal-shell restoration through native controls on the physical SSH host.
-  The production controller passed the physical SSH restoration check below.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
 - Finish the close-route audit against the installed layout and key bindings.
@@ -655,3 +653,27 @@ Selecting hz-captain and linking home op-hz-test displayed Thousand Sunny with L
 Back to firstmate opened an explicit chooser because the lab contains multiple live firstmates.
 Choosing hz-captain opened its existing terminal in the coordinator workspace on op-hz-lab.
 This verifies initial registration and navigation, not replacement of an ended remote coordinator.
+
+## Native physical-server personal-shell restoration
+
+Clicking Your terminal beside hz-captain created op-hz-lab/t13 in the same coordinator tab.
+Typing cd /tmp changed that personal shell's working directory without sending input to firstmate.
+The saved restoration record captured /tmp and the machine-qualified workspace and tab.
+After disabling keep for this disposable shell, typing exit removed its pane.
+
+Restore layout listed the missing shell with its physical machine and recorded directory.
+Clicking Create new shell displayed Creating shell and then removed the completed entry.
+The new op-hz-lab/t14 pane appeared beside firstmate with a /tmp prompt and a New shell label.
+Core queries confirmed a different process and creation time, the correct directory, and the original tab's routing label.
+The saved record identified the result as a new process.
+An assertion confirmed that the neighboring remote firstmate retained its original process identity and live state.
+
+Evidence is saved in .superpowers/native/ssh-native-restore-record.json and ssh-native-restore-after.json.
+This verifies native restoration controls over physical SSH, not continuation of an ended process or conversation.
+The first restored pane exposed its generated recovery name in the header.
+The shared display helper now hides that generated name only for terminals marked as restored.
+User-chosen names remain visible, and recovery keeps its internal name for duplicate prevention.
+After installing into the closed lab and relaunching, the native header displayed op-hz-lab/t14 with New shell beside it.
+Both the original coordinator and restored shell retained their process identifiers, creation times, and live state.
+The 102 JavaScript tests and the native mod check passed.
+Process evidence is saved in .superpowers/native/ssh-label-polish-after.json.
