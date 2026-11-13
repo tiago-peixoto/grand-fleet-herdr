@@ -83,3 +83,16 @@ Terminal output and the return button remained visible.
 A later native screenshot showed the missing content again without another interaction.
 This establishes intermittent presentation failure, but does not identify which rendering stage caused it.
 The next comparison should include the failed frame and spontaneous recovery frame.
+
+## Instrumented cache comparison
+
+An isolated source build of v0.1.15 added optional native view-cache logging and a cache-bypass switch.
+The diagnostic application used a separate home and the disposable test core.
+With cache reuse enabled, enlarging the minimal panel through pane.zoom removed both text labels while retaining its resized rectangle.
+Clicking the rectangle restored both labels.
+Restarting the diagnostic application with native view-cache reuse disabled reproduced the same missing text after enlargement.
+Its log recorded 172 cache decisions, all misses with bypass enabled, through the observed failing frame.
+This rules out that cache bypass as a sufficient fix.
+It does not rule out other retained layout state or establish the stage that loses text.
+The next trace targets script snapshots, text layout, and glyph emission.
+No diagnostic runtime change is included in the mod or installer.

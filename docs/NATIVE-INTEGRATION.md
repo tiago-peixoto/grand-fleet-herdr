@@ -384,3 +384,13 @@ Both the sidebar and inspection header changed with the reported status.
 The blocked state also added the worker to the attention list and increased the count from one to two.
 The program was then exited and its test status reset.
 This verifies live state-to-art selection for Chopper, not every character or every animation frame.
+
+## Native Restore interaction
+
+Clicking Restore layout opened the list of missing personal terminals in Grand Fleet Lab.
+The dialog explained that restoration creates new shells without resuming commands or conversations.
+Clicking Create new shell for the isolated op-remote-lab/t5 record created op-remote-lab/t9 in /Users/tiago.
+The completed record disappeared from the list and a success notification identified the new terminal.
+Comparing hc ls --all before and after showed exactly one added terminal and no changed existing terminal records.
+This verifies native restoration through the local command transport, not SSH or recovery after physical machine failure.
+The observations are saved in .superpowers/native/before-native-restore.json and .superpowers/native/after-native-restore.json.
