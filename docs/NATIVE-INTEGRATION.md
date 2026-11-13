@@ -1680,6 +1680,15 @@ Those responses do not establish whether another distribution channel contains t
 The isolated application still uses the previously verified candidate binary.
 Validation of an installable release remains open.
 
+The subsequent distribution check identified the actual update channel in Herdr's source.
+Core reads `https://releases.herdr.dev/core/latest.json`, and the application reads `https://releases.herdr.dev/app/latest.json`.
+Those manifests currently advertise Core 0.1.21 and App 0.1.15.
+The remote tag query resolves Core 0.1.21 to `1b0393f80c35b1dae34f37934d33d0144a8fc8d7`.
+Comparing its `crates/herdr-core/src/remote/viewers.rs` with the submitted patch confirms that the tag lacks activity tracking and ordered reattachment.
+The GitHub release list was therefore not the authoritative distribution check.
+The published Core update cannot close recovery acceptance yet.
+No application or Core binary was replaced during this check.
+
 ## Visual comparison conclusion
 
 The current native layout was reviewed against the saved 1728 × 994 prototype capture and the preceding native captures at both supported review sizes.

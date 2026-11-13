@@ -52,7 +52,8 @@ Fresh local and remote delegation passed within the isolated workflows described
    The mod alone cannot supply this Core fix.
    [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271) merged on 2026-11-13 at 19:52:25 UTC with all six checks passing.
    Upstream acceptance is complete.
-   An installable Herdr release containing the patch has not been identified or tested.
+   The official Core update manifest still advertises 0.1.21, whose tagged source lacks the recovery patch.
+   Release validation therefore awaits a newer published Core build containing the fix.
 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.
