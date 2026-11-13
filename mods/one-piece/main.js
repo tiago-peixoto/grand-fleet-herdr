@@ -1,5 +1,5 @@
 import { View, div, image } from 'gpui-kit';
-import { h_flex, v_flex, Editor, EditorState, Input, InputState } from 'gpui-base';
+import { h_flex, v_flex, Editor, EditorState, Input, InputState, ScrollHandle } from 'gpui-base';
 import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
 import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
 import { rememberShells, missingShells } from './shells.js';
@@ -47,6 +47,7 @@ export default class Fleet extends View {
   init(_props,cx) {
     this.collapsed={}; this.busy=false; this.error=''; this.updated=null;
     this.handle=cx.focus_handle();
+    this.machineScroll=ScrollHandle.new();
     const view=props()?.view;
     if(view==='inspect') {
       this.editor=EditorState.new({readonly:true,line_numbers:false,folding:false,soft_wrap:false,font_family:settings().font_family,font_size:14,value:'Connecting to terminal output…'});
@@ -281,6 +282,7 @@ export default class Fleet extends View {
 
   close() {
     this.closed=true;
+    this.machineScroll?.release();
     activePlaceholders.delete(this.activePlaceholder);
   }
 
@@ -373,8 +375,13 @@ export default class Fleet extends View {
     const characters=assignCharacters(workers,cfg.characters);
     if(Object.keys(characters).length!==Object.keys(cfg.characters).length) save({characters});
     const selected=focused();
-    const content=v_flex().flex_1().min_h(0).overflow_y_scrollbar().gap(20).px(12).py(12);
-    for(const machine of world) {
+    const shortcuts=h_flex().flex_wrap().gap(6).px(12).pb(8).flex_shrink_0();
+    const content=v_flex().flex_1().min_h(0).overflow_y_scrollbar().track_scroll(this.machineScroll).gap(12).px(12).py(12);
+    for(const [index,machine] of world.entries()) {
+      shortcuts.child(v_flex().id(`jump-machine-${machine.machine??'local'}`).px(9).py(6).gap(3).rounded(6).bg('#203238').cursor_pointer().hover(s=>s.bg('#29454c'))
+        .on_click((_e,c)=>{this.machineScroll.scroll_to_item(index);c.notify();})
+        .child(div().text_size(12).text_color('#e8bd70').child(machineLabel(machine.machine)))
+        .child(div().text_size(10).text_color('#9eb4b3').child(`${machine.machine??'local'}${machine.state==='ready'?'':machine.state==='loading'?' · Connecting':' · Offline'}`)));
       const block=v_flex().gap(7).child(h_flex().items_center().justify_between()
         .child(v_flex().gap(3).child(div().text_size(13).font_semibold().text_color('#e4eeea').child(machineLabel(machine.machine)))
           .child(div().text_size(10).text_color('#8fa8a9').child(machine.machine??'local')))
@@ -423,6 +430,7 @@ export default class Fleet extends View {
     }
     return v_flex().id('fleet-sidebar').track_focus(this.handle).size_full().bg('#14272d').text_color('#dce6e3')
       .child(h_flex().h(64).px(20).gap(10).items_center().child(art('flag','idle',28)).child(v_flex().gap(4).child(div().text_size(14).font_semibold().child('GRAND FLEET')).child(div().text_size(10).text_color('#91acab').child('A place for every session'))))
+      .child(shortcuts)
       .child(content)
       .child(v_flex().p(14).gap(10).border_t(1).border_color('#30474c')
         .when(Boolean(cfg.placeholders?.length),el=>el.child(button('retry-cleanup',this.cleaning?'Cleaning temporary shells…':`Retry cleanup · ${cfg.placeholders.length} pending`,(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a)))))

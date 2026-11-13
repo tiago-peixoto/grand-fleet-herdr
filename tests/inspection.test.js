@@ -15,7 +15,7 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   const sessions=[worker], workspaces=[], views=[], calls=[], errors=[];
   let placeholder;
   let cfg={coordinators:registrations,inspections:{}};
-  const context={...fleet,...shells,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
+  const context={ScrollHandle:{new:()=>({release(){},scroll_to_item(){}})},...fleet,...shells,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
     coreTerminals:()=>sessions,spaces:()=>workspaces,panes:()=>views,
     machines:()=>[{name:remote?'hz-server':null,layout:'ready'}],
     shared:()=>cfg,setShared:(_key,value)=>{cfg=value;},notify:value=>errors.push(value),
@@ -1200,4 +1200,17 @@ for(const route of ['pane focus','header focus']) test(`${route} completes inspe
   assert.ok(h.views.some(p=>p.terminal==='t3'),'personal pane must survive');
   assert.ok(!h.views.some(p=>p.terminal==='t2'),'worker must remain parked');
   assert.equal(h.errors.length,0);
+});
+
+test('machine shortcuts reveal local and offline remote groups without selecting sessions',()=>{
+  const h=navigationHost(),revealed=[];
+  h.context.machines=()=>[{name:null,layout:'ready'},{name:'hz-server',layout:'unavailable'}];
+  h.controller.machineScroll={scroll_to_item:index=>revealed.push(index)};
+  h.controller.sidebar(h.cx);
+  assert.ok(h.actions.has('jump-machine-hz-server'));
+  h.actions.get('jump-machine-hz-server')(null,h.cx);
+  h.actions.get('jump-machine-local')(null,h.cx);
+  assert.deepEqual(revealed,[1,0]);
+  assert.ok(h.texts.includes('Wano'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='space.select'||cmd==='pane.focus'||cmd==='hc'));
 });

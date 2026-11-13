@@ -70,6 +70,8 @@ This check covers the observed short name and machine label, not every label len
 
 ## Automated coverage
 
+The machine shortcut check requires local and offline remote navigation to request the correct scroll group without selecting a workspace or sending terminal commands.
+
 Run the pure session-model checks with `npm test`.
 They cover machine boundaries, offline filtering, reused identifiers, ambiguous registration, stable artwork assignment, and inspection eligibility.
 They also cover actual pane ownership and exclusion of registered secondmates from worker lists.
@@ -824,3 +826,21 @@ Four unrelated local and remote coordinator and worker processes retained their 
 Evidence is saved in .superpowers/native/ssh-registration-before.json, ssh-registration-linked.json, and ssh-registration-after.json.
 This verifies replacement and navigation over the physical server connection while connected.
 It does not establish replacement during a connection interruption or resolve the rendering and animation acceptance gaps.
+
+## Persistent machine navigation
+
+The populated native lab pushed remote machine headings below the visible sidebar while the local fleet remained expanded.
+Machine shortcuts now remain above the scrolling fleet and show each alias with its actual machine identity.
+Connecting and offline machines retain shortcuts with explicit state labels.
+Selecting a shortcut scrolls to its machine group without selecting a session.
+Herdr's installed `ScrollHandle` declaration documents revealing a direct child with the smallest necessary scroll.
+Each machine group is one direct child so its ships and workers appear together when space permits.
+
+Native verification used the installed mod in Grand Fleet Lab at 1280 × 820 logical pixels.
+All three machines remained visible above the scrolling list.
+Clicking `op-hz-lab` revealed its heading, Sunny, coordinator, and workers.
+Clicking Water 7 returned to the local heading and crew.
+The remote `hz-registration-new` terminal and its prompt remained displayed throughout both clicks.
+The 105 JavaScript tests and native initial-render check passed.
+Offline shortcut routing passed in the simulated host, but its new native label has not yet been observed during disconnection.
+This check does not establish layout behavior for an arbitrarily large machine inventory.
