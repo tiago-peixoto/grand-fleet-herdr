@@ -374,3 +374,13 @@ Sprite motion was resumed after these checks.
 Focusing worker inspection reproduced missing static text and artwork in the first captured frame.
 A later native frame showed the missing content again without another interaction.
 These control checks do not resolve that intermittent rendering defect or establish every remaining acceptance criterion.
+
+## Native worker artwork states
+
+A disposable status program ran inside the existing isolated test-worker terminal.
+It emitted Herdr's status escape sequence for idle, working, and blocked in turn.
+Native screenshots showed sleeping Chopper for Idle, upright walking artwork for Working, and seated Chopper for Needs you.
+Both the sidebar and inspection header changed with the reported status.
+The blocked state also added the worker to the attention list and increased the count from one to two.
+The program was then exited and its test status reset.
+This verifies live state-to-art selection for Chopper, not every character or every animation frame.
