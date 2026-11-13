@@ -58,6 +58,8 @@ Fresh local and remote delegation passed within the isolated workflows described
    The measured transition is recorded in [merged-source reconnection](NATIVE-INTEGRATION.md#merged-source-remote-reconnection).
    A subsequent native input check reached the shell, but the existing application view did not display its output.
    [The stale-output reproduction](NATIVE-INTEGRATION.md#merged-source-input-reaches-the-shell-but-the-existing-view-stays-stale) remains unresolved, although a fresh read-only observer received the output.
+   A later [fresh-prompt recovery](NATIVE-INTEGRATION.md#fresh-prompt-recovery-on-the-merged-build) passed native input, visible output, and settled dimensions on the merged build.
+   That passing case does not explain the earlier render interruption or corrupted terminal history.
 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.

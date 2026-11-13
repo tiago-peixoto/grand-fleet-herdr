@@ -1775,3 +1775,27 @@ Evidence is saved locally as `.superpowers/native/merged-core-stale-output.jpg`,
 The process sample is `/tmp/grand-fleet-stale-output.sample.txt`.
 Input delivery passed this attempt, but visible output recovery failed.
 The earlier candidate pass does not establish working recovery for this merged-source application session.
+
+## Fresh prompt recovery on the merged build
+
+Native window enlargement exposed the previously requested focus and sidebar changes, along with a transient `interrupted` render-error banner.
+The application's `status` command still reported an empty errors array.
+The banner subsequently cleared without a restart, and the personal pane's Grid button visibly restored both panes.
+Earlier prompt corruption also appeared in a direct remote `hc read`, so that corruption was not confined to the native capture.
+These observations do not establish a common cause for the stale view, render interruption, and corrupted history.
+
+Native Control-L redrew the personal shell's prompt before another transport recovery check.
+The baseline command printed `RECOVERY-BASELINE` and `48 79` correctly.
+Only the verified SSH child of the isolated Core process was terminated.
+The first measured size was 200 columns by 120 rows at 1.26 seconds.
+Dimensions returned to 79 columns by 48 rows at 2.53 seconds and remained there through 10.12 seconds.
+Both the personal shell and firstmate retained their process identifiers, creation timestamps, and live state.
+
+Native typing and Return then printed `RECOVERY-FRESH-INPUT` and `48 79` visibly in the personal pane.
+Firstmate's manual approval remained pending, with no input sent to that pane.
+This establishes one successful native recovery from a fresh prompt on the merged build.
+It does not explain the earlier failures or prove that clearing the screen is a required workaround.
+No product code changed.
+
+Evidence is saved locally in `.superpowers/native/fresh-prompt-reconnect.json` and `fresh-prompt-{before,after}-reconnect.jpg`.
+The official Core manifest still advertised version 0.1.21, generation 1, during this check.
