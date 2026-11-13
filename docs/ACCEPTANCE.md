@@ -20,7 +20,7 @@ Fresh local and remote delegation passed within the isolated workflows described
 | Switch between the prototype's equal-grid and chat-plus-terminals presets | [Native preset controls](NATIVE-INTEGRATION.md#native-preset-controls-and-worker-return) verify local geometry and input; [helper checks](NATIVE-INTEGRATION.md#core-document-preset-implementation) verify process identity locally and remotely | Passed for the tested three-pane local and two-pane remote inventories |
 | Restore missing personal shells explicitly without claiming conversation recovery | [Remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verifies the native action, directory, new process, and surviving neighbor | Passed over SSH, the remote shell connection |
 | Close identifies its target and process-ending consequence | [Installed close routes](NATIVE-INTEGRATION.md#installed-close-routes) and [native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) cover buttons and installed shortcuts | Passed within the installed layout and shortcut scope |
-| Offline machines show no stale live crew or unavailable actions | [Persistent machine navigation](NATIVE-INTEGRATION.md#persistent-machine-navigation) verifies unavailable presentation and foreground recovery | Passed; automatic background redraw unverified |
+| Offline machines show no stale live crew or unavailable actions | [Persistent machine navigation](NATIVE-INTEGRATION.md#persistent-machine-navigation) verifies unavailable presentation and foreground recovery | Passed; [automatic sidebar recovery](NATIVE-INTEGRATION.md#remote-recovery-without-window-input) observed, terminal wrapping unresolved |
 | Worker attention and independent attention remain distinct and usable | [Native decision records](NATIVE-INTEGRATION.md#native-decision-records-connection) and [remote decisions](NATIVE-INTEGRATION.md#remote-decision-records-and-reconnect-validation) verify appearance, inspection, and clearing beside an independent entry | Passed for real local and [remote workers](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
 | Worker identity and artwork survive changes in the fleet | Automated identity and assignment checks plus [generic Pirate state selection](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) | Passed within recorded cases |
 | Sleeping, walking, and sitting artwork reflects worker status | [Chopper](NATIVE-INTEGRATION.md#native-worker-artwork-states), [Franky](NATIVE-INTEGRATION.md#native-franky-state-and-pause-checks), and [Pirate](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) native checks | State selection passed |
@@ -38,7 +38,9 @@ Its report and project remained unchanged.
 The isolated workflow establishes that integration path without establishing the remaining rendering and recovery requirements.
 
 Resolve the difference between native captures and submitted drawing output before making another renderer change.
-Continuous animation and background recovery require visible runtime evidence, not only correct image files or connected-machine records.
+Continuous animation requires visible runtime evidence, not only correct image files.
+Automatic sidebar recovery now has native evidence.
+Malformed terminal wrapping after reconnection remains unresolved.
 
 Verify the new Arrange controls through native clicks, focus, close confirmation, workspace switching, and input.
 The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-implementation) preserves actual pane identifiers and avoids modifying the installed layout.

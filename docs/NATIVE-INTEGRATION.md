@@ -1275,3 +1275,20 @@ SHA-256 comparisons matched the report and project README against their pre-conf
 The worktree remained clean, and the project, report, worktree, and terminal were preserved.
 This verifies fresh remote delegation, native coordinator input, discovery, attention, inspection, direct return, and supervised resolution in the isolated fleet.
 It does not verify continuous animation, resize presentation, background connection recovery, or the complete large-screen visual experience.
+
+## Remote recovery without window input
+
+A fresh check disconnected only the isolated `op-hz-lab` transport while its firstmate workspace was visible.
+The transport wrapper refused reconnection for 28 seconds and then resumed automatically.
+No clicks, key presses, window raising, or forced application snapshots occurred between disconnection and the recovery capture.
+Native captures showed Offline and Machine unavailable during the interruption.
+The terminal displayed its lost-connection notice.
+After transport restoration, a native capture showed the machine and its crew again without further input.
+The core reported connected, and both `t1g` and `t1h` retained their original process identifiers and creation timestamps.
+This establishes automatic sidebar recovery for the tested connection cycle.
+
+The recovered firstmate terminal also showed malformed wrapping, including short fragments along opposite edges.
+A subsequent core query reported 200 columns and 120 rows for `t1g`.
+Those dimensions alone do not establish whether the malformed output originated in terminal reflow, application rendering, or capture.
+Full terminal recovery remains unresolved until that discrepancy is reproduced and isolated.
+The transport override was removed by the test's cleanup block.
