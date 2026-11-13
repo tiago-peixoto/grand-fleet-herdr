@@ -1589,3 +1589,19 @@ The patch is submitted as [herdr-core PR 271](https://github.com/herdrdev/herdr-
 The upstream master branch had one additional unrelated logging fix and no changes to the patched recovery files at submission.
 Upstream review, automated checks, and release remain pending.
 The mod does not bundle or install the candidate Core.
+
+## Setup scrolling and worker inspection
+
+The setup dialog reproduced a crowded session list at 1280 × 820 points when several firstmate homes were available.
+The form now scrolls while its title, status message, and action buttons remain visible.
+The session list has its own fixed-height scrolling region.
+Native inspection reached every home and task-record button without changing registrations.
+The Cancel and Link buttons stayed visible throughout scrolling.
+Evidence is saved locally as `.superpowers/native/setup-crowded-before.jpg` and `.superpowers/native/setup-scroll-{top,bottom}.jpg`.
+
+Worker inspection remained readable at 1280 × 820 and 1728 × 994 points.
+The worker artwork, inspection-only notice, terminal text, and Back to firstmate button remained visible after resizing.
+No terminal input or forced CLI screenshot redraw occurred during these checks.
+Evidence is saved locally as `.superpowers/native/visual-worker-{small,large}.jpg`.
+The installed mod check and all 120 JavaScript tests passed after the setup layout change.
+These checks do not resolve the earlier intermittent text disappearance or complete the remaining visual review.

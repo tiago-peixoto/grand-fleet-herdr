@@ -570,13 +570,14 @@ export default class Fleet extends View {
   setupView(cx) {
     const machine=props().machine??null;
     const available=terminals().filter(t=>machineOf(t.address)===machine&&t.state==='live'&&(this.role==='secondmate'||!isWorker(t))&&(t.space||config().inspections[identity(t)]||config().coordinators.some(r=>r.role==='secondmate'&&matches(t,r))));
-    const content=v_flex().size_full().bg('#192f35').p(24).gap(14).text_color('#dce6e3');
-    content.child(div().text_size(22).font_semibold().child('Make this fleet yours'));
+    const frame=v_flex().size_full().bg('#192f35').p(24).gap(14).text_color('#dce6e3');
+    frame.child(div().flex_none().text_size(22).font_semibold().child('Make this fleet yours'));
+    const content=v_flex().flex_none().gap(14);
     content.child(div().text_size(12).text_color('#a4bbb8').child(`Machine: ${machine??'local'} · identify an existing coordinator session explicitly.`));
     content.child(h_flex().gap(10).items_center().child(Input.new(this.aliasInput).flex_1()).child(button('save-alias','Save island name',()=>save({aliases:{...config().aliases,[machine??'local']:this.aliasInput.value().trim()||machine||'local'}}))));
     content.child(h_flex().gap(10).child(button('role-firstmate','Firstmate',(_e,c)=>{this.role='firstmate';this.selected=null;c.notify();},this.role==='firstmate'))
       .child(button('role-secondmate','Secondmate · inspection only',(_e,c)=>{this.role='secondmate';this.selected=null;c.notify();},this.role==='secondmate')));
-    const list=v_flex().flex_1().min_h(0).gap(5).overflow_y_scrollbar();
+    const list=v_flex().flex_none().h(160).gap(5).overflow_y_scrollbar();
     for(const terminal of available) list.child(button(`register-${terminal.address}`,`${label(terminal)} · ${terminal.address}${this.selected===terminal.address?' · Selected':''}`,(_e,c)=>{this.selected=terminal.address;c.notify();},this.selected===terminal.address));
     content.child(list);
     const homes=[...new Set(terminals().filter(t=>machineOf(t.address)===machine&&isWorker(t)).map(t=>t.labels['firstmate.home']))];
@@ -586,15 +587,16 @@ export default class Fleet extends View {
       closeOverlay(props().overlay);
       openOverlay({mod:'one-piece',props:{view:'records',machine,home},kind:'dialog',width:640,height:460});
     }));
-    content.child(div().text_size(11).text_color('#e8bd70').child(this.error||'Linking identifies an existing session. It does not launch firstmate or delegate work.'));
-    content.child(h_flex().gap(10).justify_end().child(button('cancel-setup','Cancel',()=>closeOverlay(props().overlay)))
+    frame.child(v_flex().flex_1().min_h(0).overflow_y_scrollbar().child(content));
+    frame.child(div().flex_none().text_size(11).text_color('#e8bd70').child(this.error||'Linking identifies an existing session. It does not launch firstmate or delegate work.'));
+    frame.child(h_flex().flex_none().gap(10).justify_end().child(button('cancel-setup','Cancel',()=>closeOverlay(props().overlay)))
       .child(button('save-firstmate',`Link ${this.role}`,(_e,c)=>{
         const selected=available.find(t=>t.address===this.selected);
         const home=this.homeInput.value().trim();
         const role=this.role,overlay=props().overlay;
         return c.spawn(a=>this.linkCoordinator(selected,home,role,overlay,a));
       },true)));
-    return content;
+    return frame;
   }
 
   presetTarget(tabId) {
