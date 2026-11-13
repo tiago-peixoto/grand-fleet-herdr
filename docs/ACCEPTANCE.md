@@ -3,7 +3,8 @@
 Reviewed on 2026-11-13 against VISION.md, the approved prototype, the current source, and the native verification record.
 The implementation is not ready for final acceptance.
 Passing checks below establish their stated scope only.
-The native scenarios use isolated test terminals, including a physical remote server, rather than a complete firstmate workflow.
+The native scenarios use isolated test terminals, including a physical remote server and a local supervised decision cycle.
+Fresh delegation by the tested primary and autonomous remote supervision remain unverified.
 
 ## Requirements and evidence
 
@@ -27,12 +28,12 @@ The native scenarios use isolated test terminals, including a physical remote se
 | Labels and artwork remain visible after resizing and pane focus | [Rendering investigation](NATIVE-RESIZE-REPRO.md#live-drawable-pixels-and-foreground-comparison) found text in submitted frames but missing from native captures | Unresolved |
 | Ordinary sessions remain usable and explicitly Unsupervised | [Native navigation](NATIVE-INTEGRATION.md#native-navigation-verification-after-unlocking) and controller routing tests | Passed within recorded cases |
 | Removing the mod preserves sessions and fleet records | [Removal and reinstallation](NATIVE-INTEGRATION.md#native-removal-and-reinstallation) compares 39 live terminals and app-home files | Passed in the isolated home |
-| Real firstmate delegation produces correctly discovered workers and preserves its authority and records | [Actual firstmate launch](NATIVE-INTEGRATION.md#actual-firstmate-worker-launch-and-inspection) verifies discovery, inspection, preserved records, backend input, and rejection of a mismatched task label | Partial; complete supervised workflow remains unverified |
+| Real firstmate delegation produces correctly discovered workers and preserves its authority and records | [Actual firstmate launch](NATIVE-INTEGRATION.md#actual-firstmate-worker-launch-and-inspection) verifies discovery, inspection, preserved records, backend input, and rejection of a mismatched task label | Partial; [local supervised decision cycle](NATIVE-INTEGRATION.md#local-supervised-decision-cycle) passed for an existing worker, but fresh delegation remains unverified |
 | Match the approved visual experience on the user's large-screen workflow | [Crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) covers 1280 × 820 and 1000 × 700 only | Partial; complete visual review remains open |
 
 ## Next acceptance gates
 
-Run an isolated real firstmate workflow before claiming firstmate integration is complete.
+Extend the isolated local supervised decision cycle with fresh delegation before claiming firstmate integration is complete.
 Verify coordinator registration, worker discovery, attention, inspection, return navigation, and unchanged firstmate records through that workflow.
 Use an isolated home and repository so the check cannot affect the captain's working fleet.
 

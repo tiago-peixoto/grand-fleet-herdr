@@ -1182,3 +1182,30 @@ Independent review found no remaining concrete bugs in the records changes.
 The updated mod was installed into the closed Grand Fleet Lab home and inspected after relaunch.
 The remote inspection remained available without restoring the resolved attention entry.
 The ordinary Herdr application and Grand Fleet Render Lab were not modified.
+
+### Local supervised decision cycle
+
+On 2026-11-13, Grand Fleet Lab ran an isolated firstmate primary in terminal t32 against the existing native-ai-flow worker in t30.
+The primary used the documented Claude Stop hook watcher with the headless supervision host disabled for this test home.
+Native Fleet setup linked the primary to firstmate-bbb16e1f and displayed Luffy with op-firstmate-primary.
+The primary sent steering message 004 through firstmate's own command, asking the worker to open supervised-native-checkpoint.
+The worker opened that decision and waited.
+The native attention entry opened inspection with Needs you, the sitting character, and disabled input.
+Back to firstmate opened a coordinator chooser because the lab contains multiple registered firstmates.
+Selecting op-firstmate-primary returned to its workspace.
+
+The watcher automatically delivered the decision notification to the primary.
+Captain confirmation was submitted through the isolated terminal controller, not proven through native keyboard input.
+The primary used fm-send.sh with --resolve-key to deliver steering message 005 and record the resolution.
+The worker consumed that message and recorded done.
+The worker's native attention entry cleared.
+A second automatic Stop hook notification delivered completion to the primary.
+The primary acknowledged those notifications successfully, leaving the wake queue empty.
+Individual command approvals retained manual permission mode throughout this cycle.
+
+SHA-256 comparisons confirmed that the report and project README matched their saved baseline after resolution.
+The status history contained the needs-decision, resolved, and done events in order.
+This establishes local supervision of an existing worker, including automatic decision and completion notifications.
+It does not establish fresh delegation by this primary, remote autonomous supervision, or reliable native keyboard submission.
+No application code changed during this verification.
+Grand Fleet Render Lab and the ordinary Herdr application were not modified.
