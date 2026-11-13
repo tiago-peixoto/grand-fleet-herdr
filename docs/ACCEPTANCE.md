@@ -39,7 +39,9 @@ Use an isolated home and repository so the check cannot affect the captain's wor
 Resolve the difference between native captures and submitted drawing output before making another renderer change.
 Continuous animation and background recovery require visible runtime evidence, not only correct image files or connected-machine records.
 
-Complete preset integration only after resolving the [persistence and focus constraints](NATIVE-INTEGRATION.md#preset-persistence-and-focus-constraints).
+Continue the [core document experiment](NATIVE-INTEGRATION.md#core-document-preset-feasibility), which preserves actual pane identifiers and avoids modifying the installed layout.
+The running app consumed the experimental tree, but native geometry, input, remote routing, and conflict handling remain unverified.
+The alternative terminal-block approach retains the [persistence and focus constraints](NATIVE-INTEGRATION.md#preset-persistence-and-focus-constraints).
 The terminal-block proof establishes geometry and input, not safe lifecycle behavior.
 Existing split creation and Focus pane controls do not prove preset switching.
 Complete the large-screen visual comparison after the rendering discrepancy is resolved.

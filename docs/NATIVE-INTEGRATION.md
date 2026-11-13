@@ -957,3 +957,33 @@ Before product integration, establish ownership and removal for a separate gener
 A generated layout must also reconcile persisted terminal addresses before exposing writable sessions after restart.
 Do not weaken installation ownership checks or treat static addresses as current session identities to make the preset proof shippable.
 These constraints remain open alongside the dynamic navigation requirements above.
+
+
+## Core document preset feasibility
+
+The installed `hc schema` exposes version-checked `doc.get` and `doc.set` operations.
+Herdr stores each machine's workspace tree in the `herdr-app` document.
+Its `mirror_sync.rs` implementation reads updated documents and replaces the corresponding machine's model.
+This offers a route to rearrange real panes without writing the installed layout file or substituting terminal blocks.
+
+In Grand Fleet Lab, the `op-captain` tab's three existing leaves were rearranged into two rows.
+The test preserved all three pane identifiers and terminal references and added an empty fourth container.
+The document changed from version 186 to 187 through a version-checked write.
+A read returned the exact new tree.
+Renaming that tab through `herdr-app do tab.rename` then produced version 188 with the new name and the exact new tree.
+That round trip proves the running app consumed the external tree and retained it in its next model write.
+The tab name and focused pane were restored through the app commands.
+The original root was restored at version 190 after checking that the current root still matched the experiment.
+Only that root changed in the fresh document, and a final read matched the submitted restoration.
+
+Visual verification remains open.
+Native window capture returned `cgWindowNotFound`.
+The app's own frame capture returned identical image hashes before and after a successful focus change.
+Its status correctly reported the changed focused pane, so the retained image cannot establish current geometry.
+Do not infer a synchronization failure or successful rendering from that stale frame.
+Evidence remains in `.superpowers/native/preset-core-{before,written,readback,app-sync,restored}.json`.
+
+Before exposing preset controls, verify native geometry and input, remote document routing, conflict handling, and preservation of pane-specific behavior.
+The document API accepts opaque JSON, so the integration must validate the workspace schema and refuse unsupported structures.
+Use fresh versions and preserve unrelated document fields rather than replacing a document captured earlier.
+The prototype presets remain unimplemented.
