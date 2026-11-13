@@ -90,8 +90,8 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 - Finish the close-route audit against the installed layout and key bindings.
   Native pane Close and keyboard routes have evidence below, while host commands can bypass the mod's guards.
 - Verify attention navigation and visible error reporting during remote transitions.
-- Verify generic Pirate state transitions and animation timing.
-  Chopper, Franky, and the pause control have native state-selection evidence below.
+- Verify animation timing in the running native interface.
+  Chopper, Franky, generic Pirate, and the pause control have native state-selection evidence below.
 - Compare the native layout with the approved prototype at the target screen sizes.
 
 Local-transport Restore interaction, hidden-window directory tracking, and physical SSH process recovery have passed the checks recorded below.
@@ -677,3 +677,21 @@ After installing into the closed lab and relaunching, the native header displaye
 Both the original coordinator and restored shell retained their process identifiers, creation times, and live state.
 The 102 JavaScript tests and the native mod check passed.
 Process evidence is saved in .superpowers/native/ssh-label-polish-after.json.
+
+## Native generic Pirate state selection
+
+The disposable remote hz-interrupt-worker ran a status program inside its existing shell.
+Its stable character assignment remained Pirate 7 through idle, working, and blocked transitions.
+Native captures showed sleeping, walking, and seated artwork in both the sidebar and inspection header.
+The blocked transition displayed Needs you and increased the attention count from one to two.
+
+Clicking the independent attention entry selected its local workspace according to herdr-app status.
+Clicking the remote worker attention entry then selected its existing remote inspection workspace and pane.
+Herdr reported no errors or overlays for either selection.
+The screenshot remained on inspection during navigation, so this establishes command routing but not correct visual presentation after each selection.
+The display-versus-capture discrepancy remains unresolved.
+
+Exiting the status program returned the worker to its original shell and cleared the reported status.
+Its process identifier 2654548 and creation time 1794573798108 remained unchanged.
+The final core record is saved in .superpowers/native/pirate-state-after.json.
+These observations establish state selection, not frame timing or continuous animation playback.
