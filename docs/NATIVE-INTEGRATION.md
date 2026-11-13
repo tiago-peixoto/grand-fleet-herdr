@@ -1510,3 +1510,32 @@ The candidate restores the last active viewer's size once attachment completes.
 This trace does not prove correct repainting in the native application.
 The earlier malformed output still requires a native reproduction with independently isolated applications.
 The remaining recovery check concerns final dimensions, readable output, process identity, and working input after reconnect.
+
+## Native wrapping recovery and active worker motion
+
+The native split contained remote firstmate `op-hz-lab/t1g` and personal shell `op-hz-lab/t1k`.
+Both used 79 columns and 43 rows before disconnection.
+Native keyboard input printed a 125-character wrapping marker in the personal shell.
+Only the isolated SSH transport process was terminated.
+The firstmate process received no keyboard input or approval.
+
+Four recovery samples confirmed three consecutive settled sizes by 4.285 seconds.
+Both process identifiers and creation times matched their pre-disconnection values.
+The capture before additional input showed readable wrapped text and both marker boundaries.
+Native typing then printed `RECOVERY-INPUT-OK` and `stty size` returned `43 79`.
+The original personal shell remained PID 1040875, created at 1794596816772.
+Evidence is saved locally in `.superpowers/native/native-wrap-recovery.json` and `.superpowers/native/native-wrap-after-reconnect.jpg`.
+This run used the existing 0.1.20-based candidate core, not the separate 0.1.21 test checkout.
+The earlier malformed output did not reproduce with the two applications using independent core sessions.
+
+The application stayed active during the subsequent worker animation check.
+The existing disposable worker `t8` reported working through its status probe, selecting Franky's walking artwork.
+Thirty-six consecutive native captures produced 11 distinct worker crops over approximately 2.9 seconds.
+Clicking Pause motion produced one identical worker crop across 36 captures.
+Clicking Play motion produced 10 distinct worker crops across 24 captures.
+No keyboard input or forced redraw occurred within each capture series.
+The 80 × 100 pixel crop at (95, 820) contained the worker artwork, excluding its text and neighboring ships.
+The comparison files use the `worker-active-final`, `worker-paused-final`, and `worker-resumed-final` prefixes under `.superpowers/native/`.
+The status probe was exited after measurement, and motion was left enabled.
+This verifies working animation and pause/resume for Franky, alongside the earlier Sunny playback evidence.
+It does not close the separate resize visibility defect or the complete visual review.
