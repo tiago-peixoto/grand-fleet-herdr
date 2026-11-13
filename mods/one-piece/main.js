@@ -425,7 +425,7 @@ export default class Fleet extends View {
       .child(h_flex().h(64).px(20).gap(10).items_center().child(art('flag','idle',28)).child(v_flex().gap(4).child(div().text_size(14).font_semibold().child('GRAND FLEET')).child(div().text_size(10).text_color('#91acab').child('A place for every session'))))
       .child(content)
       .child(v_flex().p(14).gap(10).border_t(1).border_color('#30474c')
-        .when(Boolean(cfg.placeholders?.length),el=>el.child(button('retry-cleanup',this.cleaning?'Cleaning temporary shells…':`Retry cleanup · ${cfg.placeholders.length} temporary shells`,(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a)))))
+        .when(Boolean(cfg.placeholders?.length),el=>el.child(button('retry-cleanup',this.cleaning?'Cleaning temporary shells…':`Retry cleanup · ${cfg.placeholders.length} pending`,(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a)))))
         .child(div().text_size(11).text_color(blockers.length?'#e8bd70':'#94b3aa').child(blockers.length?`${blockers.length} ${blockers.length===1?'session needs':'sessions need'} attention`:'No reported blockers'))
         .when(blockers.length>0,el=>el.child(alerts))
         .child(h_flex().gap(8).child(button('setup','Set up fleet',()=>this.setup())).child(button('motion',cfg.paused?'Play motion':'Pause motion',()=>save({paused:!cfg.paused})))));
