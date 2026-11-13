@@ -714,3 +714,18 @@ Evidence is saved in .superpowers/native/native-inspection-close-after.json.
 The installed one-piece layout matches the repository layout exactly.
 The running window reports that layout as active.
 Its tab and pane headers use the mod's controls rather than the shipped tab controls.
+
+## Native reopening follow-up
+
+Retrying the remote worker's sidebar entry opened hz-interrupt-worker and displayed its original shell output.
+A second native Close view and sidebar reopen cycle also succeeded without a code change.
+Twelve consecutive window-status samples retained the newly created remote inspection workspace and reported no errors.
+The settled native capture displayed the matching worker name, inspection-only notice, and original terminal history.
+The worker retained its original process identifier and creation time, and the temporary-shell cleanup list was empty.
+Evidence is saved in .superpowers/native/reopen-status-samples.json and native-inspection-reopen-after.json.
+
+The previous unrelated-workspace observation was not reproduced during this follow-up.
+Its cause remains unknown, so these successful cycles do not establish a fix for that observation.
+Clicking the independent attention entry subsequently displayed independent-probe in its local workspace.
+Both window status and the settled native capture agreed on that destination.
+This adds visual evidence for independent attention navigation that the earlier state-selection check lacked.
