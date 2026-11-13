@@ -987,3 +987,34 @@ Before exposing preset controls, verify native geometry and input, remote docume
 The document API accepts opaque JSON, so the integration must validate the workspace schema and refuse unsupported structures.
 Use fresh versions and preserve unrelated document fields rather than replacing a document captured earlier.
 The prototype presets remain unimplemented.
+
+
+## Core document preset implementation
+
+The coordinator header now exposes Arrange when its available tab contains the coordinator and at least one personal terminal.
+The dialog offers Chat + terminals and Equal grid.
+Secondmate inspection remains a mod pane with its original properties, rather than becoming a writable terminal.
+Worker workspaces and unavailable machines cannot invoke the controller action.
+The action captures pane identifiers, addresses, and machine identity before starting the local Python helper.
+The helper reads the current document, validates that the same panes remain, and submits one version-checked write.
+It preserves unrelated fields and never retries a rejected or unconfirmed write automatically.
+Custom container structures, hidden panes, and constrained pane sizes are refused rather than silently discarded.
+The installed layout and installer receipt remain untouched by preset changes.
+
+The helper's command-line path was exercised with both presets on three local panes and two physical SSH-server panes.
+Local document writes returned versions 191 and 192, and the remote writes returned 40 and 41.
+After both arrangements, every tested terminal retained its process identifier, creation time, state, parent, keep flag, and labels.
+Each original root was restored against a fresh document version and read back successfully.
+Evidence is in `.superpowers/native/preset-helper-verification.json`.
+This check exercises the real helper and core operations, not native clicks or current rendering.
+The native control and visual acceptance gates remain open.
+
+The reviewed implementation rejects every writable supervised terminal in the requested tab, including registered secondmates.
+Regression tests reproduced the missing guard before the fix.
+A write must return an unsigned integer version before the helper reports success.
+Missing or invalid confirmation produces an uncertain-result error without retrying or removing pane zoom.
+The final checks passed 110 JavaScript tests, 36 Python tests, and the native initial-render check.
+The corrected helper repeated both presets against local versions 194/195 and SSH versions 43/44.
+All five terminal identities remained unchanged, and the check restored both original arrangements.
+The reviewed changes were installed into Grand Fleet Lab only.
+Native click, input, continuous animation, and large-screen visual acceptance remain open.

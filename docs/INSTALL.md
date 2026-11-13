@@ -2,9 +2,11 @@
 
 Run commands below from this repository with Python 3.9 or newer.
 The installer uses only Python's standard library.
+Grid presets also require `python3` on the local application's PATH at runtime.
+The helper uses the local `hc connect` command to address either machine, so remote machines do not need Python for presets.
 It copies `mods/one-piece/` and `layouts/one-piece.json` from the checkout containing the script, regardless of your current directory.
 It also adds two close shortcuts to the existing `keys.json`, scoped to the One Piece layout.
-It excludes hidden source entries, `node_modules`, `jsconfig.json`, and `.d.ts` declarations that Herdr generates.
+It excludes hidden source entries, `node_modules`, Python bytecode caches, `jsconfig.json`, and `.d.ts` declarations that Herdr generates.
 It does not build artwork or validate the mod's runtime behavior.
 
 ## Choose an app home

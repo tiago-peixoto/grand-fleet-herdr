@@ -60,6 +60,73 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   return {context,controller:new context.Fleet(),worker,sessions,workspaces,views,calls,errors,config:()=>cfg,cx:{notify(){},async sleep(){},spawn(fn){return fn(this);}}};
 }
 
+test('preset targets the coordinator tab on its machine without launching or moving terminals',async()=>{
+  const h=host({remote:true,independent:true,registrations:[{terminal:'hz-server/t2',created:12,role:'firstmate'}]});
+  h.workspaces.push({id:'hz-server/s',machine:'hz-server',tabs:[{id:'hz-server/tab'}]});
+  h.views.push({pane:'hz-server/p2',tab:'hz-server/tab',terminal:'hz-server/t3'},
+    {pane:'hz-server/p1',tab:'hz-server/tab',terminal:'hz-server/t2'});
+  h.context.appHome=()=>'/app home';
+  h.context.focused=()=>({tab:'elsewhere'});
+  h.context.exec=async(...args)=>{h.calls.push(['exec',args]);return {code:0,stdout:'{"version":4}'};};
+  await h.controller.arrangePreset('daily','hz-server/tab',h.cx);
+  const invocation=h.calls.find(([name])=>name==='exec')[1];
+  assert.equal(invocation[0],'python3');
+  assert.equal(invocation[1][1],'/app home/mods/one-piece/presets.py');
+  const request=JSON.parse(invocation[1][2]);
+  assert.equal(request.machine,'hz-server');
+  assert.equal(request.tab,'hz-server/tab');
+  assert.equal(request.anchor,'hz-server/p1');
+  assert.equal(request.panes.length,2);
+  assert.deepEqual(h.calls.map(c=>c[0]),['exec']);
+});
+
+test('preset refuses worker workspaces and reports helper failures without retrying',async()=>{
+  const h=host();
+  h.workspaces.push({id:'s',machine:null,tabs:[{id:'tab'}]});
+  h.views.push({pane:'p1',tab:'tab',terminal:'t2'},{pane:'p2',tab:'tab',terminal:'t3'});
+  h.context.appHome=()=>'/app';
+  h.context.exec=async(...args)=>{h.calls.push(['exec',args]);return {code:1,stderr:'Layout changed elsewhere'};};
+  await h.controller.arrangePreset('equal','tab',h.cx);
+  assert.ok(!h.calls.some(([name])=>name==='exec'));
+  h.config().coordinators.push({terminal:'t2',created:12,role:'firstmate'});
+  h.worker.labels={};
+  await h.controller.arrangePreset('equal','tab',h.cx);
+  assert.equal(h.calls.filter(([name])=>name==='exec').length,1);
+  assert.ok(h.errors.some(e=>e.body.includes('changed elsewhere')));
+});
+
+for(const role of ['secondmate','worker']) test(`preset refuses a writable ${role} beside personal terminals`,async()=>{
+  const h=host({independent:role==='secondmate',registrations:[{terminal:'t2',created:12,role:'secondmate'}]});
+  h.config().inspections['t2:12']={space:'s'};
+  h.workspaces.push({id:'s',machine:null,tabs:[{id:'tab'}]});
+  h.views.push({pane:'supervised',tab:'tab',terminal:'t2'},
+    {pane:'inspect',tab:'tab',mod:'one-piece'},
+    {pane:'personal',tab:'tab',terminal:'t3',zoomed:true});
+  h.context.appHome=()=>'/app';
+  h.context.focused=()=>({tab:'tab'});
+  h.context.exec=async()=>{h.calls.push(['exec']);return {code:0};};
+  assert.equal(await h.controller.arrangePreset('equal','tab',h.cx),false);
+  assert.deepEqual(h.calls,[]);
+});
+
+test('secondmate preset retains inspection as its anchor and restores only the visible tab grid',async()=>{
+  const h=host({registrations:[{terminal:'t2',created:12,role:'secondmate'}]});
+  h.config().inspections['t2:12']={space:'s'};
+  h.workspaces.push({id:'s',machine:null,tabs:[{id:'tab'}]});
+  h.views.push({pane:'inspect',tab:'tab',terminal:null,mod:'one-piece'},
+    {pane:'personal',tab:'tab',terminal:'t3',zoomed:true});
+  h.context.appHome=()=>'/app';
+  h.context.focused=()=>({tab:'tab'});
+  let request;
+  h.context.exec=async(_command,args)=>{request=JSON.parse(args[2]);return {code:0};};
+  assert.equal(await h.controller.arrangePreset('equal','tab',h.cx),true);
+  assert.equal(request.anchor,'inspect');
+  assert.equal(request.panes[0].terminal,null);
+  assert.deepEqual(JSON.parse(JSON.stringify(h.calls)),[['pane.zoom',{pane:'personal'}]]);
+  h.context.machines=()=>[{name:null,layout:'unavailable'}];
+  assert.equal(h.controller.presetTarget('tab'),null);
+});
+
 test('failed inspection creation never adopts a worker into a writable pane',async()=>{
   const h=host({failTab:true});
   await h.controller.inspect(h.worker,h.cx);

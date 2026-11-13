@@ -1,6 +1,6 @@
 import { View, div, image } from 'gpui-kit';
 import { h_flex, v_flex, Editor, EditorState, Input, InputState, ScrollHandle } from 'gpui-base';
-import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
+import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, appHome, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
 import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
 import { rememberShells, missingShells } from './shells.js';
 
@@ -519,6 +519,54 @@ export default class Fleet extends View {
     return content;
   }
 
+  presetTarget(tabId) {
+    const space=spaces().find(s=>s.tabs.some(t=>t.id===tabId));
+    if(!space||!this.canAddTab(space.id)) return null;
+    const views=panes().filter(p=>p.tab===tabId);
+    if(views.length<2) return null;
+    if(views.some(p=>terminals().some(t=>t.address===p.terminal&&(isWorker(t)||config().coordinators.some(r=>r.role==='secondmate'&&matches(t,r)))))) return null;
+    let anchor=views.find(p=>terminals().some(t=>t.address===p.terminal&&config().coordinators.some(r=>matches(t,r))));
+    const inspection=Object.entries(config().inspections).find(([_key,i])=>i.space===space.id);
+    const secondmate=inspection&&config().coordinators.some(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===inspection[0]);
+    const inspectionPanes=views.filter(p=>p.mod==='one-piece');
+    if(!anchor&&secondmate&&inspectionPanes.length===1) anchor=inspectionPanes[0];
+    if(!anchor) return null;
+    return {machine:space.machine,space:space.id,tab:tabId,anchor:anchor.pane,
+      panes:views.map(p=>({pane:p.pane,terminal:p.terminal??null,mod:p.mod??null}))};
+  }
+
+  async arrangePreset(preset,tabId,cx) {
+    if(this.busy) return false;
+    this.busy=true; cx.notify();
+    try {
+      const target=this.presetTarget(tabId);
+      if(!target) throw new Error('Open an available coordinator tab with personal terminals to arrange its grid.');
+      const result=await exec('python3',['-B',`${appHome()}/mods/one-piece/presets.py`,JSON.stringify({...target,preset})],{timeout:25000});
+      if(result.code!==0) throw commandError(result,'The grid could not be changed.');
+      if(focused()?.tab===tabId) {
+        const zoomed=panes().find(p=>p.tab===tabId&&p.zoomed);
+        if(zoomed) run('pane.zoom',{pane:zoomed.pane});
+      }
+      return true;
+    } catch(error) { notifyError(error); return false; }
+    finally {this.busy=false;cx.notify();}
+  }
+
+  presetsView() {
+    const tab=props().tab,overlay=props().overlay;
+    const choose=preset=>(_e,c)=>c.spawn(async cx=>{
+      if(await this.arrangePreset(preset,tab,cx)) closeOverlay(overlay);
+    });
+    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
+      .child(div().text_size(20).child('Arrange your workspace'))
+      .child(div().text_size(12).child('Keep every session running. Only the pane arrangement changes.'))
+      .child(button('preset-daily',this.busy?'Applying…':'Chat + terminals',choose('daily')))
+      .child(div().text_size(12).text_color('#a2bab7').child('Coordinator on the left, your terminals stacked on the right.'))
+      .child(button('preset-equal',this.busy?'Applying…':'Equal grid',choose('equal')))
+      .child(div().text_size(12).text_color('#a2bab7').child('Equal cells, with the coordinator first.'))
+      .child(h_flex().justify_end().child(button('cancel-presets','Cancel',()=>closeOverlay(overlay))));
+  }
+
   header() {
     const space=spaces().find(s=>s.active);
     const coordinator=config().coordinators.find(r=>terminals().some(t=>matches(t,r)&&t.space===space?.id));
@@ -538,6 +586,7 @@ export default class Fleet extends View {
         .child(div().truncate().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`)))
       .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
       .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>run(`one-piece.focus-pane:${zoom.pane}`))))
+      .when(Boolean(this.presetTarget(current?.tab)),el=>el.child(button('grid-presets','Arrange',()=>openOverlay({mod:'one-piece',kind:'dialog',width:480,height:320,props:{view:'presets',tab:current.tab}}))))
       .child(button('restore-layout','Restore layout',()=>this.openRestore()))
       .child(button('setup-header','Fleet setup',()=>this.setup()));
   }
@@ -661,6 +710,7 @@ export default class Fleet extends View {
       case 'setup':return this.setupView(cx);
       case 'firstmates':return this.firstmatesView();
       case 'restore':return this.restoreView();
+      case 'presets':return this.presetsView();
       default:return this.sidebar(cx);
     }
   }

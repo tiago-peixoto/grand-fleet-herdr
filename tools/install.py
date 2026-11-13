@@ -147,7 +147,7 @@ def source_files(repo):
     files = {}
     for path in sorted(mod.rglob('*')):
         relative = path.relative_to(mod)
-        if (any(p.startswith('.') or p == 'node_modules' for p in relative.parts)
+        if (any(p.startswith('.') or p in ('node_modules', '__pycache__') for p in relative.parts)
                 or path.name == 'jsconfig.json' or path.name.endswith('.d.ts')):
             continue
         if path.is_file():

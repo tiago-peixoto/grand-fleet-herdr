@@ -271,10 +271,12 @@ class InstallTests(unittest.TestCase):
     def test_install_upgrade_and_remove_only_owned_files(self):
         self.put(self.repo, 'mods/one-piece/gpui-kit.d.ts', 'generated')
         self.put(self.repo, 'mods/one-piece/jsconfig.json', '{}')
+        self.put(self.repo, 'mods/one-piece/__pycache__/presets.cpython-315.pyc', b'cache')
         self.put(self.repo, 'mods/unrelated/main.js', 'not ours')
         self.run_cli()
         self.assertEqual((self.home / 'mods/one-piece/main.js').read_text(), 'version one')
         self.assertFalse((self.home / 'mods/one-piece/gpui-kit.d.ts').exists())
+        self.assertFalse((self.home / 'mods/one-piece/__pycache__').exists())
         self.assertFalse((self.home / 'mods/unrelated').exists())
         self.put(self.home, 'mods/one-piece/gpui-kit.d.ts', 'app generated')
         self.put(self.home, 'mods/one-piece/notes.txt', 'my notes')
