@@ -1665,3 +1665,17 @@ This confirms the upstream automated checks, not acceptance or release of the pa
 An explicit switch from Grand Fleet Render Lab back to Grand Fleet Lab did not reproduce the missed machine shortcut.
 The first local-machine click revealed Water 7 while preserving the remote coordinator workspace.
 Application switching alone is therefore insufficient to reproduce the initial unchanged viewport.
+
+Opening Fleet setup, cancelling it, and selecting the remote machine shortcut also revealed its heading and crew on the first click.
+The coordinator workspace stayed unchanged.
+Closing Fleet setup alone therefore did not reproduce the missed shortcut either.
+
+## Upstream recovery patch accepted
+
+The GitHub pull request query now reports [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271) as merged.
+Its merge timestamp is 2026-11-13 at 19:52:25 UTC, with all six checks passing.
+This closes upstream acceptance of the recovery patch.
+Release queries for `herdrdev/herdr-core` and `herdrdev/herdr-app` returned no entries.
+Those responses do not establish whether another distribution channel contains the fix.
+The isolated application still uses the previously verified candidate binary.
+Validation of an installable release remains open.

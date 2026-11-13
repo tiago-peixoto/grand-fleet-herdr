@@ -43,13 +43,15 @@ Fresh local and remote delegation passed within the isolated workflows described
    Native checks now cover the large window and compact attention cards.
    The complete visual review remains open.
 
-3. Obtain upstream acceptance and delivery of the external Core recovery patch.
+3. Verify delivery of the accepted external Core recovery patch.
    Native remote recovery preserves process identity, readable wrapping, settled dimensions, and independent input with the isolated candidate.
    The complete suite, formatting, dependency checks, and native and Windows Clippy checks passed on the isolated 0.1.21 checkout.
    Upstream Linux, macOS, and Windows test jobs passed, alongside lint, upgrade, and the aggregate check.
    The native application was not manually tested on Windows.
    The mod alone cannot supply this Core fix.
-   The reviewed patch is submitted as [herdr-core PR 271](https://github.com/herdrdev/herdr-core/pull/271).
+   [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271) merged on 2026-11-13 at 19:52:25 UTC with all six checks passing.
+   Upstream acceptance is complete.
+   An installable Herdr release containing the patch has not been identified or tested.
 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.
