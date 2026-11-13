@@ -1576,3 +1576,16 @@ The separate Grand Fleet Render Lab also retained its static text when expanded 
 Evidence is saved locally as `.superpowers/native/render-resize-current-{large,small}.jpg`.
 The earlier text disappearance did not reproduce in these checks, but its cause remains unexplained.
 These observations do not establish a renderer fix or complete the full visual review.
+
+## Core recovery patch submitted upstream
+
+The candidate is committed as `e4b913e` on the isolated Core 0.1.21 checkout.
+An independent code review found no introduced blockers and confirmed activity parity with local viewers.
+The reviewer noted that unmodified hash iteration can occasionally restore the correct viewer last, making the baseline failure probabilistic.
+The existing cloned-record replacement after an awaited reattachment request remains unchanged.
+The reviewer inspected the passing test and lint logs but did not rerun native tests.
+
+The patch is submitted as [herdr-core PR 271](https://github.com/herdrdev/herdr-core/pull/271).
+The upstream master branch had one additional unrelated logging fix and no changes to the patched recovery files at submission.
+Upstream review, automated checks, and release remain pending.
+The mod does not bundle or install the candidate Core.
