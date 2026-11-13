@@ -496,10 +496,10 @@ export default class Fleet extends View {
       content.child(block);
     }
     const blockers=attention(world);
-    const alerts=v_flex().gap(6).max_h(180).overflow_y_scrollbar();
+    const alerts=v_flex().gap(4).max_h(144).overflow_y_scrollbar();
     for(const item of blockers) {
       const terminal=item.terminal;
-      alerts.child(v_flex().id(`attention-${terminal.address}`).p(9).gap(3).rounded(6).bg('#28372f').cursor_pointer().hover(s=>s.bg('#364638'))
+      alerts.child(v_flex().id(`attention-${terminal.address}`).px(8).py(5).gap(1).rounded(6).bg('#28372f').cursor_pointer().hover(s=>s.bg('#364638'))
         .on_click((_e,c)=>item.inspect?c.spawn(a=>this.inspect(terminal,a)):item.kind==='Independent'?c.spawn(a=>this.openIndependent(terminal,a)):c.spawn(a=>this.select(terminal,a)))
         .child(div().truncate().text_size(11).text_color('#edc478').child(`${item.kind} · ${label(terminal)}`))
         .child(div().text_size(10).text_color('#afc0b5').child(`${machineOf(terminal.address)??'local'} · ${item.inspect?'Inspect':'Open session'}`)));
@@ -508,7 +508,7 @@ export default class Fleet extends View {
       .child(h_flex().h(64).px(20).gap(10).items_center().child(art('flag','idle',28)).child(v_flex().gap(4).child(div().text_size(14).font_semibold().child('GRAND FLEET')).child(div().text_size(10).text_color('#91acab').child('A place for every session'))))
       .child(shortcuts)
       .child(content)
-      .child(v_flex().p(14).gap(10).border_t(1).border_color('#30474c')
+      .child(v_flex().p(10).gap(8).border_t(1).border_color('#30474c')
         .when(Boolean(cfg.placeholders?.length),el=>el.child(button('retry-cleanup',this.cleaning?'Cleaning temporary shells…':`Retry cleanup · ${cfg.placeholders.length} pending`,(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a)))))
         .child(div().text_size(11).text_color(blockers.length?'#e8bd70':'#94b3aa').child(blockers.length?`${blockers.length} ${blockers.length===1?'session needs':'sessions need'} attention`:'No reported blockers'))
         .when(blockers.length>0,el=>el.child(alerts))

@@ -1562,3 +1562,17 @@ Selecting the isolated toolchain resolved the environment failure.
 The final logs are saved locally as `.superpowers/native/core-0.1.21-{full-tests,deny,clippy,windows-clippy}.log`.
 These checks do not constitute Windows runtime testing or resolve the native renderer defect.
 The candidate still requires final review and delivery before users can rely on this recovery behavior.
+
+## Compact attention cards and current resize checks
+
+The attention cards now use less padding and spacing, leaving more sidebar room for the fleet hierarchy.
+Their session label, machine identity, action label, and click handlers remain unchanged.
+Native captures at 1728 × 994 and 1280 × 820 points show all three current attention cards without clipping.
+Both terminal panes remain readable after resizing without terminal input or a forced CLI screenshot redraw.
+The installed mod passed `Herdr check mods/one-piece` after the final spacing adjustment.
+Evidence is saved locally as `.superpowers/native/compact-attention-{large,small}.jpg`.
+
+The separate Grand Fleet Render Lab also retained its static text when expanded and reduced through native window zoom.
+Evidence is saved locally as `.superpowers/native/render-resize-current-{large,small}.jpg`.
+The earlier text disappearance did not reproduce in these checks, but its cause remains unexplained.
+These observations do not establish a renderer fix or complete the full visual review.

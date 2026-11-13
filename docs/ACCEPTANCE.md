@@ -44,7 +44,9 @@ Automatic sidebar recovery now has native evidence.
 The latest isolated split recovery restored both terminal sizes within 2.14 seconds and preserved their processes.
 A [transport trace](NATIVE-INTEGRATION.md#transient-size-during-transport-loss) explains the temporary resize as Core's configured size when no writable viewer remains.
 [Native wrapping recovery](NATIVE-INTEGRATION.md#native-wrapping-recovery-and-active-worker-motion) passed readable output, process identity, settled dimensions, and typing in the isolated remote split.
-The candidate remains an external Core patch and still needs its complete release validation.
+The candidate remains an external Core patch.
+Its complete test suite, formatting, dependency checks, and native and Windows Clippy checks passed on the isolated 0.1.21 checkout.
+Final review and delivery remain outstanding, and Windows runtime behavior was not tested.
 
 Verify the new Arrange controls through native clicks, focus, close confirmation, workspace switching, and input.
 The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-implementation) preserves actual pane identifiers and avoids modifying the installed layout.
