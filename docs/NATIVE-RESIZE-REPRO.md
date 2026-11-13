@@ -209,3 +209,11 @@ This rules out animation as necessary for the current passing sample, but does n
 
 The evidence and its capture limitations are reported in [herdr-app issue 1022](https://github.com/herdrdev/herdr-app/issues/1022).
 No renderer fix is claimed.
+
+## Physical-screen observation
+
+The author watched Grand Fleet Render Lab while the text-only pane was enlarged and its split restored.
+Both labels remained visible in the native captures.
+The author reported no noticeable flickering on the physical screen.
+This establishes a passing observation on both the display and capture for that attempt.
+It does not distinguish the causes of the earlier failure because that failure did not recur during observation.
