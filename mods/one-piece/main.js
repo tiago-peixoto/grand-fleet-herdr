@@ -209,8 +209,11 @@ export default class Fleet extends View {
       .flatMap(m=>m.coordinators).filter(c=>c.role==='firstmate');
   }
 
-  openFirstmate(cx) {
+  openFirstmate(cx,target) {
     const choices=this.firstmates();
+    const worker=inspectionTarget(terminals(),machines(),config().coordinators,target);
+    const owner=worker&&choices.find(c=>c.workers.some(t=>identity(t)===identity(worker)));
+    if(owner) return this.select(owner.session,cx);
     if(choices.length===1) return this.select(choices[0].session,cx);
     else openOverlay({mod:'one-piece',props:{view:'firstmates'},kind:'dialog',width:480,height:340});
   }
@@ -519,7 +522,7 @@ export default class Fleet extends View {
       .child(h_flex().items_center().gap(12).child(art(coordinator?'luffy':config().characters[target?identity(target):'']?.art??'pirate',target?.status,56))
         .child(v_flex().flex_1().gap(5).child(div().text_size(18).font_semibold().text_color('#e0ece6').child(target?label(target):'Session unavailable'))
           .child(div().text_size(11).text_color('#e8bd70').child(`INSPECTION ONLY · ${target?stateLabel(target):'Disconnected'}`)))
-        .child(button('back-firstmate','Back to firstmate',(_e,c)=>c.spawn(a=>this.openFirstmate(a)),true)))
+        .child(button('back-firstmate','Back to firstmate',(_e,c)=>c.spawn(a=>this.openFirstmate(a,props().target)),true)))
       .child(div().text_size(11).text_color('#9eb7b4').child(target?'Live terminal text · selection and copy enabled · direct input disabled':'Terminal output unavailable · direct input disabled'))
       .child(Editor.new(this.editor).flex_1().min_h(0).size_full())
       .child(div().text_size(10).text_color(this.error?'#edc478':'#8fa8a9').child(this.error||(!target?'Waiting for the session to reconnect':this.updated?'Updates every second · up to 2,000 history lines':'Waiting for output')));

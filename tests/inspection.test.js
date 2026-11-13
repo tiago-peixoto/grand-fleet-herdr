@@ -340,6 +340,30 @@ test('multiple live firstmates require an explicit choice without changing the w
   assert.equal(h.calls[0][1].props.view,'firstmates');
 });
 
+test('worker return selects its registered firstmate among unrelated coordinators',()=>{
+  const h=firstmateHost([
+    {terminal:'t2',created:12,home:'other',role:'firstmate'},
+    {terminal:'t3',created:13,home:'crew',role:'firstmate'}
+  ]);
+  h.sessions.push({address:'t4',created_ms:14,state:'live',labels:{'firstmate.home':'crew','firstmate.task':'work'}});
+  h.controller.openFirstmate(h.cx,{terminal:'t4',created:14});
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='pane.focus'&&args.terminal==='t3'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='overlay'));
+});
+
+for(const mismatch of ['machine','generation','duplicate home']) test(`worker return keeps the chooser for ${mismatch}`,()=>{
+  const h=firstmateHost([
+    {terminal:'t2',created:12,home:mismatch==='duplicate home'?'crew':'other',role:'firstmate'},
+    {terminal:'t3',created:13,home:'crew',role:'firstmate'}
+  ]);
+  const address=mismatch==='machine'?'remote/t4':'t4';
+  h.sessions.push({address,created_ms:14,state:'live',labels:{'firstmate.home':'crew','firstmate.task':'work'}});
+  h.context.machines=()=>[{name:null,layout:'ready'},{name:'remote',layout:'ready'}];
+  h.controller.openFirstmate(h.cx,{terminal:address,created:mismatch==='generation'?15:14});
+  assert.equal(h.calls.length,1);
+  assert.equal(h.calls[0][0],'overlay');
+});
+
 test('no available firstmate opens the chooser without selecting another role',()=>{
   const h=firstmateHost([{terminal:'t3',created:13,role:'secondmate'}]);
   h.controller.openFirstmate();

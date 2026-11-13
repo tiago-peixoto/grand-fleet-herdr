@@ -1232,3 +1232,19 @@ The worker attention entry cleared, leaving the independent attention entry visi
 The Stop hook automatically delivered the new worker completion notification to the primary.
 This verifies fresh local delegation, automatic discovery, decision presentation, inspection, return navigation, and native coordinator input.
 It does not establish the corresponding autonomous remote workflow or close the rendering and animation gates.
+
+## Direct return to the owning firstmate
+
+The fresh local delegation exposed an unnecessary chooser when returning from worker inspection.
+Four local firstmates were registered, although the inspected worker belonged uniquely to `op-firstmate-primary`.
+The return action now uses the existing fleet grouping to select that worker's live firstmate directly.
+Grouping retains machine boundaries and rejects duplicate home registrations.
+Unknown ownership, secondmate inspection, and the global firstmate command retain the existing selection behavior.
+
+In Grand Fleet Lab, selecting `fm-native-fresh-flow` opened its inspection workspace with direct input disabled.
+Clicking **Back to firstmate** then opened `op-firstmate-primary` without displaying a chooser.
+The native application status confirmed terminal `t32`, workspace `op-independent-t32-1794592321467`, no overlays, and no reported errors.
+The worker and firstmate sessions remained running.
+All 120 JavaScript tests and the native mod check passed.
+The regression tests cover direct ownership, a different machine with the same home, stale terminal identity, and duplicate home registrations.
+This navigation check does not close the outstanding animation, resize, or autonomous remote workflow acceptance gates.
