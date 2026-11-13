@@ -87,8 +87,6 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
-- Finish the close-route audit against the installed layout and key bindings.
-  Native pane Close and keyboard routes have evidence below, while host commands can bypass the mod's guards.
 - Verify attention navigation and visible error reporting during remote transitions.
 - Verify animation timing in the running native interface.
   Chopper, Franky, generic Pirate, and the pause control have native state-selection evidence below.
@@ -97,6 +95,34 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 Local-transport Restore interaction, hidden-window directory tracking, and physical SSH process recovery have passed the checks recorded below.
 Those results do not establish recovery after physical host failure.
 Do not report the mod as production-ready until the remaining checks and the complete vision acceptance review pass.
+
+### Installed close routes
+
+The installed layout uses mod-owned tab controls and pane headers.
+The installed keys file maps Cmd-W to `one-piece.close-tab` and Cmd-Shift-W to `one-piece.close-pane` in `layout:one-piece`.
+Its terminal section contains no overrides for those shortcuts.
+Herdr's installed documentation states that layout bindings override global bindings, while terminal bindings override both.
+
+Native keyboard delivery was checked with the independent terminal selected on 2026-11-13.
+Cmd-W visibly opened “Close tab?” and Cmd-Shift-W visibly opened “Close pane?”.
+Both dialogs identified `t11 on local`, said its process ends, and stated that firstmate obligations remain unchanged.
+Cancel dismissed each dialog.
+After both cancellations, `hc get t11 --json` reported the original live process 48951 and creation time 1794521171090.
+The native button closure and inspection-preservation checks remain recorded below.
+This completes the route audit for the installed layout and shortcut configuration.
+Direct Herdr commands and more-specific user shortcuts remain outside these guards, as documented in docs/INSTALL.md.
+
+### Animation observation limits
+
+Native screenshot sampling on 2026-11-13 did not establish continuous animation playback.
+Three sample runs covered approximately 2.05, 3.45, and 3.73 seconds.
+Sunny and flag crops remained byte-identical within each run, although separate interaction screenshots showed different poses.
+The final run followed keyboard activation, and the window controls had appeared active in the preceding screenshot.
+The unknown-status worker crop also stayed unchanged, consistent with its static PNG selection.
+These observations do not distinguish capture behavior from foreground-dependent playback or a renderer defect.
+The user was asked to observe Sunny directly with the window in the foreground.
+Raw captures, timestamps, and crop analyses remain under `.superpowers/native/animation-captures/` and are excluded from the repository.
+Do not infer a playback pass from GIF metadata or state-selection checks.
 
 ## Layout restoration capability check
 
