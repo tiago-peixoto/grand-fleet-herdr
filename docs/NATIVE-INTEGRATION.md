@@ -1469,3 +1469,23 @@ The installed Herdr declarations document `tab.new` separately from `pane.split`
 The change passed all 120 JavaScript tests and the native initial-render check.
 After installing the file in Grand Fleet Lab, a native screenshot showed both distinct labels beside the existing remote split.
 The wider native sidebar remains under visual review rather than being changed without checking long machine and worker names.
+
+## Recovery candidate against Core 0.1.21
+
+The isolated checkout `/tmp/op-core-current-source` uses upstream tag `v0.1.21`, commit `1b0393f80c35b1dae34f37934d33d0144a8fc8d7`.
+The existing reconnect patch applies without conflicts.
+Upstream left `src/remote/viewers.rs` unchanged between 0.1.20 and 0.1.21.
+
+With the candidate, all seven foreground-status tests and all 24 remote integration tests passed.
+The two foreground-status failures recorded against 0.1.20 no longer reproduce in this run.
+The upstream release fixes those tests by waiting for the initial status report before checking its persistence.
+
+The regression was then run with unchanged 0.1.21 relay code and the added test.
+It failed because recovery selected a hidden viewer's 200 × 120 size instead of the visible viewer's 109 × 33 size.
+The candidate source was restored after that comparison.
+This establishes that the released update alone does not fix the reproduced recovery defect.
+Logs are saved locally as `.superpowers/native/core-0.1.21-candidate-tests.log` and `.superpowers/native/core-0.1.21-baseline-regression.log`.
+
+Neither application nor the user's installed core was upgraded during this comparison.
+These tests do not verify native transient resizing, continuous worker animation, or text visibility after resizing.
+Those acceptance gates remain open.
