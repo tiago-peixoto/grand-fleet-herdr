@@ -29,9 +29,17 @@ function art(name,status='idle',size=48) {
 }
 
 function notifyError(error) { notify({title:'Grand Fleet',body:String(error.message??error),level:'error'}); }
+function commandError(result,fallback) {
+  const text=result.stderr||result.stdout||fallback;
+  try {
+    const message=JSON.parse(text).error?.message;
+    if(typeof message==='string'&&message.trim()) return new Error(message);
+  } catch {}
+  return new Error(text);
+}
 async function checked(args) {
   const result=await hc(args);
-  if(result.code!==0) throw new Error(result.stderr||result.stdout||'Herdr could not complete the operation.');
+  if(result.code!==0) throw commandError(result,'Herdr could not complete the operation.');
   return result;
 }
 
@@ -282,7 +290,8 @@ export default class Fleet extends View {
     if(result.code!==0) {
       let kind;
       try {kind=JSON.parse(result.stderr).error?.kind;} catch {}
-      if(kind!=='not_found') throw new Error(result.stderr||'Could not check temporary shell.');
+      if(kind==='unavailable') throw new Error(`Reconnect ${record.machine??'local'}, then retry cleanup.`);
+      if(kind!=='not_found') throw commandError(result,'Could not check temporary shell.');
     } else {
       const terminal=JSON.parse(result.stdout);
       if(terminal.name!==record.name||terminal.labels?.['one-piece.placeholder']!==record.name||typeof terminal.address!=='string'||machineOf(terminal.address)!==record.machine) throw new Error('Temporary shell ownership could not be verified. No process was ended.');

@@ -86,7 +86,6 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
-- Verify cleanup retries when a temporary shell cannot be removed.
 - Verify attention navigation and visible error reporting during remote transitions.
 - Verify animation timing in the running native interface.
   Chopper, Franky, generic Pirate, and the pause control have native state-selection evidence below.
@@ -755,3 +754,21 @@ Its cause remains unknown, so these successful cycles do not establish a fix for
 Clicking the independent attention entry subsequently displayed independent-probe in its local workspace.
 Both window status and the settled native capture agreed on that destination.
 This adds visual evidence for independent attention navigation that the earlier state-selection check lacked.
+
+## Native cleanup retry after remote disconnection
+
+A disposable remote shell carried the mod's temporary-shell ownership label and a persisted cleanup record.
+Disabling only the lab transport left the remote worker running.
+Clicking Retry cleanup initially displayed truncated raw error data.
+The error handler now extracts command messages and gives offline cleanup a short recovery instruction.
+Two regression tests cover structured errors, plain errors, and preservation of the pending cleanup record.
+All 104 JavaScript tests and the native initial-render check passed.
+
+After installation, clicking Retry cleanup while disconnected displayed the complete instruction: Reconnect op-hz-lab, then retry cleanup.
+The pending cleanup record remained available.
+Restoring the transport and clicking Retry cleanup displayed Cleaning temporary shells, then removed the control.
+The pending list became empty and the owned temporary shell op-hz-lab/t19 was finished.
+Worker op-hz-lab/t5 remained live with process identifier 2654548 and creation time 1794573798108.
+Evidence is saved in .superpowers/native/native-cleanup-after.json.
+Motion was reenabled through the native control after this check.
+This verifies the native cleanup retry path, but does not settle continuous animation playback or other remote error paths.

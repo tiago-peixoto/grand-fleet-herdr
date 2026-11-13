@@ -114,6 +114,26 @@ test('cleanup forgets an absent placeholder without killing another process',asy
   assert.ok(!h.calls.some(([_cmd,args])=>args[0]==='kill'));
 });
 
+test('cleanup reports an actionable unavailable machine without exposing raw JSON',async()=>{
+  const h=host({remote:true,failCleanup:true});
+  await h.controller.inspect(h.worker,h.cx);
+  h.errors.length=0;
+  h.context.hc=async()=>({code:3,stderr:JSON.stringify({error:{kind:'unavailable',message:'hz-server is unreachable',hint:'hc machine ls shows when it comes back'}})});
+  await h.controller.cleanupPlaceholders(h.cx);
+  assert.equal(h.errors[0].body,'Reconnect hz-server, then retry cleanup.');
+  assert.equal(h.config().placeholders.length,1);
+});
+
+test('inspection displays structured command error messages and preserves plain errors',async()=>{
+  for(const stderr of [JSON.stringify({error:{kind:'failed',message:'The remote shell could not start.'}}),'The remote shell could not start.']) {
+    const h=host({remote:true});
+    const original=h.context.hc;
+    h.context.hc=async args=>args[0]==='run'?{code:1,stderr}:original(args);
+    await h.controller.inspect(h.worker,h.cx);
+    assert.equal(h.errors[0].body,'The remote shell could not start.');
+  }
+});
+
 test('orphaned placeholders are rediscovered from their ownership labels after interruption',()=>{
   const h=host();
   h.sessions.push({address:'t9',name:'op-view-123-456',state:'live',labels:{'one-piece.placeholder':'op-view-123-456'}});
