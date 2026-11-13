@@ -16,7 +16,7 @@ The native scenarios use isolated test terminals, including a physical remote se
 | Supervised workers and secondmates cannot receive direct input through inspection | [Observed behavior](NATIVE-INTEGRATION.md#observed-in-the-isolated-application) and [remote input rejection](NATIVE-INTEGRATION.md#native-physical-server-worker-input-rejection) cover typing, paste, Return, and interrupt | Passed |
 | Personal terminals remain independent inside coordinator workspaces | [Native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) and [remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verify separate input and process identity | Passed |
 | Focus and workspace changes preserve the existing grid and sessions | [Observed behavior](NATIVE-INTEGRATION.md#observed-in-the-isolated-application) and [crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) verify the existing three-pane arrangement | Passed for that arrangement |
-| Switch between the prototype's equal-grid and chat-plus-terminals presets | [Native preset controls](NATIVE-INTEGRATION.md#native-preset-controls-and-worker-return) verify local geometry and input; [helper checks](NATIVE-INTEGRATION.md#core-document-preset-implementation) verify process identity locally and remotely | Local native controls passed; helper verified locally and over SSH; remote native view remains unverified |
+| Switch between the prototype's equal-grid and chat-plus-terminals presets | [Native preset controls](NATIVE-INTEGRATION.md#native-preset-controls-and-worker-return) verify local geometry and input; [helper checks](NATIVE-INTEGRATION.md#core-document-preset-implementation) verify process identity locally and remotely | Passed for the tested three-pane local and two-pane remote inventories |
 | Restore missing personal shells explicitly without claiming conversation recovery | [Remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verifies the native action, directory, new process, and surviving neighbor | Passed over SSH, the remote shell connection |
 | Close identifies its target and process-ending consequence | [Installed close routes](NATIVE-INTEGRATION.md#installed-close-routes) and [native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) cover buttons and installed shortcuts | Passed within the installed layout and shortcut scope |
 | Offline machines show no stale live crew or unavailable actions | [Persistent machine navigation](NATIVE-INTEGRATION.md#persistent-machine-navigation) verifies unavailable presentation and foreground recovery | Passed; automatic background redraw unverified |
@@ -44,7 +44,9 @@ The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-im
 The helper preserved five terminal identities across local and SSH layouts.
 Conflict handling and missing confirmations have regression tests.
 [Local native controls](NATIVE-INTEGRATION.md#native-preset-controls-and-worker-return) passed geometry, input, focus, close cancellation, and worker-return checks.
-Remote native controls remain unverified because captured content disagreed with the active workspace reported by the app.
+[Remote native controls](NATIVE-INTEGRATION.md#native-remote-preset-controls) passed preset selection, independent input, focus, and return to the split view.
+Raising the window resolved that stale capture sufficiently to perform these checks.
+The separate rendering and continuous-animation acceptance gates remain open.
 The alternative terminal-block approach retains the [persistence and focus constraints](NATIVE-INTEGRATION.md#preset-persistence-and-focus-constraints).
 The terminal-block proof establishes geometry and input, not safe lifecycle behavior.
 Existing split creation and Focus pane controls do not prove preset switching.

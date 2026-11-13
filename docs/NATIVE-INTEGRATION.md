@@ -1053,3 +1053,23 @@ A subsequent click on an empty header area did not update that captured content.
 No remote preset action was attempted against the mismatched view.
 This is not evidence of successful remote visual navigation or a diagnosed mod defect.
 Physical-display comparison remains necessary to distinguish stale capture from stale presentation.
+
+
+## Native remote preset controls
+
+Raising the existing Grand Fleet Lab window brought its capture into agreement with the reported remote workspace.
+No restart or offscreen rendering command was used.
+This recovery allowed remote preset testing, but does not resolve the separate resize and continuous-animation discrepancies.
+
+Native clicks selected Equal grid for hz-captain and personal terminal op-hz-lab/t14.
+The dialog closed and both panes remained visible in equal columns.
+Typing `printf 'native-remote-preset-ok\n'` into the personal shell produced the expected output there.
+Reading both terminals through hc confirmed that the marker reached only t14.
+The coordinator remained at its unchanged prompt.
+Focus enlarged t14 and showed its output across the workspace.
+Choosing Chat + terminals from Arrange removed the enlargement and restored the coordinator left and personal shell right.
+The two presets share the same visible two-column geometry for this two-pane inventory.
+The local three-pane check establishes their different geometry with additional personal terminals.
+Both remote terminals retained their process identifiers, creation times, states, parents, keep flags, and labels.
+The identity comparison used hc get before the first preset and after the second preset.
+Evidence remains in `.superpowers/native/preset-remote-ui-before.json` and `.superpowers/native/preset-remote-ui-after.json`.
