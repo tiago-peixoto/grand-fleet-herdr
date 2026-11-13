@@ -772,3 +772,28 @@ Worker op-hz-lab/t5 remained live with process identifier 2654548 and creation t
 Evidence is saved in .superpowers/native/native-cleanup-after.json.
 Motion was reenabled through the native control after this check.
 This verifies the native cleanup retry path, but does not settle continuous animation playback or other remote error paths.
+
+## Native remote attention navigation through reconnection
+
+A disposable status program in op-hz-lab/t5 reported a blocker and printed REMOTE_ATTENTION_PROBE_READY.
+The attention list gained Worker · hz-interrupt-worker alongside the independent local blocker.
+Clicking its Inspect entry displayed the named worker, seated artwork, Needs you, and the probe's output in inspection.
+
+Stopping only the isolated transport made the core report the remote machine unreachable.
+After scrolling the sidebar, the native view displayed Machine unavailable under the retained op-hz-lab heading.
+The worker attention entry disappeared while the independent entry remained.
+Inspection displayed Session unavailable and replaced prior output with an explicit unavailable message.
+The earlier captures stayed unchanged until scrolling, so this does not prove automatic redraw timing.
+
+The independent attention entry opened the local personal terminal while the remote machine was unavailable.
+After restoring the transport, the worker attention entry returned.
+Clicking it reopened the same worker inspection with the probe output and Needs you state.
+Typing a marker and Return into inspection left the core's terminal output byte-identical.
+The worker process 2654548 and the blocking program process 3484374 both survived the connection interruption.
+Window status reported the worker inspection workspace with no errors after reconnection.
+Evidence is saved in .superpowers/native/attention-reconnect-after.json.
+
+The test program then exited through a direct fixture command.
+The worker returned to its original shell with no reported status and the same process identifier.
+This closes the native attention destination check for this disconnection cycle.
+Automatic repaint, other interruption timings, and continuous animation remain separate acceptance gaps.
