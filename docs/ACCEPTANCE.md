@@ -29,7 +29,7 @@ Fresh local and remote delegation passed within the isolated workflows described
 | Ordinary sessions remain usable and explicitly Unsupervised | [Native navigation](NATIVE-INTEGRATION.md#native-navigation-verification-after-unlocking) and controller routing tests | Passed within recorded cases |
 | Removing the mod preserves sessions and fleet records | [Removal and reinstallation](NATIVE-INTEGRATION.md#native-removal-and-reinstallation) compares 39 live terminals and app-home files | Passed in the isolated home |
 | Real firstmate delegation produces correctly discovered workers and preserves its authority and records | [Actual firstmate launch](NATIVE-INTEGRATION.md#actual-firstmate-worker-launch-and-inspection) verifies discovery, inspection, preserved records, backend input, and rejection of a mismatched task label | Passed for [fresh local delegation](NATIVE-INTEGRATION.md#fresh-delegation-through-the-native-firstmate-workspace) and the [fresh remote decision cycle](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
-| Match the approved visual experience on the user's large-screen workflow | [Crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) and [compact attention cards](NATIVE-INTEGRATION.md#compact-attention-cards-and-current-resize-checks) cover 1000 × 700 through 1728 × 994 | Partial; complete visual review remains open |
+| Match the approved visual experience on the user's large-screen workflow | [Visual comparison conclusion](NATIVE-INTEGRATION.md#visual-comparison-conclusion) covers hierarchy, artwork, terminal arrangements, controls, and attention at 1000 × 700 through 1728 × 994 | Appearance review passed for the recorded inventories; rendering reliability remains unresolved |
 
 ## Next acceptance gates
 
@@ -39,9 +39,10 @@ Fresh local and remote delegation passed within the isolated workflows described
    The restored text-only probe also passes its latest split and enlargement checks.
    The unresolved evidence is tracked in [herdr-app issue 1022](https://github.com/herdrdev/herdr-app/issues/1022).
 
-2. Finish the visual comparison against the approved prototype.
-   Native checks now cover the large window and compact attention cards.
-   The complete visual review remains open.
+2. Resolve the unexplained first machine shortcut miss.
+   Later selections worked, including immediately after switching applications and cancelling Fleet setup.
+   Those passing samples do not explain the original unchanged viewport.
+   Do not claim a navigation fix without reproducing its cause.
 
 3. Verify delivery of the accepted external Core recovery patch.
    Native remote recovery preserves process identity, readable wrapping, settled dimensions, and independent input with the isolated candidate.

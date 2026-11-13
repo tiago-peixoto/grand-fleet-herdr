@@ -1679,3 +1679,27 @@ Release queries for `herdrdev/herdr-core` and `herdrdev/herdr-app` returned no e
 Those responses do not establish whether another distribution channel contains the fix.
 The isolated application still uses the previously verified candidate binary.
 Validation of an installable release remains open.
+
+## Visual comparison conclusion
+
+The current native layout was reviewed against the saved 1728 × 994 prototype capture and the preceding native captures at both supported review sizes.
+The compact Arrange dialog was also opened at 1000 × 700.
+Both preset names, their explanations, and Cancel remained visible without clipping.
+Cancel returned to the existing workspace without sending terminal input.
+The capture is saved locally as `.superpowers/native/visual-arrange-compact.jpg`.
+
+| Prototype area | Native conclusion |
+| --- | --- |
+| Palette and artwork | Dark teal surfaces, gold emphasis, and the custom Sunny and character artwork retain the approved visual language. |
+| Machine and crew hierarchy | Persistent machine shortcuts and indented crew preserve navigation across a scrolling inventory. |
+| Sidebar width | Keep 310 points because the tested narrower version wraps shortcuts and truncates task names sooner. |
+| Coordinator content | The actual terminal preserves real permission prompts instead of reproducing simulated chat bubbles. |
+| Personal terminals | Existing local three-pane and remote two-pane checks establish the reviewed grid and focused arrangements. |
+| Workspace controls | The compact toolbar exposes machine identity, and Arrange presents both prototype presets with readable explanations. |
+| Crew inspection | Sidebar selection opens a separate read-only workspace with artwork, task identity, and return to the owning firstmate. |
+| Attention | Three compact cards remain readable without consuming the whole crew viewport. |
+
+This completes the appearance comparison for the recorded inventories and window sizes.
+It does not establish arbitrary fleet sizes, every keyboard interaction, or reliable rendering across every resize.
+The initial missed machine shortcut remains unexplained despite successful subsequent navigation checks.
+The rendering discrepancy and released Core verification remain separate acceptance gates.
