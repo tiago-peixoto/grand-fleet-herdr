@@ -107,7 +107,7 @@ Historical sections below retain the limits that applied when each check ran.
   Chopper, Franky, generic Pirate, and the pause control have native state-selection evidence below.
 - Verify automatic background redraw after remote reconnection.
 - Verify a complete isolated firstmate workflow, beyond labeled shell fixtures.
-- Resolve the prototype's unimplemented grid presets and complete the large-screen visual comparison.
+- Complete the large-screen visual comparison, including the implemented grid presets.
 
 Native cleanup retry and remote attention navigation passed the later checks recorded below.
 
