@@ -1209,3 +1209,26 @@ This establishes local supervision of an existing worker, including automatic de
 It does not establish fresh delegation by this primary, remote autonomous supervision, or reliable native keyboard submission.
 No application code changed during this verification.
 Grand Fleet Render Lab and the ordinary Herdr application were not modified.
+
+### Fresh delegation through the native firstmate workspace
+
+The same isolated primary then created native-fresh-flow through fm-brief.sh and fm-spawn.sh on 2026-11-13.
+Firstmate launched the scout in terminal t33 with its own worktree at /Users/tiago/.treehouse/project-671758/2/project.
+The scout read the fixture README, wrote its report, and opened fresh-native-checkpoint.
+The mod discovered Worker · fm-native-fresh-flow without another registration or records connection.
+Its attention entry remained separate from Independent · independent-probe.
+Clicking that entry opened a separate worker inspection workspace with Needs you and a sitting Pirate.
+The view explicitly disabled direct input and offered selection and copying.
+Back to firstmate opened the existing coordinator chooser, and selecting op-firstmate-primary returned to Luffy's terminal.
+
+Confirmation typed and submitted through the native firstmate terminal appeared in the primary's conversation.
+The automatic Stop hook notification delivered the new worker's decision.
+The primary relayed confirmation using fm-send.sh with --resolve-key and acknowledged the drained notifications.
+The worker consumed the steering message, passed its scout completion gate, and recorded done.
+The durable history contains needs-decision, resolved, and done in order.
+SHA-256 comparisons confirmed that the report and project README were unchanged across resolution.
+The new worktree remained clean.
+The worker attention entry cleared, leaving the independent attention entry visible.
+The Stop hook automatically delivered the new worker completion notification to the primary.
+This verifies fresh local delegation, automatic discovery, decision presentation, inspection, return navigation, and native coordinator input.
+It does not establish the corresponding autonomous remote workflow or close the rendering and animation gates.
