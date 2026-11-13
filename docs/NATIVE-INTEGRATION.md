@@ -1605,3 +1605,25 @@ No terminal input or forced CLI screenshot redraw occurred during these checks.
 Evidence is saved locally as `.superpowers/native/visual-worker-{small,large}.jpg`.
 The installed mod check and all 120 JavaScript tests passed after the setup layout change.
 These checks do not resolve the earlier intermittent text disappearance or complete the remaining visual review.
+
+## Large-screen comparison after setup correction
+
+The native coordinator workspace was compared with the approved prototype at 1728 × 994 points.
+The comparison used the existing remote firstmate and its independent terminal.
+Clicking Focus enlarged firstmate, and clicking Grid restored both panes with their existing contents.
+Luffy, the coordinator label, toolbar labels, and terminal text remained visible throughout this sample.
+No terminal input or forced CLI screenshot redraw occurred.
+Evidence is saved locally as `.superpowers/native/visual-firstmate-{focused,grid}.jpg`.
+
+| Area | Native comparison | Remaining decision or check |
+| --- | --- | --- |
+| Color and artwork | Dark teal surfaces, gold selection borders, Sunny, and Luffy preserve the prototype's visual language | No change indicated by this sample |
+| Sidebar hierarchy | Ships group indented characters, and the machine shortcuts remain visible while the inventory scrolls | Compare the 310-point width with a narrower candidate using long names |
+| Coordinator content | Real terminal output replaces the prototype's simulated conversation | Keep the actual session and its permission prompts intact |
+| Independent work | The restored grid shows firstmate and the personal terminal side by side | Already verified for this two-pane inventory |
+| Workspace controls | Arrange groups the prototype's two preset actions, while New tab distinguishes tab creation from terminal splitting | Check toolbar density at the smallest supported window |
+| Crew access | Workers remain available in the sidebar rather than a second strip beneath the coordinator | Review discoverability when the active coordinator is below the sidebar viewport |
+| Worker inspection | The separate workspace displays artwork, task identity, read-only output, and Back to firstmate | Small and large captures passed in the preceding section |
+
+Window resizing and pane enlargement are distinct checks.
+This successful pane enlargement does not explain the earlier minimal-probe failure.
