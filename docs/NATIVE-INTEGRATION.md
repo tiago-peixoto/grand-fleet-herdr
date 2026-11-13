@@ -25,7 +25,8 @@ The worker never receives workspace labels during this operation.
 If creating inspection fails, the worker stays parked and its process continues.
 Parking preserves the process while removing its writable pane.
 Native selection, clipboard copying, and long-output scrolling passed in worker inspection.
-Hidden inspection and lifecycle transitions still require acceptance checks.
+Hidden inspection polling and interrupted inspection creation passed the runtime checks recorded below.
+Native presentation across those transitions remains unverified.
 
 ## Observed in the isolated application
 
@@ -74,7 +75,8 @@ Setup callback checks reproduce stale registrations blocking replacement and sel
 Linking now validates the selected terminal identity and machine availability again before saving.
 An explicit link replaces stale registrations for that home on that machine while preserving live conflicts and other machines.
 Additional checks reject reused terminal identifiers and machines that disconnect before linking.
-Native replacement click-through remains unverified.
+Local coordinator replacement subsequently passed native click-through verification, as recorded below.
+Replacement through a physical remote connection remains unverified.
 
 Run artwork and installer checks with `python3 -B -m unittest discover -s tests -p 'test_*.py' -v`.
 Installer tests use temporary directories and do not modify the user's Herdr configuration.
@@ -84,15 +86,19 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native presentation during SSH disconnection and reconnection on the separate physical host.
-- Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
+- Complete personal-shell restoration on the physical SSH host, including native interaction.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
-- Check every close route, including Herdr's built-in tab controls.
+- Finish the close-route audit against the installed layout and key bindings.
+  Native pane Close and keyboard routes have evidence below, while host commands can bypass the mod's guards.
 - Verify attention navigation and visible error reporting during remote transitions.
-- Verify animation transitions against actual worker state and paused motion.
+- Verify generic Pirate state transitions and animation timing.
+  Chopper, Franky, and the pause control have native state-selection evidence below.
 - Compare the native layout with the approved prototype at the target screen sizes.
 
-Do not report the mod as production-ready until these checks and the complete vision acceptance review pass.
+Local-transport Restore interaction, hidden-window directory tracking, and physical SSH process recovery have passed the checks recorded below.
+Those results do not establish recovery after physical host failure.
+Do not report the mod as production-ready until the remaining checks and the complete vision acceptance review pass.
 
 ## Layout restoration capability check
 
@@ -532,7 +538,8 @@ Reconnection restored the remote shell prompt.
 Assertions confirmed no writable worker pane and unchanged captain and worker process identities.
 The recovery evidence files now include the inspection editor values for both connection states.
 Additional records are ssh-inspection-created.json and ssh-inspection-cleanup.json in .superpowers/native/.
-Native appearance, direct input rejection, and interruption during inspection creation still need separate verification.
+Native appearance and direct input rejection on this physical remote connection remain unverified.
+The following sections verify interruptions during inspection creation.
 
 
 ## Application termination during physical SSH inspection creation
@@ -576,3 +583,15 @@ The assert-based test is .superpowers/native/check-ssh-launch-disconnect.py.
 Its evidence files use the ssh-launch-disconnect prefix in the same directory.
 This verifies the controller's failure result, durable cleanup obligation, process preservation, and retry across a real SSH interruption.
 Native notification appearance and clicking Retry cleanup remain unverified.
+
+
+## Physical SSH personal-shell restoration attempt
+
+The test view started with token ssh-restore-physical-1 and created the dedicated anchor shell op-hz-lab/t10.
+The app lists that shell in its machine-qualified test workspace.
+No restoration result was saved, and no second test shell appeared in the terminal inventory.
+The app remained running, and no hc child command remained active when inspected.
+This does not establish whether the test task was cancelled or its continuation stopped advancing.
+Do not count this attempt as successful restoration or restart it solely because its result is absent.
+Native capture showed an older inspection tab while the command interface selected Physical SSH restoration.
+The unresolved task and display discrepancy require investigation before this acceptance item can pass.
