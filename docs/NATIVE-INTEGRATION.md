@@ -930,10 +930,30 @@ That inventory includes finished records and is not a claim of 94 live terminals
 The original `one-piece` layout was restored with no reported application errors.
 Proof layouts and before-and-after inventories remain under `.superpowers/native/preset-proof/`.
 
-This changes the next implementation step: prototype presets are feasible without moving or restarting terminals.
+This proves that both geometries can render without moving or restarting terminals.
+It does not yet establish a safe product integration.
 They remain unimplemented in the product.
 The installed `focused()` documentation says a layout terminal block has no model pane identifier.
 Implicit pane commands and split placement therefore cannot be reused unchanged for these blocks.
 Integration must target the original model panes explicitly and retain pane headers, close confirmation, focus restoration, and personal-terminal creation.
 It must also reconcile blocks on workspace changes, worker inspection, process exit, and machine disconnection.
 The proof uses fixed terminal addresses and does not verify those dynamic requirements.
+
+### Preset persistence and focus constraints
+
+The installed `focused()` documentation distinguishes terminal blocks from model panes.
+A focused terminal block returns its terminal address but a null pane identifier.
+The current header resolves the model's focused pane, while the close shortcut uses `focused().pane`.
+A preset integration must resolve the selected block back to its original pane before creating or closing personal terminals.
+It must retain the existing supervised-navigation check before focusing any coordinator or worker.
+
+Inspection of Herdr's `layout.set` implementation confirmed that it atomically writes the replacement tree to the personal layout file.
+Reading the proof file after returning to the normal layout confirmed that `t1`, `t3`, and `t4` remained embedded on disk.
+The current installer checks each owned file against its recorded hash and refuses changed files.
+Calling `layout.set` on the installed `one-piece` layout would therefore prevent normal upgrades and removal.
+The proof used a separate clone, and the installed layout still matches its ownership receipt.
+
+Before product integration, establish ownership and removal for a separate generated layout or another host-supported arrangement mechanism.
+A generated layout must also reconcile persisted terminal addresses before exposing writable sessions after restart.
+Do not weaken installation ownership checks or treat static addresses as current session identities to make the preset proof shippable.
+These constraints remain open alongside the dynamic navigation requirements above.
