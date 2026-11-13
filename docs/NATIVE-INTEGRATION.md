@@ -695,3 +695,22 @@ Exiting the status program returned the worker to its original shell and cleared
 Its process identifier 2654548 and creation time 1794573798108 remained unchanged.
 The final core record is saved in .superpowers/native/pirate-state-after.json.
 These observations establish state selection, not frame timing or continuous animation playback.
+
+## Native remote inspection tab closure
+
+Clicking the tab's Close button for hz-interrupt-worker opened the mod's confirmation dialog.
+The dialog identified op-hz-lab/t5 and stated that only the inspection view would close.
+Clicking Close view dismissed the dialog and displayed another worker's inspection.
+A core query confirmed that t5 remained live with process identifier 2654548 and creation time 1794573798108.
+This verifies the native tab button's preservation path over physical SSH.
+
+Reopening through the sidebar briefly displayed a temporary-shell cleanup notice.
+The persisted cleanup list subsequently became empty without clicking Retry cleanup.
+The inspection record acquired a new workspace, tab, and pane.
+However, subsequent window status selected op-remote-lab/op-remote-probe, and the settled capture showed that unrelated terminal.
+Reopening is therefore not accepted as passing, even though the worker survived and cleanup completed.
+Evidence is saved in .superpowers/native/native-inspection-close-after.json.
+
+The installed one-piece layout matches the repository layout exactly.
+The running window reports that layout as active.
+Its tab and pane headers use the mod's controls rather than the shipped tab controls.
