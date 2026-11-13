@@ -470,3 +470,17 @@ Those summaries omit process identifiers, so this comparison does not independen
 Evidence is saved in .superpowers/native/registration-before.json, registration-after.json, and registration-preservation-result.json.
 This verifies replacement on the local machine through native setup controls.
 It does not establish replacement across a physical remote connection.
+
+## Native Franky state and pause checks
+
+The existing isolated worker t8 ran the disposable status program used for Chopper verification.
+Native screenshots showed sleeping Franky for Idle, upright Franky for Working, and seated Franky for Needs you.
+Both inspection headers and the sidebar reflected each transition.
+The blocked transition added an attention entry and changed the count from one to two.
+Clicking Pause motion changed the control to Play motion and persisted paused=true.
+While paused, changing the worker to Working updated its artwork and text and removed its attention entry.
+The pause preference therefore leaves status updates active.
+The production art selector uses static PNG assets while this preference is enabled.
+These observations verify state selection and the native pause control, not frame-by-frame animation timing.
+Clicking Play motion restored paused=false.
+Exiting the status program returned t8 to its original shell with process identifier 21083 and creation time 1794520892484.
