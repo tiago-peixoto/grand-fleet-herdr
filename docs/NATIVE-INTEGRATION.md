@@ -1027,3 +1027,29 @@ The corrected helper repeated both presets against local versions 194/195 and SS
 All five terminal identities remained unchanged, and the check restored both original arrangements.
 The reviewed changes were installed into Grand Fleet Lab only.
 Native click, input, continuous animation, and large-screen visual acceptance remain open.
+
+
+## Native preset controls and worker return
+
+Native clicks in Grand Fleet Lab exercised Equal grid on the local coordinator's three existing panes.
+The resulting view placed t1 and t3 across the top row, with t4 below and an empty fourth cell.
+Typing a unique marker into t4 produced its output there, while t1 remained at its untouched shell prompt.
+Focus enlarged t4.
+Choosing Chat + terminals from that enlarged view restored t1 on the left and stacked t3 and t4 on the right.
+The t4 close dialog named the terminal and machine and explained that its process would end.
+Cancel preserved the terminal.
+Selecting test-worker opened inspection with direct input disabled.
+Back to firstmate opened the coordinator chooser because the test inventory contains multiple firstmates.
+Choosing test-captain restored the same three-pane arrangement and retained the personal terminal output.
+The before and after inventory records for t1, t3, and t4 match exactly.
+Those inventory records do not contain process identifiers, so this comparison alone does not prove process identity.
+The earlier helper verification supplies the separate process-identity evidence for preset writes.
+Evidence remains in `.superpowers/native/preset-ui-before.json` and `.superpowers/native/preset-ui-after.json`.
+
+Remote native verification encountered a discrepancy before any preset was selected.
+Clicking hz-captain changed the app status to `op-hz-lab/op-hz-captain` with no reported errors.
+Native captures continued to show the local test-captain workspace with t3 and t4.
+A subsequent click on an empty header area did not update that captured content.
+No remote preset action was attempted against the mismatched view.
+This is not evidence of successful remote visual navigation or a diagnosed mod defect.
+Physical-display comparison remains necessary to distinguish stale capture from stale presentation.
