@@ -76,7 +76,7 @@ Linking now validates the selected terminal identity and machine availability ag
 An explicit link replaces stale registrations for that home on that machine while preserving live conflicts and other machines.
 Additional checks reject reused terminal identifiers and machines that disconnect before linking.
 Local coordinator replacement subsequently passed native click-through verification, as recorded below.
-Replacement through a physical remote connection remains unverified.
+Replacement through a physical remote connection also passed the native check recorded below.
 
 Run artwork and installer checks with `python3 -B -m unittest discover -s tests -p 'test_*.py' -v`.
 Installer tests use temporary directories and do not modify the user's Herdr configuration.
@@ -797,3 +797,19 @@ The test program then exited through a direct fixture command.
 The worker returned to its original shell with no reported status and the same process identifier.
 This closes the native attention destination check for this disconnection cycle.
 Automatic repaint, other interruption timings, and continuous animation remain separate acceptance gaps.
+
+## Native physical-server coordinator replacement
+
+Fleet setup linked disposable remote shell hz-registration-old, op-hz-lab/t1b, to home native-ssh-replacement.
+After that shell ended, the setup dialog excluded it and offered hz-registration-new, op-hz-lab/t1c.
+Linking the replacement to the same home closed the dialog and replaced the stale registration.
+Exactly one registration remained for that home, with the replacement's creation time, 1794583025575.
+All six unrelated coordinator registrations remained identical.
+
+Back to firstmate opened the chooser, whose scrollable list included hz-registration-new with its remote machine identity.
+Selecting it displayed the remote coordinator workspace, Luffy header, and shell prompt in /tmp.
+Window status confirmed op-hz-lab/op-hz-registration with no errors or open overlays.
+Four unrelated local and remote coordinator and worker processes retained their process identifiers, creation times, and live state.
+Evidence is saved in .superpowers/native/ssh-registration-before.json, ssh-registration-linked.json, and ssh-registration-after.json.
+This verifies replacement and navigation over the physical server connection while connected.
+It does not establish replacement during a connection interruption or resolve the rendering and animation acceptance gaps.
