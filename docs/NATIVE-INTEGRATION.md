@@ -1317,3 +1317,19 @@ The [0.1.20 relay implementation](https://github.com/herdrdev/herdr-core/blob/v0
 The control verifies that path with the installed binary, independently of native terminal rendering.
 It does not reproduce the persistent 200-by-120 size seen in Grand Fleet Lab.
 Further investigation must compare native viewer traffic or terminal replies against this passing control before changing the relay implementation.
+
+### Multiple-viewer recovery reproduction
+
+A metadata-only trace found two resumed attachments for the remote firstmate, requesting 109-by-33 and 200-by-120 respectively.
+The original transport wrapper was restored afterward, and machine status confirmed reconnection.
+A disposable two-core test added a second viewer at 200-by-120 before resizing the first viewer to 109-by-33.
+The fourth repeated attempt recovered at 200-by-120 and failed the expected-size assertion.
+This reproduces the size failure without the mod or native application.
+Each attempt stopped both disposable cores afterward.
+
+The core stores relayed viewers in a HashMap and marks all resumed attachments with no activity timestamp.
+Its size selection therefore cannot preserve their previous activity ordering when those viewers return.
+The resulting tie depends on attachment order.
+A correction must also preserve the existing rule that a returning viewer cannot displace a viewer active during the outage.
+The native output still requires verification after correcting size ownership.
+The investigation is tracked in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3).
