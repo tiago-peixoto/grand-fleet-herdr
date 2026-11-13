@@ -54,7 +54,7 @@ The [native cache](https://github.com/herdrdev/herdr-app/blob/v0.1.15/vendor/gpu
 Changed geometry must rebuild the subtree.
 
 The next diagnostic must compare cache decisions, text layout, and glyph emission across successful, failed, and click-restored frames.
-No instrumented failing frame has been captured.
+The synchronized failing frames are recorded in the follow-up sections below.
 The evidence does not yet identify a specific cache, clipping, or graphics defect.
 
 Upstream commit d6f6106cec444f82c1d59bd8a25f107990ec0d85 is 47 commits beyond v0.1.15.
@@ -121,3 +121,32 @@ They submit 33 monochrome glyph sprites for the static label and 16 for the inte
 Native view-cache reuse remained disabled.
 This narrows the investigation beyond text layout and sprite submission but does not identify the rendering failure.
 No runtime workaround is included in the mod.
+
+## Metal drawing trace
+
+A third isolated build logged glyph records, rectangles, drawing batches, and texture lookup.
+Restoring the split view retained both labels.
+Enlarging the probe then removed both labels while retaining its yellow rectangle.
+Clicking the rectangle restored both labels again.
+Native screenshots verified each transition.
+The failed capture has 240 recorded frames and no missing-texture reports.
+Its final frame contains all 49 glyphs across the two labels.
+The restored frame contains identical glyph records, including bounds, clipping, opacity, transformation, and atlas coordinates.
+Both frames have identical drawing batches.
+No later opaque rectangle covers either label in those records.
+These observations exclude missing texture lookup and changed drawing order as explanations for this captured failure.
+They do not establish whether the texture contents, graphics execution, or frame presentation causes the loss.
+The next diagnostic compares numeric glyph coverage in the texture between failed and restored frames.
+The trace files remain in .superpowers/native/metal-trace-missing.log and .superpowers/native/metal-trace-restored-frame.log.
+Only the isolated diagnostic runtime contains instrumentation.
+
+## Texture coverage comparison
+
+A fourth diagnostic build added numeric coverage measurements for glyph textures in shared memory.
+The same split, enlarge, and click sequence reproduced and restored both missing labels.
+The failed and restored frames contain identical coverage measurements for all 49 glyphs.
+Their complete logged Metal records also match, including glyphs, rectangles, batches, and texture availability.
+The saved evidence is .superpowers/native/atlas-trace-missing.log and .superpowers/native/atlas-trace-restored-frame.log.
+This comparison does not support empty glyph textures as the cause of the captured failure.
+The next investigation must distinguish graphics execution from frame presentation and confirm which frame reaches the screen.
+No production fix has been established.
