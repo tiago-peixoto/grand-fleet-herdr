@@ -1835,7 +1835,11 @@ The terminal selection and its visible counter output remained unchanged through
 No terminal input was sent.
 
 This rejects the hypothesis that a partially visible machine section prevents returning to its hidden heading in the tested state.
-It does not explain the historical first-click miss at compact size.
+A follow-up resize produced a 2004 × 1404 pixel capture, approximately 1002 × 702 logical points.
+The first `op-hz-lab` shortcut click then revealed its heading and first coordinator.
+The application status reported no errors.
+Restoring the terminal grid and enlarging the window retained both terminal panes and readable output.
+These checks did not reproduce the historical first-click miss at compact size.
 The installed Herdr guidance documents `scroll_to_item` as revealing a direct child with the smallest necessary movement.
 The mod supplies one direct child per machine and uses that child's index.
 No navigation code change is justified by these passing samples.
