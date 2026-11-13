@@ -63,6 +63,37 @@ The documented `ctrl-shift-l` shortcut also cycles layouts, unless you changed t
 These mechanisms come from [Herdr's installed guidance](/Users/tiago/.config/herdr-app/AGENTS.md), under Layouts and Commands.
 The installer never executes either command.
 
+## Connect firstmate task records
+
+Herdr reports terminal activity separately from firstmate's durable decisions and task completion.
+Connect each firstmate home so an unanswered decision appears even after its worker finishes a model turn.
+The connection requires Python 3 and the firstmate executable checkout on that machine.
+
+1. Open the machine menu in the sidebar, then open Fleet setup.
+2. Choose **Task records** for the worker home label you want to connect.
+3. Enter the absolute path to the firstmate executable checkout in **Firstmate executable root**.
+4. Enter the absolute path containing that home's `state` and `data` directories in **Operational home**.
+5. Select **Connect**.
+
+For remote machines, both paths belong to the remote machine.
+The mod reads through Herdr's existing machine connection.
+It does not create a new remote connection or copy fleet records into the repository.
+Repeat these steps for each participating home.
+Reopening the same connection lets you correct its paths.
+
+The reader matches each record against the worker's machine, home label, task label, terminal address, and creation timestamp.
+Open decisions display **Needs you** and add an inspection entry to the attention list.
+Resolve decisions through firstmate's normal workflow.
+The mod does not answer them or send worker input.
+A verified completed task displays **Task complete**.
+A terminal that merely finished a model turn displays **Turn complete**.
+
+A configured source without fresh matching evidence displays **Task records unavailable** unless Herdr already reports a blocker.
+Reopen the home's Task records connection to inspect a read error or correct its paths.
+The mod polls configured homes every five seconds and rejects results older than thirty seconds.
+Observed disconnection clears cached evidence and prevents a pending read from publishing after reconnection.
+An unconfigured home retains Herdr's terminal status and cannot expose decisions stored only in firstmate records.
+
 ## Scoped close shortcuts
 
 The installer adds these entries inside `keys.json`:
