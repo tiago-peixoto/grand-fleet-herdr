@@ -1364,6 +1364,23 @@ Disabling signing only in the test process passed all six command execution test
 No global Git settings were changed.
 The full core validation gate, continuous animation, and the separate resize rendering discrepancy remain open.
 
+### Fixed-window recovery follow-up
+
+A subsequent cycle kept both native captures at 3456 by 1988 pixels and sent no window input during reconnection.
+The dimension assertion failed: the remote firstmate changed from 113 columns by 36 rows to 161 columns by 43 rows.
+Its process identifier and creation timestamp remained unchanged.
+The evidence is `.superpowers/native/candidate-fixed-viewport-recovery.json`.
+Overlapping terminal text was already present before this interruption.
+The before and after captures were nearly identical despite the changed core dimensions.
+This does not establish whether the viewer changed its requested size during reconnection or whether replay selected another viewer.
+The candidate therefore remains insufficiently verified for native recovery, despite its passing controlled integration test.
+No production core installation includes it.
+
+The candidate passed macOS Clippy with warnings treated as errors using Homebrew Rust 1.99.1.
+Dependency advisory, license, source, and ban checks passed with cargo-deny 0.20.2.
+Windows Clippy also passed with warnings treated as errors using the isolated Rust 1.95.0 toolchain.
+Cross-compilation does not establish Windows runtime behavior.
+
 ### Native animation activity trace
 
 Grand Fleet Render Lab now includes Sunny beside its static text reproduction.
