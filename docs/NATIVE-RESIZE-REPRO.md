@@ -150,3 +150,27 @@ The saved evidence is .superpowers/native/atlas-trace-missing.log and .superpowe
 This comparison does not support empty glyph textures as the cause of the captured failure.
 The next investigation must distinguish graphics execution from frame presentation and confirm which frame reaches the screen.
 No production fix has been established.
+
+## Presentation and screenshot side effects
+
+The saved presentation trace reports 620 submitted frames, 620 completed command buffers, and 620 presentation callbacks.
+Every recorded completion reports Completed while the native capture still shows missing labels.
+The evidence is .superpowers/native/present-trace-missing-completed.log.
+A subsequent diagnostic build waits for graphics completion after every live draw.
+Enlarging the pane still removes both labels.
+This rules out that synchronization change as a sufficient fix.
+
+The shot command renders both labels in its offscreen image.
+A native capture immediately afterward also shows both labels restored.
+Repeating split, enlarge, native capture, shot, and native capture reproduces this recovery.
+A read-only ls request between the failed capture and shot leaves both labels missing.
+Therefore, shot is not a neutral observation of this failure and cannot provide native acceptance evidence.
+The trace is .superpowers/native/sync-trace-shot-recovery.log.
+
+Offscreen rendering recreates the intermediate textures used for paths.
+A diagnostic switch tested that operation before every live draw while preserving the completion wait.
+The build passed, but split-to-enlarged navigation still removed both labels in the native capture.
+The evidence is .superpowers/native/path-reset-missing.log.
+Recreating those textures is therefore not sufficient either.
+The next investigation should compare uploaded instance data and live drawing output with the offscreen rendering path.
+No diagnostic switch is part of the production mod or installer.
