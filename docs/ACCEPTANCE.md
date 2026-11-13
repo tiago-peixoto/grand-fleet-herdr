@@ -20,7 +20,7 @@ The native scenarios use isolated test terminals, including a physical remote se
 | Restore missing personal shells explicitly without claiming conversation recovery | [Remote restoration](NATIVE-INTEGRATION.md#native-physical-server-personal-shell-restoration) verifies the native action, directory, new process, and surviving neighbor | Passed over SSH, the remote shell connection |
 | Close identifies its target and process-ending consequence | [Installed close routes](NATIVE-INTEGRATION.md#installed-close-routes) and [native controls](NATIVE-INTEGRATION.md#native-controls-after-unlocking-the-mac) cover buttons and installed shortcuts | Passed within the installed layout and shortcut scope |
 | Offline machines show no stale live crew or unavailable actions | [Persistent machine navigation](NATIVE-INTEGRATION.md#persistent-machine-navigation) verifies unavailable presentation and foreground recovery | Passed; automatic background redraw unverified |
-| Worker attention and independent attention remain distinct and usable | [Remote attention navigation](NATIVE-INTEGRATION.md#native-remote-attention-navigation-through-reconnection) covers disconnected and recovered states | Passed for tested transitions |
+| Worker attention and independent attention remain distinct and usable | [Real worker decision](NATIVE-INTEGRATION.md#real-worker-decision-and-turn-completion) remained absent from attention despite an unresolved firstmate decision | Failed; native blocked-status fixtures do not cover durable decisions |
 | Worker identity and artwork survive changes in the fleet | Automated identity and assignment checks plus [generic Pirate state selection](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) | Passed within recorded cases |
 | Sleeping, walking, and sitting artwork reflects worker status | [Chopper](NATIVE-INTEGRATION.md#native-worker-artwork-states), [Franky](NATIVE-INTEGRATION.md#native-franky-state-and-pause-checks), and [Pirate](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) native checks | State selection passed |
 | Artwork animates continuously when enabled and stops when paused | [Animation observation limits](NATIVE-INTEGRATION.md#animation-observation-limits) found identical captures within each sample run | Continuous playback unverified |
@@ -54,6 +54,7 @@ Complete the large-screen visual comparison after the rendering discrepancy is r
 
 ## Current automated check
 
-The reviewed preset implementation passed 110 JavaScript tests and 36 Python tests.
+The turn-completion label correction passed 111 JavaScript tests.
+The reviewed preset implementation separately passed 36 Python tests.
 The native initial-render check passed.
 These results do not close any runtime or visual gate marked incomplete above.

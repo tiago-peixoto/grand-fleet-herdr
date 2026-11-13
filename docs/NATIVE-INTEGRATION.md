@@ -1117,3 +1117,24 @@ The command returned the completed fixture task, its exact endpoint, and an empt
 The mod still needs an explicit connection to this source and verification while a decision remains open.
 It must preserve machine and task identity and disclose unavailable evidence instead of guessing task completion from terminal state.
 Evidence remains in `.superpowers/native/ai-flow-authoritative-snapshot.json` and `.superpowers/native/ai-flow-after-label-upgrade.json`.
+
+## Authoritative open-decision source
+
+A second instruction reached the same isolated worker through `fm-send.sh`.
+The worker read its final report and opened decision `snapshot-checkpoint` without changing the project or report.
+The snapshot reported current state parked, pending_decision true, and the exact keyed question in open_decisions.
+At the same time, the native terminal reported done.
+This establishes that the structured firstmate source distinguishes the condition that the native terminal status loses.
+
+The snapshot named endpoint `fm-hclab-onepiece-32447-23158:t30`.
+Reading that endpoint through firstmate's own hc adapter verified its creation time and both ownership labels against the live worker.
+The task metadata, status record, and final report retained their byte hashes across the snapshot and endpoint reads.
+Evidence remains in `.superpowers/native/ai-flow-open-decision-snapshot.json` and `.superpowers/native/ai-flow-open-decision-identity.json`.
+The isolated decision remains open for native attention verification after integration.
+
+The connection must retain executable root, operational home, and machine separately from a coordinator's display name.
+Herdr's installed exec contract supports execution on a named machine through its existing core connection.
+Firstmate's snapshot supplies authoritative decisions; its hc adapter supplies exact endpoint identity.
+The renderer must verify machine, home label, task label, and terminal creation identity before attaching a decision to a live worker.
+It must expose an unavailable source and reject stale results after configuration changes or disconnection.
+Reading the last status-log line or matching only a task name does not satisfy this contract.
