@@ -24,43 +24,31 @@ Fresh local and remote delegation passed within the isolated workflows described
 | Worker attention and independent attention remain distinct and usable | [Native decision records](NATIVE-INTEGRATION.md#native-decision-records-connection) and [remote decisions](NATIVE-INTEGRATION.md#remote-decision-records-and-reconnect-validation) verify appearance, inspection, and clearing beside an independent entry | Passed for real local and [remote workers](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
 | Worker identity and artwork survive changes in the fleet | Automated identity and assignment checks plus [generic Pirate state selection](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) | Passed within recorded cases |
 | Sleeping, walking, and sitting artwork reflects worker status | [Chopper](NATIVE-INTEGRATION.md#native-worker-artwork-states), [Franky](NATIVE-INTEGRATION.md#native-franky-state-and-pause-checks), and [Pirate](NATIVE-INTEGRATION.md#native-generic-pirate-state-selection) native checks | State selection passed |
-| Artwork animates continuously when enabled and stops when paused | [Animation observation limits](NATIVE-INTEGRATION.md#animation-observation-limits) found identical captures within each sample run | Sunny and Franky playback observed; Franky pause/resume passed in the active native window |
-| Labels and artwork remain visible after resizing and pane focus | [Rendering investigation](NATIVE-RESIZE-REPRO.md#live-drawable-pixels-and-foreground-comparison) found text in submitted frames but missing from native captures | Unresolved |
+| Artwork animates continuously when enabled and stops when paused | [Active native animation](NATIVE-INTEGRATION.md#native-wrapping-recovery-and-active-worker-motion) distinguishes playing, paused, and resumed worker frames | Sunny and Franky playback observed; Franky pause/resume passed in the active native window |
+| Labels and artwork remain visible after resizing and pane focus | [Earlier rendering investigation](NATIVE-RESIZE-REPRO.md#live-drawable-pixels-and-foreground-comparison) found missing captured text; [current resize checks](NATIVE-INTEGRATION.md#compact-attention-cards-and-current-resize-checks) retain it | Unresolved |
 | Ordinary sessions remain usable and explicitly Unsupervised | [Native navigation](NATIVE-INTEGRATION.md#native-navigation-verification-after-unlocking) and controller routing tests | Passed within recorded cases |
 | Removing the mod preserves sessions and fleet records | [Removal and reinstallation](NATIVE-INTEGRATION.md#native-removal-and-reinstallation) compares 39 live terminals and app-home files | Passed in the isolated home |
 | Real firstmate delegation produces correctly discovered workers and preserves its authority and records | [Actual firstmate launch](NATIVE-INTEGRATION.md#actual-firstmate-worker-launch-and-inspection) verifies discovery, inspection, preserved records, backend input, and rejection of a mismatched task label | Passed for [fresh local delegation](NATIVE-INTEGRATION.md#fresh-delegation-through-the-native-firstmate-workspace) and the [fresh remote decision cycle](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
-| Match the approved visual experience on the user's large-screen workflow | [Crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) covers 1280 × 820 and 1000 × 700 only | Partial; complete visual review remains open |
+| Match the approved visual experience on the user's large-screen workflow | [Crew hierarchy](NATIVE-INTEGRATION.md#crew-hierarchy-against-the-prototype) and [compact attention cards](NATIVE-INTEGRATION.md#compact-attention-cards-and-current-resize-checks) cover 1000 × 700 through 1728 × 994 | Partial; complete visual review remains open |
 
 ## Next acceptance gates
 
-The [fresh remote workflow](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) verified coordinator registration, discovery, attention, inspection, direct return, and supervised confirmation.
-Its report and project remained unchanged.
-The isolated workflow establishes that integration path without establishing the remaining rendering and recovery requirements.
+1. Resolve the earlier native rendering discrepancy.
+   Current resize checks pass in both isolated applications, but the earlier missing text remains unexplained.
+   Do not introduce a renderer change without a reproducible cause.
 
-Resolve the difference between native captures and submitted drawing output before making another renderer change.
-[Sunny now has visible runtime evidence](NATIVE-INTEGRATION.md#independent-split-recovery-and-visible-ship-motion) from consecutive native captures.
-[Active worker motion](NATIVE-INTEGRATION.md#native-wrapping-recovery-and-active-worker-motion) now verifies Franky playback, pause, and resume through native captures.
-Automatic sidebar recovery now has native evidence.
-The latest isolated split recovery restored both terminal sizes within 2.14 seconds and preserved their processes.
-A [transport trace](NATIVE-INTEGRATION.md#transient-size-during-transport-loss) explains the temporary resize as Core's configured size when no writable viewer remains.
-[Native wrapping recovery](NATIVE-INTEGRATION.md#native-wrapping-recovery-and-active-worker-motion) passed readable output, process identity, settled dimensions, and typing in the isolated remote split.
-The candidate remains an external Core patch.
-Its complete test suite, formatting, dependency checks, and native and Windows Clippy checks passed on the isolated 0.1.21 checkout.
-Final review and delivery remain outstanding, and Windows runtime behavior was not tested.
+2. Finish the visual comparison against the approved prototype.
+   Native checks now cover the large window and compact attention cards.
+   The complete visual review remains open.
 
-Verify the new Arrange controls through native clicks, focus, close confirmation, workspace switching, and input.
-The [core document implementation](NATIVE-INTEGRATION.md#core-document-preset-implementation) preserves actual pane identifiers and avoids modifying the installed layout.
-The helper preserved five terminal identities across local and SSH layouts.
-Conflict handling and missing confirmations have regression tests.
-[Local native controls](NATIVE-INTEGRATION.md#native-preset-controls-and-worker-return) passed geometry, input, focus, close cancellation, and worker-return checks.
-[Remote native controls](NATIVE-INTEGRATION.md#native-remote-preset-controls) passed preset selection, independent input, focus, and return to the split view.
-Raising the window resolved that stale capture sufficiently to perform these checks.
-The separate resize visibility gate remains open.
-Active-window animation now has Sunny and Franky evidence.
-The alternative terminal-block approach retains the [persistence and focus constraints](NATIVE-INTEGRATION.md#preset-persistence-and-focus-constraints).
-The terminal-block proof establishes geometry and input, not safe lifecycle behavior.
-Existing split creation and Focus pane controls do not prove preset switching.
-Complete the large-screen visual comparison after the rendering discrepancy is resolved.
+3. Review and deliver the external Core recovery patch.
+   Native remote recovery preserves process identity, readable wrapping, settled dimensions, and independent input with the isolated candidate.
+   The complete suite, formatting, dependency checks, and native and Windows Clippy checks passed on the isolated 0.1.21 checkout.
+   Windows runtime behavior was not tested.
+   The mod alone cannot supply this Core fix.
+
+The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
+Those completed checks are recorded in the requirements table rather than repeated as outstanding work.
 
 ## Current automated check
 
