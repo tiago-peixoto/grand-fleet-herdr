@@ -85,7 +85,6 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 ## Remaining acceptance work
 
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
-- Verify native presentation during SSH disconnection and reconnection on the separate physical host.
 - Verify personal-shell restoration through native controls on the physical SSH host.
   The production controller passed the physical SSH restoration check below.
 - Verify native error presentation and retry interaction for the remote interruption cases covered below.
@@ -539,7 +538,7 @@ Reconnection restored the remote shell prompt.
 Assertions confirmed no writable worker pane and unchanged captain and worker process identities.
 The recovery evidence files now include the inspection editor values for both connection states.
 Additional records are ssh-inspection-created.json and ssh-inspection-cleanup.json in .superpowers/native/.
-Native appearance and direct input rejection on this physical remote connection remain unverified.
+Subsequent native appearance and input-rejection checks on this physical connection are recorded below.
 The following sections verify interruptions during inspection creation.
 
 
@@ -622,3 +621,37 @@ Independent core queries confirmed that the anchor, ended original shell, and re
 Evidence is saved in .superpowers/native/ssh-restore-result.json and ssh-restore-cleanup.json.
 This verifies the production controller over physical SSH, not native Restore button delivery.
 The original fixture's missing completion result remains unexplained.
+
+## Native physical-server worker input rejection
+
+Grand Fleet Lab opened hz-interrupt-worker through its sidebar and displayed the physical server's live shell prompt.
+The inspection view identified op-hz-lab and stated that direct input was disabled.
+Clicking the output area and sending typed and pasted marker commands, Return, and Ctrl-C did not change the worker's terminal output.
+Independent core queries confirmed the original process identifier, creation time, and live state.
+An assertion compared terminal output with the saved baseline and found an exact match.
+
+Evidence files use the ssh-native-input-before and ssh-native-input-after prefixes in .superpowers/native.
+This verifies input rejection through the native inspection view over physical SSH.
+It does not establish a security boundary against direct host or command-interface access.
+
+## Native physical-server disconnection presentation
+
+With hz-interrupt-worker open in Grand Fleet Lab, the test disabled only its dedicated transport and ended that transport's connection process.
+The native sidebar retained op-hz-lab and displayed Machine unavailable.
+The inspection showed Session unavailable, Disconnected, and Terminal output unavailable.
+It replaced the prompt with an explicit statement that no cached output was shown.
+The footer indicated that it was waiting for reconnection.
+
+Restoring the dedicated transport returned the worker list and live prompt without navigating away or restarting the app.
+An independent core query confirmed that the worker retained its original process identifier, creation time, and live state.
+This establishes native disconnection and reconnection presentation for the physical server.
+It does not establish recovery after physical host failure.
+
+## Native physical-server coordinator registration
+
+Fleet setup opened for op-hz-lab and listed its existing hz-captain session.
+Submitting a home label without selecting the session displayed a validation message and kept the dialog open.
+Selecting hz-captain and linking home op-hz-test displayed Thousand Sunny with Luffy pinned before its three workers.
+Back to firstmate opened an explicit chooser because the lab contains multiple live firstmates.
+Choosing hz-captain opened its existing terminal in the coordinator workspace on op-hz-lab.
+This verifies initial registration and navigation, not replacement of an ended remote coordinator.
