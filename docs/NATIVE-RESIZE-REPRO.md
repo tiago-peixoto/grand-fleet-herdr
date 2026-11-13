@@ -174,3 +174,26 @@ The evidence is .superpowers/native/path-reset-missing.log.
 Recreating those textures is therefore not sufficient either.
 The next investigation should compare uploaded instance data and live drawing output with the offscreen rendering path.
 No diagnostic switch is part of the production mod or installer.
+
+## Live drawable pixels and foreground comparison
+
+A subsequent diagnostic copies a small region from the actual live drawable before presentation.
+The region starts at pixel 592,192 and measures 512 by 64 pixels, covering the static label.
+After graphics completion, the diagnostic counts pixels whose three color components exceed 200.
+It does not render an offscreen replacement or invoke shot.
+The saved trace contains 149 measurements.
+The initial frame contains zero white pixels, and every subsequent measurement contains 3,125 white pixels.
+Both labels nevertheless remain absent from the native capture after enlargement.
+The trace is .superpowers/native/drawable-readback-missing.log.
+This establishes text pixels in the submitted live drawing output, rather than merely valid glyph inputs.
+It does not establish what the user sees on the physical display.
+
+Background keyboard input also opened a command palette in the accessibility tree without showing it in the capture.
+Raising the diagnostic window and reopening the palette made the palette visible in the capture.
+However, foreground input did not eliminate the text discrepancy.
+With the window raised, Command-Shift-Return restored the split view with both labels visible.
+Repeating that shortcut enlarged the probe and removed both labels from the capture again.
+The corresponding live frame, drawable 723, still reported 3,125 white pixels and successful completion and presentation.
+The diagnostic window therefore remains available for direct human comparison with the captured result.
+Neither a rendering fix nor a capture-tool defect has been established.
+Further rendering changes require evidence that distinguishes presentation from capture.

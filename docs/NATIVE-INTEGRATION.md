@@ -82,8 +82,7 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 
 ## Remaining acceptance work
 
-- Resolve the native repaint defect documented in docs/NATIVE-RESIZE-REPRO.md.
-- Visually confirm inspection after returning from another tab.
+- Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Extend remote disconnection coverage to SSH and a separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
 - Verify stale registration replacement.
@@ -446,3 +445,13 @@ The inspection displayed the direct-input-disabled explanation.
 These checks verify native command delivery for the pane header Focus control, the tab button, and the unplaced independent row.
 They do not establish every navigation entry point or eliminate the documented host-navigation limitations.
 The before-and-after terminal records are saved under .superpowers/native/ with focus-worker, unplaced-click, and tab-click prefixes.
+
+## Native inspection reselection
+
+The installed mod displayed test-worker inspection after raising the Grand Fleet Lab window.
+Selecting the pinned test-captain row displayed its existing three-pane grid with terminals t1, t3, and t4.
+Selecting test-worker again displayed its inspection text, Chopper artwork, and direct-input-disabled explanation.
+The native accessibility field disappeared during firstmate selection and returned during worker selection.
+Separate screenshots showed the coordinator grid and the subsequent inspection view.
+This verifies visible inspection after leaving and returning through the sidebar in the tested layout.
+It does not resolve the separate enlargement discrepancy or prove every animation frame.
