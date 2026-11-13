@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import * as fleet from '../mods/one-piece/fleet.js';
 import * as shells from '../mods/one-piece/shells.js';
+import * as records from '../mods/one-piece/records.js';
 
 // The native UI runtime is unavailable in Node; execute the real controller with a host fixture.
 const source=readFileSync(new URL('../mods/one-piece/main.js',import.meta.url),'utf8')
@@ -15,10 +16,11 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   const sessions=[worker], workspaces=[], views=[], calls=[], errors=[];
   let placeholder;
   let cfg={coordinators:registrations,inspections:{}};
-  const context={ScrollHandle:{new:()=>({release(){},scroll_to_item(){}})},...fleet,...shells,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
+  let recordReads={};
+  const context={ScrollHandle:{new:()=>({release(){},scroll_to_item(){}})},...fleet,...shells,...records,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
     coreTerminals:()=>sessions,spaces:()=>workspaces,panes:()=>views,
     machines:()=>[{name:remote?'hz-server':null,layout:'ready'}],
-    shared:()=>cfg,setShared:(_key,value)=>{cfg=value;},notify:value=>errors.push(value),
+    shared:key=>key==='one-piece'?cfg:recordReads,setShared:(key,value)=>{if(key==='one-piece') cfg=value;else recordReads=value;},notify:value=>errors.push(value),
     openOverlay:spec=>calls.push(['overlay',spec]),
     run:(name,args)=>{
       calls.push([name,args]);
@@ -65,6 +67,50 @@ test('a completed model turn does not claim that its firstmate task finished',()
   h.worker.status='done';
   h.context.observed=h.worker;
   assert.equal(runInNewContext('stateLabel(observed)',h.context),'Turn complete');
+});
+
+test('record reads use the registered machine and discard a result after its source changes',async()=>{
+  const h=host({remote:true}),key=records.recordKey('hz-server','test');
+  h.config().recordSources={[key]:{root:'/firstmate',home:'/home/fleet'}};
+  h.context.appHome=()=>'/app';
+  h.context.readTextFile=async()=> 'reader';
+  let pending;
+  h.cx.spawn=fn=>{pending=fn(h.cx);};
+  h.context.exec=async(cmd,args,options)=>{
+    assert.equal(cmd,'python3');
+    assert.equal(options.on,'hz-server');
+    const request=JSON.parse(args[2]);
+    assert.equal(request.workers[0].address,'t2');
+    assert.equal(request.workers[0].created_ms,12);
+    h.config().recordSources[key]={root:'/firstmate',home:'/replacement'};
+    return {code:0,stdout:'[]'};
+  };
+  h.controller.refreshRecords(h.cx);
+  await pending;
+  assert.equal(h.context.shared('one-piece-records')[key],undefined);
+  h.context.exec=async()=>({code:1,stderr:'Cannot read home'});
+  h.controller.refreshRecords(h.cx);
+  await pending;
+  assert.equal(h.context.shared('one-piece-records')[key].error,'Cannot read home');
+  assert.equal(h.calls.length,0);
+});
+
+test('sidebar copies share in-flight record reads and publish invalid data as unavailable',async()=>{
+  const h=host(),key=records.recordKey(null,'test');
+  h.config().recordSources={[key]:{root:'/firstmate',home:'/fleet'}};
+  h.context.appHome=()=>'/app';h.context.readTextFile=async()=> 'reader';
+  const pending=[],responses=[];
+  h.cx.spawn=fn=>pending.push(fn(h.cx));
+  h.context.exec=()=>new Promise(resolve=>responses.push(resolve));
+  h.controller.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  new h.context.Fleet().refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(responses.length,1);
+  responses[0]({code:0,stdout:'[null]'});
+  await Promise.all(pending);
+  assert.match(h.context.shared('one-piece-records')[key].error,/invalid data/);
+  assert.equal(h.context.shared('one-piece-records')[key].rows.length,0);
 });
 
 test('preset targets the coordinator tab on its machine without launching or moving terminals',async()=>{
@@ -1127,7 +1173,7 @@ test('sidebar records hidden terminal directory changes without a render',()=>{
   let tick;
   h.cx.focus_handle=()=>({});
   h.cx.spawn=()=>{};
-  h.cx.timer={every(_ms,callback){tick=callback;}};
+  h.cx.timer={every(ms,callback){if(ms===1000) tick=callback;}};
   h.controller.init({},h.cx);
   assert.equal(typeof tick,'function');
   tick(h.cx);
@@ -1287,4 +1333,28 @@ test('machine shortcuts reveal local and offline remote groups without selecting
   assert.deepEqual(revealed,[1,0]);
   assert.ok(h.texts.includes('Wano'));
   assert.ok(!h.calls.some(([cmd])=>cmd==='space.select'||cmd==='pane.focus'||cmd==='hc'));
+});
+
+test('disconnecting invalidates pending task records even when the machine reconnects before the result',async()=>{
+  const h=host({remote:true}),key=records.recordKey('hz-server','test');
+  h.config().recordSources={[key]:{root:'/firstmate',home:'/fleet'}};
+  h.context.appHome=()=>'/app';h.context.readTextFile=async()=> 'reader';
+  const pending=[],responses=[];
+  h.cx.spawn=fn=>pending.push(fn(h.cx));
+  h.context.exec=()=>new Promise(resolve=>responses.push(resolve));
+  h.controller.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  h.context.machines=()=>[{name:'hz-server',layout:'unavailable'}];
+  h.controller.refreshRecords(h.cx);
+  assert.equal(h.context.shared('one-piece-records')[key],null);
+  h.context.machines=()=>[{name:'hz-server',layout:'ready'}];
+  responses[0]({code:0,stdout:JSON.stringify([{address:'t2',created_ms:12,task:'work',state:'done',decisions:[]}])});
+  await Promise.all(pending);
+  assert.equal(h.context.shared('one-piece-records')[key],null);
+  h.controller.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(responses.length,2);
+  responses[1]({code:0,stdout:JSON.stringify([{address:'t2',created_ms:12,task:'work',state:'working',decisions:[]}])});
+  await Promise.all(pending);
+  assert.equal(h.context.shared('one-piece-records')[key].rows[0].state,'working');
 });

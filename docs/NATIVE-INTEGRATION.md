@@ -1138,3 +1138,47 @@ Firstmate's snapshot supplies authoritative decisions; its hc adapter supplies e
 The renderer must verify machine, home label, task label, and terminal creation identity before attaching a decision to a live worker.
 It must expose an unavailable source and reject stale results after configuration changes or disconnection.
 Reading the last status-log line or matching only a task name does not satisfy this contract.
+
+### Native decision records connection
+
+The mod now reads firstmate's authoritative snapshot through a configured root and operational home on each machine.
+Each task must match the live terminal address, creation timestamp, home label, and task label before its decisions affect the UI.
+The reader uses firstmate's own backend adapter to resolve the endpoint.
+
+Grand Fleet Lab connected the isolated `firstmate-bbb16e1f` home through Fleet setup.
+The real `native-ai-flow` worker changed from Turn complete to Needs you, displayed a sitting character, and gained an attention entry.
+Answering `snapshot-checkpoint` through `fm-send.sh --resolve-key` removed the decision from the next native reader result.
+The worker attention entry disappeared and its character returned to sleeping after the turn ended.
+The snapshot then reported unknown task state, so the UI correctly retained Turn complete rather than claiming Task complete.
+The snapshot and screenshot observations establish local decision presentation and clearance, not a supervised workflow acceptance pass.
+
+Validation passed 113 JavaScript tests, 38 Python tests, and `herdr-app check mods/one-piece`.
+Remote record connections, large-home setup layout, and malformed nested snapshot objects still require additional validation before this change is finalized.
+The native lab runner preserves its explicit firstmate socket override only inside its ignored test environment.
+Grand Fleet Render Lab and the user's normal Herdr application were not changed during this check.
+
+### Remote decision records and reconnect validation
+
+The records reader ran through the existing op-hz-lab connection against an isolated firstmate home on the remote machine.
+The test used terminal t1d, its exact creation timestamp, and task fm-records-check.
+Firstmate's status writer opened the remote-check decision.
+Grand Fleet Lab showed an attention entry for that remote worker.
+Clicking the entry opened inspection on op-hz-lab with Needs you and the sitting character.
+Resolving the decision through firstmate's status writer removed the attention entry and restored the sleeping character.
+The remote reader then returned no pending decisions.
+This fixture used a shell with firstmate task metadata, not an autonomous remote worker.
+It proves remote record transport, identity matching, and native presentation, not a complete supervised remote workflow.
+
+Review reproduced malformed records and overlapping reads across sidebar copies.
+Validation now rejects malformed snapshot fields and cached rows without crashing the sidebar.
+Sidebar copies share pending reads, while different configured homes read independently.
+A separate regression reproduced disconnection followed by reconnection before an earlier read returned.
+Observing disconnection now clears cached records and cancels publication from that pending read.
+The next read after reconnection supplies fresh records.
+This timing regression uses a simulated host and does not establish physical disconnection timing.
+
+Validation passed 116 JavaScript tests, 39 Python tests, the native mod check, and whitespace checks.
+Independent review found no remaining concrete bugs in the records changes.
+The updated mod was installed into the closed Grand Fleet Lab home and inspected after relaunch.
+The remote inspection remained available without restoring the resolved attention entry.
+The ordinary Herdr application and Grand Fleet Render Lab were not modified.

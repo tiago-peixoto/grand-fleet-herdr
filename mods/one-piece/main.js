@@ -1,12 +1,14 @@
 import { View, div, image } from 'gpui-kit';
 import { h_flex, v_flex, Editor, EditorState, Input, InputState, ScrollHandle } from 'gpui-base';
-import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, appHome, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
+import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, readTextFile, appHome, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
 import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
 import { rememberShells, missingShells } from './shells.js';
+import { withRecords, recordKey, validRecordRows } from './records.js';
 
-const terminals=()=>withLocations(coreTerminals(),panes(),spaces());
+const terminals=()=>withRecords(withLocations(coreTerminals(),panes(),spaces()),config().recordSources??{},shared('one-piece-records')??{});
 
 const KEY='one-piece';
+const recordReadsInFlight=new Map();
 // Copies share lifecycle guards because Retry cleanup can run in another sidebar.
 const activePlaceholders=new Set();
 const cleanedPlaceholders=new Set();
@@ -18,7 +20,7 @@ function paneReady(id) {
 }
 const config=()=>shared(KEY)??{coordinators:[],aliases:{},characters:{},inspections:{},paused:false};
 function save(patch) { setShared(KEY,{...config(),...patch}); }
-const stateLabel=t=>t.status==='working'?'Working':t.status==='blocked'?'Needs you':t.status==='done'?'Turn complete':t.status==='idle'?'Idle':'Status unavailable';
+const stateLabel=t=>t.status==='blocked'?'Needs you':t.taskRecord===null?'Task records unavailable':t.taskRecord?.state==='done'?'Task complete':t.status==='working'?'Working':t.status==='done'?'Turn complete':t.status==='idle'?'Idle':'Status unavailable';
 const machineLabel=name=>config().aliases[name??'local']||(name===null?'Water 7':name==='hz-server'?'Wano':name);
 const button=(id,text,action,primary=false)=>h_flex().id(id).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click(action).child(text);
 
@@ -55,6 +57,11 @@ export default class Fleet extends View {
       cx.timer.every(1000,c=>this.refresh(c));
     }
     if(view==='rename-tab') this.tabName=InputState.new({value:props().name});
+    if(view==='records') {
+      const source=config().recordSources?.[recordKey(props().machine,props().home)];
+      this.recordRoot=InputState.new({value:source?.root??'',placeholder:'Firstmate executable root, such as /home/me/firstmate'});
+      this.recordHome=InputState.new({value:source?.home??'',placeholder:'Operational home containing state and data'});
+    }
     if(view==='setup') {
       this.homeInput=InputState.new({placeholder:'firstmate.home label, such as a1b2c3'});
       this.aliasInput=InputState.new({value:machineLabel(props().machine??null)});
@@ -62,6 +69,10 @@ export default class Fleet extends View {
     }
     // Hidden windows can stop rendering while terminal directories keep changing.
     if(!view) cx.timer.every(1000,()=>this.rememberShells());
+    if(!view) {
+      this.refreshRecords(cx);
+      cx.timer.every(5000,c=>this.refreshRecords(c));
+    }
     if(!view) cx.spawn(async c=>{
       for(;;) {
         const command=await nextCommand();
@@ -83,6 +94,66 @@ export default class Fleet extends View {
 
   setup(machine=focused()?.space?spaces().find(s=>s.id===focused().space)?.machine??null:null) {
     openOverlay({mod:'one-piece',props:{view:'setup',machine},kind:'dialog',width:600,height:560});
+  }
+
+  refreshRecords(cx) {
+    for(const [key,source] of Object.entries(config().recordSources??{})) {
+      const [machine,home]=JSON.parse(key);
+      if(!machines().some(m=>m.name===machine&&m.layout==='ready')) {
+        const pending=recordReadsInFlight.get(key);
+        if(pending) pending.cancelled=true;
+        setShared('one-piece-records',{...(shared('one-piece-records')??{}),[key]:null});
+        continue;
+      }
+      if(recordReadsInFlight.has(key)) continue;
+      const pending={cancelled:false};
+      recordReadsInFlight.set(key,pending);
+      cx.spawn(async c=>{
+        const at=Date.now();
+        let read={source:JSON.stringify(source),at,rows:[]};
+        try {
+          const code=await readTextFile(`${appHome()}/mods/one-piece/records.py`);
+          if(!code) throw new Error('Task records reader is missing. Reinstall the mod.');
+          const workers=coreTerminals().filter(t=>machineOf(t.address)===machine&&t.state==='live'&&t.labels?.['firstmate.home']===home&&t.labels?.['firstmate.task'])
+            .map(t=>({address:machine?t.address.slice(machine.length+1):t.address,created_ms:t.created_ms,task:t.labels['firstmate.task']}));
+          const result=await exec('python3',['-c',code,JSON.stringify({...source,label:home,workers})],{on:machine,timeout:25000});
+          if(result.code!==0) throw commandError(result,'Task records are unavailable.');
+          read.rows=JSON.parse(result.stdout);
+          if(!validRecordRows(read.rows)) throw new Error('Task records reader returned invalid data.');
+        } catch(error) {read={...read,rows:[],error:String(error.message??error)};}
+        finally {
+          recordReadsInFlight.delete(key);
+          if(!pending.cancelled&&JSON.stringify(config().recordSources?.[key])===read.source) {
+            const value=machines().some(m=>m.name===machine&&m.layout==='ready')?read:null;
+            setShared('one-piece-records',{...(shared('one-piece-records')??{}),[key]:value});
+          }
+          c.notify();
+        }
+      });
+    }
+  }
+
+  recordsView() {
+    const {machine,home}=props(),key=recordKey(machine,home);
+    const error=shared('one-piece-records')?.[key]?.error;
+    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
+      .child(div().text_size(22).font_semibold().child('Connect firstmate records'))
+      .child(div().text_size(12).child(`${machine??'local'} · ${home}`))
+      .child(div().text_size(12).child('Read decisions from this firstmate home. Paths belong to the machine shown above.'))
+      .child(div().text_size(12).child('Firstmate executable root'))
+      .child(Input.new(this.recordRoot).h(34))
+      .child(div().text_size(12).child('Operational home'))
+      .child(Input.new(this.recordHome).h(34))
+      .child(div().text_size(11).text_color('#e8bd70').child(this.error||error||'Requires Python 3 and firstmate on this machine. This connection only reads task records.'))
+      .child(h_flex().gap(10).justify_end()
+        .child(button('cancel-records','Cancel',()=>closeOverlay(props().overlay)))
+        .child(button('save-records','Connect',(_e,c)=>{
+          const root=this.recordRoot.value().trim(),path=this.recordHome.value().trim();
+          if(!root.startsWith('/')||!path.startsWith('/')) {this.error='Enter two absolute paths.';c.notify();return;}
+          save({recordSources:{...config().recordSources,[key]:{root,home:path}}});
+          setShared('one-piece-records',{...(shared('one-piece-records')??{}),[key]:null});
+          closeOverlay(props().overlay);
+        },true)));
   }
 
   rememberShells() {
@@ -508,6 +579,10 @@ export default class Fleet extends View {
     const homes=[...new Set(terminals().filter(t=>machineOf(t.address)===machine&&isWorker(t)).map(t=>t.labels['firstmate.home']))];
     content.child(div().text_size(11).text_color('#a4bbb8').child(homes.length?`Worker home labels: ${homes.join(', ')}`:'Enter the home label used by firstmate’s hc adapter.'));
     content.child(Input.new(this.homeInput).h(34));
+    for(const home of homes) content.child(button(`records-${home}`,'Task records · '+home,()=>{
+      closeOverlay(props().overlay);
+      openOverlay({mod:'one-piece',props:{view:'records',machine,home},kind:'dialog',width:640,height:460});
+    }));
     content.child(div().text_size(11).text_color('#e8bd70').child(this.error||'Linking identifies an existing session. It does not launch firstmate or delegate work.'));
     content.child(h_flex().gap(10).justify_end().child(button('cancel-setup','Cancel',()=>closeOverlay(props().overlay)))
       .child(button('save-firstmate',`Link ${this.role}`,(_e,c)=>{
@@ -708,6 +783,7 @@ export default class Fleet extends View {
       case 'pane':return this.paneHeader();
       case 'inspect':return this.inspectView();
       case 'setup':return this.setupView(cx);
+      case 'records':return this.recordsView();
       case 'firstmates':return this.firstmatesView();
       case 'restore':return this.restoreView();
       case 'presets':return this.presetsView();
