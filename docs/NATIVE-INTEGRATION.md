@@ -85,7 +85,7 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
 - Verify native presentation during SSH disconnection and reconnection on the separate physical host.
 - Verify Restore layout click-through, hidden-window directory tracking, and live remote recovery.
-- Test inspection creation across remote disconnects and application termination.
+- Test inspection creation interrupted by a remote disconnect; application termination is covered below.
 - Verify cleanup retries when a temporary shell cannot be removed.
 - Check every close route, including Herdr's built-in tab controls.
 - Verify attention navigation and visible error reporting during remote transitions.
@@ -533,3 +533,26 @@ Assertions confirmed no writable worker pane and unchanged captain and worker pr
 The recovery evidence files now include the inspection editor values for both connection states.
 Additional records are ssh-inspection-created.json and ssh-inspection-cleanup.json in .superpowers/native/.
 Native appearance, direct input rejection, and interruption during inspection creation still need separate verification.
+
+
+## Application termination during physical SSH inspection creation
+
+A dedicated remote worker, op-hz-lab/t5, exercised the current inspection controller through the disposable test view.
+The test stopped only Grand Fleet Lab after the controller persisted a temporary-shell record.
+The saved state contained no completed inspection result.
+The remote terminal service continued running while the app was stopped.
+The worker remained live with process identifier 2654548 and creation time 1794573798108.
+
+After reopening the app, the cleanup record remained present.
+Its labeled temporary shell, op-hz-lab/t6, was still live.
+Invoking the production cleanup controller ended that shell and removed its pending record.
+The worker retained the same process identity.
+A subsequent inspection attempt succeeded and saved a machine-qualified workspace, tab, and pane.
+The worker remained unplaced, with keep=false and no herdr.space label.
+No pending temporary-shell record remained after the successful retry.
+
+The assertions and process-stop sequence are in .superpowers/native/check-ssh-interruption.py.
+Evidence files use the ssh-interrupt prefix in the same directory.
+This verifies real application termination during remote inspection creation, persisted cleanup, and successful controller retry.
+It does not establish native Retry cleanup interaction or termination of the remote machine itself.
+The app was deliberately terminated for this lifecycle test, not restarted to address the stale native capture.
