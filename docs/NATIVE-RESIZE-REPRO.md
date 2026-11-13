@@ -96,3 +96,16 @@ This rules out that cache bypass as a sufficient fix.
 It does not rule out other retained layout state or establish the stage that loses text.
 The next trace targets script snapshots, text layout, and glyph emission.
 No diagnostic runtime change is included in the mod or installer.
+
+## Text trace follow-up
+
+A second diagnostic build traced snapshot replay, text measurement, clipping, and glyph submission.
+The saved zoom trace contains 31 paint passes for both labels, including 18 enlarged passes.
+Each pass submitted 33 glyph sprites for the static label and 16 for the interactive label.
+Bounds, clipping masks, and opacity were valid in those passes.
+The native screenshot after enlargement showed both labels.
+No missing-label screenshot was synchronized with this trace, so it does not isolate the failure.
+Further capture attempts failed with cgWindowNotFound for both isolated applications while their processes remained alive.
+No application was restarted to address that capture failure.
+The next useful diagnostic correlates a missing-label frame with graphics texture lookup and draw submission.
+No production rendering change is justified by this trace.

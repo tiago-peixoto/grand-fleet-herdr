@@ -65,7 +65,8 @@ export default class Fleet extends View {
         }
         if(command==='close-tab') this.requestClose('tab',focused()?.tab);
         if(command==='close-pane') this.requestClose('pane',focused()?.pane);
-        if(command==='firstmate') this.openFirstmate();
+        if(command==='firstmate') await this.openFirstmate(c);
+        if(command.startsWith('focus-pane:')) await this.focusPane(command.slice('focus-pane:'.length),c);
         if(command==='restore-layout') this.openRestore();
         c.notify();
       }
@@ -129,9 +130,9 @@ export default class Fleet extends View {
       .flatMap(m=>m.coordinators).filter(c=>c.role==='firstmate');
   }
 
-  openFirstmate() {
+  openFirstmate(cx) {
     const choices=this.firstmates();
-    if(choices.length===1) this.select(choices[0].session);
+    if(choices.length===1) return this.select(choices[0].session,cx);
     else openOverlay({mod:'one-piece',props:{view:'firstmates'},kind:'dialog',width:480,height:340});
   }
 
@@ -140,10 +141,10 @@ export default class Fleet extends View {
     const list=v_flex().flex_1().min_h(0).gap(10).overflow_y_scrollbar();
     for(const choice of choices) {
       const machine=machineOf(choice.terminal);
-      list.child(button(`choose-${choice.terminal}`,`${label(choice.session)} · ${machineLabel(machine)} (${machine??'local'})`,()=>{
-        this.select(choice.session);
+      list.child(button(`choose-${choice.terminal}`,`${label(choice.session)} · ${machineLabel(machine)} (${machine??'local'})`,(_e,c)=>c.spawn(async a=>{
+        await this.select(choice.session,a);
         closeOverlay(props().overlay);
-      }));
+      })));
     }
     return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
       .child(div().text_size(22).font_semibold().child('Choose your firstmate'))
@@ -152,26 +153,47 @@ export default class Fleet extends View {
       .child(h_flex().justify_end().child(button('cancel-firstmates','Cancel',()=>closeOverlay(props().overlay))));
   }
 
-  select(terminal) {
+  navigate(tab,action,cx) {
+    const space=spaces().find(s=>s.tabs.some(t=>t.id===tab));
+    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return;
+    const supervised=terminals().find(t=>t.tab===tab&&t.state==='live'&&(isWorker(t)||config().coordinators.some(r=>r.role==='secondmate'&&matches(t,r))));
+    if(supervised) return this.inspect(supervised,cx);
+    return action();
+  }
+
+  selectSpace(id,cx) {
+    const space=spaces().find(s=>s.id===id);
+    const tab=space?.tabs.find(t=>t.active)??space?.tabs[0];
+    if(tab) return this.navigate(tab.id,()=>{run('space.select',{id});run('tab.select',{id:tab.id});},cx);
+  }
+
+  focusPane(id,cx) {
+    const pane=panes().find(p=>p.pane===id);
+    if(pane) return this.navigate(pane.tab,()=>run('pane.zoom',{pane:id}),cx);
+  }
+
+  select(terminal,cx) {
     if(!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')) return;
     const current=terminals().find(t=>t.address===terminal.address&&t.created_ms===terminal.created_ms&&t.state==='live');
     if(!current?.space||!current.tab) { notifyError(new Error('This session has no workspace. Open it in Herdr before registering it.')); return; }
-    run('space.select',{id:current.space});
-    run('tab.select',{id:current.tab});
-    run('pane.focus',{terminal:current.address});
+    return this.navigate(current.tab,()=>{
+      run('space.select',{id:current.space});
+      run('tab.select',{id:current.tab});
+      run('pane.focus',{terminal:current.address});
+    },cx);
   }
 
   async openIndependent(terminal,cx) {
     const current=fleet(terminals(),machines(),config().coordinators).flatMap(m=>m.independent)
       .find(t=>identity(t)===identity(terminal));
     if(!current) {notifyError(new Error('This independent session is no longer available.'));return;}
-    if(current.space) {this.select(current);return;}
+    if(current.space) {await this.select(current,cx);return;}
     try {
       const rawSpace=`op-independent-${current.address.split('/').pop()}-${current.created_ms}`;
       await checked(['label',current.address,`herdr.space=${rawSpace}`,`herdr.tab=${rawSpace}`]);
       for(let attempt=0;attempt<40;attempt++) {
         const placed=terminals().find(t=>identity(t)===identity(current)&&t.space&&t.tab);
-        if(placed) {this.select(placed);return;}
+        if(placed) {await this.select(placed,cx);return;}
         await cx.sleep(100);
       }
       throw new Error('Herdr has not opened the independent workspace. Try again after it reconnects.');
@@ -363,7 +385,7 @@ export default class Fleet extends View {
           .child(div().text_color('#a0b7b8').child(collapsed?'›':'⌄'));
         block.child(ship);
         if(!collapsed) {
-          block.child(this.row(coordinator.session,'luffy',`${coordinator.role} · ${coordinator.role==='firstmate'?'Pinned first':'Inspection only'}`,(_e,c)=>coordinator.role==='firstmate'?this.select(coordinator.session):c.spawn(a=>this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
+          block.child(this.row(coordinator.session,'luffy',`${coordinator.role} · ${coordinator.role==='firstmate'?'Pinned first':'Inspection only'}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
           for(const worker of coordinator.workers) {
             const character=characters[identity(worker)];
             block.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.inspect(worker,a)),selected?.space===cfg.inspections[identity(worker)]?.space));
@@ -374,10 +396,12 @@ export default class Fleet extends View {
       for(const worker of machine.unassigned) block.child(this.row(worker,characters[identity(worker)].art,`${stateLabel(worker)} · Inspection only`,(_e,c)=>c.spawn(a=>this.inspect(worker,a))));
       const coordinatorSpaces=new Set(machine.coordinators.map(c=>c.session.space??cfg.inspections[identity(c.session)]?.space));
       const independentSpaces=spaces().filter(s=>s.machine===machine.machine&&!coordinatorSpaces.has(s.id)&&machine.independent.some(t=>t.space===s.id));
-      if(independentSpaces.length) block.child(div().mt(8).text_size(10).text_color('#8fa8a9').child('UNSUPERVISED'));
-      for(const space of independentSpaces) block.child(h_flex().id(`space-${space.id}`).px(12).py(10).rounded(7).bg(space.active?'#29454c':'#182e34').hover(s=>s.bg('#29454c')).cursor_pointer().on_click(()=>run('space.select',{id:space.id})).child(div().flex_1().truncate().text_color('#c3d5d0').text_size(12).child(space.name)));
+      const unplaced=machine.independent.filter(t=>!t.space&&!t.labels?.['one-piece.placeholder']);
+      if(independentSpaces.length||unplaced.length) block.child(div().mt(8).text_size(10).text_color('#8fa8a9').child('UNSUPERVISED'));
+      for(const space of independentSpaces) block.child(h_flex().id(`space-${space.id}`).px(12).py(10).rounded(7).bg(space.active?'#29454c':'#182e34').hover(s=>s.bg('#29454c')).cursor_pointer().on_click((_e,c)=>c.spawn(a=>this.selectSpace(space.id,a))).child(div().flex_1().truncate().text_color('#c3d5d0').text_size(12).child(space.name)));
+      for(const terminal of unplaced) block.child(this.row(terminal,'pirate',`Independent · ${stateLabel(terminal)}`,(_e,c)=>c.spawn(a=>this.openIndependent(terminal,a))));
       for(const missing of machine.missing) block.child(div().text_size(11).text_color('#e8bd70').child(`${missing.role} disconnected · ${missing.terminal}`));
-      if(!machine.coordinators.length&&!machine.unassigned.length&&!independentSpaces.length) block.child(div().py(10).text_color('#92acab').text_size(12).child('No sessions on this machine.'));
+      if(!machine.coordinators.length&&!machine.unassigned.length&&!independentSpaces.length&&!unplaced.length) block.child(div().py(10).text_color('#92acab').text_size(12).child('No sessions on this machine.'));
       content.child(block);
     }
     const blockers=attention(world);
@@ -385,7 +409,7 @@ export default class Fleet extends View {
     for(const item of blockers) {
       const terminal=item.terminal;
       alerts.child(v_flex().id(`attention-${terminal.address}`).p(9).gap(3).rounded(6).bg('#28372f').cursor_pointer().hover(s=>s.bg('#364638'))
-        .on_click((_e,c)=>item.inspect?c.spawn(a=>this.inspect(terminal,a)):item.kind==='Independent'?c.spawn(a=>this.openIndependent(terminal,a)):this.select(terminal))
+        .on_click((_e,c)=>item.inspect?c.spawn(a=>this.inspect(terminal,a)):item.kind==='Independent'?c.spawn(a=>this.openIndependent(terminal,a)):c.spawn(a=>this.select(terminal,a)))
         .child(div().truncate().text_size(11).text_color('#edc478').child(`${item.kind} · ${label(terminal)}`))
         .child(div().text_size(10).text_color('#afc0b5').child(`${machineOf(terminal.address)??'local'} · ${item.inspect?'Inspect':'Open session'}`)));
     }
@@ -406,7 +430,7 @@ export default class Fleet extends View {
       .child(h_flex().items_center().gap(12).child(art(coordinator?'luffy':config().characters[target?identity(target):'']?.art??'pirate',target?.status,56))
         .child(v_flex().flex_1().gap(5).child(div().text_size(18).font_semibold().text_color('#e0ece6').child(target?label(target):'Session unavailable'))
           .child(div().text_size(11).text_color('#e8bd70').child(`INSPECTION ONLY · ${target?stateLabel(target):'Disconnected'}`)))
-        .child(button('back-firstmate','Back to firstmate',()=>this.openFirstmate(),true)))
+        .child(button('back-firstmate','Back to firstmate',(_e,c)=>c.spawn(a=>this.openFirstmate(a)),true)))
       .child(div().text_size(11).text_color('#9eb7b4').child(target?'Live terminal text · selection and copy enabled · direct input disabled':'Terminal output unavailable · direct input disabled'))
       .child(Editor.new(this.editor).flex_1().min_h(0).size_full())
       .child(div().text_size(10).text_color(this.error?'#edc478':'#8fa8a9').child(this.error||(!target?'Waiting for the session to reconnect':this.updated?'Updates every second · up to 2,000 history lines':'Waiting for output')));
@@ -494,7 +518,7 @@ export default class Fleet extends View {
       .child(div().flex_1().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
       .child(div().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`))
       .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
-      .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>paneReady(zoom.pane)&&run('pane.zoom',{pane:zoom.pane}))))
+      .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>run(`one-piece.focus-pane:${zoom.pane}`))))
       .child(button('restore-layout','Restore layout',()=>this.openRestore()))
       .child(button('setup-header','Fleet setup',()=>this.setup()));
   }
@@ -512,7 +536,7 @@ export default class Fleet extends View {
     const row=h_flex().size_full().px(8).gap(6).items_center().overflow_x_scrollbar().bg('#192e34');
     if(!space) return row;
     for(const tab of space.tabs) row.child(h_flex().gap(3).flex_none()
-      .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',()=>run('tab.select',{id:tab.id}),tab.active))
+      .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',(_e,c)=>c.spawn(a=>this.navigate(tab.id,()=>run('tab.select',{id:tab.id}),a)),tab.active))
       .child(button(`rename-tab-${tab.id}`,'Rename',()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:tab.name}})))
       .child(button(`close-tab-${tab.id}`,'Close',()=>this.requestClose('tab',tab.id))));
     if(this.canAddTab(space.id)) row.child(button('add-tab','+ Your terminal',()=>{if(this.canAddTab(space.id)) run('tab.new',{space:space.id});}));
@@ -603,7 +627,7 @@ export default class Fleet extends View {
     return h_flex().size_full().px(10).gap(8).items_center().bg('#1b3339').text_color('#dbe8e2')
       .when(Boolean(coordinator),el=>el.child(art('luffy',terminal.status,30)))
       .child(div().flex_1().truncate().text_size(11).child(coordinator?`Luffy · ${label(terminal)}`:supervisor?`${label(terminal)} · open inspection from the fleet`:pane.mod?'Inspection only':`${terminal?label(terminal):pane.title} · ${(config().shells??[]).some(r=>r.terminal===terminal?.address&&r.created===terminal?.created_ms&&r.newProcess)?'New shell':'Your terminal'}`))
-      .when(paneReady(pane.pane),el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>paneReady(pane.pane)&&run('pane.zoom',{pane:pane.pane}))))
+      .when(paneReady(pane.pane),el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>run(`one-piece.focus-pane:${pane.pane}`))))
       .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`close-${pane.pane}`,'Close',()=>this.requestClose('pane',pane.pane))));
   }
 

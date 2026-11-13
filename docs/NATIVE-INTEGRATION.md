@@ -394,3 +394,31 @@ The completed record disappeared from the list and a success notification identi
 Comparing hc ls --all before and after showed exactly one added terminal and no changed existing terminal records.
 This verifies native restoration through the local command transport, not SSH or recovery after physical machine failure.
 The observations are saved in .superpowers/native/before-native-restore.json and .superpowers/native/after-native-restore.json.
+
+## Navigation gaps found during native verification
+
+Selecting a supervised worker through the mod's tab bar opened a writable terminal instead of inspection.
+Typing a marker into disposable worker t2p confirmed that the shell received input.
+A separate live independent session, t2n, had no pane and no sidebar entry while working.
+
+The navigation change routes mod-owned tab, workspace, session, and Focus actions through inspection when the destination tab contains a supervised session.
+It preserves neighboring personal panes.
+Independent sessions without workspaces now appear under Unsupervised and reuse the existing workspace attachment flow.
+This guard does not cover startup selection, host shortcuts, direct terminal clicks, or command-line navigation.
+It is presentation behavior, not a security boundary.
+
+Fresh verification passed 101 JavaScript tests, 30 Python tests, native initial rendering, and git diff --check.
+The controller tests cover late supervision changes, unavailable machines, parking failure, mixed personal panes, and independent workspace attachment.
+Native click verification of these changes remains pending because window capture stopped working for both isolated applications.
+
+Review reproduced cancellation when parking destroyed the pane header that initiated inspection.
+Both Focus controls now dispatch to the persistent sidebar controller before opening inspection.
+Two regression tests reproduced the cancellation before this correction and pass afterward.
+A separate review found no further concrete issue.
+
+A live controller test opened inspection for t2p and attached the existing independent session t2n to a workspace.
+Their process identifiers, 6648 and 62063, and creation times remained unchanged.
+Comparison also preserved all 28 unrelated live sessions.
+Evidence is saved in .superpowers/native/navigation-independent-runtime-result.json and .superpowers/native/navigation-independent-preservation-result.json.
+These controller checks do not verify native Focus command delivery or clicks.
+The corrected source has not yet replaced the installed One Piece mod in Grand Fleet Lab.

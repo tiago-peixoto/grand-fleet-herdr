@@ -52,12 +52,12 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
       if(args[0]==='label') {
         worker.keep=true;worker.labels['herdr.space']=args[2].split('=')[1];
         views.push({terminal:worker.address,tab:'writable'});
-        workspaces.push({id:prefix+worker.labels['herdr.space'],tabs:[{id:'writable'}]});
+        workspaces.push({id:prefix+worker.labels['herdr.space'],machine:remote?'hz-server':null,tabs:[{id:'writable'}]});
       }
       return {code:0,stdout:''};
     }};
   runInNewContext(source,context);
-  return {context,controller:new context.Fleet(),worker,sessions,workspaces,views,calls,errors,config:()=>cfg,cx:{notify(){},async sleep(){}}};
+  return {context,controller:new context.Fleet(),worker,sessions,workspaces,views,calls,errors,config:()=>cfg,cx:{notify(){},async sleep(){},spawn(fn){return fn(this);}}};
 }
 
 test('failed inspection creation never adopts a worker into a writable pane',async()=>{
@@ -173,7 +173,7 @@ test('stale shared close cannot end a replacement, supervised, or unavailable se
 function firstmateHost(registrations) {
   const h=host({independent:true,registrations});
   h.sessions.push({address:'t3',created_ms:13,state:'live',labels:{}});
-  h.workspaces.push({id:'captain',tabs:[{id:'captain-tab'}]});
+  h.workspaces.push({id:'captain',machine:null,tabs:[{id:'captain-tab'}]});
   h.views.push({terminal:'t3',tab:'captain-tab'});
   return h;
 }
@@ -432,6 +432,7 @@ function paneControlsHost() {
     focused:()=>({tab:'hz-server/tab'}),props:()=>({pane:'hz-server/p1'})});
   h.workspaces.push({id:'hz-server/space',machine:'hz-server',active:true,tabs:[{id:'hz-server/tab'}]});
   h.views.push({pane:'hz-server/p1',terminal:h.worker.address,tab:'hz-server/tab',focused:true});
+  persistentCommands(h);
   return {...h,clicks,render(){clicks.clear();h.controller.header();h.controller.paneHeader();}};
 }
 
@@ -446,15 +447,15 @@ test('unavailable and loading remote panes offer no split, zoom or close control
   }
 });
 
-test('pane callbacks recheck readiness after rendering and work after reconnection',()=>{
+test('pane callbacks recheck readiness after rendering and work after reconnection',async()=>{
   const h=paneControlsHost();
   h.render();
   h.context.machines=()=>[{name:'hz-server',layout:'unavailable'}];
-  for(const id of paneControlIds) h.clicks.get(id)();
+  for(const id of paneControlIds) await h.clicks.get(id)(null,h.cx);
   assert.equal(h.calls.length,0);
   h.context.machines=()=>[{name:'hz-server',layout:'ready'}];
   h.render();
-  for(const id of paneControlIds) h.clicks.get(id)();
+  for(const id of paneControlIds) await h.clicks.get(id)(null,h.cx);
   assert.equal(h.calls.filter(([cmd])=>cmd==='pane.split').length,1);
   assert.equal(h.calls.filter(([cmd])=>cmd==='pane.zoom').length,2);
   assert.equal(h.calls.filter(([cmd])=>cmd==='overlay').length,1);
@@ -1041,4 +1042,142 @@ test('sidebar records hidden terminal directory changes without a render',()=>{
   tick(h.cx);
   assert.equal(h.config().shells[0].cwd,'/changed directory');
   assert.equal(h.calls.length,0);
+});
+
+function persistentCommands(h) {
+  const run=h.context.run;
+  h.context.run=(cmd,args)=>{
+    if(!cmd.startsWith('one-piece.')) return run(cmd,args);
+    const owner=new h.context.Fleet();
+    const props=h.context.props;
+    let count=0,pending;
+    h.context.props=()=>({});
+    h.context.nextCommand=async()=>{if(count++) throw new Error('fixture stopped');return cmd.slice('one-piece.'.length);};
+    const cx={...h.cx,timer:{every(){}},focus_handle:()=>({}),spawn:fn=>{
+      pending=fn(cx).catch(error=>assert.equal(error.message,'fixture stopped'));
+    }};
+    owner.init({},cx);
+    h.context.props=props;
+    return pending;
+  };
+}
+
+function navigationHost() {
+  const h=closeRoutesHost();
+  h.cx.spawn=fn=>fn(h.cx);
+  h.config().characters={};h.config().aliases={};
+  h.context.theme=()=>({foreground:'#fff'});
+  h.controller.collapsed={};h.controller.handle={};
+  persistentCommands(h);
+  h.context.props=()=>({pane:'probe-pane'});
+  return h;
+}
+
+for(const route of ['tab','space','select','header focus','pane focus']) test(`supervised navigation via ${route} opens inspection and preserves mixed personal panes`,async()=>{
+  const h=navigationHost();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
+  const personal={address:'t3',created_ms:13,state:'live',labels:{}};
+  h.sessions.push(personal);
+  h.views.push({pane:'personal',tab:'probe',terminal:'t3'});
+  const before=JSON.stringify(personal);
+  h.controller.tabsView();h.controller.sidebar(h.cx);h.controller.header();h.controller.paneHeader();
+  if(route==='select') await h.controller.select(personal,h.cx);
+  else await h.actions.get({'tab':'select-tab-probe','space':'space-captain','header focus':'zoom-grid','pane focus':'zoom-probe-pane'}[route])(null,h.cx);
+  assert.ok(h.config().inspections['t2:12'],'worker must open in inspection');
+  assert.ok(!h.views.some(p=>p.terminal==='t2'),'worker writable pane must be removed');
+  assert.ok(h.views.some(p=>p.terminal==='t3'&&p.tab==='probe'));
+  assert.equal(JSON.stringify(personal),before);
+  assert.ok(!h.calls.some(([cmd,args])=>cmd==='pane.zoom'||cmd==='tab.select'&&args.id==='probe'));
+});
+
+test('navigation rechecks supervision after rendering and does not touch other tabs',async()=>{
+  const h=navigationHost();h.controller.tabsView();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
+  h.sessions.push({address:'t4',created_ms:14,state:'live',labels:{'firstmate.home':'test','firstmate.task':'other'}});
+  h.views.push({pane:'other-worker',tab:'other',terminal:'t4'});
+  await h.actions.get('select-tab-probe')(null,h.cx);
+  assert.ok(h.config().inspections['t2:12']);
+  assert.ok(h.views.some(p=>p.terminal==='t4'));
+});
+
+for(const status of ['idle','working']) test(`unplaced independent ${status} session has an opening row instead of an empty message`,async()=>{
+  const h=navigationHost();h.views.length=0;h.workspaces.length=0;
+  h.worker.status=status;
+  h.controller.sidebar(h.cx);
+  assert.ok(!h.texts.includes('No sessions on this machine.'));
+  assert.ok(h.texts.includes('UNSUPERVISED'));
+  const before=JSON.stringify(h.worker);
+  const action=h.actions.get('session-t2');
+  assert.ok(action,'unplaced independent session needs a navigation row');
+  await action(null,h.cx);
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='space.select'&&args.id==='op-independent-t2-12'));
+  assert.equal(h.worker.created_ms,JSON.parse(before).created_ms);
+  assert.ok(!h.calls.some(([cmd,args])=>cmd==='hc'&&['run','kill'].includes(args[0])));
+});
+
+test('secondmate navigation cannot fall back to writable selection when parking fails',async()=>{
+  const h=navigationHost();
+  h.config().coordinators.push({terminal:'t2',created:12,role:'secondmate'});
+  const run=h.context.run;
+  h.context.run=(cmd,args)=>{if(cmd!=='terminal.park') run(cmd,args);};
+  h.controller.tabsView();
+  await h.actions.get('select-tab-probe')(null,h.cx);
+  assert.ok(h.errors.some(e=>e.body.includes('writable pane')));
+  assert.ok(!h.calls.some(([cmd])=>['tab.select','space.select','pane.focus','pane.zoom'].includes(cmd)));
+  assert.equal(h.worker.state,'live');
+});
+
+test('tab navigation rejects disconnection after rendering without parking or selecting',async()=>{
+  const h=navigationHost();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
+  h.controller.tabsView();h.context.machines=()=>[{name:null,layout:'unavailable'}];
+  await h.actions.get('select-tab-probe')(null,h.cx);
+  assert.equal(h.calls.length,0);
+});
+
+test('personal navigation works after inspecting its supervised neighbor',async()=>{
+  const h=navigationHost();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
+  const personal={address:'t3',created_ms:13,state:'live',labels:{}};
+  h.sessions.push(personal);h.views.push({pane:'personal',tab:'probe',terminal:'t3'});
+  await h.controller.select(personal,h.cx);
+  h.calls.length=0;
+  await h.controller.select(personal,h.cx);
+  assert.ok(h.calls.some(([cmd,args])=>cmd==='pane.focus'&&args.terminal==='t3'));
+  assert.ok(!h.calls.some(([cmd])=>cmd==='terminal.park'));
+});
+
+test('remote unplaced rows preserve machine identity and exclude offline sessions and temporary shells',async()=>{
+  const h=navigationHost();h.views.length=0;h.workspaces.length=0;
+  h.worker.address='remote/t2';
+  h.sessions.push({address:'remote/t9',created_ms:9,state:'live',labels:{'one-piece.placeholder':'op-view-1-2'}});
+  h.context.machines=()=>[{name:'remote',layout:'ready'}];
+  h.controller.sidebar(h.cx);
+  assert.ok(h.actions.has('session-remote/t2'));
+  assert.ok(!h.actions.has('session-remote/t9'));
+  h.context.machines=()=>[{name:'remote',layout:'unavailable'}];
+  await h.actions.get('session-remote/t2')(null,h.cx);
+  assert.equal(h.calls.length,0);
+  h.actions.clear();h.controller.sidebar(h.cx);
+  assert.ok(!h.actions.has('session-remote/t2'));
+});
+
+for(const route of ['pane focus','header focus']) test(`${route} completes inspection after parking closes the pane header`,async()=>{
+  const h=navigationHost();
+  h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
+  const personal={address:'t3',created_ms:13,state:'live',labels:{}};
+  h.sessions.push(personal);h.views.push({pane:'personal',tab:'probe',terminal:'t3'});
+  const run=h.context.run;
+  h.context.run=(cmd,args)=>{
+    const result=run(cmd,args);
+    if(cmd==='terminal.park') h.controller.close();
+    return result;
+  };
+  h.controller.paneHeader();h.controller.header();
+  await h.actions.get(route==='pane focus'?'zoom-probe-pane':'zoom-grid')(null,h.cx);
+  assert.equal(h.controller.closed,true,'parking must destroy the initiating header');
+  assert.ok(h.config().inspections['t2:12'],'inspection must survive header destruction');
+  assert.ok(h.views.some(p=>p.terminal==='t3'),'personal pane must survive');
+  assert.ok(!h.views.some(p=>p.terminal==='t2'),'worker must remain parked');
+  assert.equal(h.errors.length,0);
 });
