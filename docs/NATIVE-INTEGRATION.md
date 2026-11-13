@@ -912,6 +912,15 @@ All 19 files under the isolated firstmate state and data directories retained id
 After inspection, firstmate's own `fm_backend_hc_capture` accepted the worker's ownership labels and read the diagnostic marker successfully.
 The before-and-after records and assertions are retained in `.superpowers/native/firstmate-integration.json`.
 
+A follow-up exercised firstmate's own `fm_backend_hc_send_text_line` against the same inspected worker.
+The helper accepted the matching task label and the worker printed a unique marker, observed through `fm_backend_hc_capture`.
+The same helper rejected a mismatched task label before submission, and its marker never appeared in captured output.
+The worker retained process 18995, creation time 1794584371599, ownership labels, and its parked placement.
+All 19 firstmate state and data files retained identical hashes.
+This confirms that inspection preserves firstmate's input authority for the shell diagnostic worker.
+It does not establish an AI worker's permission handling, attention transitions, or task completion.
+The assertions and result are retained in `.superpowers/native/verify-firstmate-authority.py` and `.superpowers/native/firstmate-authority-verification.json`.
+
 Coordinator registration, supervised attention transitions, return navigation for this home, and task completion remain unverified in a complete firstmate workflow.
 
 ## Terminal block preset feasibility
