@@ -512,3 +512,24 @@ This proves recovery of the real SSH transport and preservation of both remote p
 It does not prove native offline presentation, inspection creation, or remote coordinator registration through the setup dialog.
 Native captures continued showing an older view while the app command interface reported the newly selected observation tab.
 That capture mismatch remains unresolved.
+
+
+## Physical SSH inspection controller
+
+A disposable test view loaded the current production controller and opened inspection for op-hz-lab/t2.
+The controller created a machine-qualified inspection workspace and saved its pane identity.
+The editor received the remote shell prompt, and the app reported no writable pane for this worker.
+The worker retained process identifier 2001284 and creation time 1794573083999.
+This invokes the actual controller in Herdr, but it does not verify a native sidebar click.
+
+Reloading the test view left one labeled temporary shell with a persisted cleanup record.
+Calling the production cleanup controller ended that owned temporary shell and cleared the pending record.
+The native Retry cleanup button was not exercised.
+
+A second physical SSH interruption tested the inspection editor through the inherited production refresh method.
+Its value changed to This session is unavailable. No cached output is shown.
+Reconnection restored the remote shell prompt.
+Assertions confirmed no writable worker pane and unchanged captain and worker process identities.
+The recovery evidence files now include the inspection editor values for both connection states.
+Additional records are ssh-inspection-created.json and ssh-inspection-cleanup.json in .superpowers/native/.
+Native appearance, direct input rejection, and interruption during inspection creation still need separate verification.
