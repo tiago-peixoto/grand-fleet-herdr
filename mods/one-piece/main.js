@@ -685,7 +685,7 @@ export default class Fleet extends View {
       .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',(_e,c)=>c.spawn(a=>this.navigate(tab.id,()=>run('tab.select',{id:tab.id}),a)),tab.active))
       .child(button(`rename-tab-${tab.id}`,'Rename',()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:tab.name}})))
       .child(button(`close-tab-${tab.id}`,'Close',()=>this.requestClose('tab',tab.id))));
-    if(this.canAddTab(space.id)) row.child(button('add-tab','+ Your terminal',()=>{if(this.canAddTab(space.id)) run('tab.new',{space:space.id});}));
+    if(this.canAddTab(space.id)) row.child(button('add-tab','+ New tab',()=>{if(this.canAddTab(space.id)) run('tab.new',{space:space.id});}));
     return row;
   }
 
