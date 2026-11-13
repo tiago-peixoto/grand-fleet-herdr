@@ -97,12 +97,17 @@ See docs/INSTALL.md for ownership checks, rollback behavior, and interrupted-ope
 
 ## Remaining acceptance work
 
+The requirement-by-requirement verdict is maintained in [Native acceptance review](ACCEPTANCE.md).
+Historical sections below retain the limits that applied when each check ran.
+
 - Resolve the display-versus-capture discrepancy documented in docs/NATIVE-RESIZE-REPRO.md.
-- Verify native error presentation and retry interaction for the remote interruption cases covered below.
-- Verify attention navigation and visible error reporting during remote transitions.
 - Verify animation timing in the running native interface.
   Chopper, Franky, generic Pirate, and the pause control have native state-selection evidence below.
-- Compare the native layout with the approved prototype at the target screen sizes.
+- Verify automatic background redraw after remote reconnection.
+- Verify a complete isolated firstmate workflow, beyond labeled shell fixtures.
+- Resolve the prototype's unimplemented grid presets and complete the large-screen visual comparison.
+
+Native cleanup retry and remote attention navigation passed the later checks recorded below.
 
 Local-transport Restore interaction, hidden-window directory tracking, and physical SSH process recovery have passed the checks recorded below.
 Those results do not establish recovery after physical host failure.
