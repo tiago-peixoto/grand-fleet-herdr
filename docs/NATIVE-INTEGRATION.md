@@ -57,6 +57,17 @@ These checks establish the tested interactions, not every keyboard route or life
 Native initial-render validation also passes with `herdr-app check mods/one-piece`.
 That command does not establish runtime input isolation or process preservation.
 
+## Workspace header at reduced width
+
+Resizing Grand Fleet Lab from 1280 × 820 to 1000 × 700 logical pixels reduced the three-letter workspace name `tmp` to `t...`.
+The workspace name, context label, and four actions previously competed within one horizontal row.
+The header now stacks the name and context label in one flexible column within the existing header height.
+The installed mod displayed the complete name and `Coordinator workspace · op-hz-lab` at 1000 × 700.
+All four header actions remained visible at that size and after returning to 1280 × 820.
+The remote coordinator prompt remained visible in both captures.
+Native initial-render validation and whitespace checks passed.
+This check covers the observed short name and machine label, not every label length or smaller window size.
+
 ## Automated coverage
 
 Run the pure session-model checks with `npm test`.

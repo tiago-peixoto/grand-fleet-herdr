@@ -523,8 +523,9 @@ export default class Fleet extends View {
       return Boolean(pane&&paneReady(pane.pane)&&this.canAddTab(owner?.id));
     };
     return h_flex().size_full().px(18).gap(12).items_center().bg('#192e34')
-      .child(div().flex_1().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
-      .child(div().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`))
+      .child(v_flex().flex_1().min_w(0).gap(3)
+        .child(div().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
+        .child(div().truncate().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`)))
       .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
       .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>run(`one-piece.focus-pane:${zoom.pane}`))))
       .child(button('restore-layout','Restore layout',()=>this.openRestore()))
