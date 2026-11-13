@@ -1394,3 +1394,30 @@ This proves frame advancement in the renderer while active, but does not prove c
 Raising and clicking through the automation tool did not leave this window active in the subsequent trace.
 A focused-window visual comparison remains pending.
 The diagnostic build and probe do not change the production mod.
+
+### Renderer lab interference isolated
+
+The fixed-window recovery failure was retested with Grand Fleet Render Lab closed.
+Grand Fleet Lab remained open on the remote firstmate, with no terminal input sent.
+The remote process remained PID 17778 with creation time 1794593609763.
+Its dimensions remained 161 columns by 43 rows across the forced SSH interruption.
+The recovery observation is saved locally in `.superpowers/native/candidate-single-app-recovery.json`.
+A native screenshot after recovery showed readable terminal output and the pending approval without overlapping text.
+
+Reopening Grand Fleet Render Lab changed that same remote terminal to 113 columns by 36 rows without another interruption.
+Eight consecutive observations recorded the smaller dimensions and unchanged process identity.
+Those observations are saved locally in `.superpowers/native/candidate-renderer-reopened.json`.
+Both apps used the same isolated core, so the renderer lab was not independent of the workflow lab.
+This establishes interference from reopening the renderer lab, but does not identify the exact hidden viewer responsible.
+Grand Fleet Render Lab was closed again after this experiment.
+Future rendering experiments must use a separate core session before their results can establish workflow recovery behavior.
+The earlier two-app failure remains recorded, but cannot establish failure of single-app recovery.
+One passing single-app cycle does not establish reliable recovery across all supported layouts and viewers.
+
+Grand Fleet Render Lab now uses its own core session, `op-render-isolated`.
+Its socket is `/var/tmp/op-render-core-isolated/core.sock`, with separate configuration and state directories.
+The new core initially reported zero terminals and zero remote machines.
+A disposable local shell and the existing Sunny/text probe were then opened in that core.
+The native window shows only the independent renderer workspace and no fleet agents.
+The workflow terminal remained 161 columns by 43 rows after the independent renderer opened.
+The environment overrides are saved locally in `.superpowers/native/render-isolated-environment.json`.
