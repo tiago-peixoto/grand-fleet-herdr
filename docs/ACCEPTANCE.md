@@ -55,7 +55,9 @@ Fresh local and remote delegation passed within the isolated workflows described
    The official Core update manifest still advertises 0.1.21, whose tagged source lacks the recovery patch.
    Release validation therefore awaits a newer published Core build containing the fix.
    The merged-source build now preserves existing sessions and settles remote dimensions after transport recovery.
-   The measured transition and interrupted native input check are recorded in [merged-source reconnection](NATIVE-INTEGRATION.md#merged-source-remote-reconnection).
+   The measured transition is recorded in [merged-source reconnection](NATIVE-INTEGRATION.md#merged-source-remote-reconnection).
+   A subsequent native input check reached the shell, but the existing application view did not display its output.
+   [The stale-output reproduction](NATIVE-INTEGRATION.md#merged-source-input-reaches-the-shell-but-the-existing-view-stays-stale) remains unresolved, although a fresh read-only observer received the output.
 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.

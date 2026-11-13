@@ -1752,3 +1752,26 @@ A follow-up attempt to focus the personal terminal failed with computer-control 
 No typing followed that error, and UI actions stopped.
 Independent input after recovery remains unverified for this merged-source attempt.
 The control error alone does not establish user interference or an application defect.
+
+## Merged-source input reaches the shell but the existing view stays stale
+
+After native window control resumed, Grand Fleet Lab focused the personal terminal `op-hz-lab/t1k`.
+Native paste and typing reached Bash, but neither appeared in the application capture.
+A read-only `hc read` confirmed both unsubmitted commands, so the duplicate was cleared with native Control-U.
+After confirming the replacement command through `hc read`, native Return executed `printf 'MERGED-CORE-INPUT-OK\n'; stty size`.
+The remote output contains the marker and `27 36`, followed by the shell prompt.
+The personal shell retained process 1040875 and creation timestamp 1794596816772.
+The firstmate retained process 17778 and its unchanged manual Bash approval.
+
+The native view continued showing the earlier empty prompt.
+Scrolling down did not expose the new output.
+Clicking the personal pane's Focus button produced no visible layout change, and its dimensions remained 36 columns by 27 rows.
+A fresh read-only protocol observer received 1,264 terminal bytes including the missing marker immediately after attaching.
+This narrows the failure to the existing application view or its connection, but does not identify the cause.
+A one-second process sample found the application's connection reader reading frames and its main thread processing events.
+No product code was changed, and no user interference was established.
+
+Evidence is saved locally as `.superpowers/native/merged-core-stale-output.jpg`, `.superpowers/native/merged-core-stale-output.json`, and `.superpowers/native/merged-core-fresh-observer.json`.
+The process sample is `/tmp/grand-fleet-stale-output.sample.txt`.
+Input delivery passed this attempt, but visible output recovery failed.
+The earlier candidate pass does not establish working recovery for this merged-source application session.
