@@ -1767,13 +1767,16 @@ The native view continued showing the earlier empty prompt.
 Scrolling down did not expose the new output.
 Clicking the personal pane's Focus button produced no visible layout change, and its dimensions remained 36 columns by 27 rows.
 A fresh read-only protocol observer received 1,264 terminal bytes including the missing marker immediately after attaching.
-This narrows the failure to the existing application view or its connection, but does not identify the cause.
+The capture, Core read, and fresh observer were sampled at different times.
+They do not establish what the application received when the capture was taken.
+The physical display was not independently confirmed at the missing-output moment, so the cause remains unknown.
 A one-second process sample found the application's connection reader reading frames and its main thread processing events.
 No product code was changed, and no user interference was established.
 
 Evidence is saved locally as `.superpowers/native/merged-core-stale-output.jpg`, `.superpowers/native/merged-core-stale-output.json`, and `.superpowers/native/merged-core-fresh-observer.json`.
 The process sample is `/tmp/grand-fleet-stale-output.sample.txt`.
-Input delivery passed this attempt, but visible output recovery failed.
+Input delivery passed this attempt, but the application capture did not show the output.
+This does not establish a failure on the physical display.
 The earlier candidate pass does not establish working recovery for this merged-source application session.
 
 ## Fresh prompt recovery on the merged build
@@ -1799,3 +1802,40 @@ No product code changed.
 
 Evidence is saved locally in `.superpowers/native/fresh-prompt-reconnect.json` and `fresh-prompt-{before,after}-reconnect.jpg`.
 The official Core manifest still advertised version 0.1.21, generation 1, during this check.
+
+## Controlled default and mod reconnection comparison
+
+The user watched the reserved screen while the isolated release application exercised default and One Piece layouts.
+The default counter ran from 22:52:16 through 22:53:15 UTC on 2026-11-13.
+Its isolated remote connection was interrupted at 22:52:31 UTC, and captured output advanced through `060` and `DEFAULT DONE`.
+
+The mod reconnection counter ran from 22:55:08 through 22:56:07 UTC.
+Its isolated remote connection was interrupted at 22:55:15 UTC.
+Captured output advanced through `060` and `FLEET-RECONNECT DONE` after resizing and pane enlargement.
+The shell retained process 3333565 and creation timestamp 1794610094987.
+A later native scrollback check showed continuous lines `001` through `048`, including output around the interruption.
+
+The user initially reported clearing in the mod, then confirmed it occurred only before `001` appeared.
+Both mod counter commands explicitly began with `clear`, while the default counter did not.
+That difference explains the initial clearing and invalidates it as evidence of a mod reconnection defect.
+No reconnection display defect was reproduced in this controlled trial.
+This short passing trial does not resolve the historical intermittent capture discrepancies.
+No product code changed.
+
+Local evidence is stored under `.superpowers/native/controlled-comparison/`, including `physical-observation.json` and `fleet-final-output.json`.
+
+## Machine shortcut follow-up after the controlled comparison
+
+The isolated release application displayed the remote `Render comparison` terminal throughout this check.
+Selecting `op-remote-lab` revealed that machine's heading and workers.
+Selecting Water 7 returned to the local heading and first coordinator.
+Manual scrolling then hid the local heading while leaving the lower local section visible.
+Selecting Water 7 again returned directly to the local heading.
+The terminal selection and its visible counter output remained unchanged throughout these actions.
+No terminal input was sent.
+
+This rejects the hypothesis that a partially visible machine section prevents returning to its hidden heading in the tested state.
+It does not explain the historical first-click miss at compact size.
+The installed Herdr guidance documents `scroll_to_item` as revealing a direct child with the smallest necessary movement.
+The mod supplies one direct child per machine and uses that child's index.
+No navigation code change is justified by these passing samples.

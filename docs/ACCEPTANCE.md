@@ -34,7 +34,11 @@ Fresh local and remote delegation passed within the isolated workflows described
 ## Next acceptance gates
 
 1. Resolve the earlier native rendering discrepancy.
-   Current resize checks pass in both isolated applications, but the earlier missing text remains unexplained.
+   Current resize checks pass in both isolated applications, but the earlier missing captured text remains unexplained.
+   The [controlled comparison](NATIVE-INTEGRATION.md#controlled-default-and-mod-reconnection-comparison) preserved output through reconnection in both layouts.
+   The user confirmed that clearing occurred only before the mod counter began.
+   An explicit `clear` in the test command explains that clearing.
+   The historical captures do not independently establish a physical display failure.
    Do not introduce a renderer change without a reproducible cause.
    The restored text-only probe also passes its latest split and enlargement checks.
    The unresolved evidence is tracked in [herdr-app issue 1022](https://github.com/herdrdev/herdr-app/issues/1022).
@@ -56,8 +60,9 @@ Fresh local and remote delegation passed within the isolated workflows described
    Release validation therefore awaits a newer published Core build containing the fix.
    The merged-source build now preserves existing sessions and settles remote dimensions after transport recovery.
    The measured transition is recorded in [merged-source reconnection](NATIVE-INTEGRATION.md#merged-source-remote-reconnection).
-   A subsequent native input check reached the shell, but the existing application view did not display its output.
-   [The stale-output reproduction](NATIVE-INTEGRATION.md#merged-source-input-reaches-the-shell-but-the-existing-view-stays-stale) remains unresolved, although a fresh read-only observer received the output.
+   A subsequent native input check reached the shell, but an application capture did not display its output.
+   [The stale-output capture](NATIVE-INTEGRATION.md#merged-source-input-reaches-the-shell-but-the-existing-view-stays-stale) remains unexplained.
+   A later read-only observer received the output, but these observations were not simultaneous.
    A later [fresh-prompt recovery](NATIVE-INTEGRATION.md#fresh-prompt-recovery-on-the-merged-build) passed native input, visible output, and settled dimensions on the merged build.
    That passing case does not explain the earlier render interruption or corrupted terminal history.
 
