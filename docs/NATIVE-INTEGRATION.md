@@ -842,5 +842,11 @@ Clicking `op-hz-lab` revealed its heading, Sunny, coordinator, and workers.
 Clicking Water 7 returned to the local heading and crew.
 The remote `hz-registration-new` terminal and its prompt remained displayed throughout both clicks.
 The 105 JavaScript tests and native initial-render check passed.
-Offline shortcut routing passed in the simulated host, but its new native label has not yet been observed during disconnection.
+The isolated SSH transport was disconnected to verify the native offline shortcut.
+The shortcut displayed `op-hz-lab · Offline`, and selecting it revealed `Machine unavailable` without stale remote crew.
+The selected terminal retained its explicit lost-connection message.
+After restoring the transport, `hc machine ls` reported connected and the original shell retained PID 3928533 and creation time 1794583025575.
+The capture initially retained the offline view after reconnection, including after a shortcut click.
+Raising Grand Fleet Lab then showed the recovered crew, terminal prompt, and enabled terminal controls.
+Recovery is verified, but automatic background redraw remains unproven.
 This check does not establish layout behavior for an arbitrarily large machine inventory.
