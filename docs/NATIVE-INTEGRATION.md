@@ -1661,3 +1661,7 @@ The inspection capture is saved locally as `.superpowers/native/remote-worker-na
 
 All six upstream checks for herdr-core PR 271 passed, including Linux, macOS, Windows, lint, upgrade, and the aggregate check.
 This confirms the upstream automated checks, not acceptance or release of the patch.
+
+An explicit switch from Grand Fleet Render Lab back to Grand Fleet Lab did not reproduce the missed machine shortcut.
+The first local-machine click revealed Water 7 while preserving the remote coordinator workspace.
+Application switching alone is therefore insufficient to reproduce the initial unchanged viewport.

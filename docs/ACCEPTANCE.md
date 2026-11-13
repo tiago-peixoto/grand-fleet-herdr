@@ -36,6 +36,8 @@ Fresh local and remote delegation passed within the isolated workflows described
 1. Resolve the earlier native rendering discrepancy.
    Current resize checks pass in both isolated applications, but the earlier missing text remains unexplained.
    Do not introduce a renderer change without a reproducible cause.
+   The restored text-only probe also passes its latest split and enlargement checks.
+   The unresolved evidence is tracked in [herdr-app issue 1022](https://github.com/herdrdev/herdr-app/issues/1022).
 
 2. Finish the visual comparison against the approved prototype.
    Native checks now cover the large window and compact attention cards.

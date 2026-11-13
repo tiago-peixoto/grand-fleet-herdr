@@ -197,3 +197,15 @@ The corresponding live frame, drawable 723, still reported 3,125 white pixels an
 The diagnostic window therefore remains available for direct human comparison with the captured result.
 Neither a rendering fix nor a capture-tool defect has been established.
 Further rendering changes require evidence that distinguishes presentation from capture.
+
+## Text-only recheck and upstream tracking
+
+The original text-only probe was restored in Grand Fleet Render Lab on 2026-11-13.
+A disposable terminal was split beside it through the pane controls.
+Command-Shift-Return enlarged the probe and restored its split view without losing either label.
+No animated image, click on the repaint rectangle, or offscreen screenshot command was needed for this passing sample.
+Captures are saved locally as `.superpowers/native/text-only-{focus,split}-current.jpg`.
+This rules out animation as necessary for the current passing sample, but does not explain the earlier failures.
+
+The evidence and its capture limitations are reported in [herdr-app issue 1022](https://github.com/herdrdev/herdr-app/issues/1022).
+No renderer fix is claimed.
