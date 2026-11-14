@@ -12,9 +12,11 @@ The required Firstmate producer change remains unpublished.
 Existing sessions without canonical registration remain ordinary Herdr sessions.
 
 This project remains experimental.
-Current verification covers disposable local and remote terminal creation and navigation, plus local character selection and direct typing.
+Current verification covers disposable local and remote terminal creation, navigation, character selection, and direct typing.
 The current sidebar passed remote connection-loss recovery and unavailable presentation in the isolated lab.
-Automatic worker discovery and remaining interaction checks are incomplete.
+Real local and remote Firstmate tasks passed automatic discovery, task execution, and direct worker input.
+Remote normal cleanup passed; local cleanup required a disposable-record correction for an existing Firstmate path bug.
+Producer delivery and the final dependency audit remain incomplete.
 Use a separate test home before considering your daily configuration.
 
 ## Start here

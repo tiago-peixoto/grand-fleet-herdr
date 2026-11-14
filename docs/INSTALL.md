@@ -6,9 +6,10 @@ The adapter does not create worker spaces, adopt terminals, connect firstmate ta
 Read the [thin presentation design](THIN-MOD.md) for the current contract.
 
 This implementation remains experimental.
-Use a separate test home while current native interaction and visual verification remain incomplete.
-The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) contain historical evidence with narrower scopes.
-They do not establish acceptance of the current thin adapter.
+Use a separate test home while producer delivery and the final dependency audit remain incomplete.
+The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
+Real local and remote worker flows passed with the tested producer patch.
+The documented path and Core release limitations still apply.
 
 ## Choose an app home
 

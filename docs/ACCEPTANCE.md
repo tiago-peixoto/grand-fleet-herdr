@@ -10,7 +10,7 @@ This audit covers the approved native-flow objective, not the retired inspection
 Recorded runtime evidence applies to its tested source and fixtures only.
 Registration changes made after those fixtures require fresh verification.
 
-| Requirement | Current evidence | Remaining proof |
+| Requirement | Current evidence | Status or remaining proof |
 | --- | --- | --- |
 | Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
 | Explicit coordinator and worker relationships | Explicit home labels, ambiguity checks, and automatic discovery after producer review fixes | Real local and remote task flows passed; local cleanup required the documented fixture correction |
@@ -38,22 +38,22 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
 
 ## Current acceptance gaps
 
-- Verify the complete Firstmate task lifecycle with the patched producer.
-  Real local Claude coordinator and worker execution, automatic grouping, and direct terminal input passed.
-  Real remote discovery, task execution, navigation, and direct terminal input also passed.
-  Local normal cleanup stopped at a `/var` versus `/private/var` worktree path mismatch.
-  Remote normal cleanup released the worktree lease and removed the worker terminal.
-  Local cleanup passed after correcting only the disposable task record to the pool path spelling.
-  The original failure remains tracked by [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).
-  Remote automatic discovery and direct input also passed with a simulated coordinator and worker shell.
-  Local surviving character identity also passed in the current native sidebar.
 - Deliver the producer change alongside the dependent mod.
-- Validate a published Herdr Core build containing the recovery fix before release acceptance.
+  Review and validation are running against the contribution rebased onto upstream Firstmate.
+  Confirm that the delivered registration behavior matches the producer used for the real local and remote tasks.
+- Finish the dependency audit and update the pull request with the producer contribution link.
+  Current mod tests, native loading, command comparisons, and interactive checks passed within their recorded scopes.
+- Before release acceptance, validate a published Herdr Core build containing the recovery fix.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
-- Finish the current requirement audit against the approved prototype.
-  Pointer resizing passed locally and remotely in Grand Fleet and default Herdr with preserved processes and output.
-  Local sleeping, walking, and seated animations passed with simulated terminal status reports.
-- Complete current code review, relevant tests, and pull request updates.
+  The implementation goal delivers a reviewable pull request and does not authorize a release or daily installation.
+
+Real local and remote Claude tasks passed automatic grouping, task execution, native navigation, and direct terminal input.
+Remote normal cleanup released the worktree lease and removed the worker terminal.
+Local cleanup passed after correcting only the disposable task record to the pool path spelling.
+The original failure remains tracked by [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).
+Pointer resizing passed locally and remotely in Grand Fleet and default Herdr with preserved processes and output.
+Sleeping, walking, and seated animations passed with simulated status reports, and real tasks exercised corresponding status changes.
+Local and remote captures confirm the approved sidebar hierarchy and artwork alongside native terminal controls.
 
 ## Historical acceptance review
 
@@ -94,7 +94,7 @@ Fresh local and remote delegation passed within the isolated workflows described
 
 Task records also recover after closing a sidebar during a read, as verified by [the native lifecycle reproduction](NATIVE-INTEGRATION.md#task-record-refresh-after-closing-a-sidebar).
 
-## Next acceptance gates
+## Historical acceptance gates
 
 1. Resolve the earlier native rendering discrepancy.
    Current resize checks pass in both isolated applications, but the earlier missing captured text remains unexplained.
@@ -132,8 +132,9 @@ Task records also recover after closing a sidebar during a read, as verified by 
 The local and remote Arrange controls already passed native checks for presets, input, focus, and returning to the existing split view.
 Those completed checks are recorded in the requirements table rather than repeated as outstanding work.
 
-## Current automated check
+## Historical automated check
 
+These counts describe the retired sidebar lifecycle implementation.
 The sidebar lifecycle fix passed 122 JavaScript tests and 39 Python tests.
 The native initial-render check passed.
 These results do not close any runtime or visual gate marked incomplete above.
