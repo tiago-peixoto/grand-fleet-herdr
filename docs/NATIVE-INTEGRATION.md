@@ -1912,3 +1912,21 @@ It does not verify remote rollback, arbitrary saved-state compatibility, or down
 The upstream update command warns that saved state only moves forward when describing forced downgrades.
 The local evidence is `.superpowers/native/core-fallback-validation.json`.
 The source-build fallback does not resolve the historical capture discrepancy, machine shortcut miss, or official-release acceptance gate.
+
+## Traced machine navigation after compact resizing
+
+A temporary handler trace recorded machine identity, child index, and time for each machine shortcut click.
+The initial remote selection succeeded in the large Grand Fleet Lab window.
+After resizing to 1000 × 700 logical points, the first Water 7 click revealed the local heading.
+The first subsequent op-hz-lab click revealed the remote heading.
+All three clicks reached the handler with the expected child indices.
+The local machine identity was null with index zero, consistent with the local entry.
+Both personal terminal panes remained visible throughout these selections.
+No terminal input was sent.
+
+The trace is preserved privately in `.superpowers/native/navigation-click-trace.json`.
+Temporary tracing was removed, and the installed mod matched the repository file by SHA256.
+After reload, the sidebar returned to Water 7 while both terminal panes retained visible output.
+These observations establish successful delivery and navigation for these samples only.
+They do not reproduce or explain the historical missed click.
+No navigation workaround was added.
