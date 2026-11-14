@@ -9,17 +9,21 @@ The prototype and artwork live under prototype/.
 The current preview is generated from prototype/flow/app.js and prototype/flow/screen.html.
 Rebuild it with `python3 prototype/flow/build.py` rather than editing prototype/index.html.
 The docs directory contains the prototype inventory, artwork coverage, and historical specification.
-The experimental native mod lives in mods/one-piece, with its layout in layouts/one-piece.json.
+The experimental native mod lives in mods/one-piece.
+The installer generates its base module and layout from the destination Herdr installation.
+Read docs/THIN-MOD.md for the current simplification and candidate verification.
 Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 
 ## Resolve design conflicts
 
 VISION.md takes precedence over docs/PROTOTYPE-SPEC.md and the browser simulation.
 The author explicitly approved direct typing into worker and secondmate terminals on 2026-11-14.
-Use ordinary Herdr terminal controls with crewmate artwork in terminal headers.
+The current request preserves native Spaces, Agents, and terminal controls while replacing agent status artwork.
+Do not reintroduce custom workspace ownership or task polling.
+Firstmate-specific display grouping remains an unresolved design choice because firstmate launches workers without native parents.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.
 Do not recreate the retired inspection-only workspace or custom arrangement workflows.
-Preserve independent personal terminals and the accepted Unsupervised mode.
+Preserve independent personal terminals without inventing supervision labels.
 
 ## Native development
 
@@ -35,7 +39,9 @@ Treat role registration details in the prototype specification as proposals unti
 
 Run `git diff --check` for every change.
 For prototype behavior changes, rebuild, open prototype/index.html with chrome-devtools-axi, and run `python3 prototype/flow/check-browser.py`.
-For a native mod, run `herdr-app check <mod-folder>` and inspect its behavior in the running application.
+Run `herdr-app check <installed-mod-folder>` after generating the native base module.
+Run `node tools/check-parity.mjs <app-home>` against the same Herdr version.
+Inspect the interface in the isolated Grand Fleet Lab.
 The native check only exercises initial rendering and cannot establish session preservation, remote recovery, or correct terminal adoption.
 Record those limits explicitly when reporting results.
 Review boards and verdict transcripts stay outside this repository.

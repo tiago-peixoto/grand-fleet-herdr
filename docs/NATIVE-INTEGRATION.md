@@ -1,5 +1,9 @@
 # Native verification
 
+The thin adapter supersedes the custom fleet implementation described here.
+Read [Thin mod design](THIN-MOD.md) for current behavior and candidate verification.
+The remaining sections preserve historical decisions and test evidence.
+
 ## Current terminal model, 2026-11-14
 
 The author approved writable crewmate terminals and ordinary personal terminals.

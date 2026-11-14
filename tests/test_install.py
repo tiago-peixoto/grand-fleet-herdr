@@ -1,4 +1,5 @@
 """Run the installer as a user would, with all writes in temporary homes."""
+import hashlib
 import importlib.util
 import json
 import os
@@ -27,16 +28,26 @@ class InstallTests(unittest.TestCase):
         self.put(self.repo, 'mods/one-piece/main.js', 'version one')
         self.put(self.repo, 'mods/one-piece/mod.json', '{"place":"none"}')
         self.put(self.repo, 'mods/one-piece/assets/image.png', b'\x00\xffPNG')
-        self.put(self.repo, 'layouts/one-piece.json', '{"content":{"mod":"one-piece"}}')
+        shutil.copyfile(ROOT / 'tools/compat.py', self.repo / 'tools/compat.py')
         for name in ('settings.json', 'shared.json', 'view.json', 'sessions.json',
-                     'mods/tabs/main.js', 'layouts/main.json'):
+                     'mods/tabs/main.js'):
             self.put(self.home, name, 'keep ' + name)
+        self.upstream(self.home)
         self.keys = (b'{\r\n  "global": {"cmd-w": "tab.close", "cmd-shift-w": "pane.close"},'
                      b'\r\n  "terminal": {"ctrl-c": "terminal"},'
                      b' "layout:main": {"cmd-w": "terminal"},'
                      b' "mod:editor": {"cmd-s": "editor.save"}\r\n}\r\n')
         self.put(self.home, 'keys.json', self.keys)
         self.original = self.files(self.home)
+
+    def upstream(self, home):
+        self.put(home, 'mods/agents/main.js',
+                 'import { View } from "herdr";\nexport default class Agents extends View {\n'
+                 + ''.join('  ' + name + '() {}\n' for name in
+                           ('render', 'status', 'subRow', 'tree'))
+                 + '  init() { this.folded = new Set(); }\n}\n')
+        self.put(home, 'layouts/main.json', json.dumps({'children': [
+            {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}))
 
     def put(self, root, name, content):
         path = root / name
@@ -58,21 +69,131 @@ class InstallTests(unittest.TestCase):
     def installer(self):
         spec = importlib.util.spec_from_file_location('installer', SCRIPT)
         installer = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(installer)
+        with mock.patch.object(sys, 'path', [str(ROOT / 'tools'), *sys.path]):
+            spec.loader.exec_module(installer)
         return installer
 
-    def test_scoped_close_bindings_and_exact_restoration(self):
+    def make_v2_install(self):
         self.run_cli()
-        keys = json.loads((self.home / 'keys.json').read_bytes())
-        self.assertEqual(keys.pop('layout:one-piece', None), {
-            'cmd-w': 'one-piece.close-tab', 'cmd-shift-w': 'one-piece.close-pane'})
-        self.assertEqual(keys, json.loads(self.keys))
+        path = self.home / '.one-piece-install.json'
+        receipt = json.loads(path.read_bytes())
+        original = (self.home / 'keys.json').read_bytes().decode()
+        keys = json.loads(original)
+        bindings = {'cmd-w': 'one-piece.close-tab', 'cmd-shift-w': 'one-piece.close-pane'}
+        keys.setdefault('layout:one-piece', {}).update(bindings)
+        installed = (json.dumps(keys, indent=2, ensure_ascii=True) + '\n').encode()
+        receipt.update(version=2, keys={'bindings': bindings, 'original': original,
+                                     'installed_sha256': hashlib.sha256(installed).hexdigest()})
+        generated = 'mods/one-piece/herdr-agents.js'
+        receipt['files'].pop(generated, None)
+        (self.home / generated).unlink(missing_ok=True)
+        path.write_text(json.dumps(receipt))
+        self.put(self.home, 'keys.json', installed)
+
+    def test_new_install_generates_files_without_changing_keys(self):
+        self.run_cli()
+        self.assertEqual((self.home / 'keys.json').read_bytes(), self.keys)
+        self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(),
+                         (self.home / 'mods/agents/main.js').read_bytes())
+        expected = json.loads((self.home / 'layouts/main.json').read_bytes())
+        expected['children'][1]['content']['mod'] = 'one-piece'
+        self.assertEqual(json.loads((self.home / 'layouts/one-piece.json').read_bytes()), expected)
+        receipt = json.loads((self.home / '.one-piece-install.json').read_bytes())
+        self.assertEqual(set(receipt), {'owner', 'version', 'files'})
+        self.assertEqual(receipt['version'], 3)
+        for name in ('mods/one-piece/herdr-agents.js', 'layouts/one-piece.json'):
+            self.assertEqual(receipt['files'][name],
+                             hashlib.sha256((self.home / name).read_bytes()).hexdigest())
+        self.assertFalse((self.repo / 'mods/one-piece/herdr-agents.js').exists())
         self.run_cli()
         self.run_cli('uninstall')
+        self.assertEqual(self.files(self.home), self.original)
+
+    def test_unsupported_upstream_preserves_new_and_legacy_homes(self):
+        for legacy in (False, True):
+            if legacy:
+                self.make_v2_install()
+            for name, invalid in (
+                    ('mods/agents/main.js', 'export default class Agents {}'),
+                    ('layouts/main.json', '{}'),
+                    ('layouts/main.json', '{'),
+                    ('layouts/main.json', '[]'),
+                    ('layouts/main.json', '{"content":null}'),
+                    ('layouts/main.json', '{"children":null}')):
+                path = self.home / name
+                original = path.read_bytes()
+                path.write_text(invalid)
+                before = self.files(self.home)
+                with self.subTest(legacy=legacy, name=name, invalid=invalid):
+                    result = self.run_cli(ok=False)
+                    self.assertNotIn('Traceback', result.stderr)
+                    self.assertEqual(self.files(self.home), before)
+                    self.assertFalse((self.home / '.one-piece-install-work').exists())
+                path.write_bytes(original)
+
+    def test_upstream_symlinks_and_missing_files_preserve_home(self):
+        for name in ('mods/agents/main.js', 'layouts/main.json'):
+            path = self.home / name
+            original = path.read_bytes()
+            outside = self.put(self.root, 'outside-upstream', original)
+            path.unlink()
+            for symlink in (False, True):
+                if symlink:
+                    path.symlink_to(outside)
+                before = self.files(self.home)
+                self.run_cli(ok=False)
+                self.assertEqual(self.files(self.home), before)
+                self.assertEqual(outside.read_bytes(), original)
+            path.unlink()
+            path.write_bytes(original)
+
+    def test_generated_files_refresh_from_destination(self):
+        self.run_cli()
+        agents = self.home / 'mods/agents/main.js'
+        agents.write_bytes(agents.read_bytes().replace(b'\n', b'\r\n') + b'// upstream update\r\n')
+        layout = json.loads((self.home / 'layouts/main.json').read_bytes())
+        layout['children'].append({'content': {'mod': 'tabs'}})
+        self.put(self.home, 'layouts/main.json', json.dumps(layout))
+        self.run_cli()
+        self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(), agents.read_bytes())
+        layout['children'][1]['content']['mod'] = 'one-piece'
+        self.assertEqual(json.loads((self.home / 'layouts/one-piece.json').read_bytes()), layout)
+
+    def test_v3_receipt_has_strict_shape(self):
+        self.run_cli()
+        path = self.home / '.one-piece-install.json'
+        original = path.read_bytes()
+        for invalid in ('keys', 'extra', 'missing-generated', 'boolean-version'):
+            receipt = json.loads(original)
+            if invalid == 'missing-generated':
+                del receipt['files']['mods/one-piece/herdr-agents.js']
+            elif invalid == 'boolean-version':
+                receipt['version'] = True
+            else:
+                receipt[invalid] = {}
+            path.write_text(json.dumps(receipt))
+            before = self.files(self.home)
+            for action in ('install', 'uninstall'):
+                self.run_cli(action, ok=False)
+                self.assertEqual(self.files(self.home), before)
+
+    def test_v2_migration_cannot_adopt_unowned_generated_file(self):
+        self.make_v2_install()
+        self.put(self.home, 'mods/one-piece/herdr-agents.js', 'personal file')
+        before = self.files(self.home)
+        self.run_cli(ok=False)
+        self.assertEqual(self.files(self.home), before)
+
+    def test_v2_migration_restores_exact_original_keys(self):
+        self.make_v2_install()
+        self.run_cli()
         self.assertEqual((self.home / 'keys.json').read_bytes(), self.keys)
+        self.assertEqual(json.loads((self.home / '.one-piece-install.json').read_bytes())['version'], 3)
+        self.run_cli('uninstall')
+        self.assertEqual(self.files(self.home), self.original)
 
     def test_unrelated_shortcut_edits_survive_upgrade_and_removal(self):
-        self.run_cli()
+        self.make_v2_install()
         path = self.home / 'keys.json'
         keys = json.loads(path.read_bytes())
         keys['global']['cmd-x'] = {'command': 'tab.new', 'args': {'name': 'Personal'}}
@@ -82,17 +203,17 @@ class InstallTests(unittest.TestCase):
         edited = json.dumps(keys, ensure_ascii=False).encode()
         path.write_bytes(edited)
         self.run_cli()
-        self.assertEqual(path.read_bytes(), edited)
-        self.run_cli('uninstall')
         del keys['layout:one-piece']['cmd-w']
         del keys['layout:one-piece']['cmd-shift-w']
+        self.assertEqual(json.loads(path.read_bytes()), keys)
+        self.run_cli('uninstall')
         self.assertEqual(json.loads(path.read_bytes()), keys)
 
     def test_existing_empty_layout_section_survives_surgical_removal(self):
         keys = json.loads(self.keys)
         keys['layout:one-piece'] = {}
         self.put(self.home, 'keys.json', json.dumps(keys))
-        self.run_cli()
+        self.make_v2_install()
         path = self.home / 'keys.json'
         edited = json.loads(path.read_bytes())
         edited['global']['cmd-p'] = 'app.palette'
@@ -101,18 +222,16 @@ class InstallTests(unittest.TestCase):
         keys['global']['cmd-p'] = 'app.palette'
         self.assertEqual(json.loads(path.read_bytes()), keys)
 
-    def test_unknown_scoped_bindings_are_not_overwritten_or_adopted(self):
+    def test_personal_bindings_are_never_adopted(self):
         for value in ('tab.close', 'one-piece.close-tab'):
-            keys = json.loads(self.keys)
-            keys['layout:one-piece'] = {'cmd-w': value}
-            self.put(self.home, 'keys.json', json.dumps(keys))
+            self.put(self.home, 'keys.json', json.dumps({'layout:one-piece': {'cmd-w': value}}))
             before = self.files(self.home)
-            self.run_cli(ok=False)
+            self.run_cli()
+            self.run_cli('uninstall')
             self.assertEqual(self.files(self.home), before)
-            self.assertFalse((self.home / '.one-piece-install-work').exists())
 
     def test_changed_or_missing_owned_bindings_block_before_mutation(self):
-        self.run_cli()
+        self.make_v2_install()
         path = self.home / 'keys.json'
         installed = path.read_bytes()
         for key in ('cmd-w', 'cmd-shift-w'):
@@ -134,11 +253,12 @@ class InstallTests(unittest.TestCase):
         self.run_cli('uninstall', ok=False)
         self.assertEqual(self.files(self.home), before)
 
-    def test_missing_keys_requires_initialization_without_writes(self):
+    def test_missing_keys_needs_no_initialization(self):
         (self.home / 'keys.json').unlink()
         before = self.files(self.home)
-        result = self.run_cli(ok=False)
-        self.assertIn('initializ', result.stderr.lower())
+        self.run_cli()
+        self.assertFalse((self.home / 'keys.json').exists())
+        self.run_cli('uninstall')
         self.assertEqual(self.files(self.home), before)
         shutil.rmtree(self.home)
         self.run_cli(ok=False)
@@ -146,21 +266,36 @@ class InstallTests(unittest.TestCase):
         self.run_cli('uninstall')
         self.assertFalse(self.home.exists())
 
-    def test_invalid_and_symlink_keys_are_refused(self):
+    def test_new_install_never_reads_keys(self):
+        installer = self.installer()
+        read_bytes = Path.read_bytes
+        def reject_keys(path):
+            if path == self.home / 'keys.json':
+                raise AssertionError('keys.json was read')
+            return read_bytes(path)
+        with mock.patch.object(Path, 'read_bytes', reject_keys):
+            installer.apply('install', self.home, self.repo)
+            installer.apply('install', self.home, self.repo)
+            installer.apply('uninstall', self.home, self.repo)
+
+    def test_invalid_and_symlink_keys_are_untouched(self):
         for value in ('{', '[]', '{"global":[]}', '{"layout:one-piece":null}',
                       '{"global":{},"global":{}}', '{"global":{"x":NaN}}'):
             self.put(self.home, 'keys.json', value)
             before = self.files(self.home)
-            self.run_cli(ok=False)
+            self.run_cli()
+            self.run_cli('uninstall')
             self.assertEqual(self.files(self.home), before)
         outside = self.put(self.root, 'outside-keys.json', self.keys)
         (self.home / 'keys.json').unlink()
         (self.home / 'keys.json').symlink_to(outside)
-        self.run_cli(ok=False)
+        self.run_cli()
+        self.run_cli('uninstall')
+        self.assertTrue((self.home / 'keys.json').is_symlink())
         self.assertEqual(outside.read_bytes(), self.keys)
 
     def test_invalid_owned_keys_and_corrupt_shortcut_receipt_block_both_actions(self):
-        self.run_cli()
+        self.make_v2_install()
         path = self.home / 'keys.json'
         receipt_path = self.home / '.one-piece-install.json'
         original_receipt = receipt_path.read_bytes()
@@ -197,8 +332,6 @@ class InstallTests(unittest.TestCase):
         original = json.dumps(keys, ensure_ascii=False).encode() + b'  '
         self.put(self.home, 'keys.json', original)
         self.run_cli()
-        keys['layout:one-piece'].update({
-            'cmd-w': 'one-piece.close-tab', 'cmd-shift-w': 'one-piece.close-pane'})
         self.assertEqual(json.loads((self.home / 'keys.json').read_bytes()), keys)
         self.run_cli('uninstall')
         self.assertEqual((self.home / 'keys.json').read_bytes(), original)
@@ -212,11 +345,10 @@ class InstallTests(unittest.TestCase):
         path.write_text(json.dumps(receipt))
         self.put(self.home, 'keys.json', self.keys)
 
-    def test_v1_upgrade_acquires_bindings_and_v1_removal_leaves_keys(self):
+    def test_v1_upgrade_and_removal_leave_keys(self):
         self.make_v1_install()
         self.run_cli()
-        self.assertEqual(json.loads((self.home / 'keys.json').read_bytes())
-                         .get('layout:one-piece', {}).get('cmd-w'), 'one-piece.close-tab')
+        self.assertEqual((self.home / 'keys.json').read_bytes(), self.keys)
         self.run_cli('uninstall')
         self.assertEqual(self.files(self.home), self.original)
         self.make_v1_install()
@@ -225,14 +357,16 @@ class InstallTests(unittest.TestCase):
         self.run_cli('uninstall')
         self.assertEqual((self.home / 'keys.json').read_bytes(), before)
 
-    def test_v1_conflicting_upgrade_leaves_legacy_install_intact(self):
+    def test_v1_upgrade_preserves_personal_bindings(self):
         self.make_v1_install()
         self.put(self.home, 'keys.json', '{"layout:one-piece":{"cmd-w":"tab.close"}}')
-        before = self.files(self.home)
-        self.run_cli(ok=False)
-        self.assertEqual(self.files(self.home), before)
+        before = (self.home / 'keys.json').read_bytes()
+        self.run_cli()
+        self.run_cli('uninstall')
+        self.assertEqual((self.home / 'keys.json').read_bytes(), before)
 
     def test_keys_staging_race_preserves_concurrent_edit(self):
+        self.make_v2_install()
         installer = self.installer()
         write_bytes = Path.write_bytes
         edited = self.keys + b' '
@@ -252,12 +386,11 @@ class InstallTests(unittest.TestCase):
     def test_failure_after_keys_replacement_rolls_back_everything(self):
         installer = self.installer()
         rename = Path.rename
+        self.make_v2_install()
         for action in ('install', 'uninstall'):
-            if action == 'uninstall':
-                self.run_cli()
             before = self.files(self.home)
             def fail_receipt(source, destination):
-                if destination == self.home / '.one-piece-install.json' and action == 'install':
+                if source == self.home / '.one-piece-install-work/new/.one-piece-install.json':
                     raise OSError('receipt failure')
                 if source == self.home / '.one-piece-install.json' and action == 'uninstall':
                     raise OSError('receipt failure')
@@ -294,7 +427,6 @@ class InstallTests(unittest.TestCase):
     def test_clean_uninstall_is_repeatable_and_needs_no_sources(self):
         self.run_cli()
         shutil.rmtree(self.repo / 'mods')
-        shutil.rmtree(self.repo / 'layouts')
         self.run_cli('uninstall')
         self.run_cli('uninstall')
         self.assertEqual(self.files(self.home), self.original)
@@ -314,7 +446,7 @@ class InstallTests(unittest.TestCase):
 
     def test_changed_or_missing_owned_files_block_both_actions(self):
         self.run_cli()
-        for target in ('mods/one-piece/main.js', 'layouts/one-piece.json'):
+        for target in ('mods/one-piece/main.js', 'mods/one-piece/herdr-agents.js', 'layouts/one-piece.json'):
             path = self.home / target
             original = path.read_bytes()
             for content in (b'user changes', None):
@@ -372,7 +504,7 @@ class InstallTests(unittest.TestCase):
     def test_default_home_and_environment_override(self):
         env = dict(os.environ, HOME=str(self.root))
         env.pop('HERDR_APP_HOME', None)
-        self.put(self.root, '.config/herdr-app/keys.json', self.keys)
+        self.upstream(self.root / '.config/herdr-app')
         command = [sys.executable, '-B', str(self.repo / 'tools/install.py'), 'install']
         subprocess.run(command, env=env, capture_output=True, check=True)
         self.assertTrue((self.root / '.config/herdr-app/mods/one-piece/main.js').is_file())
@@ -412,9 +544,7 @@ class InstallTests(unittest.TestCase):
         self.run_cli()
         before = self.files(self.home)
         self.put(self.repo, 'mods/one-piece/main.js', 'upgrade')
-        spec = importlib.util.spec_from_file_location('installer', SCRIPT)
-        installer = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(installer)
+        installer = self.installer()
         rename = Path.rename
 
         for action in ('install', 'uninstall'):
@@ -432,9 +562,7 @@ class InstallTests(unittest.TestCase):
     def test_failed_rollback_keeps_originals_for_recovery(self):
         self.run_cli()
         self.put(self.repo, 'mods/one-piece/main.js', 'upgrade')
-        spec = importlib.util.spec_from_file_location('installer', SCRIPT)
-        installer = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(installer)
+        installer = self.installer()
         rename = Path.rename
 
         def fail_and_block_rollback(source, destination):
@@ -462,7 +590,7 @@ class InstallTests(unittest.TestCase):
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
             if action == 'install':
-                for name in ('main.js', 'fleet.js', 'assets/sunny.gif'):
+                for name in ('main.js', 'mod.json', 'assets/sunny.gif'):
                     self.assertEqual((self.home / 'mods/one-piece' / name).read_bytes(),
                                      (ROOT / 'mods/one-piece' / name).read_bytes())
         self.assertEqual(self.files(self.home), before)

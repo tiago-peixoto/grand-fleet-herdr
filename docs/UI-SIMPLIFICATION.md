@@ -1,5 +1,9 @@
 # Approved terminal simplification
 
+The thin adapter supersedes the custom fleet implementation described here.
+Read [Thin mod design](THIN-MOD.md) for current behavior and candidate verification.
+The remaining sections preserve historical decisions and test evidence.
+
 The captain approved this decision on 2026-11-14, including direct typing into worker terminals.
 This replaces the inspection-only design in historical prototypes and plans.
 

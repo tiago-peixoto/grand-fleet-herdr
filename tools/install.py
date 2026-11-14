@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install One Piece files and scoped close shortcuts, with ownership checks."""
+"""Install One Piece presentation files with ownership checks."""
 import argparse
 import hashlib
 import json
@@ -9,6 +9,8 @@ import re
 import shutil
 import stat
 import sys
+
+import compat
 
 MOD = Path('mods/one-piece')
 LAYOUT = Path('layouts/one-piece.json')
@@ -65,32 +67,23 @@ def validate_keys_receipt(data):
         raise ValueError('Invalid shortcut receipt fingerprint')
 
 
-def plan_keys(action, home, receipt):
+def plan_keys(home, receipt):
     if not (home / KEYS).exists():
-        raise ValueError('Missing keys.json: initialize this app home with Herdr first; '
-                         'refusing to omit shipped shortcuts')
+        raise ValueError('Missing owned keys.json; preserving installation')
     raw = (home / KEYS).read_bytes()
     data = keys_document(raw.decode('utf-8'))
-    ownership = receipt.get('keys') if receipt else None
-    if ownership is None:
-        add_bindings(data)
-        replacement = encode_json(data)
-        ownership = {'bindings': dict(BINDINGS), 'original': raw.decode('utf-8'),
-                     'installed_sha256': hashlib.sha256(replacement).hexdigest()}
-        return replacement, ownership
+    ownership = receipt['keys']
     section = data.get(KEY_SECTION, {})
     for key, command in ownership['bindings'].items():
         if section.get(key) != command:
             raise ValueError(f'Owned binding changed or missing: keys.json / {KEY_SECTION} / {key}')
-    if action == 'install':
-        return raw, ownership
     if hashlib.sha256(raw).hexdigest() == ownership['installed_sha256']:
-        return ownership['original'].encode('utf-8'), None
+        return ownership['original'].encode('utf-8')
     for key in ownership['bindings']:
         del section[key]
     if not section and KEY_SECTION not in keys_document(ownership['original']):
         del data[KEY_SECTION]
-    return encode_json(data), None
+    return encode_json(data)
 
 
 def inventory(path):
@@ -118,13 +111,15 @@ def read_receipt(home):
     data = strict_json(path.read_bytes())
     if (not isinstance(data, dict)
             or data.get('owner') != OWNER or type(data.get('version')) is not int
-            or data['version'] not in (1, 2)
-            or set(data) != ({'owner', 'version', 'files'} if data['version'] == 1
+            or data['version'] not in (1, 2, 3)
+            or set(data) != ({'owner', 'version', 'files'} if data['version'] != 2
                              else {'owner', 'version', 'files', 'keys'})
             or not isinstance(data['files'], dict)):
         raise ValueError(f'Invalid ownership receipt: {path}')
     files = data['files']
     required = {'mods/one-piece/main.js', 'mods/one-piece/mod.json', str(LAYOUT)}
+    if data['version'] == 3:
+        required.add('mods/one-piece/herdr-agents.js')
     if not required <= files.keys():
         raise ValueError(f'Incomplete ownership receipt: {path}')
     for name, digest in files.items():
@@ -138,12 +133,10 @@ def read_receipt(home):
     return data
 
 
-def source_files(repo):
+def source_files(repo, home):
     mod = repo / MOD
     check_parents(mod)
     inventory(mod)
-    check_parents((repo / LAYOUT).parent)
-    inventory(repo / LAYOUT)
     files = {}
     for path in sorted(mod.rglob('*')):
         relative = path.relative_to(mod)
@@ -152,14 +145,21 @@ def source_files(repo):
             continue
         if path.is_file():
             files[path.relative_to(repo).as_posix()] = path.read_bytes()
-    files[str(LAYOUT)] = (repo / LAYOUT).read_bytes()
     if not {'mods/one-piece/main.js', 'mods/one-piece/mod.json'} <= files.keys():
         raise ValueError('Source mod needs main.js and mod.json')
     metadata = json.loads(files['mods/one-piece/mod.json'])
     if not isinstance(metadata, dict) or metadata.get('place') != 'none':
         raise ValueError('mod.json must use place=none to avoid docking into the active layout')
-    if not isinstance(json.loads(files[str(LAYOUT)]), dict):
-        raise ValueError('Source layout must be a JSON object')
+    agents = home / 'mods/agents/main.js'
+    layout = home / 'layouts/main.json'
+    for path in (agents, layout):
+        check_parents(path.parent)
+        inventory(path)
+    try:
+        files.update(compat.generate(agents.read_bytes().decode('utf-8'),
+                                     strict_json(layout.read_bytes())))
+    except (AttributeError, TypeError) as error:
+        raise ValueError('Unsupported Herdr main layout; preserving installation') from error
     return files
 
 
@@ -188,13 +188,12 @@ def apply(action, home, repo):
     if action == 'uninstall' and owned is None:
         return
     keys_content = None
-    keys_ownership = None
-    if action == 'install' or receipt.get('version') == 2:
+    if receipt and receipt['version'] == 2:
         targets = (MOD, LAYOUT, KEYS, RECEIPT)
         path = home / KEYS
         before[str(KEYS)] = inventory(path) if path.exists() or path.is_symlink() else None
-        keys_content, keys_ownership = plan_keys(action, home, receipt)
-    files = source_files(repo) if action == 'install' else {}
+        keys_content = plan_keys(home, receipt)
+    files = source_files(repo, home) if action == 'install' else {}
     for name in files:
         path = home / name
         check_parents(path.parent)
@@ -231,7 +230,7 @@ def apply(action, home, repo):
         if keys_content is not None:
             (stage / KEYS).write_bytes(keys_content)
         if action == 'install':
-            receipt = {'owner': OWNER, 'version': 2, 'keys': keys_ownership,
+            receipt = {'owner': OWNER, 'version': 3,
                        'files': {name: hashlib.sha256(data).hexdigest()
                                  for name, data in files.items()}}
             (stage / RECEIPT).write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')

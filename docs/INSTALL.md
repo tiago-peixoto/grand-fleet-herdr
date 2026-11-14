@@ -1,234 +1,200 @@
 # Install the native One Piece interface
 
-This mod remains experimental and is not ready to replace your daily layout.
-Read the [native acceptance review](ACCEPTANCE.md) before choosing an installation destination.
-Remote recovery passed with a Core build containing [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271).
-The published Core 0.1.21 release does not contain that patch.
-The installer neither supplies nor updates Core.
-Earlier native captures omitted text and terminal output, but those observations did not independently confirm a physical display failure.
-The controlled default/mod reconnection comparison preserved output in both layouts.
-The historical capture discrepancies remain unexplained.
-Use a separate test home until the acceptance review confirms release and rendering validation.
+The thin adapter adds artwork to Herdr's native Agents interface while retaining ordinary Spaces and terminal controls.
+Worker, secondmate, and personal terminals remain directly writable through Herdr.
+The adapter does not create worker spaces, adopt terminals, connect firstmate task records, or add shortcut bindings.
+Read the [thin presentation design](THIN-MOD.md) for the current contract.
 
-Run commands below from this repository with Python 3.9 or newer.
-The installer uses only Python's standard library.
-It copies `mods/one-piece/` and `layouts/one-piece.json` from the checkout containing the script, regardless of your current directory.
-It also adds two close shortcuts to the existing `keys.json`, scoped to the One Piece layout.
-It excludes hidden source entries, `node_modules`, Python bytecode caches, `jsconfig.json`, and `.d.ts` declarations that Herdr generates.
-It does not build artwork or validate the mod's runtime behavior.
+This implementation remains experimental.
+Use a separate test home while current native interaction and visual verification remain incomplete.
+The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) contain historical evidence with narrower scopes.
+They do not establish acceptance of the current thin adapter.
 
 ## Choose an app home
 
-Initialize the chosen home with Herdr before installation, so it contains the app's complete `keys.json`.
-Then close its window.
-The installer refuses a missing keys file instead of creating a partial file that would omit shipped shortcuts.
-It never starts Herdr to initialize a home.
+An app home is Herdr's configuration directory.
+The destination must contain supported `mods/agents/main.js` and `layouts/main.json` files supplied by Herdr.
+If either file is missing, initialize the separate test home with Herdr before installation.
+A valid source and layout are sufficient without `keys.json`.
+The installer never starts Herdr or initializes shortcut files.
 
-For an initialized separate test home, run:
+Close the destination's Herdr window before installing, refreshing, or removing the mod.
+Do not edit destination files during an operation.
+The installer does not execute Herdr commands or access terminal sessions.
+
+Run commands below from this repository with Python 3.9 or newer.
+Keep `tools/install.py` and `tools/compat.py` together in the checkout.
+The installer uses Python's standard library.
 
 ```sh
 python3 tools/install.py install --app-home /absolute/path/to/test-herdr-home
 ```
 
-For your actual Herdr configuration, explicitly run:
-
-```sh
-python3 tools/install.py install
-```
-
 An explicit `--app-home` takes priority over the `HERDR_APP_HOME` environment variable.
 Without either, the destination is `~/.config/herdr-app`.
-Running the script without an action, importing it, or requesting `--help` does not install anything.
-Paths containing symbolic links are refused.
-Use a physical path without symbolic links for the destination.
-The destination must not contain the source checkout or sit inside it.
+Running without an action or requesting `--help` does not install anything.
+The destination and source checkout must not overlap.
+Use a destination path without symbolic links.
 
-Close the Herdr window before installing, upgrading, or removing files.
-Do not edit the destination during an operation.
-Herdr's installed guidance says terminals continue running when its window closes.
-The installer does not run Herdr commands or access terminal sessions.
+## What installation generates
 
-## Select the layout yourself
+The installer copies adapter files and artwork from `mods/one-piece/` beside the script's checkout, regardless of the current working directory.
+It excludes hidden entries, `node_modules`, Python bytecode caches, `jsconfig.json`, and `.d.ts` declarations.
+It requires `main.js` and `mod.json` with `"place":"none"`, which prevents automatic docking into the active layout.
+It does not build artwork or validate runtime behavior.
 
-Installation never selects a layout.
-It does not edit shipped mods, other layouts, settings, session records, or Herdr's bookkeeping files.
-The source mod must declare `"place":"none"`, which prevents automatic docking into the active layout.
+The installer calls `tools/compat.py` with the destination's `mods/agents/main.js` source and parsed `layouts/main.json` layout.
+The compatibility check requires `export default class Agents extends View` and the methods `init`, `render`, `status`, `subRow`, and `tree`.
+It also requires the native folded-group set used by the ship control.
+It rejects detected module imports outside `herdr`, `gpui-kit`, and `gpui-base`.
+The layout must contain exactly one node whose `content.mod` value is `agents`.
+Unsupported source or layout structures stop installation before destination writes.
 
-After installation, open Herdr and select One Piece with the documented command:
+The generated `mods/one-piece/herdr-agents.js` preserves the installed Agents source contents, including line endings.
+The adapter imports that local module to retain Herdr's existing agent behavior.
+The generated `layouts/one-piece.json` changes only that Agents node's `content.mod` value to `one-piece`.
+Other layout values remain unchanged, but serialization changes formatting.
+The installer does not read a repository `layouts/one-piece.json`.
+The generated files exist only in the destination installation.
 
-```sh
-herdr-app do layout.switch '{"name":"one-piece"}'
-```
+Installation never selects a layout or changes shipped mods, other layouts, settings, or session records.
+New installations never read, edit, or add bindings to `keys.json`.
+Existing custom shortcuts remain untouched.
+Only a legacy version 2 receipt authorizes shortcut cleanup, as described below.
 
-To return to the shipped main layout, run:
+## Use native terminals
 
-```sh
-herdr-app do layout.switch '{"name":"main"}'
-```
+After installation, open the destination's Herdr window and select One Piece through Herdr's layout selector.
+Use Herdr's existing Spaces, Agents, menus, and terminal controls.
+A parent agent receives ship and captain artwork, and nested agents receive crewmate artwork.
+Artwork assignment does not change terminal parent relationships or workspace labels.
+The ship control folds its crew.
+Native agent selection and child actions remain in use.
 
-Use the same `HERDR_APP_HOME` environment variable when addressing a window with a custom home.
-The tested macOS configuration binds `cmd-shift-l` to `layout.switch`.
-Herdr’s generated guide instead names `ctrl-shift-l`.
-Check the `layout.switch` binding in your app home’s `keys.json`, because installed bindings can differ from the guide.
-These mechanisms come from [Herdr's installed guidance](/Users/tiago/.config/herdr-app/AGENTS.md), under Layouts and Commands.
-The installer never executes either command.
+Type directly into worker, secondmate, or personal terminals through Herdr's normal terminal input.
+Native new-terminal actions retain Herdr's folder inheritance.
+Nested terminals without panes use Herdr's terminal preview and its native option to keep the terminal.
+The adapter does not replace that action with workspace creation.
+Disposable local and remote sessions passed direct typing and new-terminal folder checks in the isolated lab.
+The [candidate verification record](THIN-MOD.md#candidate-verification-on-2026-11-14) describes the exact checks and remaining limits.
 
-## Connect firstmate task records
+## Refresh after updates
 
-Herdr reports terminal activity separately from firstmate's durable decisions and task completion.
-Connect each firstmate home so an unanswered decision appears even after its worker finishes a model turn.
-The connection requires Python 3 and the firstmate executable checkout on that machine.
+Run the install command again from the updated checkout, using the same destination.
+Repeat installation after Herdr updates to inherit changes to Agents and the main layout.
+The generated files capture the destination's source and layout at installation time.
+Other shipped mods referenced by the layout receive their normal updates directly.
+Compatibility checks do not promise support for every future Herdr version.
+If compatibility checks fail, keep the existing installation until the adapter supports the installed Herdr version.
 
-1. Open the machine menu in the sidebar, then open Fleet setup.
-2. Choose **Task records** for the worker home label you want to connect.
-3. Enter the absolute path to the firstmate executable checkout in **Firstmate executable root**.
-4. Enter the absolute path containing that home's `state` and `data` directories in **Operational home**.
-5. Select **Connect**.
+## Legacy shortcut cleanup
 
-For remote machines, both paths belong to the remote machine.
-The mod reads through Herdr's existing machine connection.
-It does not create a new remote connection or copy fleet records into the repository.
-Repeat these steps for each participating home.
-Reopening the same connection lets you correct its paths.
+The installer accepts ownership receipts from versions 1, 2, and 3.
+A receipt records which files or shortcuts the installer owns.
+New installations and successful upgrades write version 3 receipts without shortcut ownership.
+Version 1 upgrades and removals leave `keys.json` untouched.
 
-The reader matches each record against the worker's machine, home label, task label, terminal address, and creation timestamp.
-Open decisions display **Needs you** and add a terminal entry to the attention list.
-Resolve decisions through firstmate's normal workflow.
-The mod does not answer decisions automatically.
-You can type directly into the worker terminal.
-A verified completed task displays **Task complete**.
-A terminal that merely finished a model turn displays **Turn complete**.
+Version 2 receipts own `cmd-w` and `cmd-shift-w` inside `layout:one-piece`.
+Those bindings call the retired `one-piece.close-tab` and `one-piece.close-pane` commands.
+Upgrading or removing a version 2 installation removes those owned bindings.
+The installer adds no replacement bindings.
 
-A configured source without fresh matching evidence displays **Task records unavailable** unless Herdr already reports a blocker.
-Reopen the home's Task records connection to inspect a read error or correct its paths.
-The mod polls configured homes every five seconds and rejects results older than thirty seconds.
-Observed disconnection clears cached evidence and prevents a pending read from publishing after reconnection.
-An unconfigured home retains Herdr's terminal status and cannot expose decisions stored only in firstmate records.
+The installer first validates the legacy receipt and both owned bindings.
+Changed or missing owned bindings block the entire operation before writes.
+A missing keys file, symbolic link, invalid JSON, duplicate JSON keys, or invalid binding section also blocks version 2 cleanup.
+Unrelated custom bindings do not block cleanup.
 
-## Scoped close shortcuts
+If `keys.json` still matches its originally installed contents, cleanup restores its exact original bytes, including whitespace and line endings.
+Otherwise, cleanup removes only the two owned bindings and preserves unrelated values while rewriting JSON formatting.
+An empty One Piece section disappears only if the legacy installation originally created it.
+Existing empty sections remain.
+After successful migration, subsequent version 3 operations leave `keys.json` untouched.
+Cleanup does not guarantee that Herdr will resume replacing default shortcuts during updates.
 
-The installer adds these entries inside `keys.json`:
+## Ownership and removal
 
-```json
-{
-  "layout:one-piece": {
-    "cmd-w": "one-piece.close-tab",
-    "cmd-shift-w": "one-piece.close-pane"
-  }
-}
-```
+The installer records owned paths and SHA-256 hashes, fingerprints of file contents, in `<app-home>/.one-piece-install.json`.
+Version 3 includes both generated files alongside the copied adapter files.
+Keep this receipt with the installation.
+Older installers cannot interpret version 3 receipts.
 
-This snippet describes the additions, not a replacement keys file.
-The commands forward directly to Herdr’s native tab.close and pane.close actions.
-Herdr controls their confirmation and process-ending behavior.
-The installer preserves global, terminal, other-layout, and custom bindings.
-Herdr gives layout bindings precedence over global bindings.
-Applicable terminal and mod-specific bindings take precedence over these layout shortcuts.
-An existing terminal or mod-specific override can therefore bypass these close commands.
-The installer preserves those overrides.
-The mod adds no separate close confirmation.
+Every owned file must match its recorded contents before an upgrade or removal.
+A changed, missing, or replaced owned file blocks the entire operation.
+An existing One Piece folder or layout without a valid receipt is unknown content.
+The installer refuses to adopt unknown content, even when its bytes match the checkout.
+There is no force option.
+Symbolic links and special files within inspected installation trees are refused.
 
-**Editing `keys.json` stops Herdr from automatically replacing shipped shortcuts on upgrades.**
-Herdr considers any edit, including whitespace, to make the entire file user-maintained.
-Installing these bindings has that consequence even when all existing bindings remain unchanged.
-Add future shipped shortcut changes manually while keeping the custom file.
-See [Herdr's installed shortcut contract](/Users/tiago/.config/herdr-app/AGENTS.md:487).
+Added files remain unowned and survive upgrades and removal.
+If a new release needs an unowned file's path, installation refuses the collision.
+Preserve conflicting files elsewhere before restoring the exact owned contents or retrying installation.
+Do not edit the receipt to bypass protection.
+The receipt prevents accidental replacement, not deliberate tampering by someone who can rewrite files and receipts.
 
-An existing binding at either exact One Piece shortcut blocks installation, even if its command matches.
-Other custom bindings within `layout:one-piece` remain intact.
-There is no automatic adoption or replacement of an existing binding.
-Missing keys files, symbolic links, malformed JSON, duplicate JSON keys, and non-object binding sections are refused before installation changes.
-
-## Upgrade and remove
-
-To upgrade, run the install command again from the updated checkout, using the same destination.
-Unchanged installations can be installed repeatedly.
-
-Before removal, switch to another layout yourself and close the Herdr window.
+Before removal, select another layout and close the destination's Herdr window.
 Then run:
 
 ```sh
 python3 tools/install.py uninstall --app-home /absolute/path/to/test-herdr-home
 ```
 
-For the default destination, omit `--app-home`.
-Removal needs the script but does not need the source mod or layout.
-Removing an already absent installation succeeds without creating an app home.
+Removal deletes unchanged owned files and the receipt.
+Version 2 removal also performs the legacy shortcut cleanup described above.
+Removal requires the installer and its compatibility module, but no source mod or upstream layout files.
+Removing an absent installation succeeds without creating an app home.
+Empty parent directories can remain.
 
-## Ownership and preservation
-
-The installer records file paths and SHA-256 hashes, which identify file contents, in `<app-home>/.one-piece-install.json`.
-Keep this ownership receipt with the installation.
-Version 2 records the two owned shortcut bindings separately from owned files.
-The receipt also retains the original keys text and a fingerprint of the initially installed keys file.
-That fingerprint permits exact restoration; it does not claim ownership of other bindings.
-An existing mod folder or layout without a valid receipt is unknown content, even if its bytes match this checkout.
-The installer refuses to adopt or overwrite unknown content.
-There is no force option.
-
-Before any upgrade or removal, every owned file must still match the receipt.
-A changed, missing, or replaced owned file blocks the entire operation and leaves the installation intact.
-The error names the conflicting path.
-Save your edits elsewhere before restoring the exact installed version and retrying.
-Changed or missing owned shortcut bindings likewise block upgrades and removal before any installation changes.
-Unrelated shortcut edits do not block either operation.
-Do not edit the receipt to bypass this protection.
-
-Added files remain unowned and survive upgrades and removal, including editor support files written by Herdr.
-If a new release needs an unowned file's path, installation refuses the collision.
-Move that file somewhere safe before retrying.
-Removal deletes unchanged owned files, the two owned shortcut bindings, and the receipt.
-If the keys file still matches its initially installed bytes, removal restores its exact original bytes, including whitespace and line endings.
-Upgrades retain this original restoration point.
-Otherwise, removal changes only the owned bindings semantically and serializes the remaining JSON.
-This preserves unrelated values but can change formatting.
-An empty One Piece section is removed only if installation originally created it.
-Exact restoration can restore eligibility for Herdr's default-shortcut replacement when the original bytes match a recognized shipped file.
-Semantic removal does not guarantee that eligibility.
-
-Version 1 receipts own only mod and layout files.
-Upgrading a version 1 installation acquires shortcut ownership only after the same initialization and conflict checks.
-Removing a version 1 installation leaves `keys.json` untouched, including any manually added One Piece bindings.
-Keep using this installer version after upgrading the receipt; older installers cannot interpret version 2.
-A mod folder containing unowned files remains in place.
-This can include `gpui-kit.d.ts` and `jsconfig.json` generated by Herdr.
-A later installation refuses that remaining folder because removal also deleted its ownership receipt.
+A mod folder containing unowned files remains in place after removal.
+This can include editor files generated by Herdr.
+A later installation refuses that folder because its ownership receipt no longer exists.
 Before reinstalling, inspect the remaining folder and move it to a backup outside `<app-home>/mods/`.
-Keep that backup until you have checked any custom files it contains.
-Then run the normal install command.
-Do not recreate an ownership receipt or delete unknown files to bypass the check.
-Empty parent folders such as `mods/` and `layouts/` may remain.
-The receipt prevents accidental replacement, but it is not protection against someone who can deliberately rewrite your files and receipt.
+Keep the backup until you have checked its custom files.
 
 ## Failures and recovery
 
-The installer stages changes in `<app-home>/.one-piece-install-work` before replacing the mod, layout, keys, and receipt.
-This directory also prevents simultaneous installer operations.
-All participating destinations, including keys, are checked for concurrent changes after staging and before replacement.
-Ordinary write failures trigger rollback to the previous files.
-If rollback fails, backups remain in that directory.
+The installer stages replacements in `<app-home>/.one-piece-install-work` before changing installed files.
+That directory also blocks another installer operation until the first operation finishes or recovery resolves it.
+The installer checks participating destinations for concurrent changes after staging.
+Keys participate only during version 2 cleanup.
+Ordinary write failures trigger rollback to previous files.
+If rollback fails, backups remain in the work directory.
 
-Each rename is atomic on the same filesystem, as documented by [Python](https://docs.python.org/3/library/os.html#os.rename).
-The complete operation spans several renames and is not atomic across a power loss or forced termination.
-It also cannot protect against another program editing files during replacement.
-Closing Herdr avoids live reload seeing an intermediate installation.
+Replacement spans several renames rather than one indivisible operation.
+Power loss, forced termination, or another program editing files during replacement can leave an incomplete installation.
+Closing Herdr prevents its live reload from observing intermediate files.
+Automatic crash recovery is not provided.
 
-If an operation is interrupted, keep Herdr closed and inspect `.one-piece-install-work` before retrying.
-Save a copy of that directory and the current mod, layout, keys, and receipt before recovery.
-The `old/` directory contains originals already moved aside, and `new/` contains staged replacements not yet installed.
-Restore the saved originals to their matching app-home paths without overwriting files you have since edited.
-Only remove the work directory after preserving its contents and resolving the interrupted operation.
-Automatic crash recovery is intentionally not provided.
+If an operation is interrupted, keep Herdr closed and inspect `<app-home>/.one-piece-install-work` before retrying.
+Save that directory and the current mod, layout, and receipt before recovery.
+For interrupted version 2 cleanup, also save `keys.json`.
+The `old/` directory contains originals already moved aside.
+The `new/` directory contains staged replacements not yet installed.
+Restore saved originals to matching app-home paths without overwriting subsequent edits.
+Remove the work directory only after preserving its contents and resolving the interrupted operation.
 
-## Tests
+## Verification and historical limits
 
-Run the installer tests from the repository:
+Run the current installer and compatibility tests from the repository:
 
 ```sh
 python3 -B -m unittest discover -s tests -p test_install.py -v
+python3 -B -m unittest discover -s tests -p test_compat.py -v
 ```
 
-The tests install only into temporary directories, including tests of the default home through an isolated `HOME` environment variable.
-They cover upgrades, removal, unknown content, changed files, generated files, symbolic links, invalid receipts, collisions, rollback, and actual checkout assets.
-Shortcut tests cover scoped additions, conflicts, unrelated edits, exact restoration, semantic removal, missing initialization, version 1 migration, and concurrent staging edits.
-They do not install into your real Herdr configuration or establish the native interface's behavior inside a running window.
+Installer tests use temporary homes, including an isolated `HOME` environment variable for default-destination checks.
+They cover generation, refresh, unsupported inputs, absent keys, legacy cleanup, ownership conflicts, symbolic links, receipt validation, concurrent edits, and rollback.
+Compatibility tests check source preservation and the single layout replacement.
+These tests do not install into your real configuration or verify a running window.
+
+Historical recovery checks used a candidate Herdr Core build, the component that manages terminal sessions, containing a recovery patch.
+The historical review recorded that Core 0.1.21 lacked that patch.
+Those observations do not establish the contents or behavior of your installed Core version.
+The installer neither supplies nor updates Core.
+
+Earlier native captures omitted text and terminal output without independently proving a physical display failure.
+A historical default/mod comparison preserved output through reconnection in both layouts.
+The earlier capture discrepancies remain unexplained.
+Historical passing navigation, rendering, and recovery checks do not validate the current thin adapter.
+The candidate passed native input, ordinary terminal creation, expanded and compact sidebar inspection, appearance controls, and reconnection after reopening the app.
+These checks used disposable test programs, not production worker conversations.
+The remote test processes survived a transport interruption, but offline presentation and direct typing after transport recovery remain unverified.
