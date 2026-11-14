@@ -1,8 +1,36 @@
 # Native verification
 
-The current fleet sidebar uses explicit Firstmate registration and native terminal controls.
+The current fleet sidebar uses mod-owned captain associations and native terminal controls.
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
+
+## Mod-only association, 2026-11-14
+
+The author rejected any requirement to modify Firstmate.
+Firstmate PR 8484 is closed, and its validation process was cancelled.
+The current mod uses existing worker labels and an explicit captain choice saved through Herdr's documented `shared` and `setShared` APIs.
+It no longer reads `firstmate.role` or `firstmate.home.path`.
+
+All nine JavaScript tests passed after replacing the patched-label fixtures with stock-label fixtures.
+All 42 Python tests passed for artwork, compatibility, and installation.
+The command comparison passed with explicit mod-owned captain associations.
+It also checked stale selections, competing captain choices, captain-only setup, and unlinking without terminal commands.
+The isolated installation passed Herdr's initial loading check.
+The first installation attempt used the `/tmp` symlink and correctly refused it.
+Installation succeeded using the canonical `/private/tmp` path.
+
+In Grand Fleet Lab, the remote Link captain menu displayed actual terminal choices and existing worker groups.
+Selecting Captain only for the disposable `op-hz-lab/t27` displayed Thousand Sunny and Luffy.
+The ship's appearance menu exposed Edit captain link and Unlink captain.
+Unlinking restored the ordinary terminal entry without closing the session.
+This verifies the menu interaction, not a complete lifecycle with unmodified Firstmate.
+Complete local and remote stock-Firstmate workflows remain unverified.
+
+## Historical patched-producer evidence
+
+All producer and lifecycle observations below predate the mod-only association correction.
+They are retained as historical evidence, not current acceptance or an upstream dependency.
+References to pending Firstmate checks are obsolete because PR 8484 is closed.
 
 ## Producer delivery verification, 2026-11-14
 

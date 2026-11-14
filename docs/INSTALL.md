@@ -6,9 +6,9 @@ The adapter does not create worker spaces, adopt terminals, connect firstmate ta
 Read the [thin presentation design](THIN-MOD.md) for the current contract.
 
 This implementation remains experimental.
-Use a separate test home while producer delivery and the final dependency audit remain incomplete.
+Use a separate test home while verification of the mod-only association remains incomplete.
 The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
-Real local and remote worker flows passed with the tested producer patch.
+Earlier local and remote flows used a rejected Firstmate patch and do not validate the current association.
 The documented path and Core release limitations still apply.
 
 ## Choose an app home
@@ -69,10 +69,20 @@ Only a legacy version 2 receipt authorizes shortcut cleanup, as described below.
 After installation, open the destination's Herdr window and select One Piece through Herdr's layout selector.
 Use Herdr's existing Spaces, Agents, menus, and terminal controls.
 A registered firstmate coordinator receives ship and captain artwork, with explicitly associated workers below it.
-Registration requires matching canonical `firstmate.home.path` labels on the same machine.
-The coordinator also requires `firstmate.role=coordinator`, and workers require `firstmate.task`.
-The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
-Do not use terminal names, folders, or native process parenting as substitutes for registration.
+Firstmate requires no patch, extra hook, or special fork.
+Choose Link captain under the correct machine, then choose the terminal running your coordinator.
+Choose its worker group by the displayed home label and task list.
+Choose Captain only if no workers exist yet.
+Right-click the ship and choose Edit captain link when its first workers become available.
+Right-click the ship and choose Unlink captain to remove only its presentation association.
+The mod saves these choices in Herdr's persisted settings under `one-piece.captains`.
+The association includes the terminal creation timestamp and never transfers automatically to a replacement session.
+
+Worker discovery uses existing `firstmate.home` and `firstmate.task` labels on the same machine.
+A group includes every worker with that home label.
+If independent coordinators share one label, leave that group unlinked and use native worker navigation.
+Competing live captain choices are refused rather than guessing ownership.
+Do not use terminal names, folders, or native process parenting as substitutes for an explicit choice.
 Artwork assignment does not change terminal parent relationships or workspace labels.
 The ship control folds its crew.
 Native agent selection and child actions remain in use.

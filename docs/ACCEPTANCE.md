@@ -13,7 +13,7 @@ Registration changes made after those fixtures require fresh verification.
 | Requirement | Current evidence | Status or remaining proof |
 | --- | --- | --- |
 | Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
-| Explicit coordinator and worker relationships | Explicit home labels, ambiguity checks, and automatic discovery after producer review fixes | Real local and remote task flows passed; local cleanup required the documented fixture correction |
+| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Complete local and remote unmodified-Firstmate workflows remain unverified |
 | Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
 | Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Real local and remote task flows passed; local cleanup required the documented fixture correction |
 | Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
@@ -25,7 +25,7 @@ Registration changes made after those fixtures require fresh verification.
 | Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
 | Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
-| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Producer PR 8484 is published; full-suite CI awaits the required label |
+| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; mod-only association requires runtime verification |
 
 At mod commit `8a5da90`, all 9 JavaScript tests and 42 Python tests passed.
 The installed native loading check and command parity comparison also passed.
@@ -38,17 +38,15 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
 
 ## Current acceptance gaps
 
-- Complete the gated GitHub checks for [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
-  Review, live local validation, documentation, and lint passed on the upstream contribution.
-  The full suite requires a maintainer to apply the `full-ci` label for fork contributions.
-  The [producer verification record](NATIVE-INTEGRATION.md#producer-delivery-verification-2026-11-14) records patch equivalence and the local versus remote evidence.
-- Finish the final pull request audit after the dependency checks complete.
-  Current mod tests, native loading, command comparisons, and interactive checks passed within their recorded scopes.
+- Verify complete local and remote workflows with unmodified Firstmate and mod-owned captain associations.
+  The previous patched-producer lifecycle evidence does not validate the replacement.
+- Finish the final review of the mod pull request after those checks.
 - Before release acceptance, validate a published Herdr Core build containing the recovery fix.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
   The implementation goal delivers a reviewable pull request and does not authorize a release or daily installation.
 
-Real local and remote Claude tasks passed automatic grouping, task execution, native navigation, and direct terminal input.
+Historical local and remote Claude tasks used the rejected Firstmate patch.
+Their automatic grouping does not establish acceptance of the mod-only replacement.
 Remote normal cleanup released the worktree lease and removed the worker terminal.
 Local cleanup passed after correcting only the disposable task record to the pool path spelling.
 The original failure remains tracked by [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).

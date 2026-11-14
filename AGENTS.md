@@ -22,9 +22,11 @@ The current request preserves native workspace and terminal behavior beneath the
 Preserve the previous fleet sidebar's island headings, ship rows, captains, and nested crewmates.
 The author rejected replacing that visual structure with Herdr's default sidebar.
 Do not reintroduce custom workspace ownership or task polling.
-Ships represent explicitly registered firstmate coordinators, not native process parents.
-Group workers by authoritative firstmate metadata on the same machine.
-Do not fall back to terminal names, folders, process parents, or the legacy home tag when registration is absent.
+Ships represent firstmate coordinators explicitly selected in the mod, not native process parents.
+The mod must work with unmodified firstmate.
+Use its existing worker metadata on the same machine and explicit mod-owned coordinator associations.
+Do not infer coordinator identity from terminal names, folders, or process parents.
+Do not require firstmate.home.path, firstmate.role, or any Firstmate patch.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.
 Do not recreate the retired inspection-only workspace or custom arrangement workflows.
 Preserve independent personal terminals without inventing supervision labels.

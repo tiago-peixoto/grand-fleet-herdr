@@ -3,10 +3,11 @@ import { div, image } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, panes, focused, layout, setAgentOrder, shared, setShared, props, openOverlay, closeOverlay, theme, run } from 'herdr';
 import { identity, crews, assignCrew } from './artwork.js';
-import { groupFleet } from './fleet.js';
+import { groupFleet, machineOf, workerHome } from './fleet.js';
 
 const displayName = name => name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
 const appearance = () => shared('one-piece.art') ?? { crews: {}, characters: {}, paused: false };
+const captainLinks = () => shared('one-piece.captains') ?? {};
 const save = patch => setShared('one-piece.art', { ...appearance(), ...patch });
 
 function sidebarWidth(node = layout()) {
@@ -27,7 +28,7 @@ function sprite(name, status, size, ship = false) {
 
 export default class OnePieceAgents extends Agents {
   init(p, cx) {
-    if (props()?.appearance) {
+    if (props()?.appearance || props()?.setup) {
       this.menuFocus = cx.focus_handle();
       this.menuFocus.focus();
       return;
@@ -67,7 +68,7 @@ export default class OnePieceAgents extends Agents {
 
   fleet() {
     const compact = sidebarWidth() < 160;
-    const t = theme(), model = groupFleet(terminals());
+    const t = theme(), model = groupFleet(terminals(), captainLinks());
     const allSpaces = spaces(), allPanes = panes();
     const represented = new Set();
     const order = [];
@@ -93,6 +94,9 @@ export default class OnePieceAgents extends Agents {
           .tooltip(`${island} · ${id ?? 'local'}`)
           .child(div().truncate().font_semibold().child(compact ? island.split(' ').map(word => word[0]).join('') : island))
           .when(!compact, el => el.child(div().text_color(t.dim).text_size(11).child(id ?? 'local'))));
+      if (online) section.child(Button.new(`link-captain-${id ?? 'local'}`).tab_index(0).px(8).py(4)
+        .accessibility_label(`Link captain on ${id ?? 'local'}`).tooltip('Link captain').child(compact ? '+' : 'Link captain')
+        .on_click(() => openOverlay({mod:'one-piece',kind:'dialog',width:480,height:480,props:{setup:true,machine:id}})));
       if (!online) section.child(div().px(8).text_color(t.muted).tooltip(machine.layout === 'loading' ? 'Connecting' : 'Unavailable').child(compact ? (machine.layout === 'loading' ? '…' : 'Offline') : (machine.layout === 'loading' ? 'Connecting…' : 'Unavailable')));
       if (online) for (const group of model.groups.filter(g => g.machine === id)) {
         const key = identity(group.captain), crew = crews[appearance().crews[key]] ?? crews.strawhat;
@@ -104,8 +108,8 @@ export default class OnePieceAgents extends Agents {
             open ? this.folded.add(group.captain.address) : this.folded.delete(group.captain.address);
             cx.notify();
           })
-          .on_mouse_down('right', () => openOverlay({mod:'one-piece', kind:'popup', width:230, height:230, props:{appearance:key}}))
-          .on_key_down((event) => { if (event.keystroke === 'shift-f10') openOverlay({mod:'one-piece', kind:'popup', width:230, height:230, props:{appearance:key}}); })
+          .on_mouse_down('right', () => openOverlay({mod:'one-piece', kind:'popup', width:230, height:310, props:{appearance:key}}))
+          .on_key_down((event) => { if (event.keystroke === 'shift-f10') openOverlay({mod:'one-piece', kind:'popup', width:230, height:310, props:{appearance:key}}); })
           .child(h_flex().w_full().items_center().gap(compact ? 0 : 8).when(compact, el => el.justify_center()).child(sprite(crew.ship, 'idle', compact ? 32 : 72, true))
             .when(!compact, el => el.child(v_flex().min_w(0).gap(4).child(div().truncate().font_semibold().child(crew.title))
               .child(div().text_color(t.dim).text_size(11).child(`${open ? '▾' : '▸'} ${group.workers.length} crewmates`))))));
@@ -152,11 +156,71 @@ export default class OnePieceAgents extends Agents {
       .focus(el => el.bg(t.selected))
       .hover(el => el.bg(t.hover)).child(crew.name)
       .on_click(() => { save({ crews: { ...appearance().crews, [key]: id } }); closeOverlay(props().overlay); }));
+    menu.child(Button.new('edit-captain').accessibility_label('Edit captain link').tab_index(0).p(7).child('Edit captain link')
+      .on_click(() => {
+        const captain = terminals().find(terminal => identity(terminal) === key);
+        closeOverlay(props().overlay);
+        if (captain) openOverlay({mod:'one-piece',kind:'dialog',width:480,height:480,props:{setup:true,machine:machineOf(captain),captain:key}});
+      }));
+    menu.child(Button.new('unlink-captain').accessibility_label('Unlink captain').tab_index(0).p(7).child('Unlink captain')
+      .on_click(() => { const links = {...captainLinks()}; delete links[key]; setShared('one-piece.captains',links); closeOverlay(props().overlay); }));
     return menu.child(Button.new('motion').accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
       .on_click(() => { save({ paused: !appearance().paused }); closeOverlay(props().overlay); }));
   }
 
+  setupMenu() {
+    const t = theme(), machine = props().machine ?? null;
+    const available = terminals().filter(terminal => terminal.state === 'live' && machineOf(terminal) === machine);
+    const key = this.selectedCaptain ?? props().captain;
+    const captain = available.find(terminal => identity(terminal) === key && !terminal.labels?.['firstmate.task']);
+    const menu = v_flex().size_full().p(16).gap(8).bg(t.popover).text_color(t.foreground).text_size(13)
+      .track_focus(this.menuFocus)
+      .child(div().font_semibold().child(`Link captain · ${machine ?? 'local'}`));
+    const list = v_flex().id('captain-choices').flex_1().min_h(0).gap(4).overflow_y_scrollbar();
+    const choose = (id, label, action) => Button.new(id).tab_index(0).p(8).rounded(5)
+      .accessibility_label(label).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected)).child(label).on_click(action);
+    if (!captain) {
+      menu.child(div().child('Choose the terminal running your coordinator.'));
+      for (const terminal of available.filter(terminal => !terminal.labels?.['firstmate.task'])) {
+        list.child(choose(`captain-${identity(terminal)}`, `${terminal.name || terminal.title || 'Terminal'} · ${terminal.address}`,
+          (_event, cx) => { this.selectedCaptain = identity(terminal); this.setupError = null; cx.notify(); }));
+      }
+    } else {
+      menu.child(div().child(`${captain.name || captain.address} · ${captain.address}`))
+        .child(div().child('Choose its worker group, or link the captain alone.'))
+        .child(div().text_color(t.muted).child('A group includes all workers with this label on this machine.'))
+        .child(div().text_color(t.muted).child('If separate coordinators share a label, leave that group unlinked.'));
+      const link = (home, cx) => {
+        const current = terminals().find(terminal => identity(terminal) === key && terminal.state === 'live');
+        const online = machines().some(item => (item.name ?? null) === machine && item.layout === 'ready');
+        const conflict = groupFleet(terminals(), captainLinks()).groups.some(group =>
+          identity(group.captain) !== key && group.machine === machine && home && captainLinks()[identity(group.captain)]?.home === home);
+        const exists = home === null || terminals().some(terminal => terminal.state === 'live' && machineOf(terminal) === machine && workerHome(terminal) === home);
+        if (!online || !current || current.labels?.['firstmate.task'] || conflict || !exists) {
+          this.setupError = 'The selection changed or this group already has a captain. Choose again.';
+          cx.notify();
+          return;
+        }
+        setShared('one-piece.captains', {...captainLinks(), [key]:{home}});
+        closeOverlay(props().overlay);
+      };
+      list.child(choose('captain-only', 'Captain only', (_event, cx) => link(null, cx)));
+      for (const home of new Set(available.map(workerHome).filter(Boolean))) {
+        const workers = available.filter(terminal => workerHome(terminal) === home);
+        list.child(choose(`home-${home}`, `${home} · ${workers.length} workers`, (_event, cx) => link(home, cx)));
+        list.child(div().px(8).text_color(t.muted).child(workers.map(worker => `${worker.labels['firstmate.task']} (${worker.address})`).join(', ')));
+      }
+      menu.child(choose('choose-other-captain', 'Choose another terminal', (_event, cx) => {
+        this.selectedCaptain = ''; this.setupError = null; cx.notify();
+      }));
+    }
+    menu.child(list);
+    if (this.setupError) menu.child(div().text_color(t.blocked).child(this.setupError));
+    return menu.child(choose('cancel-link', 'Cancel', () => closeOverlay(props().overlay)));
+  }
+
   render(cx) {
+    if (props()?.setup) return this.setupMenu();
     if (props()?.appearance) return this.appearanceMenu();
     if (props()?.view) {
       const target = props().target;

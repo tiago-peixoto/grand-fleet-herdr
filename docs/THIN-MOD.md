@@ -13,21 +13,26 @@ Workers appear below their coordinator using explicit Firstmate metadata.
 Personal terminals keep native controls and have no character assignment.
 Ordinary workspaces remain accessible without duplicate destinations for represented characters.
 
-Grouping requires matching `firstmate.home.path` labels on the same machine.
-Firstmate supplies this physical home path explicitly rather than the mod deriving ownership from terminal folders.
-A coordinator also requires `firstmate.role=coordinator` and no task label.
-A worker requires `firstmate.task` and no coordinator role.
-Multiple coordinators for one home produce a conflict instead of guessed ownership.
-Legacy `firstmate.home` tags alone do not establish membership because distinct home paths can share a tag.
-Registration never changes process parenting or lifetime.
-The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
-A local live startup fixture verified automatic coordinator registration, competing-owner refusal, and stale-role transfer.
-That fixture used a simulated Codex process.
-Separate local and remote producer fixtures verified worker labels and survival after their creators exited.
-Those simulated fixtures alone do not prove complete sidebar discovery through a real Firstmate task lifecycle.
-Subsequent real Claude tasks verified automatic grouping, native navigation, and direct input locally and remotely.
-See [current native verification](NATIVE-INTEGRATION.md#real-remote-terminal-verification-2026-11-14) for evidence and the local cleanup correction.
-Manually labelled lab fixtures verify consumption, not automatic registration.
+Firstmate requires no modifications, extra hooks, or special fork.
+Link captain selects an existing terminal explicitly and stores its address and creation timestamp in the mod's settings.
+A captain can be linked before its first worker exists.
+Edit captain link later selects a worker group from existing `firstmate.home` and `firstmate.task` labels on that machine.
+New workers with the selected home label join automatically.
+Unlink captain removes presentation grouping without changing any terminal, workspace, or Firstmate record.
+An ended captain's association cannot transfer to a reused terminal identifier.
+
+A home label identifies a worker group, not a canonical directory.
+Independent Firstmate homes can share that label when they use the same installation.
+The setup menu displays the label, tasks, and terminal addresses for explicit selection.
+Do not associate a shared label when its workers belong to separate coordinators.
+Those workers remain accessible through native Herdr.
+The menu refuses a group already associated with another live captain.
+Conflicting saved associations keep captains visible and leave workers ungrouped.
+The mod does not guess a relationship from names, directories, or process parents.
+
+[Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484) was rejected as an architectural dependency and closed.
+Earlier patched-producer evidence is historical and does not validate this replacement.
+Complete local and remote workflows with unmodified Firstmate remain required.
 
 Selecting a placed character focuses its native terminal.
 An unplaced character opens Herdr's writable preview, including its native keep action.
@@ -107,5 +112,5 @@ After the lab window became available, a screenshot showed the earlier terminal 
 Raising the lab window allowed direct typing, and the remote test program echoed `AFTER_TRANSPORT_RECOVERY`.
 The unavailable-state screenshot remains inconclusive, so offline presentation remains unverified.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
-The approved coordinator model resolves that design choice through explicit Firstmate registration.
-The current implementation still needs complete live verification with that registration.
+The current coordinator model resolves that design choice through explicit mod-owned associations.
+The current implementation still needs complete live verification with unmodified Firstmate.

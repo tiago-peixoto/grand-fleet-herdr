@@ -6,17 +6,16 @@ Herdr supplies writable terminals, workspaces, tabs, splits, panels, and session
 Ships only fold their characters, and selecting a character uses native terminal focus or writable preview.
 Personal terminals remain ordinary Herdr terminals.
 
-Fleet membership requires explicit Firstmate registration on the same machine.
-The mod does not infer relationships from terminal names, folders, or process parenting.
-The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
-Existing sessions without canonical registration remain ordinary Herdr sessions.
+The mod works with unmodified Firstmate and requires no upstream patch or additional hooks.
+Choose a coordinator terminal through Link captain on its machine.
+Associate its existing worker group using Firstmate's `firstmate.home` and `firstmate.task` labels.
+The mod stores this choice without changing Firstmate or terminal metadata.
+It does not infer relationships from names, folders, or process parenting.
 
 This project remains experimental.
-Current verification covers disposable local and remote terminal creation, navigation, character selection, and direct typing.
-The current sidebar passed remote connection-loss recovery and unavailable presentation in the isolated lab.
-Real local and remote Firstmate tasks passed automatic discovery, task execution, and direct worker input.
-Remote normal cleanup passed; local cleanup required a disposable-record correction for an existing Firstmate path bug.
-The Firstmate contribution awaits its GitHub checks and upstream review.
+The mod-only association has automated checks and a native captain-only menu check.
+Complete local and remote workflows with unmodified Firstmate remain unverified.
+Earlier lifecycle evidence used a rejected Firstmate patch and does not establish compatibility with this replacement.
 Use a separate test home before considering your daily configuration.
 
 ## Start here

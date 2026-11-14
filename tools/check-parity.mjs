@@ -4,7 +4,7 @@ import { runInNewContext } from 'node:vm';
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import * as fleet from '../mods/one-piece/artwork.js';
-import { groupFleet } from '../mods/one-piece/fleet.js';
+import { groupFleet, machineOf, workerHome } from '../mods/one-piece/fleet.js';
 const home=process.argv[2];
 if(!home) throw new Error('Usage: node tools/check-parity.mjs HERDR_APP_HOME');
 const native=readFileSync(resolve(home,'mods/agents/main.js'),'utf8');
@@ -41,14 +41,13 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     {address:'remote/t1',created_ms:4,state:'live',status:'idle',program,labels:{}},
     {address:'t4',created_ms:5,state:'live',labels:{}},
     {address:'t5',created_ms:6,state:'live',name:'unregistered-child',parent:'t1',program,labels:{}}];
-  all[1].labels={'firstmate.role':'coordinator','firstmate.home.path':'local'};
-  all[2].labels={'firstmate.task':'fm-1','firstmate.home.path':'local'};
-  all[3].labels={'firstmate.task':'fm-2','firstmate.home.path':'local'};
-  all[4].labels={'firstmate.role':'coordinator','firstmate.home.path':'remote'};
+  state.set('one-piece.captains', {'t1:1':{home:'local'}, 'remote/t1:4':{home:'remote'}});
+  all[2].labels={'firstmate.task':'fm-1','firstmate.home':'local'};
+  all[3].labels={'firstmate.task':'fm-2','firstmate.home':'local'};
   const agents=[all[1],all[3],all[4]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,groupFleet,View:class{},Button:{new:id=>element().id(id)},div:element,image:element,svg:element,h_flex:element,v_flex:element,
+  const context={...fleet,groupFleet,machineOf,workerHome,View:class{},Button:{new:id=>element().id(id)},div:element,image:element,svg:element,h_flex:element,v_flex:element,
     machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
@@ -60,7 +59,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':'Agents']();
   controller.init({},cx);controller.hovered='t1';controller.render(cx);
-  return {calls,nodes,cx,controller,state};
+  return {calls,nodes,cx,controller,state,all};
 }
 
 const standard=host(false), decorated=host(true);
@@ -141,3 +140,30 @@ const beforeUnplacedMenu=reachable.calls.length;
 reachable.nodes.get('character-t2').right();
 assert.equal(reachable.calls.length,beforeUnplacedMenu,'unplaced terminal must not invent a workspace');
 console.log('Ungrouped terminal reachability and character workspace menus passed.');
+
+const setup=host(true,'priority',310,{setup:true,machine:null,overlay:'setup'});
+setup.nodes.get('captain-t1:1').click(null,setup.cx);
+setup.controller.render(setup.cx);
+setup.nodes.get('home-local').click(null,setup.cx);
+assert.equal(setup.state.get('one-piece.captains')['t1:1'].home,'local');
+assert.equal(setup.calls.at(-1)[0],'closeOverlay');
+assert.ok(!setup.calls.some(([name])=>name.startsWith('terminal.')||name.startsWith('pane.')));
+
+const stale=host(true,'priority',310,{setup:true,machine:null,captain:'t1:1',overlay:'setup'});
+stale.all.find(t=>t.address==='t1').created_ms=99;
+stale.nodes.get('home-local').click(null,stale.cx);
+assert.ok(stale.controller.setupError,'stale selection must not save');
+assert.ok(!stale.calls.some(([name])=>name==='closeOverlay'));
+
+const conflict=host(true,'priority',310,{setup:true,machine:null,captain:'t4:5',overlay:'setup'});
+conflict.nodes.get('home-local').click(null,conflict.cx);
+assert.ok(conflict.controller.setupError,'existing live captain must prevent reassignment');
+assert.ok(!conflict.state.get('one-piece.captains')['t4:5']);
+conflict.nodes.get('captain-only').click(null,conflict.cx);
+assert.equal(conflict.state.get('one-piece.captains')['t4:5'].home,null);
+
+const unlink=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
+unlink.nodes.get('unlink-captain').click();
+assert.ok(!unlink.state.get('one-piece.captains')['t1:1']);
+assert.equal(unlink.all.length,7,'unlinking must preserve terminals');
+console.log('Captain setup passed: stock labels, stale identity, competing captain, captain-only, and unlink.');

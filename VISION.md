@@ -76,6 +76,8 @@ Animation supports recognition without concealing failures, decisions, or risks.
 ## Scope
 
 This project is an optional, firstmate-specific interface for Herdr.
+The mod must work with unmodified firstmate and must not require an upstream patch, special fork, or additional firstmate hooks.
+Coordinator associations belong to the mod and must use explicit user choices when existing metadata does not establish them.
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
 Ordinary Herdr workspaces remain accessible without firstmate registration.
