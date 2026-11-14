@@ -2,12 +2,42 @@
 
 The current fleet sidebar has not passed complete acceptance.
 Read [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for observed behavior and limits.
-The table below describes retired implementations and must not be used as the current acceptance verdict.
+The historical table describes retired implementations and must not be used as the current acceptance verdict.
+
+## Current objective audit
+
+This audit covers the approved native-flow objective, not the retired inspection model.
+Recorded runtime evidence applies to its tested source and fixtures only.
+Registration changes made after those fixtures require fresh verification.
+
+| Requirement | Current evidence | Remaining proof |
+| --- | --- | --- |
+| Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Include in final visual comparison |
+| Explicit coordinator and worker relationships | Explicit home labels, ambiguity checks, and automatic discovery after producer review fixes | Complete real Firstmate lifecycle locally and remotely |
+| Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
+| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Complete real Firstmate lifecycle locally and remotely |
+| Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
+| Native Settings, Add machine, plus, Files, and Changes | Recorded pointer checks in the current native window | No known functional gap in tested controls |
+| Personal terminals inherit folder and machine without character assignment | Four-case default/mod comparison on local and physical remote machines | No known functional gap in tested cases |
+| Native tabs, splits, grids, zoom, resizing, and closing | Twelve disposable shells plus local/remote pointer resizing | No known functional gap in tested arrangements |
+| Navigation and reconnect preserve sessions and output | Process identity and output comparisons against default Herdr | Published recovery build remains unverified |
+| No custom ownership or recovery workflows | Current thin-mod design and native command routing | Confirm final diff retains this boundary |
+| Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real Firstmate lifecycle state observations |
+| Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
+| Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
+| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Finish producer review, delivery, final checks, and dependency links |
+
+See [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for the runtime observations and their limits.
+See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.
+The full Firstmate lifecycle remains required, not optional follow-up work.
 
 ## Current acceptance gaps
 
-- Verify remote automatic sidebar discovery and the complete Firstmate task lifecycle with the patched producer.
-  Local producer creation, automatic discovery, direct input, and surviving character identity passed in the current native sidebar.
+- Verify the complete Firstmate task lifecycle with the patched producer.
+  Real local Claude coordinator and worker execution, automatic grouping, and direct terminal input passed.
+  Completion notification handling and the equivalent real remote lifecycle remain under verification.
+  Remote automatic discovery and direct input also passed with a simulated coordinator and worker shell.
+  Local surviving character identity also passed in the current native sidebar.
 - Deliver the producer change alongside the dependent mod.
 - Validate a published Herdr Core build containing the recovery fix before release acceptance.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.

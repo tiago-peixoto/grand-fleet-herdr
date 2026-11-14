@@ -46,6 +46,20 @@ Both remote terminals exited successfully before cleanup, and the private termin
 This remote fixture also used a simulated Codex process and the producer API rather than the full task lifecycle.
 The producer change remains unpublished.
 
+A subsequent run of `tests/fm-backend-hc-appdetect-smoke.test.sh` passed against the producer worktree containing the registration review fixes.
+It created the private core `fm-hclab-appdetect-91874-8748` and exercised actual `fm-spawn.sh` execution with harmless shell commands.
+All four cases passed: app-terminal detection, marker-less app-window refusal, missing-core refusal, and explicit backend selection.
+The test verified worker metadata and existing ownership labels, then completed its guarded teardown with exit code zero.
+This establishes spawn compatibility, not automatic coordinator registration, interactive crew discovery, or a complete agent task lifecycle.
+
+Fresh local registration then passed with the ancestry guard and bounded startup registration in place.
+The lab created terminal `t3z` with genuine injected identity and a compiled Codex simulator beneath its terminal process.
+Unchanged Firstmate startup published the canonical home and coordinator role automatically, completed its digest, and exited zero without a registration warning.
+Recorded SHA-256 hashes matched both producer files in the worktree after startup.
+Releasing the simulator and its parent ended the disposable terminal with exit code zero.
+Evidence is recorded in `firstmate-registration-evidence-2bhnulu2/phases/review-registration` outside the repository.
+This confirms successful registration after the review fixes, but not live refusal of inherited identity or the complete agent task lifecycle.
+
 The current sidebar also passed a physical remote transport interruption and recovery comparison against default Herdr.
 The disposable remote test program retained creation timestamp, shell process, foreground process, and earlier output in both layouts.
 Direct keyboard input produced a new echo after each recovery, visible in the native window and terminal history.
@@ -74,7 +88,7 @@ Only those disposable shells were closed, and the original layout and captain fo
 Evidence lives in the ignored `.superpowers/native/remote-pointer-evidence.json`.
 
 Current complete-flow acceptance remains open.
-Outstanding checks include remote automatic worker discovery and the full Firstmate task lifecycle.
+Real local task execution and direct input passed, while completion notification handling and the equivalent real remote lifecycle remain under verification.
 
 Independent review found two navigation regressions, both reproduced in the native lab before changing code.
 The native sidebar showed the unregistered `thin-child` terminal, while the fleet sidebar omitted it.
@@ -106,10 +120,60 @@ After closing Chopper's terminal, the surviving worker retained Franky artwork a
 
 The fixture used a compiled Codex simulator with genuine terminal identity and unchanged Firstmate startup and worker producer code.
 It verifies local automatic registration through sidebar discovery, but not actual Codex or the complete Firstmate task lifecycle.
-Remote automatic discovery remains unverified in the current sidebar.
 The coordinator exited successfully after release, and native close actions ended both disposable worker shells.
 The lab returned to its original captain with no overlays or reported errors.
 Local evidence remains outside the repository in `firstmate-registration-evidence-2bhnulu2/phases/ui-discovery`.
+
+## Remote automatic discovery after registration review
+
+The physical remote machine `op-hz-lab` ran patched Firstmate startup in disposable terminal `t25`.
+The fixture used the same producer hashes as the fresh local registration check.
+Startup published the canonical home and coordinator role without manual labels.
+The unchanged worker producer created terminal `t26` with matching home metadata and native workspace labels.
+Grand Fleet Lab discovered Luffy and Chopper beneath Wano automatically.
+Selecting Chopper focused its existing remote workspace and terminal.
+Direct keyboard input printed `REMOTE_DISCOVERY_DIRECT_20261114`, visible in the native capture and terminal history.
+Selecting Luffy opened its native terminal preview.
+
+The fixture used a compiled Codex simulator and a worker shell, not actual agent execution.
+It establishes remote automatic discovery and writable navigation, but does not establish the complete Firstmate task lifecycle.
+Evidence is stored privately in `.superpowers/native/remote-discovery`, including producer hashes, terminal records, screenshots, and captured output.
+
+Cleanup closed only the fixture worker workspace after verifying its sole terminal was `t26`.
+Releasing the coordinator fixture ended `t25` with exit code zero.
+A subsequent terminal query confirmed both terminals had finished.
+The lab returned to its original local captain workspace with no overlays or reported errors.
+
+## Real Claude coordinator and worker
+
+A fresh plain source copy contains the same two producer hashes used by the remote discovery fixture.
+The existing isolated core launched actual Claude Code 2.1.325 in terminal `t40` with a disposable Firstmate home.
+Claude's project startup hook acquired the home lock and published coordinator labels automatically.
+Grand Fleet Lab displayed Luffy for `op-real-firstmate` without manual registration.
+Selecting Luffy opened the existing terminal in Herdr's writable preview.
+A lifecycle instruction typed through that preview reached Claude, which began preparing the scout task.
+The coordinator invoked actual `fm-spawn.sh` and created Claude worker `t41` with the same canonical home label.
+Grand Fleet automatically displayed that worker as Chopper beneath the coordinator.
+Selecting Chopper opened its separate native workspace with the existing report output.
+The worker read the disposable project, reported the expected word `mandarin`, passed its completion gate, and recorded done.
+Its terminal remained live after task completion.
+A second instruction typed directly through the native worker terminal produced the exact response `LOCAL_CREWMATE_DIRECT_20261114`.
+The accessibility tree reported working during that interaction and Done before it.
+Native captures showed the sleeping Chopper artwork when Done and the coordinator's Needs you state during manual approval.
+These observations establish real local task execution, automatic grouping, writable navigation, and status changes.
+Completion notification acknowledgment and the equivalent real remote lifecycle still require verification.
+Evidence is stored privately in `.superpowers/native/real-lifecycle-evidence`.
+
+## Current visual comparison
+
+The approved native-flow prototype was inspected alongside the current Grand Fleet Lab captures.
+Both retain the dark fleet palette, island and machine labels, ship rows, captain-first ordering, and indented crewmates.
+Both keep ordinary workspaces and the native terminal area beside the fleet sidebar.
+The implementation uses the approved custom Sunny, Luffy, and Chopper artwork for the tested local crew.
+The prototype's sample Zoro, Nami, and Sanji roster does not expand the initial artwork commitment in `VISION.md`.
+Native terminal headers, tabs, panels, and controls intentionally retain Herdr's shipped appearance, as required by that vision.
+The browser reference and native captures use different window dimensions, so this comparison does not establish exact pixel equivalence.
+The inspected native capture verifies the local group only; the final physical remote lifecycle capture remains outstanding.
 
 ## Historical verification before simplification
 
