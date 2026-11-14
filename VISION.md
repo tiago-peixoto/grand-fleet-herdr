@@ -2,7 +2,8 @@
 
 `herdr-one-piece` exists so that one captain can use firstmate's crew with confidence while keeping independent work close at hand.
 It serves the individual captain through an optional One Piece interface for supervised fleets and independent Herdr sessions.
-It owns exactly one thing: One Piece artwork on Herdr's existing agent interface.
+It owns the One Piece presentation of Herdr's Spaces and Agents in the fleet sidebar.
+The sidebar retains island headings, ship groups, captains, and crewmates while Herdr owns the underlying workspace and terminal behavior.
 
 ## Firstmate supplies the governing vision
 
@@ -17,7 +18,7 @@ The extension remains optional, and removing it leaves firstmate's contracts and
 
 The primary path leads to firstmate, which carries the captain's direction and gathers worker reports.
 Herdr supplies agent attention, sorting, pinning, selection, and keyboard navigation.
-Its Spaces sidebar retains native machine identities and grouping.
+The fleet sidebar retains native machine identities and grouping.
 A parent agent has ship and captain artwork, and its nested agents have crewmate artwork.
 A ship only expands or collapses its native crew group.
 Selecting the captain or a crewmate uses the corresponding native agent action.
@@ -84,6 +85,7 @@ The author approved this vision on 2026-11-12.
 On 2026-11-14, the author approved the simplified interface and replaced Restore layout with Add terminal.
 The author then approved one writable terminal per crewmate and ordinary Herdr controls, replacing the inspection-only design.
 The author subsequently requested a thin mod that replaces agent activity dots while reusing Herdr's Spaces and nested agents.
+The author clarified that this must preserve the previous fleet sidebar rather than replace it with Herdr's default sidebar.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
 A change should be resisted when visual convenience hides uncertainty, assumes consent, or makes firstmate depend on this interface.

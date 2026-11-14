@@ -19,6 +19,8 @@ Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 VISION.md takes precedence over docs/PROTOTYPE-SPEC.md and the browser simulation.
 The author explicitly approved direct typing into worker and secondmate terminals on 2026-11-14.
 The current request preserves native Spaces, Agents, and terminal controls while replacing agent status artwork.
+Preserve the previous fleet sidebar's island headings, ship rows, captains, and nested crewmates.
+The author rejected replacing that visual structure with Herdr's default sidebar.
 Do not reintroduce custom workspace ownership or task polling.
 Firstmate-specific display grouping remains an unresolved design choice because firstmate launches workers without native parents.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.

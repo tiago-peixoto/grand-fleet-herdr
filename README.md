@@ -8,6 +8,8 @@ The adapter does not create separate worker spaces, adopt terminals, or interpre
 It adds no shortcut bindings.
 
 This project remains experimental.
+The author requested restoration of the previous fleet sidebar while incorporating Herdr's Spaces and Agents.
+The published default-sidebar adapter does not yet satisfy that requirement.
 Current native interaction and visual verification are incomplete.
 Use a separate test home before considering your daily configuration.
 
@@ -49,7 +51,8 @@ Installer tests use temporary homes.
 Compatibility tests check source preservation and layout changes.
 These checks do not establish behavior inside a running Herdr window.
 The [candidate verification record](docs/THIN-MOD.md#candidate-verification-on-2026-11-14) covers native typing, terminal creation, artwork controls, sidebar sizes, and app reconnection.
-The remote test processes survived a transport interruption, but offline presentation and direct typing after transport recovery remain unverified.
+The remote test processes survived a transport interruption and accepted direct typing after recovery.
+Offline presentation remains unverified.
 Historical passing tests do not establish those guarantees for the current adapter.
 
 ## Historical prototype

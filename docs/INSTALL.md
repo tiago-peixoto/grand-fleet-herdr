@@ -197,4 +197,5 @@ The earlier capture discrepancies remain unexplained.
 Historical passing navigation, rendering, and recovery checks do not validate the current thin adapter.
 The candidate passed native input, ordinary terminal creation, expanded and compact sidebar inspection, appearance controls, and reconnection after reopening the app.
 These checks used disposable test programs, not production worker conversations.
-The remote test processes survived a transport interruption, but offline presentation and direct typing after transport recovery remain unverified.
+The remote test processes survived a transport interruption and accepted direct typing after recovery.
+Offline presentation remains unverified.

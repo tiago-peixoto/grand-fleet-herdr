@@ -1,9 +1,13 @@
 # Thin One Piece presentation
 
-The author requested ordinary Herdr usage with One Piece artwork on 2026-11-14.
-This supersedes the custom fleet navigation and workspace rules in earlier designs.
+The author clarified that the previous fleet sidebar should remain on 2026-11-14.
+Replacing that sidebar with Herdr's default Spaces and Agents sections was an incorrect interpretation of the requested simplification.
+The intended sidebar keeps islands, large ship rows, captains, and nested crewmates while representing Herdr's Spaces and Agents.
+Herdr continues to own terminals, workspace state, process relationships, and terminal commands.
+Whether each ship represents a Space or a coordinator remains under discussion.
+The implementation and verification below describe the published candidate, which does not yet satisfy this corrected visual requirement.
 
-## Design
+## Published candidate design, pending sidebar revision
 
 Spaces remain Herdr spaces, including machine grouping, worktrees, menus, ordering, and creation.
 Agents remain Herdr agents, including native parent relationships, sorting, pinning, attention, and keyboard navigation.
@@ -82,6 +86,8 @@ Its earlier output and original program marker remained visible alongside the ne
 This verifies app reconnection to the surviving session, not recovery from a machine or network outage.
 A separate transport interruption disconnected the isolated remote machine and then restored its connection.
 The remote terminal retained its creation identity, shell process, and foreground program after reconnection.
-The unavailable-state screenshot was inconclusive, so offline presentation and typing after transport recovery remain unverified.
+After the lab window became available, a screenshot showed the earlier terminal output preserved after transport recovery.
+Raising the lab window allowed direct typing, and the remote test program echoed `AFTER_TRANSPORT_RECOVERY`.
+The unavailable-state screenshot remains inconclusive, so offline presentation remains unverified.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
 The author must choose whether presentation should add firstmate grouping before that behavior is finalized.
