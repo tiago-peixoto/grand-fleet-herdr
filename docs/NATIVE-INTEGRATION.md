@@ -1890,3 +1890,25 @@ They cover a promise that never settles and a late response arriving after a rep
 The existing test still covers shared reads between live sidebar copies.
 Local diagnostic evidence remains in `.superpowers/native/record-lifecycle-before.json` and `record-lifecycle-after.json`.
 This fix addresses stale task records, not the historical text-capture discrepancy or machine shortcut miss.
+
+## Isolated source-build fallback and rollback
+
+A private delivery folder now preserves the tested merged-source binary, its source commit, checksums, license notices, and the preceding test binary.
+Neither binary is presented as an official release.
+Both report version 0.1.21, so checksums identify the actual builds.
+The candidate checksum still matches the binary installed in Grand Fleet Lab.
+
+A separate disposable Core session used its own executable, socket, state directory, and configuration directory.
+One Python terminal acknowledged input before updating, after updating to the merged build, and after restoring the preceding test binary.
+Core's `update --from` command performed both replacements without `--force`.
+The terminal retained identical metadata across all three observations, including process 38744 and creation timestamp 1794626252326.
+Its final screen retained all three acknowledgement lines.
+The executable checksum changed to the candidate and returned to the backup checksum.
+The disposable terminal was then ended and its Core server stopped successfully.
+Grand Fleet Lab and daily Herdr were not restarted or updated during this check.
+
+This establishes rollback between those two test binaries for one local terminal.
+It does not verify remote rollback, arbitrary saved-state compatibility, or downgrade to an official release.
+The upstream update command warns that saved state only moves forward when describing forced downgrades.
+The local evidence is `.superpowers/native/core-fallback-validation.json`.
+The source-build fallback does not resolve the historical capture discrepancy, machine shortcut miss, or official-release acceptance gate.
