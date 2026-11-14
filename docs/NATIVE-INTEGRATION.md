@@ -4,6 +4,26 @@ The current fleet sidebar uses explicit Firstmate registration and native termin
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
 
+## Real remote terminal verification, 2026-11-14
+
+The patched producer automatically registered a real Claude coordinator on `firstmate-vps` as `op-hz-lab/t27`.
+Its real worker, `op-hz-lab/t28`, appeared as Chopper beneath Sunny in the Wano machine group.
+The worker read the disposable project's README, reported its verification word, and completed its completion gate.
+Selecting Luffy displayed the coordinator's native terminal preview and seated attention artwork.
+Selecting Chopper opened its existing remote workspace and terminal.
+Native status confirmed the remote workspace, tab, pane, and terminal address without errors.
+The native screenshot showed the remote Claude transcript and matching project folder.
+Direct keyboard input requested `REMOTE_CREWMATE_DIRECT_20261114`, and the worker returned that exact marker.
+The sidebar changed from Done to working while processing the input.
+The final native screenshot and terminal history both retained the response and earlier task output.
+Evidence lives in `.superpowers/native/real-remote-lifecycle-evidence/` in the isolated worktree.
+
+These observations establish real remote discovery, navigation, and direct input.
+They do not establish complete cleanup.
+Local normal teardown stopped while releasing its worktree because paths differed between `/var` and `/private/var`.
+Claude exited locally, but its terminal remained a live shell and its worktree lease remained allocated.
+Remote normal cleanup and the local path discrepancy remain under investigation.
+
 ## Current verification, 2026-11-14
 
 Disposable local and physical remote shells passed a four-case comparison between default Herdr and the current One Piece layout.
@@ -88,7 +108,8 @@ Only those disposable shells were closed, and the original layout and captain fo
 Evidence lives in the ignored `.superpowers/native/remote-pointer-evidence.json`.
 
 Current complete-flow acceptance remains open.
-Real local task execution and direct input passed, while completion notification handling and the equivalent real remote lifecycle remain under verification.
+Real local and remote task execution, automatic grouping, and direct input passed.
+Complete cleanup remains under verification.
 
 Independent review found two navigation regressions, both reproduced in the native lab before changing code.
 The native sidebar showed the unregistered `thin-child` terminal, while the fleet sidebar omitted it.
@@ -161,7 +182,8 @@ A second instruction typed directly through the native worker terminal produced 
 The accessibility tree reported working during that interaction and Done before it.
 Native captures showed the sleeping Chopper artwork when Done and the coordinator's Needs you state during manual approval.
 These observations establish real local task execution, automatic grouping, writable navigation, and status changes.
-Completion notification acknowledgment and the equivalent real remote lifecycle still require verification.
+The later remote verification is recorded above.
+Local cleanup remains incomplete because worktree release rejected the aliased path.
 Evidence is stored privately in `.superpowers/native/real-lifecycle-evidence`.
 
 ## Current visual comparison
@@ -173,7 +195,8 @@ The implementation uses the approved custom Sunny, Luffy, and Chopper artwork fo
 The prototype's sample Zoro, Nami, and Sanji roster does not expand the initial artwork commitment in `VISION.md`.
 Native terminal headers, tabs, panels, and controls intentionally retain Herdr's shipped appearance, as required by that vision.
 The browser reference and native captures use different window dimensions, so this comparison does not establish exact pixel equivalence.
-The inspected native capture verifies the local group only; the final physical remote lifecycle capture remains outstanding.
+The remote lifecycle captures also show the Wano machine identity, Sunny group, Luffy attention state, and Chopper terminal.
+They confirm the same hierarchy and artwork in the physical remote workflow.
 
 ## Historical verification before simplification
 

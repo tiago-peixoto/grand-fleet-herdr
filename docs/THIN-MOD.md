@@ -24,7 +24,9 @@ The Firstmate producer change remains unpublished.
 A local live startup fixture verified automatic coordinator registration, competing-owner refusal, and stale-role transfer.
 That fixture used a simulated Codex process.
 Separate local and remote producer fixtures verified worker labels and survival after their creators exited.
-Neither fixture proves complete sidebar discovery through a real Firstmate task lifecycle.
+Those simulated fixtures alone do not prove complete sidebar discovery through a real Firstmate task lifecycle.
+Subsequent real Claude tasks verified automatic grouping, native navigation, and direct input locally and remotely.
+See [current native verification](NATIVE-INTEGRATION.md#real-remote-terminal-verification-2026-11-14) for evidence and remaining cleanup limits.
 Manually labelled lab fixtures verify consumption, not automatic registration.
 
 Selecting a placed character focuses its native terminal.

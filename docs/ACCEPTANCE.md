@@ -35,7 +35,9 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
 
 - Verify the complete Firstmate task lifecycle with the patched producer.
   Real local Claude coordinator and worker execution, automatic grouping, and direct terminal input passed.
-  Completion notification handling and the equivalent real remote lifecycle remain under verification.
+  Real remote discovery, task execution, navigation, and direct terminal input also passed.
+  Local normal cleanup stopped at a `/var` versus `/private/var` worktree path mismatch.
+  Complete cleanup remains under verification locally and remotely.
   Remote automatic discovery and direct input also passed with a simulated coordinator and worker shell.
   Local surviving character identity also passed in the current native sidebar.
 - Deliver the producer change alongside the dependent mod.
