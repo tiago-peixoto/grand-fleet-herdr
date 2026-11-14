@@ -37,7 +37,9 @@ The firstmate row returns to the same grid with running personal sessions preser
 
 Replace the duplicate attention list with a conditional filter of the original navigation rows.
 Keep firstmate visible during filtering so returning to command remains easy.
-Show blocked counts on collapsed ships and machines.
+Show blocked counts on collapsed ships.
+Expanded ships and machine headings do not repeat the fleet attention total.
+Affected worker rows retain their status labels.
 Activating the filter temporarily reveals matching descendants without overwriting the captain's normal collapse state.
 Unknown records remain unknown and offline machines remain offline.
 An independent agent needing attention retains its Independent label.
@@ -170,7 +172,7 @@ Only active workers appear in the daily sidebar; an available character catalog 
 
 ## Prototype verification
 
-Ninety-two browser checks pass for the current interactive preview.
+Ninety-four browser checks pass for the current interactive preview.
 They cover navigation, tab creation and closure, local and remote personal terminals, renaming, offline visibility, and compact-window scrolling.
 They also verify all thirteen artwork sheets load with the expected frame grid and obey Pause artwork.
 The sheets still need visual animation approval before production use.
@@ -259,3 +261,13 @@ Native integration must preserve terminal identities and verify process conseque
 Shanks, Big Mom, and Kaido now have matching three-state studies in the review gallery.
 Their crews remain unavailable because their worker and ship artwork are missing.
 Captain artwork alone does not satisfy crew coverage.
+
+## Artwork alignment measurements
+
+The 13 study sheets contain 156 frames across sleeping, walking, and sitting states.
+All sheets contain transparent pixels and fully opaque pixels.
+At an alpha threshold of 128, no character touches its cell boundary.
+The largest baseline shift within one animation is 0.46 pixels when rendered at the sidebar's 42-pixel size.
+The largest horizontal center shift is 0.81 pixels at that size.
+These measurements check clipping and placement, not anatomy, character accuracy, or natural motion.
+The review artifact stores the per-sheet results in `artwork-metrics.json`.
