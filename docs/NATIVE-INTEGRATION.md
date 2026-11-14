@@ -19,13 +19,20 @@ The final native screenshot and terminal history both retained the response and 
 Evidence lives in `.superpowers/native/real-remote-lifecycle-evidence/` in the isolated worktree.
 
 These observations establish real remote discovery, navigation, and direct input.
-They do not establish complete cleanup.
+Cleanup was verified separately, with the local fixture correction described below.
 Local normal teardown stopped while releasing its worktree because paths differed between `/var` and `/private/var`.
 Claude exited locally, but its terminal remained a live shell and its worktree lease remained allocated.
 Remote normal teardown subsequently removed worker `op-hz-lab/t28` and released its worktree lease.
 The cleanup receipt retained the report and showed an empty notification queue.
 An independent terminal lookup confirmed that `t28` no longer existed.
-The local path discrepancy remains under investigation.
+The local discrepancy matches existing [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).
+Both spellings refer to the same directory, but Treehouse stores the `/var` spelling while Firstmate records `/private/var`.
+After verifying directory identity, lease ownership, and task ownership, the test backed up the local task metadata.
+Only its worktree path spelling changed to match the pool record.
+The coordinator then ran normal teardown without its force option.
+Independent checks confirmed that terminal `t41` no longer existed, the lease was released, and the notification queue was empty.
+This recovered the disposable fixture without changing shared source or pool records manually.
+It does not establish that the upstream path defect is fixed.
 
 ## Current verification, 2026-11-14
 
@@ -112,7 +119,7 @@ Evidence lives in the ignored `.superpowers/native/remote-pointer-evidence.json`
 
 Current complete-flow acceptance remains open.
 Real local and remote task execution, automatic grouping, and direct input passed.
-Complete cleanup remains under verification.
+Remote normal cleanup passed, and local cleanup passed after the documented fixture path correction.
 
 Independent review found two navigation regressions, both reproduced in the native lab before changing code.
 The native sidebar showed the unregistered `thin-child` terminal, while the fleet sidebar omitted it.
@@ -186,7 +193,8 @@ The accessibility tree reported working during that interaction and Done before 
 Native captures showed the sleeping Chopper artwork when Done and the coordinator's Needs you state during manual approval.
 These observations establish real local task execution, automatic grouping, writable navigation, and status changes.
 The later remote verification is recorded above.
-Local cleanup remains incomplete because worktree release rejected the aliased path.
+Local cleanup initially failed because worktree release rejected the aliased path.
+The documented fixture correction allowed normal cleanup to finish.
 Evidence is stored privately in `.superpowers/native/real-lifecycle-evidence`.
 
 ## Current visual comparison

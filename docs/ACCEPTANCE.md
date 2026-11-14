@@ -12,17 +12,17 @@ Registration changes made after those fixtures require fresh verification.
 
 | Requirement | Current evidence | Remaining proof |
 | --- | --- | --- |
-| Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Include in final visual comparison |
-| Explicit coordinator and worker relationships | Explicit home labels, ambiguity checks, and automatic discovery after producer review fixes | Complete real Firstmate lifecycle locally and remotely |
+| Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
+| Explicit coordinator and worker relationships | Explicit home labels, ambiguity checks, and automatic discovery after producer review fixes | Real local and remote task flows passed; local cleanup required the documented fixture correction |
 | Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
-| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Complete real Firstmate lifecycle locally and remotely |
+| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Real local and remote task flows passed; local cleanup required the documented fixture correction |
 | Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
 | Native Settings, Add machine, plus, Files, and Changes | Recorded pointer checks in the current native window | No known functional gap in tested controls |
 | Personal terminals inherit folder and machine without character assignment | Four-case default/mod comparison on local and physical remote machines | No known functional gap in tested cases |
 | Native tabs, splits, grids, zoom, resizing, and closing | Twelve disposable shells plus local/remote pointer resizing | No known functional gap in tested arrangements |
 | Navigation and reconnect preserve sessions and output | Process identity and output comparisons against default Herdr | Published recovery build remains unverified |
-| No custom ownership or recovery workflows | Current thin-mod design and native command routing | Confirm final diff retains this boundary |
-| Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real Firstmate lifecycle state observations |
+| No custom ownership or recovery workflows | Current thin-mod design and native command routing | Current main.js and fleet.js retain native commands and explicit metadata grouping |
+| Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
 | Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
 | Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Finish producer review, delivery, final checks, and dependency links |
@@ -43,7 +43,8 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
   Real remote discovery, task execution, navigation, and direct terminal input also passed.
   Local normal cleanup stopped at a `/var` versus `/private/var` worktree path mismatch.
   Remote normal cleanup released the worktree lease and removed the worker terminal.
-  Local cleanup remains incomplete.
+  Local cleanup passed after correcting only the disposable task record to the pool path spelling.
+  The original failure remains tracked by [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).
   Remote automatic discovery and direct input also passed with a simulated coordinator and worker shell.
   Local surviving character identity also passed in the current native sidebar.
 - Deliver the producer change alongside the dependent mod.
