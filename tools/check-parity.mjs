@@ -19,6 +19,9 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     proxy=new Proxy(node,{get(target,key){
       if(key in target) return target[key];
       return (...args)=>{
+        if(key==='accessibility_label') target.label=args[0];
+        if(key==='tooltip') target.tip=args[0];
+        if(key==='text_color') target.color=args[0];
         if(key==='w') target.width=args[0];
         if(key==='track_focus') target.focusHandle=args[0];
         if(key==='child') (target.children??=[]).push(args[0]);
@@ -47,7 +50,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const agents=[all[1],all[3],all[4]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,groupFleet,machineOf,workerHome,View:class{},Button:{new:id=>element().id(id)},div:element,image:element,svg:element,h_flex:element,v_flex:element,
+  const context={...fleet,groupFleet,machineOf,workerHome,View:class{},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:element,h_flex:element,v_flex:element,
     machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
@@ -193,3 +196,22 @@ unlink.nodes.get('unlink-captain').click();
 assert.ok(!unlink.state.get('one-piece.captains')['t1:1']);
 assert.equal(unlink.all.length,7,'unlinking must preserve terminals');
 console.log('Captain setup passed: stock labels, stale identity, competing captain, captain-only, and unlink.');
+
+for (const width of [310, 76]) {
+  const errorWorker=host(true,'priority',width);
+  errorWorker.all.find(t=>t.address==='t2').status='error';
+  errorWorker.nodes.clear();
+  errorWorker.controller.render(errorWorker.cx);
+  const button=errorWorker.nodes.get('character-t2');
+  const row=button.children[0];
+  assert.equal(row.children[0].path,'mods/one-piece/assets/crew-chopper-blocked.gif',
+    'raw error must use native blocked artwork');
+  assert.equal(button.label,'Chopper, Needs you, t2');
+  assert.equal(button.tip,'Chopper · t2 · Needs you');
+  if (width===310) {
+    assert.deepEqual(row.children.at(-1).children,['Needs you']);
+    assert.equal(row.children.at(-1).color,'#ff0000');
+  }
+  assert.equal(errorWorker.all.find(t=>t.address==='t2').status,'error','presentation must preserve raw terminal status');
+}
+console.log('Error status passed: seated artwork, attention text and color, and compact accessible status.');

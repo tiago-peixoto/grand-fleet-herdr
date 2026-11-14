@@ -46,7 +46,8 @@ export default class OnePieceAgents extends Agents {
       if (space) openOverlay({mod:'menu',kind:'popup',width:200,height:260,props:{tab:'space',target:{id:space.id}}});
     };
     const selected = focused()?.terminal === terminal.address;
-    const state = terminal.status === 'blocked' ? 'Needs you' : terminal.status === 'done' ? 'Done' : terminal.status ?? 'Unknown';
+    const status = terminal.status === 'error' ? 'blocked' : terminal.status;
+    const state = status === 'blocked' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
     return Button.new(`character-${terminal.address}`).tab_index(0).h(compact ? 42 : 58).px(compact ? 0 : 8).rounded(7)
       .accessibility_label(`${name}, ${state}, ${terminal.name || terminal.address}`)
       .tooltip(`${name} · ${terminal.name || terminal.address} · ${state}`)
@@ -59,11 +60,11 @@ export default class OnePieceAgents extends Agents {
       .on_mouse_down('right', workspaceMenu)
       .on_key_down(event => { if (event.keystroke === 'shift-f10') workspaceMenu(); })
       .child(h_flex().w_full().items_center().gap(compact ? 0 : 8).when(compact, el => el.justify_center())
-        .child(sprite(art, terminal.status, compact ? 32 : 44))
+        .child(sprite(art, status, compact ? 32 : 44))
         .when(!compact, el => el.child(v_flex().flex_1().min_w(0).gap(3)
           .child(div().truncate().font_semibold().child(name))
           .child(div().truncate().text_size(11).text_color(t.muted).child(terminal.name || terminal.address))))
-        .when(!compact && (terminal.status === 'blocked' || terminal.status === 'done'), el => el.child(div().text_color(t[terminal.status]).child(state))));
+        .when(!compact && (status === 'blocked' || status === 'done'), el => el.child(div().text_color(t[status]).child(state))));
   }
 
   fleet() {
