@@ -1,7 +1,7 @@
-import { View, div, image } from 'gpui-kit';
-import { h_flex, v_flex, Editor, EditorState, Input, InputState } from 'gpui-base';
-import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, readTextFile, appHome, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
-import { fleet, identity, matches, machineOf, isWorker, assignCharacters, assignCrew, crews, crewOf, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
+import { View, div, image, svg } from 'gpui-kit';
+import { h_flex, v_flex, Input, InputState } from 'gpui-base';
+import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, readTextFile, appHome, theme, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
+import { fleet, identity, matches, machineOf, isWorker, assignCharacters, assignCrew, crews, crewOf, inspectionTarget, withLocations, attention, terminalLabel as label } from './fleet.js';
 import { withRecords, recordKey, validRecordRows } from './records.js';
 
 const terminals=()=>withRecords(withLocations(coreTerminals(),panes(),spaces()),config().recordSources??{},shared('one-piece-records')??{});
@@ -21,7 +21,7 @@ const config=()=>shared(KEY)??{coordinators:[],aliases:{},characters:{},inspecti
 function save(patch) { setShared(KEY,{...config(),...patch}); }
 const stateLabel=t=>t.status==='blocked'?'Needs you':t.taskRecord===null?'Task records unavailable':t.taskRecord?.state==='done'?'Task complete':t.status==='working'?'Working':t.status==='done'?'Turn complete':t.status==='idle'?'Idle':'Status unavailable';
 const machineLabel=name=>config().aliases[name??'local']||(name===null?'Water 7':name==='hz-server'?'Wano':name);
-const button=(id,text,action,primary=false)=>h_flex().id(id).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();action(e,c);}}).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click(action).child(text);
+const button=(id,text,action,primary=false)=>h_flex().id(id).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();action(e,c);}}).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click((e,c)=>{c.stop_propagation();return action(e,c);}).child(text);
 
 function art(name,status,size=48) {
   const ships=['sunny','flag','crew-red-force','crew-queen-mama-chanter','crew-mammoth'];
@@ -51,12 +51,6 @@ export default class Fleet extends View {
     this.collapsed={}; this.busy=false; this.error=''; this.updated=null;
     this.handle=cx.focus_handle();
     const view=props()?.view;
-    if(view==='inspect') {
-      this.editor=EditorState.new({readonly:true,line_numbers:false,folding:false,soft_wrap:false,font_family:settings().font_family,font_size:14,value:'Connecting to terminal output…'});
-      this.refresh(cx);
-      cx.timer.every(1000,c=>this.refresh(c));
-    }
-    if(view==='rename-tab') this.tabName=InputState.new({value:props().name});
     if(view==='records') {
       const source=config().recordSources?.[recordKey(props().machine,props().home)];
       this.recordRoot=InputState.new({value:source?.root??'',placeholder:'Firstmate executable root, such as /home/me/firstmate'});
@@ -82,10 +76,10 @@ export default class Fleet extends View {
         if(command==='setup') this.setup();
         if(command==='inspect-focused') {
           const t=terminals().find(t=>t.address===focused()?.terminal);
-          if(t) await this.inspect(t,c);
+          if(t) await this.select(t,c);
         }
-        if(command==='close-tab') this.requestClose('tab',focused()?.tab);
-        if(command==='close-pane') this.requestClose('pane',focused()?.pane);
+        if(command==='close-tab') run('tab.close',{id:focused()?.tab});
+        if(command==='close-pane') run('pane.close',{pane:focused()?.pane});
         if(command==='firstmate') await this.openFirstmate(c);
         if(command.startsWith('focus-pane:')) await this.focusPane(command.slice('focus-pane:'.length),c);
         if(command==='restore-layout') notify({title:'Restore layout retired',body:'Use Add terminal in the workspace header to start a new independent shell. Existing sessions are unchanged.'});
@@ -192,8 +186,6 @@ export default class Fleet extends View {
   navigate(tab,action,cx) {
     const space=spaces().find(s=>s.tabs.some(t=>t.id===tab));
     if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return;
-    const supervised=terminals().find(t=>t.tab===tab&&t.state==='live'&&(isWorker(t)||config().coordinators.some(r=>r.role==='secondmate'&&matches(t,r))));
-    if(supervised) return this.inspect(supervised,cx);
     return action();
   }
 
@@ -208,103 +200,48 @@ export default class Fleet extends View {
     if(pane) return this.navigate(pane.tab,()=>run('pane.zoom',{pane:id}),cx);
   }
 
-  select(terminal,cx) {
-    if(!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')) return;
-    const current=terminals().find(t=>t.address===terminal.address&&t.created_ms===terminal.created_ms&&t.state==='live');
-    if(!current?.space||!current.tab) { notifyError(new Error('This session has no workspace. Open it in Herdr before registering it.')); return; }
-    return this.navigate(current.tab,()=>{
-      run('space.select',{id:current.space});
-      run('tab.select',{id:current.tab});
-      run('pane.focus',{terminal:current.address});
-    },cx);
-  }
-
-  async openIndependent(terminal,cx) {
-    const current=fleet(terminals(),machines(),config().coordinators).flatMap(m=>m.independent)
-      .find(t=>identity(t)===identity(terminal));
-    if(!current) {notifyError(new Error('This independent session is no longer available.'));return;}
-    if(current.space) {await this.select(current,cx);return;}
+  async select(terminal,cx) {
+    const request=this.selection=(this.selection??0)+1;
     try {
-      const rawSpace=`op-independent-${current.address.split('/').pop()}-${current.created_ms}`;
-      await checked(['label',current.address,`herdr.space=${rawSpace}`,`herdr.tab=${rawSpace}`]);
-      for(let attempt=0;attempt<40;attempt++) {
-        const placed=terminals().find(t=>identity(t)===identity(current)&&t.space&&t.tab);
-        if(placed) {await this.select(placed,cx);return;}
-        await cx.sleep(100);
-      }
-      throw new Error('Herdr has not opened the independent workspace. Try again after it reconnects.');
-    } catch(error) {notifyError(error);}
-  }
-
-  async inspect(terminal,cx) {
-    if(this.busy) return;
-    const target={terminal:terminal.address,created:terminal.created_ms};
-    if(!inspectionTarget(terminals(),machines(),config().coordinators,target)) return;
-    this.busy=true;cx.notify();
-    let temporary;
-    try {
-      const key=identity(terminal);
-      if(panes().some(p=>p.terminal===terminal.address)||terminal.keep) await this.park(terminal,cx);
-      this.checkContext(cx);
-      if(!inspectionTarget(terminals(),machines(),config().coordinators,target)) throw new Error('The session became unavailable while opening inspection.');
-      const existing=config().inspections[key];
-      const existingSpace=existing&&spaces().find(s=>s.id===existing.space);
-      const existingTab=existingSpace?.tabs.find(t=>t.id===existing.tab);
-      const existingPane=existingTab&&panes().find(p=>p.pane===existing.pane&&p.tab===existing.tab&&p.mod==='one-piece');
-      if(existingPane) {
-        run('space.select',{id:existing.space});run('tab.select',{id:existing.tab});
-        run('pane.focus',{pane:existingPane.pane});
-        return true;
-      }
+      const current=()=>terminals().find(t=>identity(t)===identity(terminal)&&t.state==='live');
       const machine=machineOf(terminal.address);
-      const rawSpace=`op-${terminal.address.split('/').pop()}-${terminal.created_ms}-${Date.now()}`;
-      const fullSpace=existingSpace?.id??(machine?`${machine}/${rawSpace}`:rawSpace);
-      if(!existingSpace) {
-        // Herdr cannot create an empty space; only this disposable shell is ever adopted.
-        temporary={name:`op-view-${Date.now()}-${Math.floor(Math.random()*1000000)}`,machine};
-        this.activePlaceholder=placeholderKey(temporary);
-        activePlaceholders.add(this.activePlaceholder);
-        save({placeholders:[...(config().placeholders??[]),temporary]});
-        const args=['run','--json','--bg','--no-parent','--no-notify','--name',temporary.name,'--label',`one-piece.placeholder=${temporary.name}`,'--label',`herdr.space=${rawSpace}`,'--label',`herdr.tab=${rawSpace}`];
-        if(machine) args.push('--on',machine);
-        const launched=JSON.parse((await checked(args)).stdout);
-        if(typeof launched.address!=='string'||launched.address===terminal.address||machineOf(launched.address)!==machine) throw new Error('Herdr returned an invalid inspection placeholder.');
-        for(let attempt=0;attempt<40&&!spaces().some(s=>s.id===fullSpace);attempt++) await cx.sleep(100);
-        if(!spaces().some(s=>s.id===fullSpace)) throw new Error('Herdr has not created the inspection workspace. Try again after it reconnects.');
+      const ready=()=>machines().some(m=>m.name===machine&&m.layout==='ready');
+      if(!current()||!ready()) return;
+      if(!current().space||!current().tab) {
+        const previous=config().inspections?.[identity(terminal)];
+        const existing=previous&&spaces().find(s=>s.id===previous.space&&s.machine===machine);
+        const space=existing?.id??`${machine?machine+'/':''}op-terminal-${terminal.address.split('/').pop()}-${terminal.created_ms}`;
+        const tab=existing?.tabs.find(t=>t.id===previous.tab)?.id??space;
+        const local=id=>machine?id.slice(machine.length+1):id;
+        // Adoption opens the existing process; it never launches another worker.
+        await checked(['label',terminal.address,`herdr.space=${local(space)}`,`herdr.tab=${local(tab)}`]);
+        for(let attempt=0;attempt<40;attempt++) {
+          if(!current()||!ready()) throw new Error('The terminal became unavailable.');
+          if(current().space&&current().tab) break;
+          await cx.sleep(100);
+        }
+        if(!current()?.space||!current()?.tab) throw new Error('Herdr has not attached the terminal yet. Try again after it reconnects.');
       }
-      this.checkContext(cx);
-      const before=new Set(panes().map(p=>p.pane));
-      const anchor=existingTab&&panes().find(p=>p.tab===existing.tab);
-      if(anchor) run('pane.split',{pane:anchor.pane,direction:'right',mod:'one-piece',props:{view:'inspect',target}});
-      else run('tab.new',{space:fullSpace,name:`Inspect ${label(terminal)}`,mod:'one-piece',props:{view:'inspect',target}});
-      let pane;
-      for(let attempt=0;attempt<40;attempt++) {
-        const tabs=spaces().find(s=>s.id===fullSpace)?.tabs??[];
-        pane=panes().find(p=>!before.has(p.pane)&&p.mod==='one-piece'&&(anchor?p.tab===anchor.tab:tabs.some(t=>t.id===p.tab)));
-        if(pane) break;
-        await cx.sleep(100);
+      if(!ready()||this.closed||request!==this.selection) return;
+      const placed=current();
+      if(!placed) return;
+      run('space.select',{id:placed.space});
+      run('tab.select',{id:placed.tab});
+      run('pane.focus',{terminal:placed.address});
+      const previous=config().inspections?.[identity(terminal)];
+      if(previous) {
+        const obsolete=panes().find(p=>p.pane===previous.pane&&p.tab===placed.tab&&p.mod==='one-piece'&&!p.terminal);
+        if(obsolete) run('pane.close',{pane:obsolete.pane});
+        const inspections={...config().inspections};delete inspections[identity(terminal)];save({inspections});
       }
-      if(!pane) throw new Error('Herdr did not create the inspection view. The worker process is still running.');
-      this.checkContext(cx);
-      if(!inspectionTarget(terminals(),machines(),config().coordinators,target)) throw new Error('The session became unavailable while opening inspection.');
-      save({inspections:{...config().inspections,[key]:{space:fullSpace,tab:pane.tab,pane:pane.pane}}});
-      if(!existingSpace) run('space.rename',{id:fullSpace,name:label(terminal)});
-      run('space.select',{id:fullSpace});run('tab.select',{id:pane.tab});
-      run('pane.focus',{pane:pane.pane});
-      return true;
-    } catch(error) { notifyError(error); }
-    finally {
-      if(temporary) {
-        try {await this.cleanupPlaceholder(temporary);}
-        catch(error) {notifyError(new Error(`Temporary shell cleanup pending. Use Retry cleanup in the fleet sidebar. ${error.message}`));}
-        finally {activePlaceholders.delete(placeholderKey(temporary));this.activePlaceholder=null;}
-      }
-      this.busy=false;if(!this.closed) cx.notify();
-    }
+    } catch(error) {notifyError(error);}
+
   }
+
+  openIndependent(terminal,cx) { return this.select(terminal,cx); }
 
   checkContext(cx) {
-    if(this.closed) throw new Error('Inspection cancelled.');
+    if(this.closed) throw new Error('Operation cancelled.');
     cx.notify();
   }
 
@@ -358,38 +295,6 @@ export default class Fleet extends View {
     } finally {this.cleaning=false;cx.notify();}
   }
 
-  async park(terminal,cx) {
-    run('terminal.park',{terminal:terminal.address});
-    for(let attempt=0;attempt<40;attempt++) {
-      const current=terminals().find(t=>t.address===terminal.address&&t.created_ms===terminal.created_ms);
-      if(!current||current.state!=='live') throw new Error('The session ended while opening inspection.');
-      if(!panes().some(p=>p.terminal===terminal.address)&&!current.labels?.['herdr.space']&&!current.keep) return;
-      await cx.sleep(100);
-    }
-    throw new Error('Herdr has not removed the writable pane. Inspection was not selected.');
-  }
-
-  refresh(cx) {
-    const target=inspectionTarget(terminals(),machines(),config().coordinators,props().target);
-    if(!target) {
-      this.editor.set_value('This session is unavailable. No cached output is shown.');
-      this.error='';this.updated=null;cx.notify();return;
-    }
-    if(this.reading) return;
-    this.reading=true;
-    cx.spawn(async c=>{
-      try {
-        const result=await checked(['read','--json','--lines','2000',target.address]);
-        if(!inspectionTarget(terminals(),machines(),config().coordinators,props().target)) {this.refresh(c);return;}
-        const output=JSON.parse(result.stdout);
-        if(typeof output.text!=='string') throw new Error('Herdr returned no readable terminal output.');
-        if(output.text!==this.editor.value()) this.editor.set_value(output.text);
-        this.error='';this.updated=Date.now();
-      } catch(error) {this.error=String(error.message??error);this.updated=null;this.editor.set_value('Output unavailable. '+this.error);}
-      finally {this.reading=false;c.notify();}
-    });
-  }
-
   row(terminal,character,subtitle,action,selected=false) {
     const t=theme();
     return h_flex().flex_none().id(`session-${terminal.address}`).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();action(e,c);}}).px(10).py(6).gap(8).rounded(8).border_1().border_color(selected?'#e8bd70':'#16292f').bg(selected?'#29454c':'#16292f').hover(s=>s.bg('#243e45')).cursor_pointer().on_click(action)
@@ -439,11 +344,11 @@ export default class Fleet extends View {
             .child(div().text_size(10).text_color('#9eb4b3').child(`${coordinator.role} · ${label(coordinator.session)}${collapsed&&count?` · ${count} needs attention`:''}`)))
           .child(div().text_color('#a0b7b8').child(collapsed?'›':'⌄')));
         if(!collapsed) {
-          section.child(this.row(coordinator.session,`crew-${appearance.captain}`,`${coordinator.role} · ${stateLabel(coordinator.session)}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
+          section.child(this.row(coordinator.session,`crew-${appearance.captain}`,`${coordinator.role} · ${stateLabel(coordinator.session)}`,(_e,c)=>c.spawn(a=>this.select(coordinator.session,a)),selected?.terminal===coordinator.terminal));
           const crew=v_flex().id(`crew-${coordinator.terminal}`).flex_none().ml(16).pl(6).gap(4);
           for(const worker of coordinator.workers.filter(visible)) {
             const character=characters[identity(worker)];
-            crew.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.inspect(worker,a)),selected?.space===cfg.inspections[identity(worker)]?.space));
+            crew.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.select(worker,a)),selected?.terminal===worker.address));
           }
           for(const terminal of independent)
             crew.child(this.row(terminal,'pirate',`Independent · ${stateLabel(terminal)}`,(_e,c)=>c.spawn(a=>this.select(terminal,a))));
@@ -453,7 +358,7 @@ export default class Fleet extends View {
       }
       const others=v_flex().id(`other-sessions-${machine.machine}`).flex_none().gap(4);
       if(machine.unassigned.some(visible)) others.child(div().text_size(10).text_color('#e8bd70').child('WORKERS · LINK COORDINATOR IN MACHINE SETTINGS'));
-      for(const worker of machine.unassigned.filter(visible)) others.child(this.row(worker,characters[identity(worker)].art,`${stateLabel(worker)} · Inspection only`,(_e,c)=>c.spawn(a=>this.inspect(worker,a))));
+      for(const worker of machine.unassigned.filter(visible)) others.child(this.row(worker,characters[identity(worker)].art,`${stateLabel(worker)}`,(_e,c)=>c.spawn(a=>this.select(worker,a))));
       const coordinatorSpaces=new Set(machine.coordinators.map(c=>c.session.space??cfg.inspections[identity(c.session)]?.space));
       const independentSpaces=spaces().filter(s=>s.machine===machine.machine&&!coordinatorSpaces.has(s.id)&&machine.independent.some(t=>t.space===s.id&&visible(t)));
       const unplaced=machine.independent.filter(t=>!t.space&&!t.labels?.['one-piece.placeholder']&&visible(t));
@@ -478,16 +383,10 @@ export default class Fleet extends View {
     }));
   }
 
-  inspectView() {
-    const target=inspectionTarget(terminals(),machines(),config().coordinators,props().target);
-    const coordinator=target&&config().coordinators.find(r=>matches(target,r));
-    return v_flex().id('inspection').on_size_change((_size,c)=>c.notify()).size_full().min_h(0).bg('#142329').p(18).gap(12)
-      .child(h_flex().items_center().gap(12).child(art(coordinator?`crew-${crewOf(coordinator).captain}`:config().characters[target?identity(target):'']?.art??'pirate',target?.status,56))
-        .child(v_flex().flex_1().gap(5).child(div().text_size(18).font_semibold().text_color('#e0ece6').child(target?label(target):'Session unavailable'))
-          .child(div().text_size(11).text_color('#e8bd70').child(`INSPECTION ONLY · ${target?stateLabel(target):'Disconnected'}`))))
-      .child(div().text_size(11).text_color('#9eb7b4').child(target?'Live terminal text · selection and copy enabled · direct input disabled':'Terminal output unavailable · direct input disabled'))
-      .child(Editor.new(this.editor).flex_1().min_h(0).size_full())
-      .child(div().text_size(10).text_color(this.error?'#edc478':'#8fa8a9').child(this.error||(!target?'Waiting for the session to reconnect':this.updated?'Updates every second · up to 2,000 history lines':'Waiting for output')));
+  legacyView() {
+    const terminal=terminals().find(t=>matches(t,props().target));
+    return v_flex().size_full().p(24).gap(12).child(div().child('This terminal now supports direct typing.'))
+      .when(Boolean(terminal),el=>el.child(button('open-terminal','Open terminal',(_e,c)=>c.spawn(a=>this.select(terminal,a)))));
   }
 
   async linkCoordinator(selected,home,role,overlay,cx) {
@@ -510,13 +409,7 @@ export default class Fleet extends View {
         if(isWorker(terminal)) throw new Error('A supervised worker cannot be linked as firstmate.');
         if(!terminal.space||!terminal.tab||!panes().some(p=>p.terminal===terminal.address&&p.tab===terminal.tab)) throw new Error('This session has no writable workspace. Open it in Herdr before linking as firstmate.');
       }
-      if(role==='secondmate') {
-        await this.park(terminal,cx);
-        terminal=validate();
-        if(panes().some(p=>p.terminal===terminal.address)||terminal.keep||terminal.labels?.['herdr.space']) throw new Error('The writable pane returned. Retry linking the secondmate.');
-      }
       save({coordinators:[...config().coordinators.filter(r=>r.terminal!==terminal.address&&!sameHome(r)),{terminal:terminal.address,created:terminal.created_ms,home,role}]});
-      if(role==='secondmate'&&!await this.inspect(terminal,cx)) {this.error='Inspection could not open. Retry linking the parked secondmate.';return;}
       this.checkContext(cx);
       completed=true;
       closeOverlay(overlay);
@@ -538,7 +431,7 @@ export default class Fleet extends View {
     content.child(div().text_size(12).text_color('#a4bbb8').child(`Machine: ${machine??'local'} · identify an existing coordinator session explicitly.`));
     content.child(h_flex().gap(10).items_center().child(Input.new(this.aliasInput).flex_1()).child(button('save-alias','Save island name',()=>save({aliases:{...config().aliases,[machine??'local']:this.aliasInput.value().trim()||machine||'local'}}))));
     content.child(h_flex().gap(10).child(button('role-firstmate','Firstmate',(_e,c)=>{this.role='firstmate';this.selected=null;c.notify();},this.role==='firstmate'))
-      .child(button('role-secondmate','Secondmate · inspection only',(_e,c)=>{this.role='secondmate';this.selected=null;c.notify();},this.role==='secondmate')));
+      .child(button('role-secondmate','Secondmate',(_e,c)=>{this.role='secondmate';this.selected=null;c.notify();},this.role==='secondmate')));
     const list=v_flex().flex_none().h(160).gap(5).overflow_y_scrollbar();
     for(const terminal of available) list.child(button(`register-${terminal.address}`,`${label(terminal)} · ${terminal.address}${this.selected===terminal.address?' · Selected':''}`,(_e,c)=>{this.selected=terminal.address;c.notify();},this.selected===terminal.address));
     content.child(list);
@@ -561,122 +454,26 @@ export default class Fleet extends View {
     return frame;
   }
 
-  presetTarget(tabId) {
-    const space=spaces().find(s=>s.tabs.some(t=>t.id===tabId));
-    if(!space||!this.canAddTab(space.id)) return null;
-    const views=panes().filter(p=>p.tab===tabId);
-    if(views.length<2) return null;
-    if(views.some(p=>terminals().some(t=>t.address===p.terminal&&(isWorker(t)||config().coordinators.some(r=>r.role==='secondmate'&&matches(t,r)))))) return null;
-    let anchor=views.find(p=>terminals().some(t=>t.address===p.terminal&&config().coordinators.some(r=>matches(t,r))));
-    const inspection=Object.entries(config().inspections).find(([_key,i])=>i.space===space.id);
-    const secondmate=inspection&&config().coordinators.some(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===inspection[0]);
-    const inspectionPanes=views.filter(p=>p.mod==='one-piece');
-    if(!anchor&&secondmate&&inspectionPanes.length===1) anchor=inspectionPanes[0];
-    if(!anchor) return null;
-    return {machine:space.machine,space:space.id,tab:tabId,anchor:anchor.pane,
-      panes:views.map(p=>({pane:p.pane,terminal:p.terminal??null,mod:p.mod??null}))};
-  }
-
-  async arrangePreset(preset,tabId,cx) {
-    if(this.busy) return false;
-    this.busy=true; cx.notify();
-    try {
-      const target=this.presetTarget(tabId);
-      if(!target) throw new Error('Open an available coordinator tab with personal terminals to arrange its grid.');
-      const result=await exec('python3',['-B',`${appHome()}/mods/one-piece/presets.py`,JSON.stringify({...target,preset})],{timeout:25000});
-      if(result.code!==0) throw commandError(result,'The grid could not be changed.');
-      if(focused()?.tab===tabId) {
-        const zoomed=panes().find(p=>p.tab===tabId&&p.zoomed);
-        if(zoomed) run('pane.zoom',{pane:zoomed.pane});
-      }
-      return true;
-    } catch(error) { notifyError(error); return false; }
-    finally {this.busy=false;cx.notify();}
-  }
-
-  presetsView() {
-    const tab=props().tab,overlay=props().overlay;
-    const choose=preset=>(_e,c)=>c.spawn(async cx=>{
-      if(await this.arrangePreset(preset,tab,cx)) closeOverlay(overlay);
-    });
-    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
-      .child(div().text_size(20).child('Arrange your workspace'))
-      .child(div().text_size(12).child('Keep every session running. Only the pane arrangement changes.'))
-      .child(button('preset-daily',this.busy?'Applying…':'Chat + terminals',choose('daily')))
-      .child(div().text_size(12).text_color('#a2bab7').child('Coordinator on the left, your terminals stacked on the right.'))
-      .child(button('preset-equal',this.busy?'Applying…':'Equal grid · recommended',choose('equal')))
-      .child(div().text_size(12).text_color('#a2bab7').child('Equal cells, with the coordinator first.'))
-      .child(h_flex().justify_end().child(button('cancel-presets','Cancel',()=>closeOverlay(overlay))));
+  addTerminal(terminal,spaceId) {
+    const space=spaces().find(s=>s.id===spaceId);
+    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return;
+    const current=terminal&&terminals().find(t=>identity(t)===identity(terminal)&&t.state==='live'&&t.space===spaceId);
+    if(terminal&&!current) return;
+    const crewmate=terminals().find(t=>t.state==='live'&&t.space===spaceId&&(isWorker(t)||config().coordinators.some(r=>matches(t,r))));
+    if(crewmate) {
+      if(!crewmate.cwd) {notifyError(new Error('The original terminal folder is unavailable.'));return;}
+      run('tab.new',{space:spaceId,folder:crewmate.cwd});
+    } else run('tab.new',{space:spaceId});
   }
 
   header() {
     const space=spaces().find(s=>s.active);
-    const showTabs=Boolean(space&&space.tabs.length>1);
-    if(this.showTabs!==showTabs) {this.showTabs=showTabs;run(showTabs?'layout.show':'layout.hide',{id:'fleet-tabs'});}
+    const terminal=terminals().find(t=>t.address===focused()?.terminal&&t.space===space?.id);
     const coordinator=config().coordinators.find(r=>terminals().some(t=>matches(t,r)&&t.space===space?.id));
-    const current=panes().find(p=>p.focused);
-    const inspection=Object.entries(config().inspections).find(([_key,i])=>i.space===space?.id);
-    const inspected=Boolean(inspection);
-    const secondmate=inspection&&config().coordinators.find(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===inspection[0]);
-    const canAddTerminal=()=>{
-      const owner=spaces().find(s=>s.id===space?.id),pane=panes().find(p=>p.pane===current?.pane);
-      return this.canAddTab(owner?.id)&&(!owner.tabs.length||Boolean(pane&&paneReady(pane.pane)&&owner.tabs.some(t=>t.id===pane.tab)));
-    };
-    return h_flex().size_full().px(18).gap(12).items_center().bg('#192e34')
-      .child(v_flex().flex_1().min_w(0).gap(3)
-        .child(div().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
-        .child(div().truncate().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`)))
-      .when(canAddTerminal(),el=>el.child(button('new-terminal','Add terminal',()=>{
-        if(!canAddTerminal()) return;
-        if(!spaces().find(s=>s.id===space.id)?.tabs.length) run('tab.new',{space:space.id});
-        else run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane});
-      })))
-      .when(Boolean(space&&space.tabs.length),el=>el.child(button('workspace-menu','···',()=>this.openActions('workspace',{space:space.id,tab:space.tabs.find(t=>t.active)?.id??current?.tab}))));
-  }
-
-  canAddTab(spaceId) {
-    const space=spaces().find(s=>s.id===spaceId);
-    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return false;
-    if(terminals().some(t=>t.space===spaceId&&isWorker(t)&&!config().coordinators.some(r=>matches(t,r)))) return false;
-    const inspections=Object.entries(config().inspections).filter(([_key,i])=>i.space===spaceId);
-    return inspections.every(([key])=>config().coordinators.some(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===key));
-  }
-
-  openActions(scope,target) {
-    openOverlay({mod:'one-piece',kind:'popup',width:240,height:scope==='workspace'?240:100,props:{view:'actions',scope,...target}});
-  }
-
-  actionsView() {
-    const {scope,space:spaceId,tab:tabId,pane:paneId,overlay}=props();
-    const space=spaces().find(s=>s.id===spaceId||(!spaceId&&s.tabs.some(t=>t.id===tabId)));
-    const panel=v_flex().p(10).gap(8).bg('#192e34');
-    const invoke=action=>(e,c)=>{closeOverlay(overlay);return action(e,c);};
-    if(scope==='pane') {
-      const pane=panes().find(p=>p.pane===paneId),terminal=terminals().find(t=>t.address===pane?.terminal);
-      if(paneReady(paneId)&&terminal&&!isWorker(terminal)&&!config().coordinators.some(r=>matches(terminal,r)))
-        panel.child(button(`close-${paneId}`,'Close terminal',invoke(()=>this.requestClose('pane',paneId))));
-      return panel;
-    }
-    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return panel.child(div().child('Workspace unavailable'));
-    if(scope==='workspace') {
-      const coordinator=config().coordinators.find(r=>terminals().some(t=>matches(t,r)&&t.space===space.id)||config().inspections[`${r.terminal}:${r.created}`]?.space===space.id);
-      if(coordinator) panel.child(button('crew-appearance','Crew appearance',invoke(()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:300,props:{view:'crew-appearance',target:coordinator}}))));
-      if(this.presetTarget(tabId)) panel.child(button('grid-presets','Arrangement',invoke(()=>{
-        if(this.presetTarget(tabId)) openOverlay({mod:'one-piece',kind:'dialog',width:480,height:320,props:{view:'presets',tab:tabId}});
-      })));
-      if(space.tabs.length&&this.canAddTab(space.id)) panel.child(button('add-tab','New tab',invoke(()=>{
-        if(this.canAddTab(space.id)&&spaces().find(s=>s.id===space.id)?.tabs.length) run('tab.new',{space:space.id});
-      })));
-    }
-    const tab=space.tabs.find(t=>t.id===tabId);
-    if(tab&&(scope==='tab'||space.tabs.length===1)) {
-      panel.child(button(`rename-tab-${tab.id}`,'Rename tab',invoke(()=>{
-        const current=spaces().find(s=>s.id===space.id)?.tabs.find(t=>t.id===tab.id);
-        if(current&&machines().some(m=>m.name===space.machine&&m.layout==='ready')) openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:current.name}});
-      })));
-      panel.child(button(`close-tab-${tab.id}`,'Close tab',invoke(()=>this.requestClose('tab',tab.id))));
-    }
-    return panel;
+    return h_flex().size_full().px(18).gap(12).items_center().bg('#192e34').text_color('#dce6e3')
+      .child(div().flex_1().truncate().child(`${space?.name??'Welcome aboard'} · ${space?.machine??'local'}`))
+      .when(Boolean(coordinator),el=>el.child(button('crew-appearance','Crew appearance',()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:300,props:{view:'crew-appearance',target:coordinator}}))))
+      .when(Boolean(space&&machines().some(m=>m.name===space.machine&&m.layout==='ready')),el=>el.child(button('new-terminal','Add terminal',()=>this.addTerminal(terminal,space.id))));
   }
 
   crewView() {
@@ -695,119 +492,36 @@ export default class Fleet extends View {
     return panel.child(button('cancel-crew','Cancel',()=>closeOverlay(overlay)));
   }
 
-  tabsView() {
-    const space=spaces().find(s=>s.active);
-    const row=h_flex().size_full().px(8).gap(6).items_center().overflow_x_scrollbar().bg('#192e34');
-    if(!space||space.tabs.length<2) return row;
-    for(const tab of space.tabs) row.child(h_flex().gap(3).flex_none()
-      .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',(_e,c)=>c.spawn(a=>this.navigate(tab.id,()=>run('tab.select',{id:tab.id}),a)),tab.active))
-      .when(tab.active,el=>el.child(button(`tab-menu-${tab.id}`,'···',()=>this.openActions('tab',{space:space.id,tab:tab.id})))));
-    return row;
-  }
-
-  renameTabView() {
-    return v_flex().size_full().p(20).gap(12).bg('#192f35').text_color('#dce6e3')
-      .child(div().child('Rename tab')).child(Input.new(this.tabName).h(34))
-      .child(h_flex().gap(8).justify_end()
-        .child(button('cancel-rename','Cancel',()=>closeOverlay(props().overlay)))
-        .child(button('save-rename','Save',()=>{
-          const p=props(),space=spaces().find(s=>s.id===p.space&&s.tabs.some(t=>t.id===p.tab));
-          if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return;
-          run('tab.rename',{id:p.tab,name:this.tabName.value().trim()});closeOverlay(p.overlay);
-        },true)));
-  }
-
-  closeSnapshot(kind,id) {
-    const all=panes();
-    const pane=kind==='pane'&&all.find(p=>p.pane===id);
-    const tab=kind==='tab'?id:pane?.tab;
-    const space=spaces().find(s=>s.tabs.some(t=>t.id===tab));
-    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) throw new Error('The close target changed or its machine is unavailable. Nothing was closed.');
-    const affected=all.filter(p=>kind==='tab'?p.tab===tab:p.pane===id);
-    if(!affected.length) throw new Error('The close target is no longer available. Nothing was closed.');
-    const live=terminals();
-    const records=affected.map(p=>{
-      const terminal=p.terminal&&live.find(t=>t.address===p.terminal&&['live','finished'].includes(t.state));
-      if(p.terminal&&(!terminal||!Number.isFinite(terminal.created_ms)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready'))) throw new Error('A terminal changed or became unavailable. Nothing was closed.');
-      if(terminal?.state==='live'&&(isWorker(terminal)||config().coordinators.some(r=>r.role==='secondmate'&&matches(terminal,r)))) throw new Error('Open this supervised session in inspection before closing its view. Nothing was closed.');
-      return {pane:p.pane,mod:p.mod??null,terminal:terminal?.address??null,created:terminal?.created_ms??null,state:terminal?.state??null};
-    }).sort((a,b)=>a.pane.localeCompare(b.pane));
-    const preserved=Object.entries(config().inspections).filter(([_key,i])=>i.tab===tab&&affected.some(p=>p.mod==='one-piece'&&(!i.pane||p.pane===i.pane)))
-      .map(([key])=>{
-        const terminal=live.find(t=>identity(t)===key);
-        if(!terminal||!['live','finished'].includes(terminal.state)||!machines().some(m=>m.name===machineOf(terminal.address)&&m.layout==='ready')||all.some(p=>p.terminal===terminal.address)||terminal.keep||terminal.labels?.['herdr.space']) return null;
-        return {terminal:terminal.address,created:terminal.created_ms,state:terminal.state};
-      }).filter(Boolean).sort((a,b)=>a.terminal.localeCompare(b.terminal));
-    return {kind,id,tab,space:space.id,machine:space.machine,panes:records,preserved};
-  }
-
-  requestClose(kind,id) {
-    try {
-      const snapshot=this.closeSnapshot(kind,id);
-      openOverlay({mod:'one-piece',kind:'dialog',width:580,height:380,props:{view:'close-scope',snapshot}});
-    } catch(error) {notifyError(error);}
-  }
-
-  closeScope() {
-    const p=props(),snapshot=p.snapshot;
-    try {
-      // Inspection processes are informational; only actual panes authorize closure.
-      const {preserved:_previous,...target}=snapshot;
-      const {preserved:_current,...current}=this.closeSnapshot(snapshot.kind,snapshot.id);
-      if(JSON.stringify(current)!==JSON.stringify(target)) throw new Error('The close target changed. Review it again. Nothing was closed.');
-      if(snapshot.kind==='tab') run('tab.close',{id:snapshot.id,confirmed:true});
-      else if(panes().filter(p=>p.tab===snapshot.tab).length===1) run('tab.close',{id:snapshot.tab,confirmed:true});
-      else run('pane.close',{pane:snapshot.id});
-      closeOverlay(p.overlay);
-    } catch(error) {notifyError(error);}
-  }
-
-  closeScopeView() {
-    const snapshot=props().snapshot;
-    const processes=snapshot.panes.filter(p=>p.terminal&&p.state==='live');
-    const lines=snapshot.panes.filter(p=>p.terminal).map(p=>`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended; only its view closes.':'process ends.'}`);
-    for(const pane of snapshot.panes.filter(p=>p.mod&&!p.terminal)) lines.push(`Pane ${pane.pane}: only its view closes; no terminal targeted.`);
-    let preserved=[];
-    try {preserved=this.closeSnapshot(snapshot.kind,snapshot.id).preserved;} catch {}
-    for(const p of preserved) lines.push(`${p.terminal} on ${machineOf(p.terminal)??'local'}: ${p.state==='finished'?'already ended':'parked inspection process preserved'}; only its view closes.`);
-    if(!processes.length) lines.push('No terminal process ends.');
-    lines.push('Firstmate obligations remain unchanged.');
-    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
-      .child(div().text_size(20).child(`Close ${snapshot.kind}?`))
-      .child(div().flex_1().min_h(0).overflow_y_scrollbar().text_size(12).child(lines.join('\n')))
-      .child(h_flex().gap(10).justify_end()
-        .child(button('cancel-close','Cancel',()=>closeOverlay(props().overlay)))
-        .child(button('confirm-close',processes.length?'End processes and close':'Close view',()=>this.closeScope(),true)));
-  }
-
   paneHeader() {
     const pane=panes().find(p=>p.pane===props().pane);
     if(!pane) return div();
     const terminal=terminals().find(t=>t.address===pane.terminal);
     const coordinator=terminal&&config().coordinators.find(r=>matches(terminal,r));
-    const supervisor=terminal&&isWorker(terminal);
+    const character=coordinator?`crew-${crewOf(coordinator).captain}`:terminal&&isWorker(terminal)?config().characters?.[identity(terminal)]?.art??'pirate':null;
+    const title=character?`${character.replace(/^crew-/,'').replaceAll('-',' ')} · ${label(terminal)}`:pane.title||pane.program?.name||'Terminal';
+    const action=(command,args)=>()=>{if(paneReady(pane.pane)) run(command,args);};
     return h_flex().size_full().px(10).gap(8).items_center().bg('#1b3339').text_color('#dbe8e2')
-      .when(Boolean(coordinator),el=>el.child(art(`crew-${crewOf(coordinator).captain}`,terminal.status,30)))
-      .child(div().flex_1().truncate().text_size(11).child(coordinator?`${crewOf(coordinator).captain} · ${label(terminal)}`:supervisor?`${label(terminal)} · open inspection from the fleet`:pane.mod?'Inspection only':`${terminal?label(terminal):pane.title} · Your terminal`))
-      .when(paneReady(pane.pane)&&panes().filter(p=>p.tab===pane.tab).length>1,el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>run(`one-piece.focus-pane:${pane.pane}`))))
-      .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`pane-menu-${pane.pane}`,'···',()=>{if(paneReady(pane.pane))this.openActions('pane',{pane:pane.pane});})));
+      .on_click(action('pane.focus',{pane:pane.pane}))
+      .when(Boolean(character),el=>el.child(art(character,terminal.status,30)))
+      .child(div().truncate().text_size(11).child(title))
+      .child(div().flex_1().truncate().text_size(10).text_color('#a2bab7').child(pane.cwd??''))
+      .when(paneReady(pane.pane),el=>el
+        .child(button(`split-right-${pane.pane}`,svg('mods/pane/split-right.svg').size(14),action('pane.split',{pane:pane.pane,direction:'right'})).tooltip('Split right').accessibility_label('Split right'))
+        .child(button(`split-down-${pane.pane}`,svg('mods/pane/split-down.svg').size(14),action('pane.split',{pane:pane.pane,direction:'down'})).tooltip('Split down').accessibility_label('Split down'))
+        .child(button(`zoom-${pane.pane}`,svg(`mods/pane/${pane.zoomed?'unzoom':'zoom'}.svg`).size(14),action('pane.zoom',{pane:pane.pane})).tooltip('Toggle zoom').accessibility_label('Toggle zoom'))
+        .child(button(`close-${pane.pane}`,svg('mods/pane/close.svg').size(14),action('pane.close',{pane:pane.pane})).tooltip('Close terminal').accessibility_label('Close terminal')));
   }
 
   render(cx) {
     switch(props()?.view) {
-      case 'actions':return this.actionsView();
       case 'fleet-menu':return this.fleetMenu();
-      case 'tabs':return this.tabsView();
-      case 'rename-tab':return this.renameTabView();
-      case 'close-scope':return this.closeScopeView();
       case 'header':return this.header();
       case 'pane':return this.paneHeader();
-      case 'inspect':return this.inspectView();
+      case 'inspect':return this.legacyView();
       case 'setup':return this.setupView(cx);
       case 'records':return this.recordsView();
       case 'firstmates':return this.firstmatesView();
       case 'crew-appearance':return this.crewView();
-      case 'presets':return this.presetsView();
       default:return this.sidebar(cx);
     }
   }

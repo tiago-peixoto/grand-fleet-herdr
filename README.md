@@ -11,6 +11,7 @@ The native mod is under verification and is not ready to replace your daily layo
 ## Start here
 
 - [VISION.md](VISION.md) defines the approved acceptance policy.
+- [Terminal simplification](docs/UI-SIMPLIFICATION.md) defines writable crewmate terminals and ordinary personal terminals.
 - [Prototype specification](docs/PROTOTYPE-SPEC.md) records accepted choices, proposed operating rules, and native integration checks.
 - [Prototype inventory](docs/PROTOTYPE.md) maps every retained design stage and explains what differs from the accepted decisions.
 - [Artwork inventory](docs/ARTWORK.md) records current coverage, source prompts, and historical reference assets.

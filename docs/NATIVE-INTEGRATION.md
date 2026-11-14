@@ -1,5 +1,25 @@
 # Native verification
 
+## Current terminal model, 2026-11-14
+
+The author approved writable crewmate terminals and ordinary personal terminals.
+Each crewmate opens its existing process in a native Herdr terminal with a character header.
+Add terminal uses that workspace’s crewmate launch directory on the same machine, even when a personal terminal has focus.
+Native tabs, splitting, zoom, Files, Changes, and closing replace custom arrangement and inspection controls.
+Old inspection workspaces migrate on selection without restarting the crewmate or removing personal terminals.
+
+All 42 JavaScript checks and 33 Python checks passed.
+Automated controller checks cover adoption, identity, machine ownership, launch directories, and navigation races.
+The native initial-render check passed in Grand Fleet Lab.
+The lab loaded the new terminal headers and native tabs without reported runtime errors.
+Direct typing, migration, and launch-directory checks in the native interface remain unverified.
+Mouse validation stopped after two actions were rejected because the application changed during testing.
+
+## Historical verification before simplification
+
+The evidence below describes older versions and does not verify the current terminal model.
+Read-only inspection, presets, restoration, and custom close confirmation are retired.
+
 The native mod is experimental and has not passed the complete acceptance policy in VISION.md.
 A real firstmate worker exposed a failing attention check: an unresolved decision appeared as Finished and did not enter the attention list.
 Earlier blocked-status fixture checks do not establish correct presentation of durable firstmate decisions.

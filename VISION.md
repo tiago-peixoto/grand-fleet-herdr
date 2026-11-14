@@ -16,28 +16,31 @@ The extension remains optional, and removing it leaves firstmate's contracts and
 ## A calm fleet keeps firstmate within reach
 
 The primary path leads to firstmate, which carries the captain's direction and gathers worker reports.
-Worker blockers appear immediately with an inspection action, without waiting for firstmate's summary or bypassing permission gates.
+Worker blockers appear immediately with an action that focuses their terminal.
 Machine aliases may use islands such as Water 7 and Wano, with real machine identities visible beside them.
 All machines remain visible in the sidebar, and each coordinator appears under its actual machine.
 A ship only expands or collapses its characters.
 Luffy stays first beneath Sunny and opens the coordinator session.
-Worker selection opens the worker's own workspace for inspection without making worker supervision the captain's routine burden.
-Supervised worker and secondmate views provide inspection, not alternate command destinations or direct takeover.
-The captain directs the supervised fleet through firstmate.
+Worker selection focuses its single writable terminal in its own workspace.
+Worker and secondmate terminals accept direct typing, as explicitly approved by the captain.
+Firstmate remains the usual conversation, while the captain can type directly into any crewmate terminal.
 
 ## Independent work stays independent
 
 A coordinator workspace starts with one coordinator session and can hold personal terminals created by the captain.
 Personal terminal commands do not become messages or delegated tasks for firstmate or its workers.
 Independent agents contribute to attention counts with an Independent label, without becoming supervised workers.
-Workers retain their own workspaces, separate from personal terminals.
+Workers retain their own workspaces, where the captain can also open ordinary personal terminals.
 A grid keeps independent work beside the coordinator without transferring ownership between them.
 Changing selection or enlarging a pane preserves running sessions.
 Herdr owns terminal reconnection.
-Add terminal is the single visible action for creating a personal shell in a coordinator workspace.
+Add terminal opens an ordinary Herdr tab in the selected crewmate's original folder on the same machine.
+Herdr supplies the tab bar, terminal input, splitting, resizing, zoom, and closing behavior.
+Crewmate headers show character artwork and the actual session name.
+Personal terminal headers remain ordinary terminal headers without a character assignment.
 The mod does not track missing personal shells or offer a separate Restore layout workflow.
-A new shell is a new process and does not restore a previous command, directory, or conversation.
-Close identifies the terminal and explains that its process ends.
+A new shell is a new process and does not restore a previous command or conversation.
+Native Herdr close controls end terminal processes according to Herdr's normal behavior.
 Closing a view or session does not claim that firstmate's durable obligations have been completed or discarded.
 
 ## Presentation reflects authority and durable truth
@@ -58,7 +61,7 @@ Vendor independence does not require identical interfaces or a portable display 
 
 Custom One Piece pixel artwork provides one consistent visual language.
 Idle workers sleep, working workers walk, and workers needing attention sit.
-A sitting worker indicates a condition to understand, not an instruction to bypass firstmate and intervene directly.
+A sitting worker indicates that its terminal needs the captain's attention.
 Each character retains the actual worker name or task beside it.
 Character assignments remain stable for surviving workers as other workers enter or leave.
 Sunny and Luffy establish the initial crew, with Chopper, Franky, and numbered generic Pirates supporting workers.
@@ -77,6 +80,7 @@ Personal preferences, credentials, and fleet records remain private to the capta
 The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.
 The author approved this vision on 2026-11-12.
 On 2026-11-14, the author approved the simplified interface and replaced Restore layout with Add terminal.
+The author then approved one writable terminal per crewmate and ordinary Herdr controls, replacing the inspection-only design.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
-A change should be resisted when visual convenience creates competing command paths, hides uncertainty, assumes consent, or makes firstmate depend on this interface.
+A change should be resisted when visual convenience hides uncertainty, assumes consent, or makes firstmate depend on this interface.

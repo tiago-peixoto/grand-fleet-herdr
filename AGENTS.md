@@ -15,10 +15,11 @@ Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 ## Resolve design conflicts
 
 VISION.md takes precedence over docs/PROTOTYPE-SPEC.md and the browser simulation.
-The snapshot's proposed direct worker input conflicts with inspection-only supervised worker and secondmate views.
+The author explicitly approved direct typing into worker and secondmate terminals on 2026-11-14.
+Use ordinary Herdr terminal controls with crewmate artwork in terminal headers.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.
-Native terminal embedding alone does not prove inspection-only access.
-Preserve independent personal terminals and the accepted Unsupervised mode without adding another command path into the supervised fleet.
+Do not recreate the retired inspection-only workspace or custom arrangement workflows.
+Preserve independent personal terminals and the accepted Unsupervised mode.
 
 ## Native development
 
@@ -35,6 +36,6 @@ Treat role registration details in the prototype specification as proposals unti
 Run `git diff --check` for every change.
 For prototype behavior changes, rebuild, open prototype/index.html with chrome-devtools-axi, and run `python3 prototype/flow/check-browser.py`.
 For a native mod, run `herdr-app check <mod-folder>` and inspect its behavior in the running application.
-The native check only exercises initial rendering and cannot establish session preservation, remote recovery, or inspection-only access.
+The native check only exercises initial rendering and cannot establish session preservation, remote recovery, or correct terminal adoption.
 Record those limits explicitly when reporting results.
 Review boards and verdict transcripts stay outside this repository.

@@ -12,8 +12,6 @@ Use a separate test home until the acceptance review confirms release and render
 
 Run commands below from this repository with Python 3.9 or newer.
 The installer uses only Python's standard library.
-Grid presets also require `python3` on the local application's PATH at runtime.
-The helper uses the local `hc connect` command to address either machine, so remote machines do not need Python for presets.
 It copies `mods/one-piece/` and `layouts/one-piece.json` from the checkout containing the script, regardless of your current directory.
 It also adds two close shortcuts to the existing `keys.json`, scoped to the One Piece layout.
 It excludes hidden source entries, `node_modules`, Python bytecode caches, `jsconfig.json`, and `.d.ts` declarations that Herdr generates.
@@ -94,9 +92,10 @@ Repeat these steps for each participating home.
 Reopening the same connection lets you correct its paths.
 
 The reader matches each record against the worker's machine, home label, task label, terminal address, and creation timestamp.
-Open decisions display **Needs you** and add an inspection entry to the attention list.
+Open decisions display **Needs you** and add a terminal entry to the attention list.
 Resolve decisions through firstmate's normal workflow.
-The mod does not answer them or send worker input.
+The mod does not answer decisions automatically.
+You can type directly into the worker terminal.
 A verified completed task displays **Task complete**.
 A terminal that merely finished a model turn displays **Turn complete**.
 
@@ -120,13 +119,14 @@ The installer adds these entries inside `keys.json`:
 ```
 
 This snippet describes the additions, not a replacement keys file.
-The commands route close requests through the One Piece mod.
+The commands forward directly to Herdr’s native tab.close and pane.close actions.
+Herdr controls their confirmation and process-ending behavior.
 The installer preserves global, terminal, other-layout, and custom bindings.
 Herdr gives layout bindings precedence over global bindings.
 Applicable terminal and mod-specific bindings take precedence over these layout shortcuts.
 An existing terminal or mod-specific override can therefore bypass these close commands.
 The installer preserves those overrides.
-It does not guarantee confirmation for other commands, menus, or direct `tab.close` calls.
+The mod adds no separate close confirmation.
 
 **Editing `keys.json` stops Herdr from automatically replacing shipped shortcuts on upgrades.**
 Herdr considers any edit, including whitespace, to make the entire file user-maintained.

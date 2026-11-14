@@ -1,5 +1,9 @@
 # Native acceptance review
 
+The 2026-11-14 [terminal simplification](UI-SIMPLIFICATION.md) supersedes inspection-only input, presets, restoration, and custom close confirmation below.
+The table records historical checks, not acceptance of the current terminal model.
+Current native validation remains incomplete as recorded in [Native verification](NATIVE-INTEGRATION.md#current-terminal-model-2026-11-14).
+
 Reviewed on 2026-11-13 against VISION.md, the approved prototype, the current source, and the native verification record.
 The implementation is not ready for final acceptance.
 Passing checks below establish their stated scope only.
