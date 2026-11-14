@@ -1,17 +1,19 @@
 # Native repaint reproduction
 
-Herdr App 0.1.15 intermittently loses static text after zooming a mod pane or restoring its grid.
-The defect also occurs in the minimal panel below, without artwork, terminal output, or polling.
-This narrows the investigation to native layout and repaint behavior but does not establish the runtime cause.
+Native captures of Herdr App 0.1.15 intermittently omitted static text after zooming a mod pane or restoring its grid.
+Captures of the minimal panel below showed the same discrepancy without artwork, terminal output, or polling.
+These observations do not independently establish that text disappeared on the physical display.
+Later checks passed, and the runtime cause remains unknown.
+The [controlled reconnection comparison](NATIVE-INTEGRATION.md#controlled-default-and-mod-reconnection-comparison) did not reproduce a display defect.
 
-## Reproduce
+## Historical reproduction procedure
 
 Create a disposable mod with this main.js and a mod.json containing `{"place":"none"}`.
 Open the mod as a tab, then split a personal terminal beside it.
 Use the pane header to zoom the mod and restore its grid.
-Static text can disappear while the colored rectangle remains visible.
-Clicking the panel's interactive rectangle requests a repaint and restores its text.
-The defect also occurred when the mod already held focus before zooming.
+Historical captures omitted static text while retaining the colored rectangle.
+Clicking the panel's interactive rectangle requested a repaint, after which captures showed its text again.
+The capture discrepancy also occurred when the mod already held focus before zooming.
 
 ```js
 import { View, div } from 'gpui-kit';

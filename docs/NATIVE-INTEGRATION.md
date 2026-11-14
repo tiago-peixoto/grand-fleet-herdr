@@ -1843,3 +1843,18 @@ These checks did not reproduce the historical first-click miss at compact size.
 The installed Herdr guidance documents `scroll_to_item` as revealing a direct child with the smallest necessary movement.
 The mod supplies one direct child per machine and uses that child's index.
 No navigation code change is justified by these passing samples.
+
+### Source check of machine scrolling
+
+The local Herdr source checkout identifies commit `9950887361af3ba218b9ce7a347cb8ec7b66c71d` as tag `v0.1.15`.
+Its `vendor/gpui-kit/crates/shell/src/scroll.rs` and `entities.rs` have no local changes.
+The scrollbar wrapper consumes each pending child index once during rendering.
+It measures the requested direct child before painting and schedules any offset change for the next frame.
+Its `reveal_delta` function aligns oversized children to the viewport's start, including partially visible machine sections.
+This supports the observed return to the local heading and rejects partial visibility as an explanation for the historical miss.
+
+If child bounds are unavailable, the callback returns after consuming the request.
+That is a possible failure path in the source, not an observed cause of the historical miss.
+No evidence currently shows that this path ran in the installed application.
+Further diagnosis needs a failing click correlated with request consumption, child bounds, and the scheduled offset change.
+Repeated passing clicks cannot provide that evidence, and no retry workaround was added.
