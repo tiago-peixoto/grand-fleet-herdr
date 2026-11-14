@@ -32,7 +32,7 @@ The mod does not guess a relationship from names, directories, or process parent
 
 [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484) was rejected as an architectural dependency and closed.
 Earlier patched-producer evidence is historical and does not validate this replacement.
-Complete local and remote workflows with unmodified Firstmate remain required.
+Unmodified Firstmate passed local and physical remote task, input, navigation, reconnect, and cleanup checks.
 
 Selecting a placed character focuses its native terminal.
 An unplaced character opens Herdr's writable preview, including its native keep action.
@@ -113,4 +113,5 @@ Raising the lab window allowed direct typing, and the remote test program echoed
 The unavailable-state screenshot remains inconclusive, so offline presentation remains unverified.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
 The current coordinator model resolves that design choice through explicit mod-owned associations.
-The current implementation still needs complete live verification with unmodified Firstmate.
+Current stock verification supersedes this historical candidate record.
+See [Native verification](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct-input-2026-11-14) for its evidence and limits.

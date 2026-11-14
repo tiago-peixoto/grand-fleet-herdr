@@ -25,7 +25,8 @@ The ship's appearance menu exposed Edit captain link and Unlink captain.
 Unlinking restored the ordinary terminal entry without closing the session.
 This verifies the menu interaction, not a complete lifecycle with unmodified Firstmate.
 The stock task and direct-input checks below supersede that limited setup check.
-Cleanup and reconnect with these new fixtures remain outstanding.
+Stock reconnection passed in both layouts as recorded below.
+Stock cleanup passed locally and remotely as recorded below.
 
 ## Stock Firstmate tasks and direct input, 2026-11-14
 
@@ -61,6 +62,49 @@ After installing the correction in the isolated home, Enter selected the first t
 Captain only received focus in that stage, and Tab visibly moved focus to the next group.
 Cancel dismissed the dialog without changing the stored associations.
 The command comparison covers both stages, returning to terminal choices, editing, and an empty terminal list.
+
+## Stock transport recovery, 2026-11-14
+
+The same stock local and remote captains and workers survived an isolated remote transport interruption in each layout.
+Both comparisons retained all four terminal creation timestamps, shell processes, and foreground processes.
+The remote worker retained its report and `STOCK-REMOTE-DIRECT-731` response.
+During disconnection, Grand Fleet displayed Unavailable and removed remote character artwork.
+After recovery, the ship, captain, and worker returned.
+Direct native keyboard input produced `STOCK-RECOVERED-731` in Grand Fleet and `STOCK-DEFAULT-RECOVERED-731` in default Herdr.
+The native window displayed the retained transcript and each new response.
+Application status reported no errors after recovery.
+Receipts are stored in the ignored `.superpowers/native/stock-fleet-reconnect.json` and `stock-default-reconnect.json` files.
+These checks cover connection loss while the remote service remains alive.
+They do not cover service restart or machine shutdown.
+The isolated lab uses the recovery source build documented in [Installation](INSTALL.md#core-build-used-for-current-recovery-verification).
+A published recovery build remains unverified.
+
+## Stock cleanup and final review, 2026-11-14
+
+Normal stock teardown removed local worker `t43` and remote worker `op-hz-lab/t2b` after the completed task and reconnect checks.
+Neither teardown required a force option, source patch, or path correction.
+Both released the disposable worktree reservation and retained the completed report.
+The local receipt confirms unchanged source, home configuration, report bytes, and all 94 other terminal identities.
+Local teardown reported inactive monitoring in this disposable fixture.
+The remote receipt confirms 876 matching source files, an empty wake queue, and the surviving captain at turn 43.
+The remote Claude launcher hash, target, and inode numbers remained unchanged.
+The native sidebar retained both captains and removed both workers after cleanup.
+Receipts remain in `.superpowers/native/stock-local-cleanup.json` and `/tmp/grandfleet-stock-evidence-stLZKnv2/cleanup-receipt.json` in the test environment.
+
+Final review reproduced raw error status selecting sleeping artwork in the rendering harness.
+The adapter now normalizes error to native blocked presentation before choosing artwork, attention text, color, and accessibility labels.
+The regression failed before the correction and passed afterward at normal and compact widths.
+All nine JavaScript tests and the native command comparison passed on commit `97e0b40`.
+The refreshed isolated installation passed its native loading check and reopened without application errors.
+The 42 Python tests passed before this presentation-only correction.
+
+The reviewed evidence supports the implementation objective and its reviewable pull request.
+It does not establish exact pixel equivalence with the browser prototype.
+Creation, splits, zoom, and closing comparisons primarily used native commands.
+Pointer checks covered plus-menu creation in the mod, panels in both layouts, and local and remote resizing in both layouts.
+A complete pointer and keyboard comparison of every native terminal control remains unverified.
+The final error-status correction has harness coverage and a native loading check, but no fresh physical error-state capture.
+No release or installation into the daily application was performed.
 
 ## Historical patched-producer evidence
 
@@ -121,29 +165,7 @@ Independent checks confirmed that terminal `t41` no longer existed, the lease wa
 This recovered the disposable fixture without changing shared source or pool records manually.
 It does not establish that the upstream path defect is fixed.
 
-## Current verification, 2026-11-14
-
-Disposable local and physical remote shells passed a four-case comparison between default Herdr and the current One Piece layout.
-Native terminal creation inherited the focused terminal's machine and folder in each case.
-New shells received no Firstmate character labels.
-Printed output, creation timestamps, and process identities survived worker navigation, zoom, and layout changes.
-These comparisons invoked native commands through the command-line interface rather than pointer controls.
-
-In the native window, selecting Luffy focused the registered coordinator terminal.
-Selecting Chopper focused the worker's separate workspace.
-Direct keyboard input produced a printed marker in each terminal.
-Collapsing the ship hid its characters without changing the selected terminal.
-Expanding the ship restored those characters.
-
-A pointer click on the native plus menu created an ordinary terminal in the coordinator workspace.
-The new terminal inherited the focused coordinator's current folder and accepted directly typed input.
-The test closed only that disposable terminal through the native close command.
-Files displayed repository files, and Changes displayed the actual eleven changed files and a diff.
-A later pointer comparison opened Files and Changes in both default Herdr and the One Piece layout.
-Both layouts displayed the same repository files and fifteen changed files after the documentation updates.
-The Changes button also closed its panel in both layouts.
-Pointer clicks opened the native Settings and Add machine dialogs in the One Piece layout.
-Escape dismissed each dialog without changing settings or adding a connection.
+## Historical registration fixtures
 
 A separate live fixture invoked patched Firstmate startup with genuine terminal identities supplied by the lab terminal service.
 The coordinator acquired its lock and published canonical registration labels automatically.
@@ -177,6 +199,30 @@ Releasing the simulator and its parent ended the disposable terminal with exit c
 Evidence is recorded in `firstmate-registration-evidence-2bhnulu2/phases/review-registration` outside the repository.
 This confirms successful registration after the review fixes, but not live refusal of inherited identity or the complete agent task lifecycle.
 
+## Current verification, 2026-11-14
+
+Disposable local and physical remote shells passed a four-case comparison between default Herdr and the current One Piece layout.
+Native terminal creation inherited the focused terminal's machine and folder in each case.
+New shells received no Firstmate character labels.
+Printed output, creation timestamps, and process identities survived worker navigation, zoom, and layout changes.
+These comparisons invoked native commands through the command-line interface rather than pointer controls.
+
+In the native window, selecting Luffy focused the registered coordinator terminal.
+Selecting Chopper focused the worker's separate workspace.
+Direct keyboard input produced a printed marker in each terminal.
+Collapsing the ship hid its characters without changing the selected terminal.
+Expanding the ship restored those characters.
+
+A pointer click on the native plus menu created an ordinary terminal in the coordinator workspace.
+The new terminal inherited the focused coordinator's current folder and accepted directly typed input.
+The test closed only that disposable terminal through the native close command.
+Files displayed repository files, and Changes displayed the actual eleven changed files and a diff.
+A later pointer comparison opened Files and Changes in both default Herdr and the One Piece layout.
+Both layouts displayed the same repository files and fifteen changed files after the documentation updates.
+The Changes button also closed its panel in both layouts.
+Pointer clicks opened the native Settings and Add machine dialogs in the One Piece layout.
+Escape dismissed each dialog without changing settings or adding a connection.
+
 The current sidebar also passed a physical remote transport interruption and recovery comparison against default Herdr.
 The disposable remote test program retained creation timestamp, shell process, foreground process, and earlier output in both layouts.
 Direct keyboard input produced a new echo after each recovery, visible in the native window and terminal history.
@@ -204,9 +250,9 @@ Native captures showed the markers and resized boundaries in both layouts.
 Only those disposable shells were closed, and the original layout and captain focus were restored without reported errors.
 Evidence lives in the ignored `.superpowers/native/remote-pointer-evidence.json`.
 
-Current complete-flow acceptance remains open.
-Real local and remote task execution, automatic grouping, and direct input passed.
-Remote normal cleanup passed, and local cleanup passed after the documented fixture path correction.
+The patched task lifecycle is historical evidence only.
+Current stock task and reconnect evidence appears above.
+Native control comparisons remain applicable because the mod delegates those controls to Herdr.
 
 Independent review found two navigation regressions, both reproduced in the native lab before changing code.
 The native sidebar showed the unregistered `thin-child` terminal, while the fleet sidebar omitted it.

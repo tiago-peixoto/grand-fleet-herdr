@@ -6,9 +6,9 @@ The adapter does not create worker spaces, adopt terminals, connect firstmate ta
 Read the [thin presentation design](THIN-MOD.md) for the current contract.
 
 This implementation remains experimental.
-Use a separate test home while verification of the mod-only association remains incomplete.
+Use a separate test home before considering your daily configuration.
 The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
-Earlier local and remote flows used a rejected Firstmate patch and do not validate the current association.
+Current local and remote checks used unmodified Firstmate, including normal cleanup.
 The documented path and Core release limitations still apply.
 
 ## Choose an app home

@@ -1,6 +1,7 @@
 # Native acceptance review
 
-The current fleet sidebar has not passed complete acceptance.
+The implementation objective is verified for the recorded isolated workflows.
+Release acceptance remains separate and subject to the limitations below.
 Read [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for observed behavior and limits.
 The historical table describes retired implementations and must not be used as the current acceptance verdict.
 
@@ -8,14 +9,14 @@ The historical table describes retired implementations and must not be used as t
 
 This audit covers the approved native-flow objective, not the retired inspection model.
 Recorded runtime evidence applies to its tested source and fixtures only.
-Registration changes made after those fixtures require fresh verification.
+Current stock checks supersede the rejected registration fixtures.
 
 | Requirement | Current evidence | Status or remaining proof |
 | --- | --- | --- |
 | Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
-| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Stock local and remote tasks, association, direct typing, and navigation passed; cleanup and reconnect remain |
+| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Stock local and remote tasks, association, direct typing, navigation, reconnect, and normal cleanup passed |
 | Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
-| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Real local and remote task flows passed; local cleanup required the documented fixture correction |
+| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Stock local and remote task flows passed without path corrections |
 | Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
 | Native Settings, Add machine, plus, Files, and Changes | Recorded pointer checks in the current native window | No known functional gap in tested controls |
 | Personal terminals inherit folder and machine without character assignment | Four-case default/mod comparison on local and physical remote machines | No known functional gap in tested cases |
@@ -25,26 +26,30 @@ Registration changes made after those fixtures require fresh verification.
 | Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
 | Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
-| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; stock task runtime checks passed, with final lifecycle checks pending |
+| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; stock lifecycle checks passed and review corrections have regression coverage |
 
-At mod commit `8a5da90`, all 9 JavaScript tests and 42 Python tests passed.
+All 9 JavaScript tests and the command comparison passed on commit `97e0b40`.
+All 42 Python tests passed before its presentation-only error-status correction.
 The installed native loading check and command parity comparison also passed.
 These checks cover grouping, artwork, installation, compatibility, and emitted native actions.
 They do not replace the recorded interactive workflow checks.
 
 See [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for the runtime observations and their limits.
 See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.
-The full Firstmate lifecycle remains required, not optional follow-up work.
+Stock cleanup and reconnect completed the tested lifecycle without modifying Firstmate.
 
-## Current acceptance gaps
+## Remaining verification limits
 
-- Finish cleanup and reconnect checks with the new unmodified Firstmate fixtures.
-  Stock task completion, association, direct typing, and navigation passed locally and on the physical remote server.
-  See [stock task evidence](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct-input-2026-11-14).
-- Finish the final review of the mod pull request after those checks.
 - Before release acceptance, validate a published Herdr Core build containing the recovery fix.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
   The implementation goal delivers a reviewable pull request and does not authorize a release or daily installation.
+- Complete pointer and keyboard comparisons for all native terminal controls remain unverified.
+  Command comparisons cover creation, splits, zoom, and closing.
+  Recorded pointer checks cover mod plus-menu creation, panels in both layouts, and resizing locally and remotely in both layouts.
+- Captures establish the approved palette, artwork, hierarchy, and native controls, but not exact pixel equivalence with the prototype.
+- The error-state artwork correction passed the rendering regression and native loading check without a fresh physical error-state capture.
+- Independent coordinators can share a stock worker-group label.
+  Leave such groups unlinked and use native worker navigation rather than assigning ambiguous workers to a captain.
 
 Historical local and remote Claude tasks used the rejected Firstmate patch.
 Their automatic grouping does not establish acceptance of the mod-only replacement.
@@ -59,7 +64,7 @@ Local and remote captures confirm the approved sidebar hierarchy and artwork alo
 
 The 2026-11-14 [terminal simplification](UI-SIMPLIFICATION.md) supersedes inspection-only input, presets, restoration, and custom close confirmation below.
 The table records historical checks, not acceptance of the current terminal model.
-Current native validation remains incomplete as recorded in [Native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14).
+Current validation and its limits are recorded above and in [Native verification](NATIVE-INTEGRATION.md#stock-cleanup-and-final-review-2026-11-14).
 
 Reviewed on 2026-11-13 against VISION.md, the approved prototype, the current source, and the native verification record.
 The implementation is not ready for final acceptance.

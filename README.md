@@ -13,9 +13,8 @@ The mod stores this choice without changing Firstmate or terminal metadata.
 It does not infer relationships from names, folders, or process parenting.
 
 This project remains experimental.
-The mod-only association has automated checks and a native captain-only menu check.
-Complete local and remote workflows with unmodified Firstmate remain unverified.
-Earlier lifecycle evidence used a rejected Firstmate patch and does not establish compatibility with this replacement.
+Unmodified Firstmate completed local and physical remote tasks, direct input, navigation, reconnection, and normal cleanup in the isolated lab.
+The [acceptance review](docs/ACCEPTANCE.md) records test coverage and remaining release limitations.
 Use a separate test home before considering your daily configuration.
 
 ## Start here
