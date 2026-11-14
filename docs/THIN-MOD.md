@@ -20,13 +20,13 @@ A worker requires `firstmate.task` and no coordinator role.
 Multiple coordinators for one home produce a conflict instead of guessed ownership.
 Legacy `firstmate.home` tags alone do not establish membership because distinct home paths can share a tag.
 Registration never changes process parenting or lifetime.
-The Firstmate producer change remains unpublished.
+The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
 A local live startup fixture verified automatic coordinator registration, competing-owner refusal, and stale-role transfer.
 That fixture used a simulated Codex process.
 Separate local and remote producer fixtures verified worker labels and survival after their creators exited.
 Those simulated fixtures alone do not prove complete sidebar discovery through a real Firstmate task lifecycle.
 Subsequent real Claude tasks verified automatic grouping, native navigation, and direct input locally and remotely.
-See [current native verification](NATIVE-INTEGRATION.md#real-remote-terminal-verification-2026-11-14) for evidence and remaining cleanup limits.
+See [current native verification](NATIVE-INTEGRATION.md#real-remote-terminal-verification-2026-11-14) for evidence and the local cleanup correction.
 Manually labelled lab fixtures verify consumption, not automatic registration.
 
 Selecting a placed character focuses its native terminal.

@@ -4,6 +4,29 @@ The current fleet sidebar uses explicit Firstmate registration and native termin
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
 
+## Producer delivery verification, 2026-11-14
+
+[Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484) publishes the explicit coordinator registration and worker home labels.
+Its implementation commit is `cfc867b4c3a25938282906ab457a75ff542035de` on upstream base `427056c4181c41074ad24f051f79919330df0fa5`.
+The delivered head `cad75badf2fce48efea7d769f01abbbab9108ed4` adds two timeout documentation corrections without changing implementation.
+The implementation patch matches the producer used for the recorded local and remote tasks.
+Both patches have stable patch ID `598a89a33349880126316f06f7952d1b9c27c31c`.
+Patch equivalence establishes the change, not identical behavior across different bases.
+
+The publication pipeline independently passed review and live tests on the upstream base.
+Real Claude primaries exercised successful registration, inherited-marker refusal, worker home labels, and timeout cleanup in a disposable local core.
+Stale-role cleanup preserved task terminals and terminals with different homes.
+Registration failure warned while startup continued.
+Timeout cleanup released the claim lock and terminated its descendants.
+The pipeline did not repeat the remote lifecycle on the upstream base.
+Remote evidence remains the recorded physical-server workflow with the equivalent implementation patch.
+
+Disposable Claude processes disabled updates for this validation.
+The user launcher retained its target and inode before and after lab cleanup, and its version command succeeded afterward.
+Documentation checks corrected two stale timeout references, and lint passed.
+GitHub's full-suite check currently requires a maintainer to apply the `full-ci` label for this fork contribution.
+The gated test jobs did not run, so their result remains unverified.
+
 ## Real remote terminal verification, 2026-11-14
 
 The patched producer automatically registered a real Claude coordinator on `firstmate-vps` as `op-hz-lab/t27`.
@@ -74,7 +97,7 @@ It verified coordinator registration, matching worker home labels, duplicate ref
 Independent inspection confirmed those metadata and lifetime assertions.
 Both remote terminals exited successfully before cleanup, and the private terminal service stopped.
 This remote fixture also used a simulated Codex process and the producer API rather than the full task lifecycle.
-The producer change remains unpublished.
+The producer change is now published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
 
 A subsequent run of `tests/fm-backend-hc-appdetect-smoke.test.sh` passed against the producer worktree containing the registration review fixes.
 It created the private core `fm-hclab-appdetect-91874-8748` and exercised actual `fm-spawn.sh` execution with harmless shell commands.

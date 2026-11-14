@@ -25,7 +25,7 @@ Registration changes made after those fixtures require fresh verification.
 | Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
 | Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
-| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Finish producer review, delivery, final checks, and dependency links |
+| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Producer PR 8484 is published; full-suite CI awaits the required label |
 
 At mod commit `8a5da90`, all 9 JavaScript tests and 42 Python tests passed.
 The installed native loading check and command parity comparison also passed.
@@ -38,10 +38,11 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
 
 ## Current acceptance gaps
 
-- Deliver the producer change alongside the dependent mod.
-  Review and validation are running against the contribution rebased onto upstream Firstmate.
-  Confirm that the delivered registration behavior matches the producer used for the real local and remote tasks.
-- Finish the dependency audit and update the pull request with the producer contribution link.
+- Complete the gated GitHub checks for [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
+  Review, live local validation, documentation, and lint passed on the upstream contribution.
+  The full suite requires a maintainer to apply the `full-ci` label for fork contributions.
+  The [producer verification record](NATIVE-INTEGRATION.md#producer-delivery-verification-2026-11-14) records patch equivalence and the local versus remote evidence.
+- Finish the final pull request audit after the dependency checks complete.
   Current mod tests, native loading, command comparisons, and interactive checks passed within their recorded scopes.
 - Before release acceptance, validate a published Herdr Core build containing the recovery fix.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.

@@ -71,7 +71,7 @@ Use Herdr's existing Spaces, Agents, menus, and terminal controls.
 A registered firstmate coordinator receives ship and captain artwork, with explicitly associated workers below it.
 Registration requires matching canonical `firstmate.home.path` labels on the same machine.
 The coordinator also requires `firstmate.role=coordinator`, and workers require `firstmate.task`.
-The required Firstmate producer change remains unpublished.
+The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
 Do not use terminal names, folders, or native process parenting as substitutes for registration.
 Artwork assignment does not change terminal parent relationships or workspace labels.
 The ship control folds its crew.

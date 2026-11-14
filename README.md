@@ -8,7 +8,7 @@ Personal terminals remain ordinary Herdr terminals.
 
 Fleet membership requires explicit Firstmate registration on the same machine.
 The mod does not infer relationships from terminal names, folders, or process parenting.
-The required Firstmate producer change remains unpublished.
+The required Firstmate registration change is published in [Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484).
 Existing sessions without canonical registration remain ordinary Herdr sessions.
 
 This project remains experimental.
@@ -16,7 +16,7 @@ Current verification covers disposable local and remote terminal creation, navig
 The current sidebar passed remote connection-loss recovery and unavailable presentation in the isolated lab.
 Real local and remote Firstmate tasks passed automatic discovery, task execution, and direct worker input.
 Remote normal cleanup passed; local cleanup required a disposable-record correction for an existing Firstmate path bug.
-Producer delivery and the final dependency audit remain incomplete.
+The Firstmate contribution awaits its GitHub checks and upstream review.
 Use a separate test home before considering your daily configuration.
 
 ## Start here
