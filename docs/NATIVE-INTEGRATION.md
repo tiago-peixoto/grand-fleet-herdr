@@ -1858,3 +1858,35 @@ That is a possible failure path in the source, not an observed cause of the hist
 No evidence currently shows that this path ran in the installed application.
 Further diagnosis needs a failing click correlated with request consumption, child bounds, and the scheduled offset change.
 Repeated passing clicks cannot provide that evidence, and no retry workaround was added.
+
+## Task record refresh after closing a sidebar
+
+The remote worker `fm-remote-native-flow` displayed `Task records unavailable` while all three cached sources were more than three hours old.
+Invoking the installed reader directly on the remote machine returned the worker's completed task successfully.
+The installed mod matched the repository before the investigation.
+
+Herdr retains module state across layout closure.
+Its installed mod guide documents cancellation of unfinished tasks when their view closes.
+The v0.1.15 scheduler source states that cancelled promises remain unsettled.
+Consequently, the reader's `finally` block cannot release its module-level pending entry after cancellation.
+Reopened sidebars then skip that source indefinitely.
+
+A temporary 15-second delay before executing the reader made layout closure during a pending read reproducible in Grand Fleet Lab.
+The original implementation retained pending entries after cycling through layouts and returning to One Piece.
+The corrected implementation releases entries owned by the closing sidebar.
+An identity check prevents a late completion from removing a replacement entry.
+The cancellation flag also prevents that completion from publishing stale results.
+Closing another sidebar leaves the active reader unchanged.
+
+Repeating the same native layout sequence refreshed all three sources without errors.
+Temporary diagnostics were then removed from the installed mod.
+The installed production file and repository file had matching hashes.
+Selecting `op-hz-lab` visibly showed `Task complete` for `fm-remote-native-flow` with that production file installed.
+The two personal terminal panes remained visible with their existing output.
+No terminal input was sent during this check.
+
+Two regression tests failed before the fix and passed afterward.
+They cover a promise that never settles and a late response arriving after a replacement read starts.
+The existing test still covers shared reads between live sidebar copies.
+Local diagnostic evidence remains in `.superpowers/native/record-lifecycle-before.json` and `record-lifecycle-after.json`.
+This fix addresses stale task records, not the historical text-capture discrepancy or machine shortcut miss.

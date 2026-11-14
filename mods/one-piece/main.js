@@ -106,7 +106,7 @@ export default class Fleet extends View {
         continue;
       }
       if(recordReadsInFlight.has(key)) continue;
-      const pending={cancelled:false};
+      const pending={cancelled:false,owner:this};
       recordReadsInFlight.set(key,pending);
       cx.spawn(async c=>{
         const at=Date.now();
@@ -122,7 +122,7 @@ export default class Fleet extends View {
           if(!validRecordRows(read.rows)) throw new Error('Task records reader returned invalid data.');
         } catch(error) {read={...read,rows:[],error:String(error.message??error)};}
         finally {
-          recordReadsInFlight.delete(key);
+          if(recordReadsInFlight.get(key)===pending) recordReadsInFlight.delete(key);
           if(!pending.cancelled&&JSON.stringify(config().recordSources?.[key])===read.source) {
             const value=machines().some(m=>m.name===machine&&m.layout==='ready')?read:null;
             setShared('one-piece-records',{...(shared('one-piece-records')??{}),[key]:value});
@@ -356,6 +356,11 @@ export default class Fleet extends View {
 
   close() {
     this.closed=true;
+    // Herdr leaves cancelled promises unsettled, so their finally blocks cannot release these reads.
+    for(const [key,pending] of recordReadsInFlight) if(pending.owner===this) {
+      pending.cancelled=true;
+      recordReadsInFlight.delete(key);
+    }
     this.machineScroll?.release();
     activePlaceholders.delete(this.activePlaceholder);
   }

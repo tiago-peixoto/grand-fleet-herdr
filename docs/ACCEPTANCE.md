@@ -31,6 +31,8 @@ Fresh local and remote delegation passed within the isolated workflows described
 | Real firstmate delegation produces correctly discovered workers and preserves its authority and records | [Actual firstmate launch](NATIVE-INTEGRATION.md#actual-firstmate-worker-launch-and-inspection) verifies discovery, inspection, preserved records, backend input, and rejection of a mismatched task label | Passed for [fresh local delegation](NATIVE-INTEGRATION.md#fresh-delegation-through-the-native-firstmate-workspace) and the [fresh remote decision cycle](NATIVE-INTEGRATION.md#fresh-remote-delegation-and-decision-cycle) |
 | Match the approved visual experience on the user's large-screen workflow | [Visual comparison conclusion](NATIVE-INTEGRATION.md#visual-comparison-conclusion) covers hierarchy, artwork, terminal arrangements, controls, and attention at 1000 × 700 through 1728 × 994 | Appearance review passed for the recorded inventories; rendering reliability remains unresolved |
 
+Task records also recover after closing a sidebar during a read, as verified by [the native lifecycle reproduction](NATIVE-INTEGRATION.md#task-record-refresh-after-closing-a-sidebar).
+
 ## Next acceptance gates
 
 1. Resolve the earlier native rendering discrepancy.
@@ -71,6 +73,6 @@ Those completed checks are recorded in the requirements table rather than repeat
 
 ## Current automated check
 
-The reviewed integration and worker-return update passed 120 JavaScript tests and 39 Python tests.
+The sidebar lifecycle fix passed 122 JavaScript tests and 39 Python tests.
 The native initial-render check passed.
 These results do not close any runtime or visual gate marked incomplete above.

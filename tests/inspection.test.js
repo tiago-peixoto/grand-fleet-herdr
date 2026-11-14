@@ -113,6 +113,53 @@ test('sidebar copies share in-flight record reads and publish invalid data as un
   assert.equal(h.context.shared('one-piece-records')[key].rows.length,0);
 });
 
+test('reopening a sidebar refreshes records after its previous owner closes during a read',async()=>{
+  const h=host(),key=records.recordKey(null,'test');
+  h.config().recordSources={[key]:{root:'/firstmate',home:'/fleet'}};
+  h.context.appHome=()=>'/app';h.context.readTextFile=async()=> 'reader';
+  const tasks=[],responses=[];
+  h.cx.spawn=fn=>tasks.push(fn(h.cx));
+  h.context.exec=()=>new Promise(resolve=>responses.push(resolve));
+  h.controller.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  h.controller.close();
+  const reopened=new h.context.Fleet();
+  reopened.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(responses.length,2);
+  responses[1]({code:0,stdout:JSON.stringify([{address:'t2',created_ms:12,task:'work',state:'done',decisions:[]}])});
+  await tasks[1];
+  assert.equal(records.withRecords(h.sessions,h.config().recordSources,h.context.shared('one-piece-records'))[0].taskRecord.state,'done');
+});
+
+test('a closed reader cannot clear or publish over a replacement read',async()=>{
+  const h=host(),key=records.recordKey(null,'test');
+  h.config().recordSources={[key]:{root:'/firstmate',home:'/fleet'}};
+  h.context.appHome=()=>'/app';h.context.readTextFile=async()=> 'reader';
+  const tasks=[],responses=[];
+  h.cx.spawn=fn=>tasks.push(fn(h.cx));
+  h.context.exec=()=>new Promise(resolve=>responses.push(resolve));
+  h.controller.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  new h.context.Fleet().close();
+  new h.context.Fleet().refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(responses.length,1);
+  h.controller.close();
+  const reopened=new h.context.Fleet();
+  reopened.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  responses[0]({code:1,stderr:'Old reader failed'});
+  await tasks[0];
+  assert.equal(h.context.shared('one-piece-records')[key],undefined);
+  reopened.refreshRecords(h.cx);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(responses.length,2);
+  responses[1]({code:0,stdout:'[]'});
+  await tasks[1];
+  assert.equal(h.context.shared('one-piece-records')[key].error,undefined);
+});
+
 test('preset targets the coordinator tab on its machine without launching or moving terminals',async()=>{
   const h=host({remote:true,independent:true,registrations:[{terminal:'hz-server/t2',created:12,role:'firstmate'}]});
   h.workspaces.push({id:'hz-server/s',machine:'hz-server',tabs:[{id:'hz-server/tab'}]});
