@@ -174,16 +174,21 @@ export default class OnePieceAgents extends Agents {
     const key = this.selectedCaptain ?? props().captain;
     const captain = available.find(terminal => identity(terminal) === key && !terminal.labels?.['firstmate.task']);
     const menu = v_flex().size_full().p(16).gap(8).bg(t.popover).text_color(t.foreground).text_size(13)
-      .track_focus(this.menuFocus)
       .child(div().font_semibold().child(`Link captain · ${machine ?? 'local'}`));
     const list = v_flex().id('captain-choices').flex_1().min_h(0).gap(4).overflow_y_scrollbar();
-    const choose = (id, label, action) => Button.new(id).tab_index(0).p(8).rounded(5)
-      .accessibility_label(label).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected)).child(label).on_click(action);
+    let firstAction = true;
+    const choose = (id, label, action) => {
+      const button = Button.new(id).tab_index(0).p(8).rounded(5)
+        .accessibility_label(label).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected)).child(label).on_click(action);
+      if (firstAction) button.track_focus(this.menuFocus);
+      firstAction = false;
+      return button;
+    };
     if (!captain) {
       menu.child(div().child('Choose the terminal running your coordinator.'));
       for (const terminal of available.filter(terminal => !terminal.labels?.['firstmate.task'])) {
         list.child(choose(`captain-${identity(terminal)}`, `${terminal.name || terminal.title || 'Terminal'} · ${terminal.address}`,
-          (_event, cx) => { this.selectedCaptain = identity(terminal); this.setupError = null; cx.notify(); }));
+          (_event, cx) => { this.selectedCaptain = identity(terminal); this.setupError = null; this.menuFocus.focus(); cx.notify(); }));
       }
     } else {
       menu.child(div().child(`${captain.name || captain.address} · ${captain.address}`))
@@ -211,7 +216,7 @@ export default class OnePieceAgents extends Agents {
         list.child(div().px(8).text_color(t.muted).child(workers.map(worker => `${worker.labels['firstmate.task']} (${worker.address})`).join(', ')));
       }
       menu.child(choose('choose-other-captain', 'Choose another terminal', (_event, cx) => {
-        this.selectedCaptain = ''; this.setupError = null; cx.notify();
+        this.selectedCaptain = ''; this.setupError = null; this.menuFocus.focus(); cx.notify();
       }));
     }
     menu.child(list);

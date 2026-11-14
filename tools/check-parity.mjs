@@ -141,6 +141,32 @@ reachable.nodes.get('character-t2').right();
 assert.equal(reachable.calls.length,beforeUnplacedMenu,'unplaced terminal must not invent a workspace');
 console.log('Ungrouped terminal reachability and character workspace menus passed.');
 
+const setupFocus=host(true,'priority',310,{setup:true,machine:null,overlay:'setup'});
+const assertSetupFocus = (host, id) => {
+  assert.deepEqual([...host.nodes].filter(([, node]) => node.focusHandle === host.controller.menuFocus).map(([id]) => id),
+    [id], 'exactly the first setup action must attach the focused handle');
+};
+assertSetupFocus(setupFocus, 'captain-shell:0');
+setupFocus.nodes.get('captain-t1:1').click(null,setupFocus.cx);
+assert.equal(setupFocus.calls.filter(([name])=>name==='focus').length,2,'choosing another button must restore menu focus');
+setupFocus.nodes.clear();
+setupFocus.controller.render(setupFocus.cx);
+assertSetupFocus(setupFocus, 'captain-only');
+setupFocus.nodes.get('choose-other-captain').click(null,setupFocus.cx);
+assert.equal(setupFocus.calls.filter(([name])=>name==='focus').length,3,'returning to captain choices must restore menu focus');
+setupFocus.nodes.clear();
+setupFocus.controller.render(setupFocus.cx);
+assertSetupFocus(setupFocus, 'captain-shell:0');
+setupFocus.all.length=0;
+setupFocus.nodes.clear();
+setupFocus.controller.render(setupFocus.cx);
+assertSetupFocus(setupFocus, 'cancel-link');
+setupFocus.nodes.get('cancel-link').click();
+assert.equal(setupFocus.calls.at(-1)[0],'closeOverlay');
+const editFocus=host(true,'priority',310,{setup:true,machine:null,captain:'t1:1',overlay:'setup'});
+assertSetupFocus(editFocus, 'captain-only');
+console.log('Setup focus passed: captain choices, worker groups, return, edit, and empty-list Cancel.');
+
 const setup=host(true,'priority',310,{setup:true,machine:null,overlay:'setup'});
 setup.nodes.get('captain-t1:1').click(null,setup.cx);
 setup.controller.render(setup.cx);

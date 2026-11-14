@@ -13,7 +13,7 @@ Registration changes made after those fixtures require fresh verification.
 | Requirement | Current evidence | Status or remaining proof |
 | --- | --- | --- |
 | Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
-| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Complete local and remote unmodified-Firstmate workflows remain unverified |
+| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Stock local and remote tasks, association, direct typing, and navigation passed; cleanup and reconnect remain |
 | Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
 | Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Real local and remote task flows passed; local cleanup required the documented fixture correction |
 | Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
@@ -25,7 +25,7 @@ Registration changes made after those fixtures require fresh verification.
 | Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
 | Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
-| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; mod-only association requires runtime verification |
+| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; stock task runtime checks passed, with final lifecycle checks pending |
 
 At mod commit `8a5da90`, all 9 JavaScript tests and 42 Python tests passed.
 The installed native loading check and command parity comparison also passed.
@@ -38,8 +38,9 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
 
 ## Current acceptance gaps
 
-- Verify complete local and remote workflows with unmodified Firstmate and mod-owned captain associations.
-  The previous patched-producer lifecycle evidence does not validate the replacement.
+- Finish cleanup and reconnect checks with the new unmodified Firstmate fixtures.
+  Stock task completion, association, direct typing, and navigation passed locally and on the physical remote server.
+  See [stock task evidence](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct-input-2026-11-14).
 - Finish the final review of the mod pull request after those checks.
 - Before release acceptance, validate a published Herdr Core build containing the recovery fix.
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.

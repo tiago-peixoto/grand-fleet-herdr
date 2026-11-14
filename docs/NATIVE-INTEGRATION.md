@@ -24,7 +24,43 @@ Selecting Captain only for the disposable `op-hz-lab/t27` displayed Thousand Sun
 The ship's appearance menu exposed Edit captain link and Unlink captain.
 Unlinking restored the ordinary terminal entry without closing the session.
 This verifies the menu interaction, not a complete lifecycle with unmodified Firstmate.
-Complete local and remote stock-Firstmate workflows remain unverified.
+The stock task and direct-input checks below supersede that limited setup check.
+Cleanup and reconnect with these new fixtures remain outstanding.
+
+## Stock Firstmate tasks and direct input, 2026-11-14
+
+The local fixture used unchanged Firstmate commit `83d84e631a8eaea05fefb35caf002e876e87d2a9`.
+All 859 archived source files still matched after task completion and direct input.
+The physical remote fixture used unchanged commit `427056c4181c41074ad24f051f79919330df0fa5`.
+Its verification receipt confirmed all 876 source files matched.
+Neither fixture used the rejected registration patch.
+
+Local captain `t42` launched worker `t43` through stock Firstmate.
+The worker reported `mandarin` at `README.md:3`, wrote its report, and passed its completion gate.
+The coordinator read the report and left the worker alive.
+The mod linked the explicitly selected captain to stock group `firstmate-464374bd`.
+Selecting Chopper opened the existing worker workspace.
+Direct native keyboard input produced the exact response `STOCK-LOCAL-DIRECT-731`.
+Opening Luffy and closing its native preview restored the worker workspace with its report and marker intact.
+The worker retained creation time `1794693024856`, shell process `27380`, and Claude process `52756`.
+
+Remote captain `op-hz-lab/t29` launched worker `op-hz-lab/t2b` through stock Firstmate.
+The worker reported the same disposable project's verification word and passed its completion gate.
+The mod linked the explicitly selected captain to stock group `firstmate-569ce04a`.
+Selecting Chopper opened the existing remote worker workspace.
+Direct native keyboard input produced the exact response `STOCK-REMOTE-DIRECT-731`.
+Selecting Luffy opened the existing coordinator's native preview, including its real approval prompt.
+Closing the preview restored the worker's report and marker.
+The worker retained creation time `1794693174015`, shell process `3756210`, and Claude process `3760813`.
+Native application status showed the expected remote workspace, tab, pane, and no errors.
+
+Review also found that Link captain initially focused its container instead of an actionable button.
+Pressing Enter reproduced the failure in Grand Fleet Lab before the correction.
+The correction attaches the existing focus handle to the first available action.
+After installing the correction in the isolated home, Enter selected the first terminal and opened the worker-group stage.
+Captain only received focus in that stage, and Tab visibly moved focus to the next group.
+Cancel dismissed the dialog without changing the stored associations.
+The command comparison covers both stages, returning to terminal choices, editing, and an empty terminal list.
 
 ## Historical patched-producer evidence
 
