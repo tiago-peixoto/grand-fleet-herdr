@@ -1,16 +1,20 @@
 # Herdr One Piece
 
-Herdr One Piece adds One Piece artwork to Herdr's native Agents interface through a small adapter, a module that customizes presentation.
-The adapter presents parent agents as ships and captains, with nested agents as crewmates.
-Herdr retains Spaces, agent relationships, sorting, pinning, attention, menus, and keyboard navigation.
-Worker, secondmate, and personal terminals use Herdr's native controls and accept direct input.
-The adapter does not create separate worker spaces, adopt terminals, or interpret firstmate task records.
-It adds no shortcut bindings.
+Grand Fleet presents firstmate coordinators as ships and captains, with their workers nested as crewmates.
+Machines appear as islands while retaining their actual names.
+Herdr supplies writable terminals, workspaces, tabs, splits, panels, and session management.
+Ships only fold their characters, and selecting a character uses native terminal focus or writable preview.
+Personal terminals remain ordinary Herdr terminals.
+
+Fleet membership requires explicit Firstmate registration on the same machine.
+The mod does not infer relationships from terminal names, folders, or process parenting.
+The required Firstmate producer change remains unpublished.
+Existing sessions without canonical registration remain ordinary Herdr sessions.
 
 This project remains experimental.
-The author requested restoration of the previous fleet sidebar while incorporating Herdr's Spaces and Agents.
-The published default-sidebar adapter does not yet satisfy that requirement.
-Current native interaction and visual verification are incomplete.
+Current verification covers disposable local and remote terminal creation and navigation, plus local character selection and direct typing.
+The current sidebar passed remote connection-loss recovery and unavailable presentation in the isolated lab.
+Automatic worker discovery and remaining interaction checks are incomplete.
 Use a separate test home before considering your daily configuration.
 
 ## Start here
@@ -19,16 +23,17 @@ Use a separate test home before considering your daily configuration.
 - [Installation](docs/INSTALL.md) explains generation, refresh, legacy cleanup, and removal.
 - [VISION.md](VISION.md) records the approved acceptance policy and its relationship to firstmate.
 - [Artwork inventory](docs/ARTWORK.md) records artwork sources and coverage.
-- [Native verification](docs/NATIVE-INTEGRATION.md) records historical observations and unresolved checks.
-- [Acceptance review](docs/ACCEPTANCE.md) records historical evidence, not completed verification of the thin adapter.
+- [Native verification](docs/NATIVE-INTEGRATION.md) records current checks and clearly separated historical observations.
+- [Acceptance review](docs/ACCEPTANCE.md) lists current acceptance gaps and historical evidence.
 
 ## Installation model
 
 The installer reads `mods/agents/main.js` and `layouts/main.json` from the destination app home, Herdr's configuration directory.
-It validates the installed Agents interface and requires exactly one Agents slot in the main layout.
-It generates `mods/one-piece/herdr-agents.js` from that source without changing its contents.
-It generates `layouts/one-piece.json` by replacing only the Agents slot's `content.mod` value with `one-piece`.
-Other layout values remain unchanged, although formatting changes.
+It validates the installed Agents interface and requires one Spaces slot and one Agents slot under the same parent.
+It generates `mods/one-piece/herdr-agents.js` from the installed source without changing its contents.
+It replaces the Spaces slot with the fleet sidebar and removes the sibling Agents slot to avoid duplicate navigation.
+It supplies teal and gold palette defaults while preserving explicit source color overrides.
+Other native controls remain in the generated layout.
 Both generated files belong to the destination installation, not the source checkout.
 
 Run installation again after Herdr updates to refresh the generated Agents module and layout.
@@ -50,16 +55,15 @@ python3 -B -m unittest discover -s tests -p test_compat.py -v
 Installer tests use temporary homes.
 Compatibility tests check source preservation and layout changes.
 These checks do not establish behavior inside a running Herdr window.
-The [candidate verification record](docs/THIN-MOD.md#candidate-verification-on-2026-11-14) covers native typing, terminal creation, artwork controls, sidebar sizes, and app reconnection.
-The remote test processes survived a transport interruption and accepted direct typing after recovery.
-Offline presentation remains unverified.
-Historical passing tests do not establish those guarantees for the current adapter.
+Run `npm test` for fleet membership and artwork checks.
+Run `node tools/check-parity.mjs <app-home>` for simulated native command comparisons.
+The [current verification record](docs/NATIVE-INTEGRATION.md#current-verification-2026-11-14) distinguishes live checks from simulations and historical results.
 
 ## Historical prototype
 
 Open `prototype/index.html` in a browser to inspect the historical simulation.
 It contains simulated replies and terminals without connecting to machines or executing commands.
-Its custom fleet navigation does not describe the current thin adapter.
+Its historical behaviors are superseded by the approved native-flow prototype linked in the thin presentation design.
 [Prototype inventory](docs/PROTOTYPE.md) and [prototype specification](docs/PROTOTYPE-SPEC.md) preserve earlier design context.
 
 Rebuild the preview from its editable sources:

@@ -96,8 +96,11 @@ class InstallTests(unittest.TestCase):
         self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(),
                          (self.home / 'mods/agents/main.js').read_bytes())
         expected = json.loads((self.home / 'layouts/main.json').read_bytes())
-        expected['children'][1]['content']['mod'] = 'one-piece'
-        self.assertEqual(json.loads((self.home / 'layouts/one-piece.json').read_bytes()), expected)
+        expected['children'][0]['content']['mod'] = 'one-piece'
+        del expected['children'][1]
+        actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
+        self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
+        self.assertEqual(actual, expected)
         receipt = json.loads((self.home / '.one-piece-install.json').read_bytes())
         self.assertEqual(set(receipt), {'owner', 'version', 'files'})
         self.assertEqual(receipt['version'], 3)
@@ -156,8 +159,11 @@ class InstallTests(unittest.TestCase):
         self.put(self.home, 'layouts/main.json', json.dumps(layout))
         self.run_cli()
         self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(), agents.read_bytes())
-        layout['children'][1]['content']['mod'] = 'one-piece'
-        self.assertEqual(json.loads((self.home / 'layouts/one-piece.json').read_bytes()), layout)
+        layout['children'][0]['content']['mod'] = 'one-piece'
+        del layout['children'][1]
+        actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
+        self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
+        self.assertEqual(actual, layout)
 
     def test_v3_receipt_has_strict_shape(self):
         self.run_cli()

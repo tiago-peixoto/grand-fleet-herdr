@@ -1,55 +1,70 @@
 # Thin One Piece presentation
 
-The author clarified that the previous fleet sidebar should remain on 2026-11-14.
-Replacing that sidebar with Herdr's default Spaces and Agents sections was an incorrect interpretation of the requested simplification.
-The intended sidebar keeps islands, large ship rows, captains, and nested crewmates while representing Herdr's Spaces and Agents.
-Herdr continues to own terminals, workspace state, process relationships, and terminal commands.
-Whether each ship represents a Space or a coordinator remains under discussion.
-The implementation and verification below describe the published candidate, which does not yet satisfy this corrected visual requirement.
+Grand Fleet presents firstmate coordinators and workers through the approved fleet sidebar.
+The [native-flow prototype](http://tiagos-macbook-pro-1.tail707c05.ts.net:4387/session/0782435952d24d57) supplies the visual reference.
+Herdr owns terminal processes, workspaces, input, arrangement, and reconnection.
 
-## Published candidate design, pending sidebar revision
+## Current design
 
-Spaces remain Herdr spaces, including machine grouping, worktrees, menus, ordering, and creation.
-Agents remain Herdr agents, including native parent relationships, sorting, pinning, attention, and keyboard navigation.
-A parent agent is presented as a ship and captain.
-Its nested agents are crewmates.
-Character assignment changes appearance only and never writes terminal parent relationships or workspace labels.
-Ordinary terminals remain ordinary terminals.
-Native new-terminal actions inherit folders exactly as default Herdr does.
-The mod does not create separate worker spaces, adopt terminals, reinterpret task status, or add shortcut bindings.
+Machines appear as islands with their actual machine names retained.
+Each registered coordinator has a ship row and a captain beneath it.
+The ship only folds its characters, and its appearance menu selects artwork without changing sessions.
+Workers appear below their coordinator using explicit Firstmate metadata.
+Personal terminals keep native controls and have no character assignment.
+Ordinary workspaces remain accessible without duplicate destinations for represented characters.
 
-The shipped Spaces, tabs, menus, terminal controls, and workspace status remain in use.
-The adapter changes agent status artwork and adds a ship fold control beside its captain.
-Herdr retains the existing agent row and child row actions.
-A nested terminal without a pane opens through native terminal.peek, including its native option to keep the terminal.
-The mod must not silently convert that action into workspace creation.
+Grouping requires matching `firstmate.home.path` labels on the same machine.
+Firstmate supplies this physical home path explicitly rather than the mod deriving ownership from terminal folders.
+A coordinator also requires `firstmate.role=coordinator` and no task label.
+A worker requires `firstmate.task` and no coordinator role.
+Multiple coordinators for one home produce a conflict instead of guessed ownership.
+Legacy `firstmate.home` tags alone do not establish membership because distinct home paths can share a tag.
+Registration never changes process parenting or lifetime.
+The Firstmate producer change remains unpublished.
+A local live startup fixture verified automatic coordinator registration, competing-owner refusal, and stale-role transfer.
+That fixture used a simulated Codex process.
+Separate local and remote producer fixtures verified worker labels and survival after their creators exited.
+Neither fixture proves complete sidebar discovery through a real Firstmate task lifecycle.
+Manually labelled lab fixtures verify consumption, not automatic registration.
+
+Selecting a placed character focuses its native terminal.
+An unplaced character opens Herdr's writable preview, including its native keep action.
+Selection does not silently create workspaces or adopt terminals.
+Native controls continue to supply creation, folder inheritance, machine selection, tabs, splits, resizing, zoom, closing, and panels.
+There is no custom Restore layout or terminal recovery flow.
+
+The sidebar uses the approved teal and gold palette while retaining explicit layout color overrides.
+Narrow sidebars use compact artwork with terminal identities available through tooltips and accessibility labels.
+Unavailable machines display connection state instead of animated characters.
+Surviving sessions keep character assignments when other workers enter or leave.
 
 ## Compatibility approach
 
 A native loading probe confirmed that Herdr rejects imports outside a mod directory.
 Herdr exposes no documented status-artwork hook in the shipped Agents mod.
 The installer therefore generates a local base module from the installed Agents source and derives the layout from the installed main layout.
-The repository maintains the small artwork adapter, not another implementation of Herdr navigation.
+The repository maintains the fleet sidebar and artwork adapter while delegating terminal actions to native commands.
 Installation checks the methods and layout slots used by the adapter before writing files.
 Unsupported structures fail with a useful message and preserve the existing installation.
 Refresh the installation after a Herdr update to inherit changes to Agents and the main layout.
 Directly referenced shipped mods receive their normal updates.
 No promise of compatibility with every future Herdr version is possible without a supported extension hook.
 
-A handwritten replacement would keep duplicating navigation and miss new Herdr features.
-A static fork would require manual merging of those features.
-Generating from the installed source keeps the required difference small and reviewable.
+Generating the base from installed source avoids maintaining a static fork of native initialization.
+The custom sidebar still requires compatibility verification when Herdr changes.
 
 ## Verification
 
-Compare commands emitted by default and decorated Agents for selection, nesting, pinning, sorting, and keyboard order.
-Verify that the generated layout differs only at approved presentation slots.
+Compare emitted terminal commands with native Herdr and verify fleet membership separately.
+Verify that the generated layout changes only approved sidebar slots and palette defaults.
 Test installation, upgrade, removal, modified files, unsupported upstream source, and legacy shortcut cleanup.
 Use disposable local and remote sessions to verify navigation, typing, native creation, and preservation of process identities.
 Inspect the native layout at compact and large sizes.
 Keep interactive validation stopped if user input changes the test window.
 
-## Candidate verification on 2026-11-14
+## Historical candidate verification on 2026-11-14
+
+These observations describe the earlier parent-based candidate, not complete verification of the current fleet sidebar.
 
 The isolated Grand Fleet Lab loaded the candidate through a separate `one-piece-probe` layout.
 The default layout and the previous installed mod remained available.
@@ -90,4 +105,5 @@ After the lab window became available, a screenshot showed the earlier terminal 
 Raising the lab window allowed direct typing, and the remote test program echoed `AFTER_TRANSPORT_RECOVERY`.
 The unavailable-state screenshot remains inconclusive, so offline presentation remains unverified.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
-The author must choose whether presentation should add firstmate grouping before that behavior is finalized.
+The approved coordinator model resolves that design choice through explicit Firstmate registration.
+The current implementation still needs complete live verification with that registration.

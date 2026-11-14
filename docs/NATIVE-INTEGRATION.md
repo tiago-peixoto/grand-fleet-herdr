@@ -1,23 +1,115 @@
 # Native verification
 
-The thin adapter supersedes the custom fleet implementation described here.
-Read [Thin mod design](THIN-MOD.md) for current behavior and candidate verification.
-The remaining sections preserve historical decisions and test evidence.
+The current fleet sidebar uses explicit Firstmate registration and native terminal controls.
+Read [Thin mod design](THIN-MOD.md) for the implementation contract.
+Historical observations below do not establish acceptance of the current implementation.
 
-## Current terminal model, 2026-11-14
+## Current verification, 2026-11-14
 
-The author approved writable crewmate terminals and ordinary personal terminals.
-Each crewmate opens its existing process in a native Herdr terminal with a character header.
-Add terminal uses that workspace’s crewmate launch directory on the same machine, even when a personal terminal has focus.
-Native tabs, splitting, zoom, Files, Changes, and closing replace custom arrangement and inspection controls.
-Old inspection workspaces migrate on selection without restarting the crewmate or removing personal terminals.
+Disposable local and physical remote shells passed a four-case comparison between default Herdr and the current One Piece layout.
+Native terminal creation inherited the focused terminal's machine and folder in each case.
+New shells received no Firstmate character labels.
+Printed output, creation timestamps, and process identities survived worker navigation, zoom, and layout changes.
+These comparisons invoked native commands through the command-line interface rather than pointer controls.
 
-All 42 JavaScript checks and 33 Python checks passed.
-Automated controller checks cover adoption, identity, machine ownership, launch directories, and navigation races.
-The native initial-render check passed in Grand Fleet Lab.
-The lab loaded the new terminal headers and native tabs without reported runtime errors.
-Direct typing, migration, and launch-directory checks in the native interface remain unverified.
-Mouse validation stopped after two actions were rejected because the application changed during testing.
+In the native window, selecting Luffy focused the registered coordinator terminal.
+Selecting Chopper focused the worker's separate workspace.
+Direct keyboard input produced a printed marker in each terminal.
+Collapsing the ship hid its characters without changing the selected terminal.
+Expanding the ship restored those characters.
+
+A pointer click on the native plus menu created an ordinary terminal in the coordinator workspace.
+The new terminal inherited the focused coordinator's current folder and accepted directly typed input.
+The test closed only that disposable terminal through the native close command.
+Files displayed repository files, and Changes displayed the actual eleven changed files and a diff.
+A later pointer comparison opened Files and Changes in both default Herdr and the One Piece layout.
+Both layouts displayed the same repository files and fifteen changed files after the documentation updates.
+The Changes button also closed its panel in both layouts.
+Pointer clicks opened the native Settings and Add machine dialogs in the One Piece layout.
+Escape dismissed each dialog without changing settings or adding a connection.
+
+A separate live fixture invoked patched Firstmate startup with genuine terminal identities supplied by the lab terminal service.
+The coordinator acquired its lock and published canonical registration labels automatically.
+A competing process entered read-only mode without receiving registration labels.
+A successor acquired the lock and removed only the stale coordinator role while preserving the old terminal.
+All 25 recorded assertions passed when independently rerun.
+The fixture used a compiled Codex simulator, not the actual Codex application.
+It did not verify sidebar rendering of automatic registration.
+A separate private local terminal service then exercised the unchanged worker-creation producer.
+Fourteen assertions covered canonical home labels, task identity, duplicate refusal, and worker survival after its creator exited.
+Independent inspection confirmed the recorded home label, lifetime flags, creator exit, and surviving worker process.
+This exercised the producer API, not the full Firstmate task lifecycle.
+A remote fixture on firstmate-vps passed 22 assertions with the same patched producer source.
+It verified coordinator registration, matching worker home labels, duplicate refusal, and worker survival after coordinator exit.
+Independent inspection confirmed those metadata and lifetime assertions.
+Both remote terminals exited successfully before cleanup, and the private terminal service stopped.
+This remote fixture also used a simulated Codex process and the producer API rather than the full task lifecycle.
+The producer change remains unpublished.
+
+The current sidebar also passed a physical remote transport interruption and recovery comparison against default Herdr.
+The disposable remote test program retained creation timestamp, shell process, foreground process, and earlier output in both layouts.
+Direct keyboard input produced a new echo after each recovery, visible in the native window and terminal history.
+During disconnection, the fleet sidebar showed Unavailable and removed the remote captain artwork.
+The ship and captain returned after reconnection.
+Temporary coordinator labels were removed after the test, and the lab returned to its local captain.
+This tests connection loss while the remote service remains alive, not remote machine shutdown or service restart.
+The lab uses an isolated recovery build of Herdr Core, so these results do not establish behavior of every published version.
+
+A further four-case comparison created three-terminal grids in both layouts on local and physical remote machines.
+Native commands split each grid right and down, swapped panes, toggled zoom, and navigated away and back.
+All twelve disposable shells inherited the expected machine and folder without Firstmate labels.
+Each shell retained its creation timestamp, shell process, foreground process, and printed output throughout the comparison.
+Inspected screenshots showed all three terminals and their markers in the local and remote One Piece grids.
+The checks closed only the twelve created terminals and restored the original layout and focus.
+Evidence lives in the ignored `.superpowers/native/grid-evidence.json` beside its verification script.
+A later local pointer comparison dragged the split boundary in Grand Fleet and default Herdr.
+Grand Fleet changed the terminal widths to 105 and 56 columns.
+Default Herdr changed them back to 81 and 80 columns.
+Both shells retained their process identities and visible printed markers.
+A matching physical remote pointer comparison resized two disposable shells in both layouts.
+Grand Fleet changed their widths to 105 and 56 columns, and default Herdr changed them to 81 and 80 columns.
+Both shells retained their creation timestamps, shell processes, foreground processes, and printed markers.
+Native captures showed the markers and resized boundaries in both layouts.
+Only those disposable shells were closed, and the original layout and captain focus were restored without reported errors.
+Evidence lives in the ignored `.superpowers/native/remote-pointer-evidence.json`.
+
+Current complete-flow acceptance remains open.
+Outstanding checks include remote automatic worker discovery and the full Firstmate task lifecycle.
+
+Independent review found two navigation regressions, both reproduced in the native lab before changing code.
+The native sidebar showed the unregistered `thin-child` terminal, while the fleet sidebar omitted it.
+The fleet sidebar now exposes unplaced, ungrouped terminals as ordinary entries without character assignments.
+Selecting `thin-child` opened Herdr's writable preview with its existing output.
+Right-clicking Luffy previously did nothing because its workspace row was hidden.
+Character rows now expose their actual workspace's native menu through right-click or Shift-F10.
+The inspected native menu contained Rename, New worktree, Open worktree, Remove worktree, and Close.
+Unplaced characters do not invent a workspace menu.
+Command regression checks failed before each fix and passed afterward.
+The installed mod passed the native check, all nine JavaScript tests passed, and the lab reported no errors.
+Historical recovery checks below cannot substitute for those checks.
+
+## Local automatic discovery and animated states
+
+Patched Firstmate startup registered a coordinator automatically in the active Grand Fleet Lab terminal service.
+The unchanged worker producer then created two local workers with matching canonical home labels.
+The sidebar discovered Luffy, Chopper, and Franky without manual registration labels or presentation placement commands.
+Selecting Chopper focused its native terminal, where direct keyboard input printed the expected marker.
+Selecting the unplaced Luffy opened Herdr's native terminal preview.
+The producer placed both workers in separate native tabs within its normal worker workspace.
+The mod did not assign workspace ownership or create additional workspaces.
+
+A disposable status program reported idle, working, and blocked terminal states through Herdr's terminal protocol.
+Native captures showed sleeping, walking, and seated Chopper artwork respectively.
+Two captures per state contained visibly different sprite frames, confirmed by cropped image comparisons.
+This verifies state selection and animation for the simulated reports, not the meaning of a real Firstmate decision.
+After closing Chopper's terminal, the surviving worker retained Franky artwork and the same process identity.
+
+The fixture used a compiled Codex simulator with genuine terminal identity and unchanged Firstmate startup and worker producer code.
+It verifies local automatic registration through sidebar discovery, but not actual Codex or the complete Firstmate task lifecycle.
+Remote automatic discovery remains unverified in the current sidebar.
+The coordinator exited successfully after release, and native close actions ended both disposable worker shells.
+The lab returned to its original captain with no overlays or reported errors.
+Local evidence remains outside the repository in `firstmate-registration-evidence-2bhnulu2/phases/ui-discovery`.
 
 ## Historical verification before simplification
 

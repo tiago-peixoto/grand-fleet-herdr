@@ -1,12 +1,26 @@
 # Native acceptance review
 
-The thin adapter supersedes the custom fleet implementation described here.
-Read [Thin mod design](THIN-MOD.md) for current behavior and candidate verification.
-The remaining sections preserve historical decisions and test evidence.
+The current fleet sidebar has not passed complete acceptance.
+Read [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for observed behavior and limits.
+The table below describes retired implementations and must not be used as the current acceptance verdict.
+
+## Current acceptance gaps
+
+- Verify remote automatic sidebar discovery and the complete Firstmate task lifecycle with the patched producer.
+  Local producer creation, automatic discovery, direct input, and surviving character identity passed in the current native sidebar.
+- Deliver the producer change alongside the dependent mod.
+- Validate a published Herdr Core build containing the recovery fix before release acceptance.
+  The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
+- Finish the current requirement audit against the approved prototype.
+  Pointer resizing passed locally and remotely in Grand Fleet and default Herdr with preserved processes and output.
+  Local sleeping, walking, and seated animations passed with simulated terminal status reports.
+- Complete current code review, relevant tests, and pull request updates.
+
+## Historical acceptance review
 
 The 2026-11-14 [terminal simplification](UI-SIMPLIFICATION.md) supersedes inspection-only input, presets, restoration, and custom close confirmation below.
 The table records historical checks, not acceptance of the current terminal model.
-Current native validation remains incomplete as recorded in [Native verification](NATIVE-INTEGRATION.md#current-terminal-model-2026-11-14).
+Current native validation remains incomplete as recorded in [Native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14).
 
 Reviewed on 2026-11-13 against VISION.md, the approved prototype, the current source, and the native verification record.
 The implementation is not ready for final acceptance.

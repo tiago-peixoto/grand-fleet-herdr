@@ -17,10 +17,12 @@ The extension remains optional, and removing it leaves firstmate's contracts and
 ## A calm fleet keeps firstmate within reach
 
 The primary path leads to firstmate, which carries the captain's direction and gathers worker reports.
-Herdr supplies agent attention, sorting, pinning, selection, and keyboard navigation.
+Herdr supplies terminal attention, focus, writable previews, and session management.
 The fleet sidebar retains native machine identities and grouping.
-A parent agent has ship and captain artwork, and its nested agents have crewmate artwork.
-A ship only expands or collapses its native crew group.
+Each explicitly registered firstmate coordinator has ship and captain artwork.
+Its explicitly associated workers appear beneath the captain as crewmates.
+A ship only expands or collapses its presentation group.
+Presentation grouping does not require native process parenting.
 Selecting the captain or a crewmate uses the corresponding native agent action.
 An unplaced crewmate opens in Herdr's writable preview with Herdr's option to keep its terminal.
 The mod does not create a workspace merely because a crewmate was selected.
@@ -55,7 +57,7 @@ Themed navigation preserves machine identity, workspace ownership, and existing 
 Native integration must verify these guarantees before the implementation promises them.
 Appearance settings never change terminal parent relationships, process lifetimes, or workspace ownership.
 The mod retains shipped behavior instead of maintaining its own navigation, task polling, recovery, or terminal system.
-Herdr updates remain straightforward to inherit because the mod owns only the artwork difference.
+The mod owns fleet navigation presentation and artwork while reusing native terminal commands and controls.
 Compatibility checks must reject unsupported upstream structures before replacing an existing installation.
 Herdr-specific capabilities are legitimate, including firstmate's existing Herdr integration.
 Vendor independence does not require identical interfaces or a portable display abstraction.
@@ -76,8 +78,8 @@ Animation supports recognition without concealing failures, decisions, or risks.
 This project is an optional, firstmate-specific interface for Herdr.
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
-The same presentation works with ordinary Herdr agents without firstmate.
-Artwork never claims firstmate supervision or guarantees for those sessions.
+Ordinary Herdr workspaces remain accessible without firstmate registration.
+Unregistered terminals do not acquire a coordinator or crew identity from their names, folders, or process parents.
 This mod adds no command hierarchy, merge authority, or automatic delegation policy.
 Personal preferences, credentials, and fleet records remain private to the captain's home.
 The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.
@@ -86,6 +88,8 @@ On 2026-11-14, the author approved the simplified interface and replaced Restore
 The author then approved one writable terminal per crewmate and ordinary Herdr controls, replacing the inspection-only design.
 The author subsequently requested a thin mod that replaces agent activity dots while reusing Herdr's Spaces and nested agents.
 The author clarified that this must preserve the previous fleet sidebar rather than replace it with Herdr's default sidebar.
+The approved native-flow prototype identifies ships and captains as coordinators running firstmate.
+Workers retain their own workspaces, and personal terminals retain native behavior.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
 A change should be resisted when visual convenience hides uncertainty, assumes consent, or makes firstmate depend on this interface.
