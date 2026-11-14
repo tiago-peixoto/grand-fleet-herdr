@@ -170,9 +170,9 @@ Only active workers appear in the daily sidebar; an available character catalog 
 
 ## Prototype verification
 
-Ninety browser checks pass for the current interactive preview.
+Ninety-two browser checks pass for the current interactive preview.
 They cover navigation, tab creation and closure, local and remote personal terminals, renaming, offline visibility, and compact-window scrolling.
-They also verify all eleven artwork sheets load with the expected frame grid and obey Pause artwork.
+They also verify all thirteen artwork sheets load with the expected frame grid and obey Pause artwork.
 The sheets still need visual animation approval before production use.
 
 The long-crew preview originally scrolled Luffy out of view with the workers.
@@ -256,6 +256,6 @@ The design proposal is ready for review, but adoption remains unconfirmed.
 The larger requested crew collections still need a membership boundary and artwork.
 Native integration must preserve terminal identities and verify process consequences against real sessions before claiming completion.
 
-Shanks now has a matching three-state study in the review gallery.
-His crew remains unavailable because its worker and ship artwork are missing.
+Shanks, Big Mom, and Kaido now have matching three-state studies in the review gallery.
+Their crews remain unavailable because their worker and ship artwork are missing.
 Captain artwork alone does not satisfy crew coverage.
