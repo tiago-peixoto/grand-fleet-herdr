@@ -69,7 +69,9 @@ herdr-app do layout.switch '{"name":"main"}'
 ```
 
 Use the same `HERDR_APP_HOME` environment variable when addressing a window with a custom home.
-The documented `ctrl-shift-l` shortcut also cycles layouts, unless you changed that binding.
+The tested macOS configuration binds `cmd-shift-l` to `layout.switch`.
+Herdr’s generated guide instead names `ctrl-shift-l`.
+Check the `layout.switch` binding in your app home’s `keys.json`, because installed bindings can differ from the guide.
 These mechanisms come from [Herdr's installed guidance](/Users/tiago/.config/herdr-app/AGENTS.md), under Layouts and Commands.
 The installer never executes either command.
 
