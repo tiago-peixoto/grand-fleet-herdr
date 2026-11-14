@@ -5,7 +5,9 @@ Read the [native acceptance review](ACCEPTANCE.md) before choosing an installati
 Remote recovery passed with a Core build containing [Herdr Core PR 271](https://github.com/herdrdev/herdr-core/pull/271).
 The published Core 0.1.21 release does not contain that patch.
 The installer neither supplies nor updates Core.
-Native rendering failures also remain unresolved, including an instance where terminal input executed but its output stayed invisible.
+Earlier native captures omitted text and terminal output, but those observations did not independently confirm a physical display failure.
+The controlled default/mod reconnection comparison preserved output in both layouts.
+The historical capture discrepancies remain unexplained.
 Use a separate test home until the acceptance review confirms release and rendering validation.
 
 Run commands below from this repository with Python 3.9 or newer.
