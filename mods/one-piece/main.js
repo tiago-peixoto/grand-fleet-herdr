@@ -1,8 +1,7 @@
 import { View, div, image } from 'gpui-kit';
-import { h_flex, v_flex, Editor, EditorState, Input, InputState, ScrollHandle } from 'gpui-base';
+import { h_flex, v_flex, Editor, EditorState, Input, InputState } from 'gpui-base';
 import { terminals as coreTerminals, machines, spaces, panes, focused, props, shared, setShared, run, hc, exec, readTextFile, appHome, theme, settings, openOverlay, closeOverlay, nextCommand, notify } from 'herdr';
-import { fleet, identity, matches, machineOf, isWorker, assignCharacters, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
-import { rememberShells, missingShells } from './shells.js';
+import { fleet, identity, matches, machineOf, isWorker, assignCharacters, assignCrew, crews, crewOf, inspectionTarget, withLocations, zoomTarget, attention, terminalLabel as label } from './fleet.js';
 import { withRecords, recordKey, validRecordRows } from './records.js';
 
 const terminals=()=>withRecords(withLocations(coreTerminals(),panes(),spaces()),config().recordSources??{},shared('one-piece-records')??{});
@@ -22,11 +21,13 @@ const config=()=>shared(KEY)??{coordinators:[],aliases:{},characters:{},inspecti
 function save(patch) { setShared(KEY,{...config(),...patch}); }
 const stateLabel=t=>t.status==='blocked'?'Needs you':t.taskRecord===null?'Task records unavailable':t.taskRecord?.state==='done'?'Task complete':t.status==='working'?'Working':t.status==='done'?'Turn complete':t.status==='idle'?'Idle':'Status unavailable';
 const machineLabel=name=>config().aliases[name??'local']||(name===null?'Water 7':name==='hz-server'?'Wano':name);
-const button=(id,text,action,primary=false)=>h_flex().id(id).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click(action).child(text);
+const button=(id,text,action,primary=false)=>h_flex().id(id).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();action(e,c);}}).px(12).h(30).items_center().rounded(6).border_1().border_color(primary?'#e8bd70':'#344c51').bg(primary?'#e8bd70':'#203238').text_color(primary?'#14242a':'#dce6e3').text_size(12).cursor_pointer().hover(s=>s.opacity(0.85)).on_mouse_down('left',(_e,cx)=>cx.stop_propagation()).on_click(action).child(text);
 
-function art(name,status='idle',size=48) {
-  const motion=config().paused||(!['sunny','flag'].includes(name)&&!['idle','working','blocked'].includes(status))?'png':'gif';
-  const suffix=['sunny','flag'].includes(name)?'':`-${status==='working'?'working':status==='blocked'&&name!=='luffy'?'blocked':'idle'}`;
+function art(name,status,size=48) {
+  const ships=['sunny','flag','crew-red-force','crew-queen-mama-chanter','crew-mammoth'];
+  const motion=config().paused||(!ships.includes(name)&&!['idle','working','blocked'].includes(status))?'png':'gif';
+  if(!ships.includes(name)&&!['idle','working','blocked'].includes(status)) status='working';
+  const suffix=ships.includes(name)?'':`-${status==='working'?'working':status==='blocked'&&name!=='luffy'?'blocked':'idle'}`;
   return image(`mods/one-piece/assets/${name}${suffix}.${motion}`).w(size).h(size).flex_none();
 }
 
@@ -49,7 +50,6 @@ export default class Fleet extends View {
   init(_props,cx) {
     this.collapsed={}; this.busy=false; this.error=''; this.updated=null;
     this.handle=cx.focus_handle();
-    this.machineScroll=ScrollHandle.new();
     const view=props()?.view;
     if(view==='inspect') {
       this.editor=EditorState.new({readonly:true,line_numbers:false,folding:false,soft_wrap:false,font_family:settings().font_family,font_size:14,value:'Connecting to terminal output…'});
@@ -67,8 +67,10 @@ export default class Fleet extends View {
       this.aliasInput=InputState.new({value:machineLabel(props().machine??null)});
       this.selected=null; this.role='firstmate';
     }
-    // Hidden windows can stop rendering while terminal directories keep changing.
-    if(!view) cx.timer.every(1000,()=>this.rememberShells());
+    if(!view&&Object.hasOwn(config(),'shells')) {
+      const {shells:_retired,...retained}=config();
+      setShared(KEY,retained);
+    }
     if(!view) {
       this.refreshRecords(cx);
       cx.timer.every(5000,c=>this.refreshRecords(c));
@@ -86,7 +88,7 @@ export default class Fleet extends View {
         if(command==='close-pane') this.requestClose('pane',focused()?.pane);
         if(command==='firstmate') await this.openFirstmate(c);
         if(command.startsWith('focus-pane:')) await this.focusPane(command.slice('focus-pane:'.length),c);
-        if(command==='restore-layout') this.openRestore();
+        if(command==='restore-layout') notify({title:'Restore layout retired',body:'Use Add terminal in the workspace header to start a new independent shell. Existing sessions are unchanged.'});
         c.notify();
       }
     });
@@ -154,54 +156,6 @@ export default class Fleet extends View {
           setShared('one-piece-records',{...(shared('one-piece-records')??{}),[key]:null});
           closeOverlay(props().overlay);
         },true)));
-  }
-
-  rememberShells() {
-    const previous=config().shells??[];
-    const shells=rememberShells(previous,terminals(),panes(),spaces(),machines(),config().coordinators);
-    if(JSON.stringify(previous)!==JSON.stringify(shells)) save({shells});
-  }
-
-  openRestore() {
-    this.rememberShells();
-    openOverlay({mod:'one-piece',props:{view:'restore'},kind:'dialog',width:620,height:460});
-  }
-
-  async restoreShell(record,cx) {
-    if(this.busy) return;
-    const current=missingShells(config().shells??[],terminals(),machines()).find(r=>r.terminal===record.terminal&&r.created===record.created);
-    if(!current) return;
-    this.busy=true;cx.notify();
-    try {
-      const restoreName=current.restoreName??`op-shell-${Date.now()}-${Math.floor(Math.random()*1000000)}`;
-      save({shells:config().shells.map(r=>r.terminal===current.terminal&&r.created===current.created?{...r,restoreName}:r)});
-      const localId=id=>current.machine&&id.startsWith(current.machine+'/')?id.slice(current.machine.length+1):id;
-      const args=['run','--json','--bg','--keep','--no-parent','--no-notify','--name',restoreName,'--cwd',current.cwd,
-        '--label',`herdr.space=${localId(current.space)}`,'--label',`herdr.tab=${localId(current.tab)}`,'--label','one-piece.restored=true'];
-      if(current.machine) args.push('--on',current.machine);
-      const launched=JSON.parse((await checked(args)).stdout);
-      if(typeof launched.address!=='string'||machineOf(launched.address)!==current.machine) throw new Error('Herdr returned an unexpected machine for the new shell.');
-      for(let attempt=0;attempt<40&&!panes().some(p=>p.terminal===launched.address);attempt++) await cx.sleep(100);
-      if(!panes().some(p=>p.terminal===launched.address)) throw new Error(`Shell ${launched.address} started, but its pane is not available yet. It will appear after the machine reconnects.`);
-      this.rememberShells();
-      notify({title:'New personal shell',body:`Created ${launched.address} in ${current.cwd}. This is a new process, not the previous conversation.`});
-    } catch(error) {notifyError(error);}
-    finally {this.busy=false;cx.notify();}
-  }
-
-  restoreView() {
-    const missing=missingShells(config().shells??[],terminals(),machines());
-    const list=v_flex().flex_1().min_h(0).gap(12).overflow_y_scrollbar();
-    for(const record of missing) list.child(v_flex().p(12).gap(8).rounded(8).bg('#20383e')
-      .child(div().text_size(12).child(`${machineLabel(record.machine)} (${record.machine??'local'}) · ${record.terminal}`))
-      .child(div().text_size(12).text_color('#a4bbb8').child(record.cwd))
-      .child(button(`restore-${record.terminal}`,this.busy?'Creating shell…':record.restoreName?'Retry new shell':'Create new shell',(_e,c)=>c.spawn(a=>this.restoreShell(record,a)),true)));
-    return v_flex().size_full().p(24).gap(16).bg('#192f35').text_color('#dce6e3')
-      .child(div().text_size(22).font_semibold().child('Restore layout'))
-      .child(div().text_size(12).text_color('#a4bbb8').child('Create missing personal shells in their recorded directories and tabs. Existing processes stay running. Previous commands and agent conversations are not resumed.'))
-      .when(!missing.length,el=>el.child(div().text_size(12).child('No missing personal shells on connected machines.')))
-      .child(list)
-      .child(h_flex().justify_end().child(button('close-restore','Done',()=>closeOverlay(props().overlay))));
   }
 
   firstmates() {
@@ -361,7 +315,6 @@ export default class Fleet extends View {
       pending.cancelled=true;
       recordReadsInFlight.delete(key);
     }
-    this.machineScroll?.release();
     activePlaceholders.delete(this.activePlaceholder);
   }
 
@@ -392,11 +345,12 @@ export default class Fleet extends View {
     if(found.length) save({placeholders:[...records,...found]});
   }
 
-  async cleanupPlaceholders(cx) {
+  async cleanupPlaceholders(cx,machine) {
     if(this.cleaning) return;
     this.cleaning=true;cx.notify();
     try {
       for(const record of config().placeholders??[]) {
+        if(machine!==undefined&&record.machine!==machine) continue;
         if(activePlaceholders.has(placeholderKey(record))) continue;
         try {await this.cleanupPlaceholder(record);}
         catch(error) {notifyError(error);}
@@ -438,7 +392,7 @@ export default class Fleet extends View {
 
   row(terminal,character,subtitle,action,selected=false) {
     const t=theme();
-    return h_flex().id(`session-${terminal.address}`).px(10).py(6).gap(8).rounded(8).border_1().border_color(selected?'#e8bd70':'#16292f').bg(selected?'#29454c':'#16292f').hover(s=>s.bg('#243e45')).cursor_pointer().on_click(action)
+    return h_flex().flex_none().id(`session-${terminal.address}`).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();action(e,c);}}).px(10).py(6).gap(8).rounded(8).border_1().border_color(selected?'#e8bd70':'#16292f').bg(selected?'#29454c':'#16292f').hover(s=>s.bg('#243e45')).cursor_pointer().on_click(action)
       .child(art(character,terminal.status,44))
       .child(v_flex().flex_1().min_w(0).gap(3).child(div().truncate().text_size(13).font_semibold().text_color(t.foreground).child(label(terminal)))
         .child(div().truncate().text_size(10).text_color(terminal.status==='blocked'?'#edc478':'#a4b8b7').child(subtitle)))
@@ -446,88 +400,91 @@ export default class Fleet extends View {
   }
 
   sidebar(cx) {
-    this.rememberShells();
     this.rememberPlaceholders();
-    const cfg=config();
-    const world=fleet(terminals(),machines(),cfg.coordinators);
+    const cfg=config(),world=fleet(terminals(),machines(),cfg.coordinators);
     const workers=world.flatMap(m=>[...m.unassigned,...m.coordinators.flatMap(c=>c.workers)]);
-    const characters=assignCharacters(workers,cfg.characters);
-    if(Object.keys(characters).length!==Object.keys(cfg.characters).length) save({characters});
-    const selected=focused();
-    const shortcuts=h_flex().flex_wrap().gap(6).px(12).pb(8).flex_shrink_0();
-    const content=v_flex().flex_1().min_h(0).overflow_y_scrollbar().track_scroll(this.machineScroll).gap(12).px(12).py(12);
-    for(const [index,machine] of world.entries()) {
-      shortcuts.child(v_flex().id(`jump-machine-${machine.machine??'local'}`).px(9).py(6).gap(3).rounded(6).bg('#203238').cursor_pointer().hover(s=>s.bg('#29454c'))
-        .on_click((_e,c)=>{this.machineScroll.scroll_to_item(index);c.notify();})
-        .child(div().text_size(12).text_color('#e8bd70').child(machineLabel(machine.machine)))
-        .child(div().text_size(10).text_color('#9eb4b3').child(`${machine.machine??'local'}${machine.state==='ready'?'':machine.state==='loading'?' · Connecting':' · Offline'}`)));
-      const block=v_flex().gap(7).child(h_flex().items_center().justify_between()
+    let characters=assignCharacters(workers,cfg.characters);
+    for(const coordinator of world.flatMap(m=>m.coordinators)) characters=assignCrew(coordinator.workers,characters,coordinator);
+    if(JSON.stringify(characters)!==JSON.stringify(cfg.characters)) save({characters});
+    const blockers=attention(world),selected=focused();
+    if(!blockers.length) this.filtered=false;
+    const visible=t=>!this.filtered||t.status==='blocked';
+    const content=v_flex().flex_1().min_h(0).gap(12).px(12).py(12);
+    for(const machine of world) {
+      const block=v_flex().flex_1().min_h(0).gap(7).child(h_flex().flex_none().items_center().justify_between()
         .child(v_flex().gap(3).child(div().text_size(13).font_semibold().text_color('#e4eeea').child(machineLabel(machine.machine)))
           .child(div().text_size(10).text_color('#8fa8a9').child(machine.machine??'local')))
         .child(button(`machine-settings-${machine.machine}`,'···',()=>this.setup(machine.machine))));
       if(machine.state!=='ready') {
-        block.child(div().p(12).rounded(8).bg('#243238').text_size(12).text_color('#b2bfbe').child(machine.state==='loading'?'Connecting…':'Machine unavailable'));
+        block.child(div().p(12).text_size(12).text_color('#b2bfbe').child(machine.state==='loading'?'Connecting…':'Machine unavailable'));
         content.child(block);continue;
       }
+      const list=v_flex().id(`machine-sessions-${machine.machine}`).flex_1().min_h(0).overflow_y_scrollbar().gap(7);
+      const cleanup=(cfg.placeholders??[]).filter(r=>r.machine===machine.machine);
+      if(cleanup.length) list.child(v_flex().flex_none().gap(4)
+        .child(div().text_size(10).text_color('#e8bd70').child(`Temporary setup shells: ${cleanup.map(r=>r.name).join(', ')}`))
+        .child(button(`retry-cleanup-${machine.machine}`,this.cleaning?'Cleaning…':'Retry cleanup',(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a,machine.machine)))));
       for(const coordinator of machine.coordinators) {
-        const collapsed=this.collapsed[coordinator.terminal];
-        const ship=h_flex().id(`ship-${coordinator.terminal}`).gap(6).items_center().cursor_pointer().rounded(8).hover(s=>s.bg('#1c343b'))
-          .on_click((_e,c)=>{this.collapsed[coordinator.terminal]=!collapsed;c.notify();})
-          .child(art('sunny','idle',64)).child(v_flex().flex_1().gap(4)
-            .child(div().text_size(11).text_color('#e8bd70').font_semibold().child('THOUSAND SUNNY'))
-            .child(div().text_size(10).text_color('#9eb4b3').child(`${coordinator.role} · ${coordinator.workers.length} workers`)))
-          .child(div().text_color('#a0b7b8').child(collapsed?'›':'⌄'));
-        block.child(ship);
+        const appearance=crewOf(coordinator);
+        const workspace=coordinator.session.space??cfg.inspections[identity(coordinator.session)]?.space;
+        const independent=machine.independent.filter(t=>t.space&&t.space===workspace&&t.status==='blocked');
+        const count=[coordinator.session,...coordinator.workers,...independent].filter(t=>t.status==='blocked').length;
+        if(this.filtered&&coordinator.role!=='firstmate'&&!count) continue;
+        const collapsed=this.collapsed[coordinator.terminal]&&!this.filtered;
+        const section=v_flex().flex_none().gap(4);
+        section.child(h_flex().flex_none().id(`ship-${coordinator.terminal}`).tab_index(0).on_key_down((e,c)=>{if(e.keystroke==='enter'||e.keystroke==='space'){c.stop_propagation();if(!this.filtered)this.collapsed[coordinator.terminal]=!collapsed;c.notify();}}).gap(6).items_center().cursor_pointer().rounded(8).hover(s=>s.bg('#1c343b'))
+          .on_click((_e,c)=>{if(!this.filtered)this.collapsed[coordinator.terminal]=!collapsed;c.notify();})
+          .child(art(appearance.ship,'idle',64)).child(v_flex().flex_1().gap(4)
+            .child(div().text_size(11).text_color('#e8bd70').font_semibold().child(appearance.title.toUpperCase()))
+            .child(div().text_size(10).text_color('#9eb4b3').child(`${coordinator.role} · ${label(coordinator.session)}${collapsed&&count?` · ${count} needs attention`:''}`)))
+          .child(div().text_color('#a0b7b8').child(collapsed?'›':'⌄')));
         if(!collapsed) {
-          const crew=v_flex().ml(16).pl(6).gap(4).border_l_1().border_color('#344c51');
-          crew.child(this.row(coordinator.session,'luffy',`${coordinator.role} · ${coordinator.role==='firstmate'?'Pinned first':'Inspection only'}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
-          for(const worker of coordinator.workers) {
+          section.child(this.row(coordinator.session,`crew-${appearance.captain}`,`${coordinator.role} · ${stateLabel(coordinator.session)}`,(_e,c)=>c.spawn(a=>coordinator.role==='firstmate'?this.select(coordinator.session,a):this.inspect(coordinator.session,a)),selected?.terminal===coordinator.terminal));
+          const crew=v_flex().id(`crew-${coordinator.terminal}`).flex_none().ml(16).pl(6).gap(4);
+          for(const worker of coordinator.workers.filter(visible)) {
             const character=characters[identity(worker)];
             crew.child(this.row(worker,character.art,`${stateLabel(worker)}${character.number?` · Pirate ${character.number}`:''}`,(_e,c)=>c.spawn(a=>this.inspect(worker,a)),selected?.space===cfg.inspections[identity(worker)]?.space));
           }
-          block.child(crew);
+          for(const terminal of independent)
+            crew.child(this.row(terminal,'pirate',`Independent · ${stateLabel(terminal)}`,(_e,c)=>c.spawn(a=>this.select(terminal,a))));
+          section.child(crew);
         }
+        list.child(section);
       }
-      if(machine.unassigned.length) block.child(div().mt(8).text_size(10).text_color('#e8bd70').child('WORKERS · LINK FIRSTMATE IN SETUP'));
-      for(const worker of machine.unassigned) block.child(this.row(worker,characters[identity(worker)].art,`${stateLabel(worker)} · Inspection only`,(_e,c)=>c.spawn(a=>this.inspect(worker,a))));
+      const others=v_flex().id(`other-sessions-${machine.machine}`).flex_none().gap(4);
+      if(machine.unassigned.some(visible)) others.child(div().text_size(10).text_color('#e8bd70').child('WORKERS · LINK COORDINATOR IN MACHINE SETTINGS'));
+      for(const worker of machine.unassigned.filter(visible)) others.child(this.row(worker,characters[identity(worker)].art,`${stateLabel(worker)} · Inspection only`,(_e,c)=>c.spawn(a=>this.inspect(worker,a))));
       const coordinatorSpaces=new Set(machine.coordinators.map(c=>c.session.space??cfg.inspections[identity(c.session)]?.space));
-      const independentSpaces=spaces().filter(s=>s.machine===machine.machine&&!coordinatorSpaces.has(s.id)&&machine.independent.some(t=>t.space===s.id));
-      const unplaced=machine.independent.filter(t=>!t.space&&!t.labels?.['one-piece.placeholder']);
-      if(independentSpaces.length||unplaced.length) block.child(div().mt(8).text_size(10).text_color('#8fa8a9').child('UNSUPERVISED'));
-      for(const space of independentSpaces) block.child(h_flex().id(`space-${space.id}`).px(12).py(10).rounded(7).bg(space.active?'#29454c':'#182e34').hover(s=>s.bg('#29454c')).cursor_pointer().on_click((_e,c)=>c.spawn(a=>this.selectSpace(space.id,a))).child(div().flex_1().truncate().text_color('#c3d5d0').text_size(12).child(space.name)));
-      for(const terminal of unplaced) block.child(this.row(terminal,'pirate',`Independent · ${stateLabel(terminal)}`,(_e,c)=>c.spawn(a=>this.openIndependent(terminal,a))));
-      for(const missing of machine.missing) block.child(div().text_size(11).text_color('#e8bd70').child(`${missing.role} disconnected · ${missing.terminal}`));
-      if(!machine.coordinators.length&&!machine.unassigned.length&&!independentSpaces.length&&!unplaced.length) block.child(div().py(10).text_color('#92acab').text_size(12).child('No sessions on this machine.'));
-      content.child(block);
-    }
-    const blockers=attention(world);
-    const alerts=v_flex().gap(4).max_h(144).overflow_y_scrollbar();
-    for(const item of blockers) {
-      const terminal=item.terminal;
-      alerts.child(v_flex().id(`attention-${terminal.address}`).px(8).py(5).gap(1).rounded(6).bg('#28372f').cursor_pointer().hover(s=>s.bg('#364638'))
-        .on_click((_e,c)=>item.inspect?c.spawn(a=>this.inspect(terminal,a)):item.kind==='Independent'?c.spawn(a=>this.openIndependent(terminal,a)):c.spawn(a=>this.select(terminal,a)))
-        .child(div().truncate().text_size(11).text_color('#edc478').child(`${item.kind} · ${label(terminal)}`))
-        .child(div().text_size(10).text_color('#afc0b5').child(`${machineOf(terminal.address)??'local'} · ${item.inspect?'Inspect':'Open session'}`)));
+      const independentSpaces=spaces().filter(s=>s.machine===machine.machine&&!coordinatorSpaces.has(s.id)&&machine.independent.some(t=>t.space===s.id&&visible(t)));
+      const unplaced=machine.independent.filter(t=>!t.space&&!t.labels?.['one-piece.placeholder']&&visible(t));
+      if(independentSpaces.length||unplaced.length) others.child(div().text_size(10).text_color('#8fa8a9').child('UNSUPERVISED'));
+      for(const space of independentSpaces) others.child(button(`space-${space.id}`,`${space.name}${machine.independent.some(t=>t.space===space.id&&t.status==='blocked')?' · Independent · needs you':''}`,(_e,c)=>c.spawn(a=>this.selectSpace(space.id,a)),space.active));
+      for(const terminal of unplaced) others.child(this.row(terminal,'pirate',`Independent · ${stateLabel(terminal)}`,(_e,c)=>c.spawn(a=>this.openIndependent(terminal,a))));
+      for(const missing of machine.missing) others.child(div().text_size(11).text_color('#e8bd70').child(`${missing.role} disconnected · ${missing.terminal}`));
+      if(!machine.coordinators.length&&!machine.unassigned.length&&!independentSpaces.length&&!unplaced.length) others.child(div().text_color('#92acab').text_size(12).child('No sessions on this machine.'));
+      list.child(others);block.child(list);content.child(block);
     }
     return v_flex().id('fleet-sidebar').track_focus(this.handle).size_full().bg('#14272d').text_color('#dce6e3')
-      .child(h_flex().h(64).px(20).gap(10).items_center().child(art('flag','idle',28)).child(v_flex().gap(4).child(div().text_size(14).font_semibold().child('GRAND FLEET')).child(div().text_size(10).text_color('#91acab').child('A place for every session'))))
-      .child(shortcuts)
+      .child(h_flex().h(64).flex_none().px(20).gap(10).items_center().child(art('flag','idle',28))
+        .child(div().flex_1().text_size(14).font_semibold().child('GRAND FLEET'))
+        .child(button('fleet-menu','···',()=>openOverlay({mod:'one-piece',kind:'popup',width:230,height:60,props:{view:'fleet-menu'}}))))
       .child(content)
-      .child(v_flex().p(10).gap(8).border_t(1).border_color('#30474c')
-        .when(Boolean(cfg.placeholders?.length),el=>el.child(button('retry-cleanup',this.cleaning?'Cleaning temporary shells…':`Retry cleanup · ${cfg.placeholders.length} pending`,(_e,c)=>c.spawn(a=>this.cleanupPlaceholders(a)))))
-        .child(div().text_size(11).text_color(blockers.length?'#e8bd70':'#94b3aa').child(blockers.length?`${blockers.length} ${blockers.length===1?'session needs':'sessions need'} attention`:'No reported blockers'))
-        .when(blockers.length>0,el=>el.child(alerts))
-        .child(h_flex().gap(8).child(button('setup','Set up fleet',()=>this.setup())).child(button('motion',cfg.paused?'Play motion':'Pause motion',()=>save({paused:!cfg.paused})))));
+      .when(blockers.length>0,el=>el.child(button('filter-attention',this.filtered?'Show all sessions':`${blockers.length} sessions need attention`,(_e,c)=>{this.filtered=!this.filtered;c.notify();})));
+  }
+
+  fleetMenu() {
+    return v_flex().p(10).bg('#192e34').child(button('motion',config().paused?'Animate artwork':'Pause artwork',()=>{
+      save({paused:!config().paused});closeOverlay(props().overlay);
+    }));
   }
 
   inspectView() {
     const target=inspectionTarget(terminals(),machines(),config().coordinators,props().target);
     const coordinator=target&&config().coordinators.find(r=>matches(target,r));
     return v_flex().id('inspection').on_size_change((_size,c)=>c.notify()).size_full().min_h(0).bg('#142329').p(18).gap(12)
-      .child(h_flex().items_center().gap(12).child(art(coordinator?'luffy':config().characters[target?identity(target):'']?.art??'pirate',target?.status,56))
+      .child(h_flex().items_center().gap(12).child(art(coordinator?`crew-${crewOf(coordinator).captain}`:config().characters[target?identity(target):'']?.art??'pirate',target?.status,56))
         .child(v_flex().flex_1().gap(5).child(div().text_size(18).font_semibold().text_color('#e0ece6').child(target?label(target):'Session unavailable'))
-          .child(div().text_size(11).text_color('#e8bd70').child(`INSPECTION ONLY · ${target?stateLabel(target):'Disconnected'}`)))
-        .child(button('back-firstmate','Back to firstmate',(_e,c)=>c.spawn(a=>this.openFirstmate(a,props().target)),true)))
+          .child(div().text_size(11).text_color('#e8bd70').child(`INSPECTION ONLY · ${target?stateLabel(target):'Disconnected'}`))))
       .child(div().text_size(11).text_color('#9eb7b4').child(target?'Live terminal text · selection and copy enabled · direct input disabled':'Terminal output unavailable · direct input disabled'))
       .child(Editor.new(this.editor).flex_1().min_h(0).size_full())
       .child(div().text_size(10).text_color(this.error?'#edc478':'#8fa8a9').child(this.error||(!target?'Waiting for the session to reconnect':this.updated?'Updates every second · up to 2,000 history lines':'Waiting for output')));
@@ -647,32 +604,34 @@ export default class Fleet extends View {
       .child(div().text_size(12).child('Keep every session running. Only the pane arrangement changes.'))
       .child(button('preset-daily',this.busy?'Applying…':'Chat + terminals',choose('daily')))
       .child(div().text_size(12).text_color('#a2bab7').child('Coordinator on the left, your terminals stacked on the right.'))
-      .child(button('preset-equal',this.busy?'Applying…':'Equal grid',choose('equal')))
+      .child(button('preset-equal',this.busy?'Applying…':'Equal grid · recommended',choose('equal')))
       .child(div().text_size(12).text_color('#a2bab7').child('Equal cells, with the coordinator first.'))
       .child(h_flex().justify_end().child(button('cancel-presets','Cancel',()=>closeOverlay(overlay))));
   }
 
   header() {
     const space=spaces().find(s=>s.active);
+    const showTabs=Boolean(space&&space.tabs.length>1);
+    if(this.showTabs!==showTabs) {this.showTabs=showTabs;run(showTabs?'layout.show':'layout.hide',{id:'fleet-tabs'});}
     const coordinator=config().coordinators.find(r=>terminals().some(t=>matches(t,r)&&t.space===space?.id));
     const current=panes().find(p=>p.focused);
-    const zoom=zoomTarget(panes(),focused()?.tab);
     const inspection=Object.entries(config().inspections).find(([_key,i])=>i.space===space?.id);
     const inspected=Boolean(inspection);
     const secondmate=inspection&&config().coordinators.find(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===inspection[0]);
     const canAddTerminal=()=>{
-      const pane=panes().find(p=>p.pane===current?.pane);
-      const owner=pane&&spaces().find(s=>s.tabs.some(t=>t.id===pane.tab));
-      return Boolean(pane&&paneReady(pane.pane)&&this.canAddTab(owner?.id));
+      const owner=spaces().find(s=>s.id===space?.id),pane=panes().find(p=>p.pane===current?.pane);
+      return this.canAddTab(owner?.id)&&(!owner.tabs.length||Boolean(pane&&paneReady(pane.pane)&&owner.tabs.some(t=>t.id===pane.tab)));
     };
     return h_flex().size_full().px(18).gap(12).items_center().bg('#192e34')
       .child(v_flex().flex_1().min_w(0).gap(3)
         .child(div().truncate().font_semibold().text_size(14).text_color('#dce6e3').child(space?.name??'Welcome aboard'))
         .child(div().truncate().text_size(11).text_color('#a2bab7').child(`${coordinator?'Coordinator workspace':secondmate?'Secondmate workspace':inspected?'Worker inspection':'Unsupervised'} · ${space?.machine??'local'}`)))
-      .when(canAddTerminal(),el=>el.child(button('new-terminal','+ Your terminal',()=>canAddTerminal()&&run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane}))))
-      .when(Boolean(zoom&&paneReady(zoom.pane)),el=>el.child(button('zoom-grid',zoom.zoomed?'Restore grid':'Focus pane',()=>run(`one-piece.focus-pane:${zoom.pane}`))))
-      .when(Boolean(this.presetTarget(current?.tab)),el=>el.child(button('grid-presets','Arrange',()=>openOverlay({mod:'one-piece',kind:'dialog',width:480,height:320,props:{view:'presets',tab:current.tab}}))))
-      .child(button('restore-layout','Restore layout',()=>this.openRestore()));
+      .when(canAddTerminal(),el=>el.child(button('new-terminal','Add terminal',()=>{
+        if(!canAddTerminal()) return;
+        if(!spaces().find(s=>s.id===space.id)?.tabs.length) run('tab.new',{space:space.id});
+        else run('pane.split',{direction:panes().filter(p=>p.tab===current.tab).length>1?'down':'right',pane:current.pane});
+      })))
+      .when(Boolean(space&&space.tabs.length),el=>el.child(button('workspace-menu','···',()=>this.openActions('workspace',{space:space.id,tab:space.tabs.find(t=>t.active)?.id??current?.tab}))));
   }
 
   canAddTab(spaceId) {
@@ -683,15 +642,66 @@ export default class Fleet extends View {
     return inspections.every(([key])=>config().coordinators.some(r=>r.role==='secondmate'&&`${r.terminal}:${r.created}`===key));
   }
 
+  openActions(scope,target) {
+    openOverlay({mod:'one-piece',kind:'popup',width:240,height:scope==='workspace'?240:100,props:{view:'actions',scope,...target}});
+  }
+
+  actionsView() {
+    const {scope,space:spaceId,tab:tabId,pane:paneId,overlay}=props();
+    const space=spaces().find(s=>s.id===spaceId||(!spaceId&&s.tabs.some(t=>t.id===tabId)));
+    const panel=v_flex().p(10).gap(8).bg('#192e34');
+    const invoke=action=>(e,c)=>{closeOverlay(overlay);return action(e,c);};
+    if(scope==='pane') {
+      const pane=panes().find(p=>p.pane===paneId),terminal=terminals().find(t=>t.address===pane?.terminal);
+      if(paneReady(paneId)&&terminal&&!isWorker(terminal)&&!config().coordinators.some(r=>matches(terminal,r)))
+        panel.child(button(`close-${paneId}`,'Close terminal',invoke(()=>this.requestClose('pane',paneId))));
+      return panel;
+    }
+    if(!space||!machines().some(m=>m.name===space.machine&&m.layout==='ready')) return panel.child(div().child('Workspace unavailable'));
+    if(scope==='workspace') {
+      const coordinator=config().coordinators.find(r=>terminals().some(t=>matches(t,r)&&t.space===space.id)||config().inspections[`${r.terminal}:${r.created}`]?.space===space.id);
+      if(coordinator) panel.child(button('crew-appearance','Crew appearance',invoke(()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:300,props:{view:'crew-appearance',target:coordinator}}))));
+      if(this.presetTarget(tabId)) panel.child(button('grid-presets','Arrangement',invoke(()=>{
+        if(this.presetTarget(tabId)) openOverlay({mod:'one-piece',kind:'dialog',width:480,height:320,props:{view:'presets',tab:tabId}});
+      })));
+      if(space.tabs.length&&this.canAddTab(space.id)) panel.child(button('add-tab','New tab',invoke(()=>{
+        if(this.canAddTab(space.id)&&spaces().find(s=>s.id===space.id)?.tabs.length) run('tab.new',{space:space.id});
+      })));
+    }
+    const tab=space.tabs.find(t=>t.id===tabId);
+    if(tab&&(scope==='tab'||space.tabs.length===1)) {
+      panel.child(button(`rename-tab-${tab.id}`,'Rename tab',invoke(()=>{
+        const current=spaces().find(s=>s.id===space.id)?.tabs.find(t=>t.id===tab.id);
+        if(current&&machines().some(m=>m.name===space.machine&&m.layout==='ready')) openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:current.name}});
+      })));
+      panel.child(button(`close-tab-${tab.id}`,'Close tab',invoke(()=>this.requestClose('tab',tab.id))));
+    }
+    return panel;
+  }
+
+  crewView() {
+    const {target,overlay}=props();
+    const panel=v_flex().size_full().p(20).gap(12).bg('#192e34').text_color('#dce6e3').child(div().child('Crew appearance'));
+    for(const [id,crew] of Object.entries(crews)) {
+      const used=config().coordinators.some(r=>r.terminal!==target.terminal&&(r.crew??'strawhat')===id);
+      if(used) panel.child(div().child(`${crew.name} · already assigned`));
+      else panel.child(button(`crew-${id}`,crew.name,()=>{
+        const registrations=config().coordinators;
+        const current=registrations.find(r=>r.terminal===target.terminal&&r.created===target.created);
+        if(current&&!registrations.some(r=>r!==current&&(r.crew??'strawhat')===id)) save({coordinators:registrations.map(r=>r===current?{...r,crew:id}:r)});
+        closeOverlay(overlay);
+      },(target.crew??'strawhat')===id));
+    }
+    return panel.child(button('cancel-crew','Cancel',()=>closeOverlay(overlay)));
+  }
+
   tabsView() {
     const space=spaces().find(s=>s.active);
     const row=h_flex().size_full().px(8).gap(6).items_center().overflow_x_scrollbar().bg('#192e34');
-    if(!space) return row;
+    if(!space||space.tabs.length<2) return row;
     for(const tab of space.tabs) row.child(h_flex().gap(3).flex_none()
       .child(button(`select-tab-${tab.id}`,tab.name||'Terminal',(_e,c)=>c.spawn(a=>this.navigate(tab.id,()=>run('tab.select',{id:tab.id}),a)),tab.active))
-      .child(button(`rename-tab-${tab.id}`,'Rename',()=>openOverlay({mod:'one-piece',kind:'dialog',width:420,height:200,props:{view:'rename-tab',tab:tab.id,space:space.id,name:tab.name}})))
-      .child(button(`close-tab-${tab.id}`,'Close',()=>this.requestClose('tab',tab.id))));
-    if(this.canAddTab(space.id)) row.child(button('add-tab','+ New tab',()=>{if(this.canAddTab(space.id)) run('tab.new',{space:space.id});}));
+      .when(tab.active,el=>el.child(button(`tab-menu-${tab.id}`,'···',()=>this.openActions('tab',{space:space.id,tab:tab.id})))));
     return row;
   }
 
@@ -777,14 +787,16 @@ export default class Fleet extends View {
     const coordinator=terminal&&config().coordinators.find(r=>matches(terminal,r));
     const supervisor=terminal&&isWorker(terminal);
     return h_flex().size_full().px(10).gap(8).items_center().bg('#1b3339').text_color('#dbe8e2')
-      .when(Boolean(coordinator),el=>el.child(art('luffy',terminal.status,30)))
-      .child(div().flex_1().truncate().text_size(11).child(coordinator?`Luffy · ${label(terminal)}`:supervisor?`${label(terminal)} · open inspection from the fleet`:pane.mod?'Inspection only':`${terminal?label(terminal):pane.title} · ${(config().shells??[]).some(r=>r.terminal===terminal?.address&&r.created===terminal?.created_ms&&r.newProcess)?'New shell':'Your terminal'}`))
-      .when(paneReady(pane.pane),el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>run(`one-piece.focus-pane:${pane.pane}`))))
-      .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`close-${pane.pane}`,'Close',()=>this.requestClose('pane',pane.pane))));
+      .when(Boolean(coordinator),el=>el.child(art(`crew-${crewOf(coordinator).captain}`,terminal.status,30)))
+      .child(div().flex_1().truncate().text_size(11).child(coordinator?`${crewOf(coordinator).captain} · ${label(terminal)}`:supervisor?`${label(terminal)} · open inspection from the fleet`:pane.mod?'Inspection only':`${terminal?label(terminal):pane.title} · Your terminal`))
+      .when(paneReady(pane.pane)&&panes().filter(p=>p.tab===pane.tab).length>1,el=>el.child(button(`zoom-${pane.pane}`,pane.zoomed?'Grid':'Focus',()=>run(`one-piece.focus-pane:${pane.pane}`))))
+      .when(Boolean(paneReady(pane.pane)&&terminal&&!coordinator&&!supervisor),el=>el.child(button(`pane-menu-${pane.pane}`,'···',()=>{if(paneReady(pane.pane))this.openActions('pane',{pane:pane.pane});})));
   }
 
   render(cx) {
     switch(props()?.view) {
+      case 'actions':return this.actionsView();
+      case 'fleet-menu':return this.fleetMenu();
       case 'tabs':return this.tabsView();
       case 'rename-tab':return this.renameTabView();
       case 'close-scope':return this.closeScopeView();
@@ -794,7 +806,7 @@ export default class Fleet extends View {
       case 'setup':return this.setupView(cx);
       case 'records':return this.recordsView();
       case 'firstmates':return this.firstmatesView();
-      case 'restore':return this.restoreView();
+      case 'crew-appearance':return this.crewView();
       case 'presets':return this.presetsView();
       default:return this.sidebar(cx);
     }

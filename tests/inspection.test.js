@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import * as fleet from '../mods/one-piece/fleet.js';
-import * as shells from '../mods/one-piece/shells.js';
 import * as records from '../mods/one-piece/records.js';
 
 // The native UI runtime is unavailable in Node; execute the real controller with a host fixture.
@@ -17,7 +16,7 @@ function host({failTab=false,remote=false,failCleanup=false,independent=false,re
   let placeholder;
   let cfg={coordinators:registrations,inspections:{}};
   let recordReads={};
-  const context={ScrollHandle:{new:()=>({release(){},scroll_to_item(){}})},...fleet,...shells,...records,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
+  const context={ScrollHandle:{new:()=>({release(){},scroll_to_item(){}})},...fleet,...records,label:fleet.terminalLabel,View:class{},Date,JSON,Set,Error,
     coreTerminals:()=>sessions,spaces:()=>workspaces,panes:()=>views,
     machines:()=>[{name:remote?'hz-server':null,layout:'ready'}],
     shared:key=>key==='one-piece'?cfg:recordReads,setShared:(key,value)=>{if(key==='one-piece') cfg=value;else recordReads=value;},notify:value=>errors.push(value),
@@ -527,61 +526,6 @@ test('replacing a stale home preserves registrations on other machines',async()=
   assert.ok(h.config().coordinators.some(r=>r.terminal==='t3'));
 });
 
-function restoreHost(remote=false) {
-  const h=host({remote});
-  const record={terminal:remote?'hz-server/t20':'t20',created:20,space:remote?'hz-server/captain':'captain',tab:remote?'hz-server/chat':'chat',cwd:'/work/project',machine:remote?'hz-server':null};
-  h.context.setShared('one-piece',{...h.config(),shells:[record]});
-  const hc=h.context.hc;
-  h.context.hc=async args=>{
-    const result=await hc(args);
-    if(args[0]==='run') {
-      const address=JSON.parse(result.stdout).address;
-      h.sessions.push({address,created_ms:21,state:'live',program:{shell:true},name:args[args.indexOf('--name')+1],labels:{'one-piece.restored':'true'}});
-      h.workspaces.at(-1).tabs[0].id=record.tab;
-      h.views.push({terminal:address,tab:record.tab,cwd:record.cwd});
-    }
-    return result;
-  };
-  return {...h,record};
-}
-
-test('restoration starts only a new default shell in the recorded machine, directory and tab',async()=>{
-  const h=restoreHost(true);
-  await h.controller.restoreShell(h.record,h.cx);
-  const args=h.calls.find(([cmd,args])=>cmd==='hc'&&args[0]==='run')[1];
-  assert.equal(args[args.indexOf('--on')+1],'hz-server');
-  assert.equal(args[args.indexOf('--cwd')+1],'/work/project');
-  assert.ok(args.includes('herdr.space=captain'));
-  assert.ok(args.includes('herdr.tab=chat'));
-  assert.ok(args.includes('one-piece.restored=true'));
-  assert.ok(!args.includes('--'));
-  assert.equal(h.config().shells[0].newProcess,true);
-  assert.equal(h.errors.filter(e=>e.level==='error').length,0);
-  assert.ok(!h.calls.some(([cmd])=>cmd==='pane.focus'||cmd==='terminal.kill'));
-});
-
-test('restoration does nothing when the original process survives or the machine disconnects',async()=>{
-  const h=restoreHost();
-  h.sessions.push({address:'t20',created_ms:20,state:'live'});
-  await h.controller.restoreShell(h.record,h.cx);
-  assert.equal(h.calls.length,0);
-  h.sessions.pop();
-  h.context.machines=()=>[{name:null,layout:'unavailable'}];
-  await h.controller.restoreShell(h.record,h.cx);
-  assert.equal(h.calls.length,0);
-});
-
-test('restoration retries use the same unique name after an uncertain response',async()=>{
-  const h=restoreHost();
-  h.context.hc=async args=>{h.calls.push(['hc',args]);throw new Error('Connection lost');};
-  await h.controller.restoreShell(h.record,h.cx);
-  await h.controller.restoreShell(h.record,h.cx);
-  const requests=h.calls.filter(([cmd])=>cmd==='hc').map(([,args])=>args);
-  assert.equal(requests.length,2);
-  assert.equal(requests[0][requests[0].indexOf('--name')+1],requests[1][requests[1].indexOf('--name')+1]);
-  assert.ok(h.errors.some(e=>e.body.includes('Connection lost')));
-});
-
 test('retry from another controller leaves an active inspection placeholder alone',async()=>{
   const h=host({remote:true});
   const original=h.context.hc;
@@ -642,12 +586,12 @@ function paneControlsHost() {
   Object.assign(h.context,{h_flex:element,v_flex:element,div:element,
     focused:()=>({tab:'hz-server/tab'}),props:()=>({pane:'hz-server/p1'})});
   h.workspaces.push({id:'hz-server/space',machine:'hz-server',active:true,tabs:[{id:'hz-server/tab'}]});
-  h.views.push({pane:'hz-server/p1',terminal:h.worker.address,tab:'hz-server/tab',focused:true});
+  h.views.push({pane:'hz-server/p1',terminal:h.worker.address,tab:'hz-server/tab',focused:true},{pane:'hz-server/p2',tab:'hz-server/tab',mod:'probe'});
   persistentCommands(h);
   return {...h,clicks,render(){clicks.clear();h.controller.header();h.controller.paneHeader();}};
 }
 
-const paneControlIds=['new-terminal','zoom-grid','zoom-hz-server/p1','close-hz-server/p1'];
+const paneControlIds=['new-terminal','zoom-hz-server/p1','pane-menu-hz-server/p1'];
 
 test('unavailable and loading remote panes offer no split, zoom or close controls',()=>{
   for(const layout of ['unavailable','loading']) {
@@ -660,7 +604,7 @@ test('unavailable and loading remote panes offer no split, zoom or close control
 
 test('pane callbacks recheck readiness after rendering and work after reconnection',async()=>{
   const h=paneControlsHost();
-  h.render();
+  h.render();h.calls.length=0;
   h.context.machines=()=>[{name:'hz-server',layout:'unavailable'}];
   for(const id of paneControlIds) await h.clicks.get(id)(null,h.cx);
   assert.equal(h.calls.length,0);
@@ -668,7 +612,7 @@ test('pane callbacks recheck readiness after rendering and work after reconnecti
   h.render();
   for(const id of paneControlIds) await h.clicks.get(id)(null,h.cx);
   assert.equal(h.calls.filter(([cmd])=>cmd==='pane.split').length,1);
-  assert.equal(h.calls.filter(([cmd])=>cmd==='pane.zoom').length,2);
+  assert.equal(h.calls.filter(([cmd])=>cmd==='pane.zoom').length,1);
   assert.equal(h.calls.filter(([cmd])=>cmd==='overlay').length,1);
 });
 
@@ -925,12 +869,21 @@ function closeRoutesHost() {
   }};
 }
 
+function renderActions(h,scope,target={}) {
+  const previous=h.context.props;
+  h.context.props=()=>({view:'actions',scope,space:'captain',tab:'probe',overlay:'menu',...target});
+  h.controller.actionsView();
+  // Keep the menu props while callbacks run, matching its native controller.
+  return ()=>{h.context.props=previous;};
+}
+
 test('owned tabs route the live Close probe through confirmation before ending its process',()=>{
   const layout=JSON.parse(readFileSync(new URL('../layouts/one-piece.json',import.meta.url)));
   const content=layout.children[1].children.find(n=>n.id==='fleet-tabs').content;
   assert.equal(content.mod,'one-piece');
   assert.equal(content.props.view,'tabs');
   const h=closeRoutesHost();h.render();
+  renderActions(h,'tab');
   h.actions.get('close-tab-probe')(null,h.cx);
   assert.ok(!h.calls.some(([cmd])=>cmd==='tab.close'));
   h.confirm();
@@ -980,7 +933,9 @@ test('tab close lists personal processes and preserves the parked inspection wor
 test('owned tabs retain select and rename and restrict new personal tabs in worker spaces',()=>{
   const h=closeRoutesHost();h.render();
   h.actions.get('select-tab-other')(null,h.cx);
+  renderActions(h,'tab');
   h.actions.get('rename-tab-probe')(null,h.cx);
+  renderActions(h,'workspace');
   h.actions.get('add-tab')(null,h.cx);
   assert.ok(h.calls.some(([cmd,args])=>cmd==='tab.select'&&args.id==='other'));
   assert.ok(h.calls.some(([cmd,args])=>cmd==='overlay'&&args.props.view==='rename-tab'));
@@ -1050,12 +1005,12 @@ test('secondmate inspection spaces can add personal tabs and reject addition aft
   const h=closeRoutesHost();
   h.config().coordinators.push({terminal:'t2',created:12,role:'secondmate'});
   h.config().inspections['t2:12']={space:'captain',tab:'probe',pane:'viewer'};
-  h.render();h.actions.get('add-tab')();
+  h.render();renderActions(h,'workspace');h.actions.get('add-tab')();
   assert.ok(h.calls.some(([cmd])=>cmd==='tab.new'));
   h.calls.length=0;
   h.context.machines=()=>[{name:null,layout:'unavailable'}];
   h.actions.get('add-tab')();
-  assert.equal(h.calls.length,0);
+  assert.ok(!h.calls.some(([cmd])=>cmd==='tab.new'));
 });
 
 test('pane confirmation rejects a replacement process and direct supervised closure',()=>{
@@ -1087,7 +1042,7 @@ test('finished terminal panes close with already-ended wording and reject replac
 test('pane-header Close uses the shared pane confirmation',()=>{
   const h=closeRoutesHost();
   h.context.props=()=>({view:'pane',pane:'probe-pane'});
-  h.render();h.actions.get('close-probe-pane')();
+  h.render();renderActions(h,'pane',{pane:'probe-pane'});h.actions.get('close-probe-pane')();
   const spec=h.calls.find(([cmd])=>cmd==='overlay')[1];
   assert.equal(spec.props.view,'close-scope');
   assert.equal(spec.props.snapshot.kind,'pane');
@@ -1235,26 +1190,6 @@ test('a sibling added after pane confirmation prevents tab closure and survives'
   assert.equal(h.sessions.find(t=>t.address==='t5').state,'live');
 });
 
-test('sidebar records hidden terminal directory changes without a render',()=>{
-  const h=host({independent:true});
-  h.worker.program={shell:true};
-  h.workspaces.push({id:'personal',machine:null,tabs:[{id:'personal-tab'}]});
-  h.views.push({pane:'personal-pane',terminal:h.worker.address,tab:'personal-tab',cwd:'/initial'});
-  h.context.props=()=>({});
-  let tick;
-  h.cx.focus_handle=()=>({});
-  h.cx.spawn=()=>{};
-  h.cx.timer={every(ms,callback){if(ms===1000) tick=callback;}};
-  h.controller.init({},h.cx);
-  assert.equal(typeof tick,'function');
-  tick(h.cx);
-  assert.equal(h.config().shells[0].cwd,'/initial');
-  h.views[0].cwd='/changed directory';
-  tick(h.cx);
-  assert.equal(h.config().shells[0].cwd,'/changed directory');
-  assert.equal(h.calls.length,0);
-});
-
 function persistentCommands(h) {
   const run=h.context.run;
   h.context.run=(cmd,args)=>{
@@ -1284,7 +1219,7 @@ function navigationHost() {
   return h;
 }
 
-for(const route of ['tab','space','select','header focus','pane focus']) test(`supervised navigation via ${route} opens inspection and preserves mixed personal panes`,async()=>{
+for(const route of ['tab','space','select','pane focus']) test(`supervised navigation via ${route} opens inspection and preserves mixed personal panes`,async()=>{
   const h=navigationHost();
   h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
   const personal={address:'t3',created_ms:13,state:'live',labels:{}};
@@ -1373,7 +1308,7 @@ test('remote unplaced rows preserve machine identity and exclude offline session
   assert.ok(!h.actions.has('session-remote/t2'));
 });
 
-for(const route of ['pane focus','header focus']) test(`${route} completes inspection after parking closes the pane header`,async()=>{
+for(const route of ['pane focus']) test(`${route} completes inspection after parking closes the pane header`,async()=>{
   const h=navigationHost();
   h.worker.labels={'firstmate.home':'test','firstmate.task':'work'};
   const personal={address:'t3',created_ms:13,state:'live',labels:{}};
@@ -1393,16 +1328,15 @@ for(const route of ['pane focus','header focus']) test(`${route} completes inspe
   assert.equal(h.errors.length,0);
 });
 
-test('machine shortcuts reveal local and offline remote groups without selecting sessions',()=>{
-  const h=navigationHost(),revealed=[];
+test('machine headings retain offline identities without duplicate shortcuts or session selection',()=>{
+  const h=navigationHost();
   h.context.machines=()=>[{name:null,layout:'ready'},{name:'hz-server',layout:'unavailable'}];
-  h.controller.machineScroll={scroll_to_item:index=>revealed.push(index)};
   h.controller.sidebar(h.cx);
-  assert.ok(h.actions.has('jump-machine-hz-server'));
-  h.actions.get('jump-machine-hz-server')(null,h.cx);
-  h.actions.get('jump-machine-local')(null,h.cx);
-  assert.deepEqual(revealed,[1,0]);
+  assert.ok(!h.actions.has('jump-machine-hz-server'));
+  assert.ok(!h.actions.has('jump-machine-local'));
   assert.ok(h.texts.includes('Wano'));
+  assert.ok(h.texts.includes('hz-server'));
+  assert.ok(h.texts.includes('Machine unavailable'));
   assert.ok(!h.calls.some(([cmd])=>cmd==='space.select'||cmd==='pane.focus'||cmd==='hc'));
 });
 
@@ -1428,4 +1362,116 @@ test('disconnecting invalidates pending task records even when the machine recon
   responses[1]({code:0,stdout:JSON.stringify([{address:'t2',created_ms:12,task:'work',state:'working',decisions:[]}])});
   await Promise.all(pending);
   assert.equal(h.context.shared('one-piece-records')[key].rows[0].state,'working');
+});
+
+test('approved recovery retirement removes only bookkeeping without starting or ending sessions',()=>{
+  const h=host({independent:true});
+  h.config().shells=[{terminal:'old',created:1,cwd:'/old'}];
+  h.config().aliases={local:'Water 7'};
+  h.context.props=()=>({});
+  h.cx.focus_handle=()=>({});h.cx.spawn=()=>{};
+  const timers=[];
+  h.cx.timer={every(ms){timers.push(ms);}};
+  const before=JSON.stringify(h.sessions);
+  h.controller.init({},h.cx);
+  assert.equal(h.config().shells,undefined);
+  assert.equal(h.config().aliases.local,'Water 7');
+  assert.equal(JSON.stringify(h.sessions),before);
+  assert.equal(h.calls.length,0);
+  assert.ok(!timers.includes(1000));
+});
+
+test('Add terminal creates the first tab in an empty workspace and refuses an offline machine',()=>{
+  const h=paneControlsHost();
+  h.workspaces[0].tabs=[];h.views.length=0;
+  h.render();
+  assert.ok(h.clicks.has('new-terminal'));
+  assert.ok(!h.clicks.has('restore-layout'));
+  h.clicks.get('new-terminal')();
+  assert.equal(h.calls.filter(([cmd])=>cmd==='tab.new').length,1);
+  assert.equal(h.calls.find(([cmd])=>cmd==='tab.new')[1].space,'hz-server/space');
+  h.calls.length=0;
+  h.context.machines=()=>[{name:'hz-server',layout:'unavailable'}];
+  h.clicks.get('new-terminal')();
+  assert.equal(h.calls.length,0);
+});
+
+test('attention filtering uses original rows and includes blocked coordinators and unmatched workers',()=>{
+  const h=navigationHost();
+  h.config().coordinators=[{terminal:'t2',created:12,home:'first',role:'firstmate'}];
+  h.worker.status='blocked';
+  h.sessions.push({address:'t3',created_ms:13,state:'live',status:'blocked',labels:{'firstmate.home':'missing','firstmate.task':'review'}},
+    {address:'t4',created_ms:14,state:'live',status:'idle',labels:{'firstmate.home':'missing','firstmate.task':'quiet'}});
+  h.controller.sidebar(h.cx);
+  assert.ok(!h.actions.has('jump-machine-local'));
+  assert.ok(!h.actions.has('attention-t2'));
+  assert.ok(!h.actions.has('setup'));
+  assert.ok(!h.actions.has('motion'));
+  assert.ok(h.actions.has('filter-attention'));
+  h.actions.get('filter-attention')(null,h.cx);
+  h.actions.clear();h.controller.sidebar(h.cx);
+  assert.ok(h.actions.has('session-t2'));
+  assert.ok(h.actions.has('session-t3'));
+  assert.ok(!h.actions.has('session-t4'));
+});
+
+test('workspace and pane actions have one visible home',()=>{
+  const h=closeRoutesHost();
+  h.controller.header();
+  assert.ok(!h.actions.has('zoom-grid'));
+  assert.ok(!h.actions.has('grid-presets'));
+  assert.ok(h.actions.has('workspace-menu'));
+  h.actions.clear();h.controller.tabsView();
+  assert.ok(h.actions.has('tab-menu-probe'));
+  assert.ok(!h.actions.has('rename-tab-probe'));
+  assert.ok(!h.actions.has('close-tab-probe'));
+  assert.ok(!h.actions.has('add-tab'));
+  h.actions.clear();h.context.props=()=>({pane:'probe-pane'});h.controller.paneHeader();
+  assert.ok(h.actions.has('pane-menu-probe-pane'));
+  assert.ok(!h.actions.has('close-probe-pane'));
+});
+
+test('Add terminal rejects a pane moved to another workspace after rendering',()=>{
+  const h=paneControlsHost();h.render();
+  h.workspaces.push({id:'inspection',machine:'hz-server',tabs:[{id:'worker-tab'}]});
+  h.views[0].tab='worker-tab';
+  h.clicks.get('new-terminal')();
+  assert.ok(!h.calls.some(([cmd])=>cmd==='pane.split'));
+});
+
+test('crew selection saves across freshly decoded shared configuration reads',()=>{
+  const h=closeRoutesHost(),target={terminal:'t2',created:12,role:'firstmate',home:'test'};
+  h.config().coordinators=[target];
+  const shared=h.context.shared;
+  h.context.shared=key=>JSON.parse(JSON.stringify(shared(key)));
+  h.context.props=()=>({target,overlay:'crew'});
+  h.controller.crewView();h.actions.get('crew-redhair')();
+  assert.equal(h.config().coordinators[0].crew,'redhair');
+});
+
+test('attention exposes blocked personal sessions inside coordinator workspaces',async()=>{
+  const h=closeRoutesHost();
+  h.config().coordinators=[{terminal:'t2',created:12,home:'first',role:'firstmate'}];
+  h.sessions.push({address:'t3',created_ms:13,state:'live',status:'blocked',labels:{}});
+  h.views.push({pane:'personal',tab:'other',terminal:'t3'});
+  h.config().aliases={};h.config().characters={};
+  h.context.props=()=>({});h.controller.filtered=true;h.controller.collapsed={};h.context.theme=()=>({foreground:"white"});
+  h.controller.sidebar(h.cx);
+  assert.ok(h.actions.has('session-t3'));
+  assert.ok(h.texts.includes('Independent · Needs you'));
+});
+
+test('attention exposes personal sessions inside a parked secondmate inspection workspace',()=>{
+  const h=closeRoutesHost();
+  h.config().coordinators=[{terminal:'t2',created:12,home:'second',role:'secondmate'}];
+  h.config().inspections={'t2:12':{space:'captain'}};
+  h.views[0].terminal=null;
+  h.sessions.push({address:'t3',created_ms:13,state:'live',status:'blocked',labels:{}});
+  h.views.push({pane:'personal',tab:'other',terminal:'t3'});
+  h.config().aliases={};h.config().characters={};
+  h.context.theme=()=>({foreground:'white'});h.context.props=()=>({});
+  h.controller.filtered=true;h.controller.collapsed={};
+  h.controller.sidebar(h.cx);
+  assert.ok(h.actions.has('session-t3'));
+  assert.ok(h.texts.includes('Independent · Needs you'));
 });

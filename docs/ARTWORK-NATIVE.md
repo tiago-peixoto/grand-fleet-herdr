@@ -18,7 +18,7 @@ The exporter and tests use only Python's standard library and the installed Imag
 Pillow and additional dependencies are unnecessary.
 Use `python3 tools/build-artwork.py --output /tmp/one-piece-artwork` to export elsewhere.
 The default destination is `mods/one-piece/assets/`.
-Only the 26 named output files are replaced, and unrelated files remain intact.
+The exporter replaces its named output files and leaves unrelated files intact.
 All source frames are validated before output starts.
 A conversion failure stops the build, but previously written output files are not rolled back.
 
@@ -109,3 +109,20 @@ They compare static PNG pixels with the first source frame and reject empty cell
 The worker test bands record this approved sheet and must be reviewed if the source changes.
 The tests rebuild twice to check byte identity.
 Native playback in a running Herdr window remains an integration check for the parent mod work.
+
+## Approved crew expansion, 2026-11-14
+
+The native mod includes the 33 approved sheets in `prototype/crew-artwork`.
+Thirty character sheets contain four frames for each of sleeping, walking, and sitting.
+These cover four coordinators, eighteen named workers, and eight generic pirate colors.
+Three ship sheets cover Red Force, Queen Mama Chanter, and Mammoth.
+Sunny retains its existing source.
+Mammoth represents the Beasts crew through Jack’s ship, not Kaido’s flagship.
+
+Straw Hats support nine named workers before generic pirates.
+Each other crew supports three named workers before generic pirates.
+Generic pirates cycle through eight colors and retain individual numbers.
+This imposes no worker limit, but colors repeat beyond eight generic workers per crew.
+Assignments persist separately for each worker identity and selected crew.
+Changing crews and returning does not exchange surviving workers’ appearances.
+Unknown status uses a static standing frame instead of claiming sleep, work, or a request for attention.

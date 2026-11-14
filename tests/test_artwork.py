@@ -53,6 +53,20 @@ class ArtworkTests(unittest.TestCase):
             output = Path(directory)
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
             expected_names = {name+ext for name in RECIPES for ext in ('.gif', '.png')}
+            for sheet in (ROOT / 'prototype/crew-artwork').glob('*-study-v1.png'):
+                name = sheet.name.removesuffix('-study-v1.png')
+                ship = name in ('red-force', 'queen-mama-chanter', 'mammoth')
+                names = [f'crew-{name}'] if ship else [f'crew-{name}-{state}' for state in ('idle', 'working', 'blocked')]
+                for animation in names:
+                    expected_names.update(animation+ext for ext in ('.gif', '.png'))
+                    gif = output / (animation+'.gif')
+                    size = 128 if ship else 64
+                    self.assertEqual(im('identify', '-format', '%w %h\n', gif).decode().splitlines(), [f'{size} {size}']*4)
+                    raw = im(gif, '-coalesce', '-depth', '8', 'rgba:-')
+                    stride = size*size*4
+                    self.assertGreater(len({raw[i:i+stride] for i in range(0,len(raw),stride)}), 1)
+                    for ext in ('.gif', '.png'):
+                        self.assertEqual((ASSETS / (animation+ext)).read_bytes(), (output / (animation+ext)).read_bytes())
             self.assertEqual({p.name for p in output.iterdir()}, expected_names)
             before = {p.name: p.read_bytes() for p in output.iterdir()}
             sources = {}

@@ -33,8 +33,10 @@ Independent agents contribute to attention counts with an Independent label, wit
 Workers retain their own workspaces, separate from personal terminals.
 A grid keeps independent work beside the coordinator without transferring ownership between them.
 Changing selection or enlarging a pane preserves running sessions.
-After reconnection, an explicit Restore layout action can recreate missing personal shells in their previous directories.
-The interface distinguishes new shells from surviving sessions and never presents recreation as recovery of a prior process.
+Herdr owns terminal reconnection.
+Add terminal is the single visible action for creating a personal shell in a coordinator workspace.
+The mod does not track missing personal shells or offer a separate Restore layout workflow.
+A new shell is a new process and does not restore a previous command, directory, or conversation.
 Close identifies the terminal and explains that its process ends.
 Closing a view or session does not claim that firstmate's durable obligations have been completed or discarded.
 
@@ -74,6 +76,7 @@ This mod adds no command hierarchy, merge authority, or automatic delegation pol
 Personal preferences, credentials, and fleet records remain private to the captain's home.
 The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.
 The author approved this vision on 2026-11-12.
+On 2026-11-14, the author approved the simplified interface and replaced Restore layout with Add terminal.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
 A change should be resisted when visual convenience creates competing command paths, hides uncertainty, assumes consent, or makes firstmate depend on this interface.

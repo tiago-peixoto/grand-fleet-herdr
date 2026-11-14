@@ -1930,3 +1930,38 @@ After reload, the sidebar returned to Water 7 while both terminal panes retained
 These observations establish successful delivery and navigation for these samples only.
 They do not reproduce or explain the historical missed click.
 No navigation workaround was added.
+
+## Approved simplification, 2026-11-14
+
+The author approved replacing Restore layout with Add terminal and implementing the reviewed scoped controls.
+This section supersedes earlier missing-shell recovery requirements.
+Herdr owns reconnection, and the mod no longer stores missing-shell recovery metadata.
+Migration removes only that metadata, without creating or ending terminals.
+The retired restore-layout command displays a migration notice without creating a process.
+
+Workspace, tab, pane, machine, and fleet actions now appear in their relevant menus.
+The tab strip appears only for multiple tabs.
+Machine headings remain visible above separate scrolling session lists.
+The attention control filters the original rows and includes blocked personal sessions in coordinator workspaces.
+Crew appearance selects one of four approved crews and preserves worker assignments when switching back.
+
+Validation used the isolated Grand Fleet Lab installation at `/private/tmp/op-app-31618`.
+Its old files were backed up before updating the lab copy.
+The normal Herdr installation and Grand Fleet Render Lab were not updated.
+The lab installer receipt was already inconsistent, so this validation used a controlled file copy rather than changing that receipt.
+
+Native clicks verified Crew appearance changed the remote coordinator to Red Force and Shanks with Benn Beckman and Yasopp.
+Add terminal created `op-hz-lab/t1q` in `op-hz-lab/op-hz-captain`.
+Existing coordinator `op-hz-lab/t1g` and personal terminal `op-hz-lab/t14` remained present.
+The existing personal terminal retained its displayed `native-remote-preset-ok` output.
+Focus enlarged the new pane, and Grid returned to the three-pane arrangement.
+Selecting hz-worker opened its separate inspection workspace without Add terminal.
+Selecting hz-captain returned to the preserved three-pane arrangement.
+The attention filter changed the sidebar without changing the active workspace.
+Native status reported no errors during these checks.
+
+The JavaScript suite passed 116 tests, including stale pane ownership and crew assignment preservation.
+The Python suite passed 39 tests, including installation checks and reproducible artwork exports.
+The native loading check passed with `herdr-app check mods/one-piece`.
+The code review findings were addressed with regression tests.
+This validation did not repeat the historical reconnection or flicker investigation.

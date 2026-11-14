@@ -98,6 +98,15 @@ def build(output):
         export(workers, worker_boxes[index*12:index*12+12], 64,
                44 if character == 'chopper' else 56, animations, output)
 
+    for sheet in sorted((ROOT / 'prototype/crew-artwork').glob('*-study-v1.png')):
+        name = sheet.name.removesuffix('-study-v1.png')
+        ship = name in ('red-force', 'queen-mama-chanter', 'mammoth')
+        boxes = extract_boxes(sheet, 1 if ship else 3)
+        animations = [(f'crew-{name}', range(4), [52]*4)] if ship else [
+            (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
+            for row, (state, delay) in enumerate([('idle', 85), ('working', 22), ('blocked', 70)])]
+        export(sheet, boxes, 128 if ship else 64, 116 if ship else 56, animations, output)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
