@@ -22,7 +22,10 @@ These observations establish real remote discovery, navigation, and direct input
 They do not establish complete cleanup.
 Local normal teardown stopped while releasing its worktree because paths differed between `/var` and `/private/var`.
 Claude exited locally, but its terminal remained a live shell and its worktree lease remained allocated.
-Remote normal cleanup and the local path discrepancy remain under investigation.
+Remote normal teardown subsequently removed worker `op-hz-lab/t28` and released its worktree lease.
+The cleanup receipt retained the report and showed an empty notification queue.
+An independent terminal lookup confirmed that `t28` no longer existed.
+The local path discrepancy remains under investigation.
 
 ## Current verification, 2026-11-14
 

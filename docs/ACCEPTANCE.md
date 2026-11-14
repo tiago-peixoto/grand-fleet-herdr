@@ -27,6 +27,11 @@ Registration changes made after those fixtures require fresh verification.
 | Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
 | Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Finish producer review, delivery, final checks, and dependency links |
 
+At mod commit `8a5da90`, all 9 JavaScript tests and 42 Python tests passed.
+The installed native loading check and command parity comparison also passed.
+These checks cover grouping, artwork, installation, compatibility, and emitted native actions.
+They do not replace the recorded interactive workflow checks.
+
 See [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for the runtime observations and their limits.
 See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.
 The full Firstmate lifecycle remains required, not optional follow-up work.
@@ -37,7 +42,8 @@ The full Firstmate lifecycle remains required, not optional follow-up work.
   Real local Claude coordinator and worker execution, automatic grouping, and direct terminal input passed.
   Real remote discovery, task execution, navigation, and direct terminal input also passed.
   Local normal cleanup stopped at a `/var` versus `/private/var` worktree path mismatch.
-  Complete cleanup remains under verification locally and remotely.
+  Remote normal cleanup released the worktree lease and removed the worker terminal.
+  Local cleanup remains incomplete.
   Remote automatic discovery and direct input also passed with a simulated coordinator and worker shell.
   Local surviving character identity also passed in the current native sidebar.
 - Deliver the producer change alongside the dependent mod.
