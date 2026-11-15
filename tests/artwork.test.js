@@ -101,16 +101,16 @@ test('a newcomer never takes the character of a surviving unassigned crewmate',a
   assert.equal(crowded['u9:12'].number,2);
 });
 
-test('a crewmate that loses its captain never shares a character with an unassigned crewmate',async()=>{
-  const {assignCrew,assignUnassigned}=await import('../mods/one-piece/artwork.js');
-  const unlinked=assignUnassigned([terminal('wu')],{});
-  assert.equal(unlinked['wu:12'].art,'crew-chopper');
+test('crewmates that lose their captain keep their characters beside unassigned crewmates',async()=>{
+  const {assignCrew}=await import('../mods/one-piece/artwork.js');
+  const unassigned={terminal:'unassigned',created:0,crew:'strawhat'};
+  const unlinked=assignCrew([terminal('wu')],{},unassigned);
   const linked=assignCrew([terminal('wa'),terminal('wb')],unlinked,{terminal:'t1',created:5,crew:'strawhat'});
+  assert.equal(linked['wu:12'].art,'crew-chopper');
   assert.equal(linked['wa:12'].art,'crew-chopper');
-  const after=assignUnassigned([terminal('wu'),terminal('wa'),terminal('wb')],linked);
-  assert.deepEqual(after['wu:12'],unlinked['wu:12']);
-  assert.deepEqual(after['wb:12'],linked['wb:12']);
-  const names=['wu','wa','wb'].map(w=>after[`${w}:12`].art);
-  assert.equal(new Set(names).size,3);
-  assert.deepEqual(assignUnassigned([terminal('wu'),terminal('wa'),terminal('wb')],after),after);
+  const crew=['wu','wa','wb','wn'].map(terminal);
+  const survivors=crew.map(w=>linked[`${w.address}:12`]).filter(Boolean);
+  const after=assignCrew(crew.filter(w=>!linked[`${w.address}:12`]),linked,unassigned,survivors);
+  for(const w of ['wu','wa','wb']) assert.deepEqual(after[`${w}:12`],linked[`${w}:12`]);
+  assert.equal(after['wn:12'].art,'crew-zoro');
 });

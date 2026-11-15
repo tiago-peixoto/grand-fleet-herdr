@@ -42,16 +42,3 @@ export function assignCrew(workers,previous,coordinator,reserved=[]) {
   }
   return assigned;
 }
-
-export function assignUnassigned(workers,previous) {
-  const coordinator={terminal:'unassigned',created:0,crew:'strawhat'};
-  const owner=`${coordinator.terminal}:${coordinator.created}:${coordinator.crew}`;
-  // Workers that kept art from a lost captain yield to the unassigned crew's own holders, so a clash renames only the newcomer to this list.
-  const held=workers.filter(w=>previous[identity(w)]).sort((a,b)=>(previous[identity(b)].owner===owner)-(previous[identity(a)].owner===owner));
-  const shown=new Set(),survivors=[],clashing=[];
-  for(const worker of held) {
-    const character=previous[identity(worker)],name=character.number?`pirate ${character.number}`:character.art;
-    if(shown.has(name)) clashing.push(worker); else {shown.add(name);survivors.push(character);}
-  }
-  return assignCrew([...workers.filter(w=>!previous[identity(w)]),...clashing],previous,coordinator,survivors);
-}
