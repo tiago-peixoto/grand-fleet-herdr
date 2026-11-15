@@ -46,11 +46,12 @@ export default class OnePieceAgents extends Agents {
       if (space) openOverlay({mod:'menu',kind:'popup',width:200,height:260,props:{tab:'space',target:{id:space.id}}});
     };
     const selected = focused()?.terminal === terminal.address;
+    const location = space?.name ?? agent?.space_name ?? 'Not in a workspace';
     const status = terminal.status === 'error' ? 'blocked' : terminal.status;
     const state = status === 'blocked' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
     return Button.new(`character-${terminal.address}`).tab_index(0).h(compact ? 42 : 58).px(compact ? 0 : 8).rounded(7)
-      .accessibility_label(`${name}, ${state}, ${terminal.name || terminal.address}`)
-      .tooltip(`${name} · ${terminal.name || terminal.address} · ${state}`)
+      .accessibility_label(`${name}, ${state}, ${terminal.name || terminal.address}, ${location}`)
+      .tooltip(`${name} · ${terminal.name || terminal.address} · ${state} · ${location}`)
       .when(selected, el => el.bg(t.selected)).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
       .on_click(() => {
         if (captain && agent) run('pane.focus', { pane: agent.pane });
@@ -62,8 +63,8 @@ export default class OnePieceAgents extends Agents {
       .child(h_flex().w_full().items_center().gap(compact ? 0 : 8).when(compact, el => el.justify_center())
         .child(sprite(art, status, compact ? 32 : 44))
         .when(!compact, el => el.child(v_flex().flex_1().min_w(0).gap(3)
-          .child(div().truncate().font_semibold().child(name))
-          .child(div().truncate().text_size(11).text_color(t.muted).child(terminal.name || terminal.address))))
+          .child(div().truncate().font_semibold().child(`${name} · ${terminal.name || terminal.address}`))
+          .child(div().truncate().text_size(11).text_color(t.muted).child(location))))
         .when(!compact && (status === 'blocked' || status === 'done'), el => el.child(div().text_color(t[status]).child(state))));
   }
 
@@ -71,6 +72,10 @@ export default class OnePieceAgents extends Agents {
     const compact = sidebarWidth() < 160;
     const t = theme(), model = groupFleet(terminals(), captainLinks());
     const allSpaces = spaces(), allPanes = panes();
+    const nativeAgents = new Set(agents().map(agent => agent.address));
+    const unassigned = model.ungrouped.filter(terminal =>
+      workerHome(terminal) || terminal.program?.agent || terminal.status || nativeAgents.has(terminal.address));
+    const unassignedAddresses = new Set(unassigned.map(terminal => terminal.address));
     const represented = new Set();
     const order = [];
     const content = v_flex().id('fleet-content').size_full().min_h(0).p(compact ? 4 : 8).gap(8).overflow_y_scrollbar().mode('always');
@@ -83,6 +88,12 @@ export default class OnePieceAgents extends Agents {
         const space = allSpaces.find(s => s.tabs?.some(tab => tab.id === pane?.tab));
         if (space) represented.add(space.id);
       }
+    }
+    characters = assignCrew(unassigned.filter(terminal => !characters[identity(terminal)]), characters, {terminal: 'unassigned', created: 0, crew: 'strawhat'});
+    for (const terminal of unassigned) {
+      const pane = allPanes.find(p => p.terminal === terminal.address);
+      const space = allSpaces.find(s => s.tabs?.some(tab => tab.id === pane?.tab));
+      if (space) represented.add(space.id);
     }
     if (JSON.stringify(characters) !== JSON.stringify(appearance().characters)) save({characters});
     const known = machines();
@@ -124,6 +135,16 @@ export default class OnePieceAgents extends Agents {
           }
         }
       }
+      const machineCrew = unassigned.filter(terminal => machineOf(terminal) === id);
+      if (online && machineCrew.length) {
+        if (!compact) section.child(div().px(8).py(4).text_color(t.muted).child('Unassigned crewmates'));
+        for (const terminal of machineCrew) {
+          const assigned = characters[identity(terminal)];
+          section.child(this.character(terminal, assigned.art,
+            assigned.number ? `Pirate ${assigned.number}` : displayName(assigned.art.replace(/^crew-/, ''))));
+          order.push(terminal.address);
+        }
+      }
       for (const space of allSpaces.filter(s => (s.machine ?? null) === id && (!online || !represented.has(s.id)))) {
         section.child(Button.new(`space-${space.id}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6).when(!compact, el => el.justify_start())
           .accessibility_label(`Workspace ${space.name}`).tooltip(space.name).when(space.active, el => el.bg(t.selected))
@@ -132,7 +153,7 @@ export default class OnePieceAgents extends Agents {
           .on_mouse_down('right', () => openOverlay({mod:'menu',kind:'popup',width:200,height:260,props:{tab:'space',target:{id:space.id}}})));
       }
       if (online) for (const terminal of model.ungrouped.filter(terminal =>
-        (terminal.address.includes('/') ? terminal.address.split('/')[0] : null) === id &&
+        machineOf(terminal) === id && !unassignedAddresses.has(terminal.address) &&
         !allPanes.some(pane => pane.terminal === terminal.address))) {
         const name = terminal.name || terminal.title || terminal.address;
         section.child(Button.new(`terminal-${terminal.address}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6)

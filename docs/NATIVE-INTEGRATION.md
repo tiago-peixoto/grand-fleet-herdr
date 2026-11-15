@@ -2365,3 +2365,41 @@ The Python suite passed 39 tests, including installation checks and reproducible
 The native loading check passed with `herdr-app check mods/one-piece`.
 The code review findings were addressed with regression tests.
 This validation did not repeat the historical reconnection or flicker investigation.
+
+## Sidebar correction in progress on 2026-11-15
+
+The previous completion assessment did not cover the full visible sidebar requirement.
+Captain links controlled artwork eligibility, leaving other live agents as ordinary terminal or workspace rows.
+The corrected renderer gives live Herdr agents character artwork independently of captain setup.
+Unknown coordinator relationships remain explicitly unassigned instead of being inferred from process ancestry or names.
+Character rows expose their native workspace and suppress its duplicate workspace entry.
+Ordinary shells retain native presentation.
+
+The regression failed on the missing unregistered character before the renderer changed.
+The command comparison now passes with all captain links removed, including local and remote agents, native focus, and ordinary shells.
+All nine JavaScript tests and 42 Python tests passed.
+The installed candidate passed Herdr's initial-render check in `/private/tmp/op-app-31618`.
+An initial check against repository sources failed because the generated base module exists only in the installed mod.
+The corrected command checks the installed directory.
+
+Grand Fleet Lab's accessibility tree and screenshot showed the previously omitted characters.
+A subsequent label adjustment puts workspace names on their own line.
+Clicking Sanji for terminal `t35` focused its existing `thin-mod-check` workspace.
+The app status reported `t35` and no runtime errors after that click.
+This is partial evidence, not completion of the approved workflow.
+The complete nested ship workflow, final visual comparison, and updated input checks remain outstanding.
+
+The follow-up review found two additional cases in the unassigned section.
+Removing a captain link reassigned surviving workers to different characters.
+Stock worker labels without a recognized program or status did not receive artwork.
+The regression reproduced the identity change before the correction.
+The renderer now preserves existing character assignments while unassigned and recognizes valid stock worker labels independently of native recognition.
+The command comparison covers both cases and a workspace containing a crewmate and a personal terminal.
+All nine JavaScript tests, the expanded command comparison, and the installed native loading check passed after these corrections.
+The Python suite was not repeated because these corrections only changed JavaScript rendering and its comparison checks.
+
+Five disposable Python terminals were created for the pending visual checks.
+They are simulated UI fixtures, not evidence of stock Firstmate delegation.
+The native app renders, but the current accessibility tree exposes only window controls.
+The app accepted a native `terminal.peek` command for fixture `t4d`, but accessibility inspection still did not expose its controls.
+Direct typing and full hierarchy interaction remain unverified in this session.

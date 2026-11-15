@@ -62,7 +62,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':'Agents']();
   controller.init({},cx);controller.hovered='t1';controller.render(cx);
-  return {calls,nodes,cx,controller,state,all};
+  return {calls,nodes,cx,controller,state,all,panes};
 }
 
 const standard=host(false), decorated=host(true);
@@ -124,8 +124,8 @@ assert.equal(JSON.stringify(rail.calls.at(-1)),JSON.stringify(['terminal.peek',{
 console.log('Narrow sidebar keeps character artwork and native selection.');
 
 const reachable=host(true);
-assert.ok(reachable.nodes.has('terminal-t5'),'unregistered unplaced terminal must remain reachable');
-reachable.nodes.get('terminal-t5').click();
+assert.ok(reachable.nodes.has('character-t5'),'unregistered agent must have character artwork');
+reachable.nodes.get('character-t5').click();
 assert.equal(JSON.stringify(reachable.calls.at(-1)),JSON.stringify(['terminal.peek',{terminal:'t5'}]));
 assert.ok(!reachable.nodes.has('terminal-t1'),'grouped captain must not gain an ordinary terminal entry');
 assert.ok(!reachable.nodes.has('terminal-t3'),'placed worker must not gain an ordinary terminal entry');
@@ -206,8 +206,8 @@ for (const width of [310, 76]) {
   const row=button.children[0];
   assert.equal(row.children[0].path,'mods/one-piece/assets/crew-chopper-blocked.gif',
     'raw error must use native blocked artwork');
-  assert.equal(button.label,'Chopper, Needs you, t2');
-  assert.equal(button.tip,'Chopper · t2 · Needs you');
+  assert.equal(button.label,'Chopper, Needs you, t2, Not in a workspace');
+  assert.equal(button.tip,'Chopper · t2 · Needs you · Not in a workspace');
   if (width===310) {
     assert.deepEqual(row.children.at(-1).children,['Needs you']);
     assert.equal(row.children.at(-1).color,'#ff0000');
@@ -215,3 +215,52 @@ for (const width of [310, 76]) {
   assert.equal(errorWorker.all.find(t=>t.address==='t2').status,'error','presentation must preserve raw terminal status');
 }
 console.log('Error status passed: seated artwork, attention text and color, and compact accessible status.');
+
+const unlinked=host(true);
+unlinked.state.delete('one-piece.captains');
+unlinked.nodes.clear();
+unlinked.controller.render(unlinked.cx);
+for (const address of ['t1','t2','t3','t5','remote/t1']) {
+  assert.ok(unlinked.nodes.has(`character-${address}`), 'agent artwork must not depend on captain setup');
+  assert.ok(!unlinked.nodes.has(`terminal-${address}`), 'agents must not also appear as plain terminals');
+}
+assert.ok(!unlinked.nodes.has('space-s'), 'agent workspace must not be duplicated without a captain');
+assert.ok(!unlinked.nodes.has('space-remote/s'), 'remote agent workspace must not be duplicated');
+assert.ok(unlinked.nodes.has('space-personal'), 'independent workspace stays reachable');
+assert.ok(unlinked.nodes.has('terminal-shell'), 'ordinary shell keeps native presentation');
+assert.ok(!unlinked.nodes.has('character-shell'), 'ordinary shell must not become a crewmate');
+assert.ok(!unlinked.nodes.has('ship-t1'), 'unknown coordinator must not become a captain');
+unlinked.nodes.get('character-t1').click();
+assert.equal(JSON.stringify(unlinked.calls.at(-1)),JSON.stringify(['pane.focus',{terminal:'t1'}]));
+console.log('Unlinked agents retain artwork, native focus, and distinct personal terminals.');
+assert.match(unlinked.nodes.get('character-t1').label, /project/, 'crewmate exposes its workspace');
+
+const detached=host(true);
+const originalArt=detached.nodes.get('character-t3').children[0].children[0].path;
+detached.state.delete('one-piece.captains');
+detached.nodes.clear();
+detached.controller.render(detached.cx);
+assert.equal(detached.nodes.get('character-t3').children[0].children[0].path,originalArt,
+  'surviving workers keep their artwork when their captain is unlinked');
+const labeled=host(true);
+labeled.all.push({address:'label-only',created_ms:9,state:'live',
+  labels:{'firstmate.home':'unknown-home','firstmate.task':'worker'}});
+labeled.nodes.clear();
+labeled.controller.render(labeled.cx);
+assert.ok(labeled.nodes.has('character-label-only'), 'stock worker labels identify crewmates before native recognition');
+assert.ok(!labeled.nodes.has('terminal-label-only'), 'labeled workers must not also appear as ordinary terminals');
+console.log('Unassigned workers preserve identity and render before native recognition.');
+
+const mixed=host(true);
+mixed.state.delete('one-piece.captains');
+mixed.panes.push({terminal:'shell',pane:'personal-pane',tab:'tab'});
+mixed.nodes.clear();
+mixed.controller.render(mixed.cx);
+assert.ok(mixed.nodes.has('character-t1'), 'mixed workspace remains reachable through its crewmate');
+assert.ok(!mixed.nodes.has('space-s'), 'mixed workspace must not duplicate its character entry');
+assert.ok(!mixed.nodes.has('character-shell'), 'personal terminal in a mixed workspace stays ordinary');
+assert.ok(!mixed.nodes.has('terminal-shell'), 'placed personal terminal stays in its native workspace');
+mixed.nodes.get('character-t1').click();
+assert.equal(JSON.stringify(mixed.calls.at(-1)),JSON.stringify(['pane.focus',{terminal:'t1'}]));
+assert.equal(mixed.panes.find(p=>p.terminal==='shell').tab,'tab', 'rendering must preserve personal terminal placement');
+console.log('Mixed workspace preserves ordinary personal terminals and character navigation.');

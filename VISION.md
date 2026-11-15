@@ -21,6 +21,9 @@ Herdr supplies terminal attention, focus, writable previews, and session managem
 The fleet sidebar retains native machine identities and grouping.
 Each explicitly registered firstmate coordinator has ship and captain artwork.
 Its explicitly associated workers appear beneath the captain as crewmates.
+Every live Herdr agent receives character artwork even before a captain association exists.
+Agents with unknown coordinator relationships appear as unassigned crewmates on their machine.
+Character rows identify their native workspace without duplicating that workspace in a separate list.
 A ship only expands or collapses its presentation group.
 Presentation grouping does not require native process parenting.
 Selecting the captain or a crewmate uses the corresponding native agent action.
@@ -81,7 +84,8 @@ Coordinator associations belong to the mod and must use explicit user choices wh
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
 Ordinary Herdr workspaces remain accessible without firstmate registration.
-Unregistered terminals do not acquire a coordinator or crew identity from their names, folders, or process parents.
+Character artwork does not establish a coordinator relationship.
+Unregistered terminals do not acquire a coordinator relationship from their names, folders, or process parents.
 This mod adds no command hierarchy, merge authority, or automatic delegation policy.
 Personal preferences, credentials, and fleet records remain private to the captain's home.
 The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.

@@ -10,6 +10,8 @@ Machines appear as islands with their actual machine names retained.
 Each registered coordinator has a ship row and a captain beneath it.
 The ship only folds its characters, and its appearance menu selects artwork without changing sessions.
 Workers appear below their coordinator using explicit Firstmate metadata.
+Other live Herdr agents appear as unassigned crewmates, with character artwork and their native workspace.
+Artwork does not depend on captain setup and does not imply an unknown coordinator relationship.
 Personal terminals keep native controls and have no character assignment.
 Ordinary workspaces remain accessible without duplicate destinations for represented characters.
 
@@ -25,7 +27,7 @@ A home label identifies a worker group, not a canonical directory.
 Independent Firstmate homes can share that label when they use the same installation.
 The setup menu displays the label, tasks, and terminal addresses for explicit selection.
 Do not associate a shared label when its workers belong to separate coordinators.
-Those workers remain accessible through native Herdr.
+Those workers remain accessible as unassigned crewmates through native Herdr commands.
 The menu refuses a group already associated with another live captain.
 Conflicting saved associations keep captains visible and leave workers ungrouped.
 The mod does not guess a relationship from names, directories, or process parents.
