@@ -123,6 +123,18 @@ for (const machine of ['local','remote']) {
   assert.ok(section.children.includes(body),'machine body belongs to its fixed section');
 }
 console.log('Machine headings stay outside independently scrolling contents.');
+const crewLayout=machineLayout.nodes.get('fleet-crew-t1');
+const workersLayout=machineLayout.nodes.get('fleet-workers-t1');
+assert.ok(crewLayout, 'captain and workers have a shared crew container');
+assert.ok(workersLayout, 'workers have their own scrolling container');
+assert.equal(workersLayout.scrolls,true);
+assert.ok(crewLayout.children.includes(machineLayout.nodes.get('ship-t1')));
+assert.ok(crewLayout.children.includes(machineLayout.nodes.get('character-t1')));
+assert.ok(crewLayout.children.includes(workersLayout));
+assert.ok(!workersLayout.children.includes(machineLayout.nodes.get('character-t1')));
+assert.equal(machineLayout.nodes.get('fleet-other-local').scrolls,true);
+console.log('Crew scrolling excludes ship and captain; other destinations scroll separately.');
+
 
 const rail=host(true,'priority',76);
 for (const id of ['character-t1','character-t2']) {

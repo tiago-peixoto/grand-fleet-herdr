@@ -2461,3 +2461,16 @@ After the machine-heading change, all nine JavaScript tests and native command c
 Herdr's installed-mod rendering check passed for `/private/tmp/op-app-31618/mods/one-piece`.
 Native status reported no errors and still selected terminal `t4d`.
 The complete visual workflow is not yet verified.
+
+
+### Crew scrolling verification
+
+The candidate now places each crew in a separate scrolling area below its ship and captain.
+A native wheel scroll changed the visible local crewmate from Chopper to Franky.
+Sunny and Luffy stayed at the same positions, and all three machine headings remained visible.
+The active terminal retained its output and original workspace, tab, and pane identifiers.
+Herdr reported no runtime errors.
+The layout keeps an outer machine scroll for fleets whose ships exceed the available height.
+This preserves access to multiple ships without shrinking character rows.
+The regression check first failed against the shared scrolling layout and passed after the change.
+All nine JavaScript tests and the installed-mod rendering check also passed.

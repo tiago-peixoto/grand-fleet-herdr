@@ -49,7 +49,7 @@ export default class OnePieceAgents extends Agents {
     const location = space?.name ?? agent?.space_name ?? 'Not in a workspace';
     const status = terminal.status === 'error' ? 'blocked' : terminal.status;
     const state = status === 'blocked' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
-    return Button.new(`character-${terminal.address}`).tab_index(0).h(compact ? 42 : 58).px(compact ? 0 : 8).rounded(7)
+    return Button.new(`character-${terminal.address}`).tab_index(0).flex_none().h(compact ? 42 : 58).px(compact ? 0 : 8).rounded(7)
       .accessibility_label(`${name}, ${state}, ${terminal.name || terminal.address}, ${location}`)
       .tooltip(`${name} · ${terminal.name || terminal.address} · ${state} · ${location}`)
       .when(selected, el => el.bg(t.selected)).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
@@ -114,7 +114,10 @@ export default class OnePieceAgents extends Agents {
       if (online) for (const group of model.groups.filter(g => g.machine === id)) {
         const key = identity(group.captain), crew = crews[appearance().crews[key]] ?? crews.strawhat;
         const open = !this.folded.has(group.captain.address);
-        body.child(Button.new(`ship-${group.captain.address}`).tab_index(0).rounded(8).p(compact ? 0 : 6)
+        const crewSection = v_flex().id(`fleet-crew-${group.captain.address}`).gap(4)
+          .when(open && group.workers.length, el => el.flex_1().min_h(compact ? 124 : 208))
+          .when(!open || !group.workers.length, el => el.flex_none());
+        crewSection.child(Button.new(`ship-${group.captain.address}`).tab_index(0).flex_none().rounded(8).p(compact ? 0 : 6)
           .accessibility_label(`${crew.title}, ${open ? 'collapse' : 'expand'} crew`).tooltip(`${crew.title}; right-click to choose ship`)
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
           .on_click((_e, cx) => {
@@ -128,43 +131,51 @@ export default class OnePieceAgents extends Agents {
               .child(div().text_color(t.dim).text_size(11).child(`${open ? '▾' : '▸'} ${group.workers.length} crewmates`))))));
         order.push(group.captain.address, ...group.workers.map(w => w.address));
         if (open) {
-          body.child(this.character(group.captain, `crew-${crew.captain}`, displayName(crew.captain), true));
+          crewSection.child(this.character(group.captain, `crew-${crew.captain}`, displayName(crew.captain), true));
+          const workers = v_flex().id(`fleet-workers-${group.captain.address}`).flex_1().min_h(0).gap(4).overflow_y_scrollbar();
           for (const worker of group.workers) {
             const assigned = characters[identity(worker)];
-            body.child(v_flex().pl(compact ? 0 : 18).child(this.character(worker, assigned.art,
+            workers.child(v_flex().flex_none().pl(compact ? 0 : 18).child(this.character(worker, assigned.art,
               assigned.number ? `Pirate ${assigned.number}` : displayName(assigned.art.replace(/^crew-/, '')))));
           }
+          if (group.workers.length) crewSection.child(workers);
         }
+        body.child(crewSection);
       }
+      const other = v_flex().id(`fleet-other-${id ?? 'local'}`).flex_1().min_h(64).gap(4).overflow_y_scrollbar();
       const machineCrew = unassigned.filter(terminal => machineOf(terminal) === id);
       if (online && machineCrew.length) {
-        if (!compact) body.child(div().px(8).py(4).text_color(t.muted).child('Unassigned crewmates'));
+        if (!compact) other.child(div().px(8).py(4).text_color(t.muted).child('Unassigned crewmates'));
         for (const terminal of machineCrew) {
           const assigned = characters[identity(terminal)];
-          body.child(this.character(terminal, assigned.art,
+          other.child(this.character(terminal, assigned.art,
             assigned.number ? `Pirate ${assigned.number}` : displayName(assigned.art.replace(/^crew-/, ''))));
           order.push(terminal.address);
         }
       }
-      for (const space of allSpaces.filter(s => (s.machine ?? null) === id && (!online || !represented.has(s.id)))) {
-        body.child(Button.new(`space-${space.id}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6).when(!compact, el => el.justify_start())
+      const machineSpaces = allSpaces.filter(s => (s.machine ?? null) === id && (!online || !represented.has(s.id)));
+      for (const space of machineSpaces) {
+        other.child(Button.new(`space-${space.id}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6).when(!compact, el => el.justify_start())
           .accessibility_label(`Workspace ${space.name}`).tooltip(space.name).when(space.active, el => el.bg(t.selected))
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected)).child(div().truncate().child(compact ? space.name.slice(0, 2) : space.name))
           .on_click(() => run('space.select', {id:space.id}))
           .on_mouse_down('right', () => openOverlay({mod:'menu',kind:'popup',width:200,height:260,props:{tab:'space',target:{id:space.id}}})));
       }
-      if (online) for (const terminal of model.ungrouped.filter(terminal =>
+      const machineTerminals = online ? model.ungrouped.filter(terminal =>
         machineOf(terminal) === id && !unassignedAddresses.has(terminal.address) &&
-        !allPanes.some(pane => pane.terminal === terminal.address))) {
+        !allPanes.some(pane => pane.terminal === terminal.address)) : [];
+      for (const terminal of machineTerminals) {
         const name = terminal.name || terminal.title || terminal.address;
-        body.child(Button.new(`terminal-${terminal.address}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6)
+        other.child(Button.new(`terminal-${terminal.address}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6)
           .accessibility_label(`Terminal ${name}`).tooltip(name).when(!compact, el => el.justify_start())
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
           .child(div().truncate().child(compact ? name.slice(0, 2) : name))
           .on_click(() => run('terminal.peek', {terminal: terminal.address})));
         order.push(terminal.address);
       }
-      for (const issue of model.ambiguous.filter(a => a.machine === id)) body.child(div().px(8).text_color(t.blocked).child(`Coordinator conflict: ${issue.home}`));
+      const machineIssues = model.ambiguous.filter(a => a.machine === id);
+      for (const issue of machineIssues) other.child(div().px(8).text_color(t.blocked).child(`Coordinator conflict: ${issue.home}`));
+      if ((online && machineCrew.length) || machineSpaces.length || machineTerminals.length || machineIssues.length) body.child(other);
       section.child(body);
       content.child(section);
     }

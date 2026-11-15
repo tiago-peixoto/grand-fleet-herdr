@@ -116,7 +116,9 @@ The initial unavailable-state screenshot was inconclusive.
 A subsequent isolated transport interruption showed Wano as unavailable with its live character rows removed.
 Local terminals remained intact, and the remote crew returned after reconnection.
 Machine headings now remain visible while their contents scroll independently.
-Ship and captain pinning still needs comparison with the approved native-flow prototype.
+Crews now scroll beneath their ship and captain, matching the approved native-flow prototype.
+Other destinations scroll separately.
+When several ships exceed the available height, the machine body scrolls so every ship remains reachable.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
 The current coordinator model resolves that design choice through explicit mod-owned associations.
 Current stock verification supersedes this historical candidate record.
