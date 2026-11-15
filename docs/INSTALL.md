@@ -127,6 +127,13 @@ Existing empty sections remain.
 After successful migration, subsequent version 3 operations leave `keys.json` untouched.
 Cleanup does not guarantee that Herdr will resume replacing default shortcuts during updates.
 
+If an experimental installation was replaced without its version 2 receipt, obsolete shortcuts can remain unowned.
+Version 3 deliberately leaves those settings untouched.
+If closing works in default Herdr but fails in Grand Fleet, inspect `layout:one-piece` in the isolated application's `keys.json`.
+Back up that file before editing it.
+Remove only bindings that still call `one-piece.close-tab` or `one-piece.close-pane`, then restart that application.
+Preserve unrelated custom bindings.
+
 ## Ownership and removal
 
 The installer records owned paths and SHA-256 hashes, fingerprints of file contents, in `<app-home>/.one-piece-install.json`.

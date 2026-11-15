@@ -106,6 +106,28 @@ A complete pointer and keyboard comparison of every native terminal control rema
 The final error-status correction has harness coverage and a native loading check, but no fresh physical error-state capture.
 No release or installation into the daily application was performed.
 
+## Native keyboard checks, 2026-11-14
+
+The disposable local workspace `pointer-audit-local` exposed stale lab configuration during keyboard verification.
+Its `layout:one-piece` shortcuts still called retired `one-piece.close-tab` and `one-piece.close-pane` commands.
+Direct typing and keyboard splitting worked, but the close-pane shortcut did nothing.
+Switching the same workspace to default Herdr made the same shortcut close the selected pane.
+The lab had replaced an experimental installation without retaining its version 2 ownership receipt.
+The current installer deliberately preserves unowned keyboard settings.
+
+After backing up the lab keys file, verification removed only the two exact obsolete bindings and restarted the isolated application.
+No implementation or Firstmate changes were needed.
+In Grand Fleet, Command-D and Command-Shift-D created a three-pane grid.
+Direct typing displayed `FLEET-GRID-731` in the third pane.
+Command-Shift-Return visibly zoomed that pane.
+After toggling zoom back, Command-Shift-W removed only that pane.
+The two surviving terminals retained their creation timestamps and shell processes.
+Command-T created ordinary terminal `t48` in the inherited `/private/tmp` folder without Firstmate labels.
+Command-W removed that new tab and preserved the original two-pane tab.
+The receipt is `.superpowers/native/keyboard-audit.json` in the isolated test environment.
+These checks extend the native-command evidence with actual keyboard input.
+They do not establish a complete remote keyboard or pointer comparison.
+
 ## Historical patched-producer evidence
 
 All producer and lifecycle observations below predate the mod-only association correction.
