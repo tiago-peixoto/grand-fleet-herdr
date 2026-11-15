@@ -78,7 +78,7 @@ export default class OnePieceAgents extends Agents {
     const unassignedAddresses = new Set(unassigned.map(terminal => terminal.address));
     const represented = new Set();
     const order = [];
-    const content = v_flex().id('fleet-content').size_full().min_h(0).p(compact ? 4 : 8).gap(8).overflow_y_scrollbar().mode('always');
+    const content = v_flex().id('fleet-content').size_full().min_h(0).p(compact ? 4 : 8).gap(8);
     let characters = appearance().characters;
     for (const group of model.groups) {
       const key = identity(group.captain), crew = appearance().crews[key] ?? 'strawhat';
@@ -101,19 +101,20 @@ export default class OnePieceAgents extends Agents {
       const id = machine.name ?? null;
       const online = machine.layout === 'ready';
       const island = shared('one-piece.islands')?.[id ?? 'local'] ?? (id === null ? 'Water 7' : 'Wano');
-      const section = v_flex().gap(4).flex_none()
-        .child(h_flex().px(compact ? 0 : 8).py(8).gap(8).items_center().when(compact, el => el.justify_center())
+      const section = v_flex().id(`fleet-machine-${id ?? 'local'}`).gap(4).flex_1().min_h(0)
+        .child(h_flex().flex_none().px(compact ? 0 : 8).py(8).gap(8).items_center().when(compact, el => el.justify_center())
           .tooltip(`${island} · ${id ?? 'local'}`)
           .child(div().truncate().font_semibold().child(compact ? island.split(' ').map(word => word[0]).join('') : island))
           .when(!compact, el => el.child(div().text_color(t.dim).text_size(11).child(id ?? 'local'))));
-      if (online) section.child(Button.new(`link-captain-${id ?? 'local'}`).tab_index(0).px(8).py(4)
+      const body = v_flex().id(`fleet-machine-body-${id ?? 'local'}`).flex_1().min_h(0).gap(4).overflow_y_scrollbar();
+      if (online) body.child(Button.new(`link-captain-${id ?? 'local'}`).tab_index(0).px(8).py(4)
         .accessibility_label(`Link captain on ${id ?? 'local'}`).tooltip('Link captain').child(compact ? '+' : 'Link captain')
         .on_click(() => openOverlay({mod:'one-piece',kind:'dialog',width:480,height:480,props:{setup:true,machine:id}})));
-      if (!online) section.child(div().px(8).text_color(t.muted).tooltip(machine.layout === 'loading' ? 'Connecting' : 'Unavailable').child(compact ? (machine.layout === 'loading' ? '…' : 'Offline') : (machine.layout === 'loading' ? 'Connecting…' : 'Unavailable')));
+      if (!online) body.child(div().px(8).text_color(t.muted).tooltip(machine.layout === 'loading' ? 'Connecting' : 'Unavailable').child(compact ? (machine.layout === 'loading' ? '…' : 'Offline') : (machine.layout === 'loading' ? 'Connecting…' : 'Unavailable')));
       if (online) for (const group of model.groups.filter(g => g.machine === id)) {
         const key = identity(group.captain), crew = crews[appearance().crews[key]] ?? crews.strawhat;
         const open = !this.folded.has(group.captain.address);
-        section.child(Button.new(`ship-${group.captain.address}`).tab_index(0).rounded(8).p(compact ? 0 : 6)
+        body.child(Button.new(`ship-${group.captain.address}`).tab_index(0).rounded(8).p(compact ? 0 : 6)
           .accessibility_label(`${crew.title}, ${open ? 'collapse' : 'expand'} crew`).tooltip(`${crew.title}; right-click to choose ship`)
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
           .on_click((_e, cx) => {
@@ -127,26 +128,26 @@ export default class OnePieceAgents extends Agents {
               .child(div().text_color(t.dim).text_size(11).child(`${open ? '▾' : '▸'} ${group.workers.length} crewmates`))))));
         order.push(group.captain.address, ...group.workers.map(w => w.address));
         if (open) {
-          section.child(this.character(group.captain, `crew-${crew.captain}`, displayName(crew.captain), true));
+          body.child(this.character(group.captain, `crew-${crew.captain}`, displayName(crew.captain), true));
           for (const worker of group.workers) {
             const assigned = characters[identity(worker)];
-            section.child(v_flex().pl(compact ? 0 : 18).child(this.character(worker, assigned.art,
+            body.child(v_flex().pl(compact ? 0 : 18).child(this.character(worker, assigned.art,
               assigned.number ? `Pirate ${assigned.number}` : displayName(assigned.art.replace(/^crew-/, '')))));
           }
         }
       }
       const machineCrew = unassigned.filter(terminal => machineOf(terminal) === id);
       if (online && machineCrew.length) {
-        if (!compact) section.child(div().px(8).py(4).text_color(t.muted).child('Unassigned crewmates'));
+        if (!compact) body.child(div().px(8).py(4).text_color(t.muted).child('Unassigned crewmates'));
         for (const terminal of machineCrew) {
           const assigned = characters[identity(terminal)];
-          section.child(this.character(terminal, assigned.art,
+          body.child(this.character(terminal, assigned.art,
             assigned.number ? `Pirate ${assigned.number}` : displayName(assigned.art.replace(/^crew-/, ''))));
           order.push(terminal.address);
         }
       }
       for (const space of allSpaces.filter(s => (s.machine ?? null) === id && (!online || !represented.has(s.id)))) {
-        section.child(Button.new(`space-${space.id}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6).when(!compact, el => el.justify_start())
+        body.child(Button.new(`space-${space.id}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6).when(!compact, el => el.justify_start())
           .accessibility_label(`Workspace ${space.name}`).tooltip(space.name).when(space.active, el => el.bg(t.selected))
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected)).child(div().truncate().child(compact ? space.name.slice(0, 2) : space.name))
           .on_click(() => run('space.select', {id:space.id}))
@@ -156,14 +157,15 @@ export default class OnePieceAgents extends Agents {
         machineOf(terminal) === id && !unassignedAddresses.has(terminal.address) &&
         !allPanes.some(pane => pane.terminal === terminal.address))) {
         const name = terminal.name || terminal.title || terminal.address;
-        section.child(Button.new(`terminal-${terminal.address}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6)
+        body.child(Button.new(`terminal-${terminal.address}`).tab_index(0).px(compact ? 0 : 10).py(8).rounded(6)
           .accessibility_label(`Terminal ${name}`).tooltip(name).when(!compact, el => el.justify_start())
           .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
           .child(div().truncate().child(compact ? name.slice(0, 2) : name))
           .on_click(() => run('terminal.peek', {terminal: terminal.address})));
         order.push(terminal.address);
       }
-      for (const issue of model.ambiguous.filter(a => a.machine === id)) section.child(div().px(8).text_color(t.blocked).child(`Coordinator conflict: ${issue.home}`));
+      for (const issue of model.ambiguous.filter(a => a.machine === id)) body.child(div().px(8).text_color(t.blocked).child(`Coordinator conflict: ${issue.home}`));
+      section.child(body);
       content.child(section);
     }
     setAgentOrder(order);

@@ -23,6 +23,8 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
         if(key==='tooltip') target.tip=args[0];
         if(key==='text_color') target.color=args[0];
         if(key==='w') target.width=args[0];
+        if(key==='overflow_y_scrollbar') target.scrolls=true;
+        if(key==='flex_1') target.grows=true;
         if(key==='track_focus') target.focusHandle=args[0];
         if(key==='child') (target.children??=[]).push(args[0]);
         if(key==='id') nodes.set(args[0],proxy);
@@ -111,6 +113,16 @@ for (const availability of ['unavailable','loading']) {
   assert.ok(offline.nodes.has('space-remote/s'),'native workspace remains reachable');
 }
 console.log('Workspace commands and unavailable/loading machine presentation passed.');
+const machineLayout=host(true);
+assert.notEqual(machineLayout.nodes.get('fleet-content').scrolls,true,'machine headings must not share a scrolling container');
+for (const machine of ['local','remote']) {
+  const section=machineLayout.nodes.get(`fleet-machine-${machine}`);
+  const body=machineLayout.nodes.get(`fleet-machine-body-${machine}`);
+  assert.equal(section?.grows,true,'each machine receives sidebar space');
+  assert.equal(body?.scrolls,true,'machine contents scroll independently');
+  assert.ok(section.children.includes(body),'machine body belongs to its fixed section');
+}
+console.log('Machine headings stay outside independently scrolling contents.');
 
 const rail=host(true,'priority',76);
 for (const id of ['character-t1','character-t2']) {
