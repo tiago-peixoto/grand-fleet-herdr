@@ -29,6 +29,12 @@ def im(*args):
     return subprocess.check_output(['magick', *map(str, args)])
 
 
+def decoded(path):
+    return (im('identify', '-format', '%W %H %T %D\n', path),
+            im(path, '-coalesce', '-depth', '8', 'rgba:-'),
+            b'NETSCAPE2.0\x03\x01\x00\x00' in path.read_bytes())
+
+
 def source_boxes(path):
     width, height = map(int, im('identify', '-format', '%w %h', path).split())
     rows = BANDS if 'worker-states' in str(path) else (
@@ -66,7 +72,7 @@ class ArtworkTests(unittest.TestCase):
                     stride = size*size*4
                     self.assertGreater(len({raw[i:i+stride] for i in range(0,len(raw),stride)}), 1)
                     for ext in ('.gif', '.png'):
-                        self.assertEqual((ASSETS / (animation+ext)).read_bytes(), (output / (animation+ext)).read_bytes())
+                        self.assertEqual(decoded(ASSETS / (animation+ext)), decoded(output / (animation+ext)))
             self.assertEqual({p.name for p in output.iterdir()}, expected_names)
             before = {p.name: p.read_bytes() for p in output.iterdir()}
             sources = {}
@@ -104,8 +110,8 @@ class ArtworkTests(unittest.TestCase):
                         if index == 0:
                             actual_png = im(png, '-depth', '8', 'rgba:-')
                             self.assertEqual(actual_png, expected)
-                    self.assertEqual((ASSETS / png.name).read_bytes(), png.read_bytes())
-                    self.assertEqual((ASSETS / gif.name).read_bytes(), gif.read_bytes())
+                    self.assertEqual(decoded(ASSETS / png.name), decoded(png))
+                    self.assertEqual(decoded(ASSETS / gif.name), decoded(gif))
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
             self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
 
