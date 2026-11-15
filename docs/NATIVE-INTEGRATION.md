@@ -103,7 +103,7 @@ It does not establish exact pixel equivalence with the browser prototype.
 Creation, splits, zoom, and closing comparisons primarily used native commands.
 Pointer checks covered plus-menu creation in the mod, panels in both layouts, and local and remote resizing in both layouts.
 A complete pointer and keyboard comparison of every native terminal control remains unverified.
-The final error-status correction has harness coverage and a native loading check, but no fresh physical error-state capture.
+The final error-status correction also passed the physical native-window check recorded below.
 No release or installation into the daily application was performed.
 
 ## Native keyboard checks, 2026-11-14
@@ -146,7 +146,18 @@ This comparison covers these keyboard paths, not every native control.
 
 A separate disposable shell exiting with code 1 did not reproduce a live agent error state.
 Herdr reported it as finished with a null status, and the fleet correctly omitted it.
-The physical error-artwork check therefore remains unverified.
+That exit-only fixture did not verify error artwork; the subsequent status-reporting fixture below did.
+
+## Native error artwork, 2026-11-14
+
+A disposable Python program emitted Herdr's documented OSC 7501 status report with `state=error` and stayed alive awaiting input.
+Terminal `t4b` used explicit fixture labels for the existing local stock group.
+Herdr reported a live terminal with `status.state` equal to `error`.
+The native sidebar displayed seated Franky with the visible text Needs you.
+Its accessibility button read `Franky, Needs you, artwork-error-live`.
+The program was then killed without touching the stock captain or remote shells.
+This verifies error-to-attention presentation using a simulated status producer, not a real Firstmate failure.
+No Firstmate source or configuration changed.
 
 ## Historical patched-producer evidence
 

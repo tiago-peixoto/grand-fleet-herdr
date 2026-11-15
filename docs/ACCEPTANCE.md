@@ -2,7 +2,7 @@
 
 The implementation objective is verified for the recorded isolated workflows.
 Release acceptance remains separate and subject to the limitations below.
-Read [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for observed behavior and limits.
+Read [current native verification](NATIVE-INTEGRATION.md#mod-only-association-2026-11-14) for observed behavior and limits.
 The historical table describes retired implementations and must not be used as the current acceptance verdict.
 
 ## Current objective audit
@@ -34,7 +34,7 @@ The installed native loading check and command parity comparison also passed.
 These checks cover grouping, artwork, installation, compatibility, and emitted native actions.
 They do not replace the recorded interactive workflow checks.
 
-See [current native verification](NATIVE-INTEGRATION.md#current-verification-2026-11-14) for the runtime observations and their limits.
+See [current native verification](NATIVE-INTEGRATION.md#mod-only-association-2026-11-14) for the runtime observations and their limits.
 See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.
 Stock cleanup and reconnect completed the tested lifecycle without modifying Firstmate.
 
@@ -44,10 +44,12 @@ Stock cleanup and reconnect completed the tested lifecycle without modifying Fir
   The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
   The implementation goal delivers a reviewable pull request and does not authorize a release or daily installation.
 - Complete pointer and keyboard comparisons for all native terminal controls remain unverified.
-  Command comparisons cover creation, splits, zoom, and closing.
+  Native keyboard checks now cover local and physical remote splitting, zoom, tab creation, and closing.
+  The remote keyboard sequence also passed in default Herdr.
   Recorded pointer checks cover mod plus-menu creation, panels in both layouts, and resizing locally and remotely in both layouts.
 - Captures establish the approved palette, artwork, hierarchy, and native controls, but not exact pixel equivalence with the prototype.
-- The error-state artwork correction passed the rendering regression and native loading check without a fresh physical error-state capture.
+- Error-state artwork passed a physical native-window check with a simulated status producer.
+  A real Firstmate failure was not induced.
 - Independent coordinators can share a stock worker-group label.
   Leave such groups unlinked and use native worker navigation rather than assigning ambiguous workers to a captain.
 
