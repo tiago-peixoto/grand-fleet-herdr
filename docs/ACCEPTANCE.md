@@ -8,6 +8,8 @@ The historical table describes retired implementations and must not be used as t
 ## Current objective audit
 
 This audit covers the approved native-flow objective, not the retired inspection model.
+The approved native-flow reference is `/Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html` and its Lavish session `0782435952d24d57`.
+The browser simulation in `prototype/flow` predates that reference and does not decide acceptance.
 Recorded runtime evidence applies to its tested source and fixtures only.
 Current stock checks supersede the rejected registration fixtures.
 
@@ -33,6 +35,11 @@ All 42 Python tests passed before its presentation-only error-status correction.
 The installed native loading check and command parity comparison also passed.
 These checks cover grouping, artwork, installation, compatibility, and emitted native actions.
 They do not replace the recorded interactive workflow checks.
+
+Final visible verification against the approved native-flow reference remains pending.
+Crew assignment and release changed after the last complete native comparison.
+[Crew scrolling verification](NATIVE-INTEGRATION.md#crew-scrolling-verification) records direct input after scrolling with simulated fixtures only.
+The published-Core release limitations below still apply.
 
 See [current native verification](NATIVE-INTEGRATION.md#mod-only-association-2026-11-14) for the runtime observations and their limits.
 See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.

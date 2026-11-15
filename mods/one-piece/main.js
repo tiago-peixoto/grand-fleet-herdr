@@ -89,7 +89,8 @@ export default class OnePieceAgents extends Agents {
         if (space) represented.add(space.id);
       }
     }
-    characters = assignCrew(unassigned.filter(terminal => !characters[identity(terminal)]), characters, {terminal: 'unassigned', created: 0, crew: 'strawhat'});
+    const survivors = unassigned.map(terminal => characters[identity(terminal)]).filter(Boolean);
+    characters = assignCrew(unassigned.filter(terminal => !characters[identity(terminal)]), characters, {terminal: 'unassigned', created: 0, crew: 'strawhat'}, survivors);
     for (const terminal of unassigned) {
       const pane = allPanes.find(p => p.terminal === terminal.address);
       const space = allSpaces.find(s => s.tabs?.some(tab => tab.id === pane?.tab));

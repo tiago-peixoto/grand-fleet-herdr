@@ -83,3 +83,20 @@ test('a ready machine whose terminals are not listed yet keeps its characters',a
   assert.equal(remaining['hz/t21:12'],undefined);
   assert.deepEqual(remaining['hz/t20:12'],before['hz/t20:12']);
 });
+
+test('a newcomer never takes the character of a surviving unassigned crewmate',async()=>{
+  const {assignCrew}=await import('../mods/one-piece/artwork.js');
+  const unassigned={terminal:'unassigned',created:0,crew:'strawhat'};
+  const formerCaptain=assignCrew([terminal('t2')],{},{terminal:'t1',created:5,crew:'strawhat'});
+  const survivor=formerCaptain['t2:12'];
+  assert.equal(survivor.art,'crew-chopper');
+  const after=assignCrew([terminal('t3')],formerCaptain,unassigned,[survivor]);
+  assert.deepEqual(after['t2:12'],survivor);
+  assert.equal(after['t3:12'].art,'crew-franky');
+  const redhair=assignCrew([1,2,3,4].map(i=>terminal(`r${i}`)),{},{terminal:'t9',created:5,crew:'redhair'});
+  const pirate=redhair['r4:12'];
+  assert.equal(pirate.number,1);
+  const many=Array.from({length:10},(_,i)=>terminal(`u${i}`));
+  const crowded=assignCrew(many,redhair,unassigned,[pirate]);
+  assert.equal(crowded['u9:12'].number,2);
+});

@@ -2455,7 +2455,8 @@ The sidebar now gives each machine a fixed heading and independently scrolling c
 Native screenshots confirmed Water 7 and both Wano headings remained visible while the local section scrolled.
 The active terminal, tab, workspace, and focused pane retained their identifiers.
 The approved prototype also keeps ships and captains above scrolling crewmates.
-That part of the comparison remains unfinished because the current machine body scrolls those rows together.
+At the time of this check, the machine body scrolled those rows together.
+The crew scrolling verification below supersedes that gap.
 
 After the machine-heading change, all nine JavaScript tests and native command comparisons passed.
 Herdr's installed-mod rendering check passed for `/private/tmp/op-app-31618/mods/one-piece`.
@@ -2474,3 +2475,17 @@ The layout keeps an outer machine scroll for fleets whose ships exceed the avail
 This preserves access to multiple ships without shrinking character rows.
 The regression check first failed against the shared scrolling layout and passed after the change.
 All nine JavaScript tests and the installed-mod rendering check also passed.
+
+A further native check exercised direct input after crew scrolling.
+The local worker list was scrolled from Chopper to Franky while Sunny, Luffy, and all machine headings stayed fixed.
+Selecting Franky opened the native preview for terminal `t4f`, process 78357.
+Typing `FLEET_SCROLLED_CREW_INPUT` visibly produced `ACK FLEET_SCROLLED_CREW_INPUT`.
+Closing the preview returned to terminal `t4d`.
+Its space `spe38ea04a6e6dd1cb2705ec1df009236c`, tab `tb7dbaf894cd59581f77b38e9f02ca3ede`, and pane `p032841298671917225c6f66a4fac194b` were unchanged.
+Native status reported no overlays and no errors.
+`hc get` confirmed that `t4f` remained live with process 78357.
+These terminals were simulated interface fixtures, not a new stock Firstmate lifecycle test.
+
+Later review rounds changed how crew characters are assigned and released.
+The complete visible workflow has not been verified again since those changes.
+Final visible verification against the approved native-flow prototype remains pending.

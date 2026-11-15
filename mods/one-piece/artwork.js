@@ -20,12 +20,12 @@ export function releaseCrew(characters,terminals,machines) {
   }));
 }
 
-export function assignCrew(workers,previous,coordinator) {
+export function assignCrew(workers,previous,coordinator,reserved=[]) {
   const assigned={...previous},crew=coordinator.crew??'strawhat';
   const owner=`${coordinator.terminal}:${coordinator.created}:${crew}`;
   const roster=crewOf(coordinator).workers;
   const slot=a=>a.number?roster.length+a.number-1:roster.indexOf(a.art.replace(/^crew-/,''));
-  const taken=new Set(Object.values(assigned).map(a=>a.owner===owner?a:a.history?.[owner]).filter(Boolean).map(slot));
+  const taken=new Set([...Object.values(assigned).map(a=>a.owner===owner?a:a.history?.[owner]).filter(Boolean),...reserved].map(slot));
   for(const worker of workers) {
     const key=identity(worker);
     if(assigned[key]?.owner===owner) continue;
