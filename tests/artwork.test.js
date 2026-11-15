@@ -65,3 +65,21 @@ test('assignments on an unavailable machine survive until it reconnects',async()
   const reconnected=assignCrew(workers,releaseCrew(before,[local,...workers],[{name:null,layout:'ready'},{name:'hz',layout:'ready'}]),coordinator);
   assert.deepEqual(reconnected,before);
 });
+
+test('a ready machine whose terminals are not listed yet keeps its characters',async()=>{
+  const {assignCrew,releaseCrew}=await import('../mods/one-piece/artwork.js');
+  const coordinator={terminal:'hz/t1',created:12,crew:'redhair'};
+  const workers=[{address:'hz/t20',created_ms:12,state:'live'},{address:'hz/t21',created_ms:12,state:'live'}];
+  const local={address:'t5',created_ms:5,state:'live'};
+  const before=assignCrew(workers,assignCrew([local],{},{terminal:'unassigned',created:0}),coordinator);
+  const ready=[{name:null,layout:'ready'},{name:'hz',layout:'ready'}];
+  let characters=releaseCrew(before,[local],ready);
+  assert.deepEqual(characters,before);
+  characters=releaseCrew(characters,[],ready);
+  assert.deepEqual(characters,before);
+  characters=assignCrew(workers,releaseCrew(characters,[local,...workers],ready),coordinator);
+  assert.deepEqual(characters,before);
+  const remaining=releaseCrew(characters,[local,workers[0]],ready);
+  assert.equal(remaining['hz/t21:12'],undefined);
+  assert.deepEqual(remaining['hz/t20:12'],before['hz/t20:12']);
+});

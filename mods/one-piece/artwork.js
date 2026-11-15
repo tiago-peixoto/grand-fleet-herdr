@@ -10,11 +10,13 @@ const pirateColors=['blue','amber','green','violet','red','cyan','pink','silver'
 export const crewOf = coordinator => crews[coordinator?.crew]??crews.strawhat;
 
 export function releaseCrew(characters,terminals,machines) {
+  const machineOf=address=>address.includes('/')?address.split('/')[0]:null;
   const live=new Set(terminals.filter(t=>t.state==='live').map(identity));
+  const listed=new Set(terminals.map(t=>machineOf(t.address)));
   const online=new Set(machines.filter(m=>m.layout==='ready').map(m=>m.name??null));
   return Object.fromEntries(Object.entries(characters).filter(([key])=>{
-    const address=key.slice(0,key.lastIndexOf(':'));
-    return live.has(key)||!online.has(address.includes('/')?address.split('/')[0]:null);
+    const machine=machineOf(key.slice(0,key.lastIndexOf(':')));
+    return live.has(key)||!online.has(machine)||!listed.has(machine);
   }));
 }
 
