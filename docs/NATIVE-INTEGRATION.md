@@ -128,6 +128,26 @@ The receipt is `.superpowers/native/keyboard-audit.json` in the isolated test en
 These checks extend the native-command evidence with actual keyboard input.
 They do not establish a complete remote keyboard or pointer comparison.
 
+## Remote keyboard comparison, 2026-11-14
+
+A new disposable workspace on physical machine `op-hz-lab` started in `/tmp`.
+Actual Command-D and Command-Shift-D input created three remote panes in Grand Fleet.
+Direct typing visibly printed `REMOTE-KEYBOARD-731`.
+Command-Shift-Return visibly zoomed the selected pane.
+After toggling zoom back, Command-Shift-W closed only that pane.
+Command-T created a remote ordinary terminal that inherited `/tmp`.
+Command-W removed the new tab while preserving the original two-pane tab.
+
+The same workspace then ran the equivalent split, direct typing, zoom-toggle, pane-close, new-tab, and tab-close keyboard sequence in default Herdr.
+The default terminal transcript contained `DEFAULT-REMOTE-731`.
+Both surviving remote terminals retained their original creation timestamps and shell processes throughout both layouts.
+The receipt is `.superpowers/native/remote-keyboard-audit.json` in the isolated test environment.
+This comparison covers these keyboard paths, not every native control.
+
+A separate disposable shell exiting with code 1 did not reproduce a live agent error state.
+Herdr reported it as finished with a null status, and the fleet correctly omitted it.
+The physical error-artwork check therefore remains unverified.
+
 ## Historical patched-producer evidence
 
 All producer and lifecycle observations below predate the mod-only association correction.
