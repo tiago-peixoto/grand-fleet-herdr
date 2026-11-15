@@ -2489,3 +2489,49 @@ These terminals were simulated interface fixtures, not a new stock Firstmate lif
 Later review rounds changed how crew characters are assigned and released.
 The complete visible workflow has not been verified again since those changes.
 Final visible verification against the approved native-flow prototype remains pending.
+
+
+## Native Spaces and Agents verification, 2026-11-15
+
+This section supersedes the nested machine and crew scrolling checks above for the current presentation contract.
+The author requested native Spaces and Agents, each with one scrolling list.
+The checks used Grand Fleet Lab with isolated home `/private/tmp/op-app-31618`.
+The user's daily configuration was not changed.
+
+### Local navigation and input
+
+Sunny selection opened space `spe38ea04a6e6dd1cb2705ec1df009236c` and the existing captain terminal `t4c`.
+Typing `NATIVE_REGIONS_CAPTAIN_CHECK` produced `ACK NATIVE_REGIONS_CAPTAIN_CHECK` without removing earlier output.
+Selecting the crewmember row opened terminal `t4d` in tab `tb7dbaf894cd59581f77b38e9f02ca3ede`.
+The focused pane remained `p032841298671917225c6f66a4fac194b`.
+Typing `NATIVE_REGIONS_CREWMEMBER_CHECK` produced its matching acknowledgement and preserved prior output.
+Spaces scrolling left the Agents region fixed.
+These checks used disposable interface fixtures, not a new Firstmate delegation lifecycle.
+The earlier native personal-terminal creation check remains applicable because terminal controls and folder inheritance are unchanged.
+
+### Remote ship selection and input
+
+The remote captain fixture `op-hz-lab/t2k` was initially unplaced, so native Agents did not give it a workspace row.
+Herdr rejected keeping its preview in a local workspace because a terminal must remain on its own machine.
+Keeping it in existing remote space `op-hz-lab/sp4620b5663daf783c98a0015c5791cace` succeeded.
+Red Force and Shanks appeared in their respective sidebar regions.
+Clicking Red Force selected that remote space and tab `op-hz-lab/tb3ecdda2c03ce3e1548e5aeddc1ce3dd0`.
+The selected pane was `op-hz-lab/p225719cd166a240067696010c5ea5d14`.
+Typing `NATIVE_REGIONS_REMOTE_CHECK` produced `ACK NATIVE_REGIONS_REMOTE_CHECK`.
+The fixture retained process 1988054 and its earlier output.
+Native status reported no runtime errors.
+
+### Compact presentation and review
+
+An 83-pixel sidebar displayed ship artwork, native space attention indicators, and crewmember artwork within the native status cells.
+The Crew button remained visible without clipping.
+Independent review found three defects before this verification: oversized compact crewmembers, missing compact ship attention, and an unchecked native menu dependency.
+The adapter now uses 14-pixel artwork below Herdr's compact threshold and native ship status glyphs and colors.
+Compatibility validation now requires the Spaces menu method and status exports.
+Regression checks failed before the corresponding fixes and passed afterward.
+Follow-up review found no further concrete defect.
+
+The native loading check and all 43 Python tests passed after the fixes.
+The executed native-module comparison covers two widths, priority and grouped sorting, ship selection, agent focus and previews, pinning, and appearance settings.
+It also verifies that retired inspection panes cannot create a third agent list or open a recycled terminal identity.
+Simulation does not establish every keyboard interaction, published Core recovery, or pixel fidelity across all displays.

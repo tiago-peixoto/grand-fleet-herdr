@@ -3,7 +3,7 @@
 `herdr-one-piece` exists so that one captain can use firstmate's crew with confidence while keeping independent work close at hand.
 It serves the individual captain through an optional One Piece interface for supervised fleets and independent Herdr sessions.
 It owns the One Piece presentation of Herdr's Spaces and Agents in the fleet sidebar.
-The sidebar retains island headings, ship groups, captains, and crewmates while Herdr owns the underlying workspace and terminal behavior.
+The sidebar retains two native regions, Spaces and Agents, while Herdr owns workspace and terminal behavior.
 
 ## Firstmate supplies the governing vision
 
@@ -19,13 +19,14 @@ The extension remains optional, and removing it leaves firstmate's contracts and
 The primary path leads to firstmate, which carries the captain's direction and gathers worker reports.
 Herdr supplies terminal attention, focus, writable previews, and session management.
 The fleet sidebar retains native machine identities and grouping.
-Each explicitly registered firstmate coordinator has ship and captain artwork.
-Its explicitly associated workers appear beneath the captain as crewmates.
-Every live Herdr agent receives character artwork even before a captain association exists.
-Agents with unknown coordinator relationships appear as unassigned crewmates on their machine.
-Character rows identify their native workspace without duplicating that workspace in a separate list.
-A ship only expands or collapses its presentation group.
-Presentation grouping does not require native process parenting.
+Every Herdr agent is a crewmember, regardless of who started it.
+Any agent running a Firstmate instance can be explicitly identified as a captain.
+Spaces containing captains display ship artwork and remain ordinary Herdr workspaces.
+Selecting a ship selects its space rather than collapsing a crew group.
+Captain and crewmember artwork appears in the Agents region.
+Spaces and Agents each have one scrolling list, without scrolling inside individual machines or ships.
+Crewmember artwork requires no coordinator association or worker ownership metadata.
+Native agent grouping, sorting, pinning, and terminal navigation remain available.
 Selecting the captain or a crewmate uses the corresponding native agent action.
 An unplaced crewmate opens in Herdr's writable preview with Herdr's option to keep its terminal.
 The mod does not create a workspace merely because a crewmate was selected.
@@ -78,9 +79,9 @@ Animation supports recognition without concealing failures, decisions, or risks.
 
 ## Scope
 
-This project is an optional, firstmate-specific interface for Herdr.
+This project is an optional One Piece presentation of Herdr agents and spaces, with captain artwork for Firstmate instances.
 The mod must work with unmodified firstmate and must not require an upstream patch, special fork, or additional firstmate hooks.
-Coordinator associations belong to the mod and must use explicit user choices when existing metadata does not establish them.
+Captain identification belongs to the mod and uses explicit user choices when existing metadata does not establish it.
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
 Ordinary Herdr workspaces remain accessible without firstmate registration.
@@ -93,8 +94,8 @@ The author approved this vision on 2026-11-12.
 On 2026-11-14, the author approved the simplified interface and replaced Restore layout with Add terminal.
 The author then approved one writable terminal per crewmate and ordinary Herdr controls, replacing the inspection-only design.
 The author subsequently requested a thin mod that replaces agent activity dots while reusing Herdr's Spaces and nested agents.
-The author clarified that this must preserve the previous fleet sidebar rather than replace it with Herdr's default sidebar.
-The approved native-flow prototype identifies ships and captains as coordinators running firstmate.
+The earlier nested fleet decision was superseded on 2026-11-15 by two native sidebar regions and generic crewmember presentation.
+Ships now identify spaces containing Firstmate captains, and clicking a ship selects that space.
 Workers retain their own workspaces, and personal terminals retain native behavior.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.

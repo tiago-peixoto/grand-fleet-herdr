@@ -19,6 +19,20 @@ export default class Agents extends View {
 '''
 
 
+SPACES_SOURCE = '''export function glyph() {}
+export function tone() {}
+import { View } from "gpui-kit";
+export default class Spaces extends View {
+  init() {}
+  render() {}
+  row() {}
+  compact() {}
+  grouped() {}
+  menu() {}
+}
+'''
+
+
 class CompatibilityTests(unittest.TestCase):
     def setUp(self):
         self.layout = {'id': 'root', 'children': [
@@ -26,38 +40,51 @@ class CompatibilityTests(unittest.TestCase):
             {'id': 'agents', 'content': {'mod': 'agents', 'props': {'future': True}}},
             {'id': 'future', 'content': {'mod': 'future-herdr-feature'}}]}
 
-    def test_combines_sidebar_lists_and_preserves_other_layout_fields(self):
-        files = compat.generate(SOURCE, self.layout)
+    def test_preserves_two_sidebar_regions_and_native_sources(self):
+        files = compat.generate(SOURCE, self.layout, SPACES_SOURCE)
         self.assertEqual(files['mods/one-piece/herdr-agents.js'].decode(), SOURCE)
+        self.assertEqual(files['mods/one-piece/herdr-spaces.js'].decode(), SPACES_SOURCE)
         layout = json.loads(files['layouts/one-piece.json'])
-        self.assertEqual(layout['children'][0]['content']['mod'], 'one-piece')
-        self.assertEqual(len(layout['children']), 2)
+        self.assertEqual(len(layout['children']), 3)
+        for index, region in enumerate(('spaces', 'agents')):
+            content = layout['children'][index]['content']
+            self.assertEqual(content['mod'], 'one-piece')
+            self.assertEqual(content['props']['region'], region)
+            content['mod'] = region
+            del content['props']['region']
+        del layout['children'][0]['content']['props']
         colors = layout.pop('colors')
         self.assertEqual(colors['chrome'], '#14272d')
         self.assertEqual(colors['accent'], '#e8bd70')
-        layout['children'][0]['content']['mod'] = 'spaces'
-        layout['children'].insert(1, self.layout['children'][1])
         self.assertEqual(layout, self.layout)
+
+    def test_rejects_unsupported_spaces_interface(self):
+        for source in (SPACES_SOURCE.replace('  compact()', '  rail()'),
+                       SPACES_SOURCE.replace('  menu()', '  renamedMenu()'),
+                       SPACES_SOURCE.replace('export function tone()', 'function tone()'),
+                       SPACES_SOURCE + '\nimport x from "./new-module.js";'):
+            with self.subTest(source=source), self.assertRaises(ValueError):
+                compat.generate(SOURCE, self.layout, source)
 
     def test_rejects_separated_sidebar_slots(self):
         layout = {'children': [self.layout['children'][0], {'children': [self.layout['children'][1]]}]}
         with self.assertRaises(ValueError):
-            compat.generate(SOURCE, layout)
+            compat.generate(SOURCE, layout, SPACES_SOURCE)
 
     def test_rejects_missing_methods_and_new_module_dependencies(self):
         for source in (SOURCE.replace('  subRow()', '  childRow()'),
                        SOURCE.replace('this.folded', 'this.collapsed'),
                        SOURCE + '\nimport x from "./new-module.js";'):
             with self.subTest(source=source), self.assertRaises(ValueError):
-                compat.generate(source, self.layout)
+                compat.generate(source, self.layout, SPACES_SOURCE)
 
     def test_rejects_missing_or_ambiguous_agent_slots(self):
         for children in ([], [self.layout['children'][1]] * 2):
             with self.subTest(children=children), self.assertRaises(ValueError):
-                compat.generate(SOURCE, {'children': children})
+                compat.generate(SOURCE, {'children': children}, SPACES_SOURCE)
 
     def test_preserves_explicit_source_color_preferences(self):
         self.layout['colors'] = {'accent': '#123456'}
-        result = json.loads(compat.generate(SOURCE, self.layout)['layouts/one-piece.json'])
+        result = json.loads(compat.generate(SOURCE, self.layout, SPACES_SOURCE)['layouts/one-piece.json'])
         self.assertEqual(result['colors']['accent'], '#123456')
         self.assertEqual(result['colors']['chrome'], '#14272d')

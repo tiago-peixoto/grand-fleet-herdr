@@ -20,12 +20,12 @@ Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 VISION.md takes precedence over docs/PROTOTYPE-SPEC.md and the browser simulation.
 The author explicitly approved direct typing into worker and secondmate terminals on 2026-11-14.
 The current request preserves native workspace and terminal behavior beneath the approved fleet sidebar.
-Preserve the previous fleet sidebar's island headings, ship rows, captains, and nested crewmates.
-The author rejected replacing that visual structure with Herdr's default sidebar.
-Do not reintroduce custom workspace ownership or task polling.
-Ships represent firstmate coordinators explicitly selected in the mod, not native process parents.
+The latest approved design uses native Spaces and Agents regions, each with one scrolling list.
+Ships identify spaces containing Firstmate captains, and clicking a ship selects that space.
+Every agent is a crewmember, with captain artwork for explicitly identified Firstmate instances.
+Retain native grouping, sorting, pinning, workspace menus, and terminal navigation.
+Do not reintroduce custom workspace ownership, worker associations, or task polling.
 The mod must work with unmodified firstmate.
-Use its existing worker metadata on the same machine and explicit mod-owned coordinator associations.
 Do not infer coordinator identity from terminal names, folders, or process parents.
 Do not require firstmate.home.path, firstmate.role, or any Firstmate patch.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.

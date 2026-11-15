@@ -46,6 +46,10 @@ class InstallTests(unittest.TestCase):
                  + ''.join('  ' + name + '() {}\n' for name in
                            ('render', 'status', 'subRow', 'tree'))
                  + '  init() { this.folded = new Set(); }\n}\n')
+        self.put(home, 'mods/spaces/main.js',
+                 'export function glyph() {}\nexport function tone() {}\nimport { View } from "gpui-kit";\nexport default class Spaces extends View {\n'
+                 + ''.join('  ' + name + '() {}\n' for name in
+                           ('init', 'render', 'row', 'compact', 'grouped', 'menu')) + '}\n')
         self.put(home, 'layouts/main.json', json.dumps({'children': [
             {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}))
 
@@ -96,8 +100,10 @@ class InstallTests(unittest.TestCase):
         self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(),
                          (self.home / 'mods/agents/main.js').read_bytes())
         expected = json.loads((self.home / 'layouts/main.json').read_bytes())
-        expected['children'][0]['content']['mod'] = 'one-piece'
-        del expected['children'][1]
+        for index, region in enumerate(('spaces', 'agents')):
+            expected['children'][index]['content'] = {'mod': 'one-piece', 'props': {'region': region}}
+        self.assertEqual((self.home / 'mods/one-piece/herdr-spaces.js').read_bytes(),
+                         (self.home / 'mods/spaces/main.js').read_bytes())
         actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
         self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
         self.assertEqual(actual, expected)
@@ -159,8 +165,8 @@ class InstallTests(unittest.TestCase):
         self.put(self.home, 'layouts/main.json', json.dumps(layout))
         self.run_cli()
         self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(), agents.read_bytes())
-        layout['children'][0]['content']['mod'] = 'one-piece'
-        del layout['children'][1]
+        for index, region in enumerate(('spaces', 'agents')):
+            layout['children'][index]['content'] = {'mod': 'one-piece', 'props': {'region': region}}
         actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
         self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
         self.assertEqual(actual, layout)

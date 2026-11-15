@@ -1,6 +1,6 @@
 # Install the native One Piece interface
 
-Grand Fleet combines workspace navigation and registered firstmate characters in a themed sidebar while retaining native terminal controls.
+Grand Fleet decorates native Spaces and Agents regions while retaining native terminal controls.
 Worker, secondmate, and personal terminals remain directly writable through Herdr.
 The adapter does not create worker spaces, adopt terminals, connect firstmate task records, or add shortcut bindings.
 Read the [thin presentation design](THIN-MOD.md) for the current contract.
@@ -14,8 +14,8 @@ The documented path and Core release limitations still apply.
 ## Choose an app home
 
 An app home is Herdr's configuration directory.
-The destination must contain supported `mods/agents/main.js` and `layouts/main.json` files supplied by Herdr.
-If either file is missing, initialize the separate test home with Herdr before installation.
+The destination must contain supported `mods/agents/main.js`, `mods/spaces/main.js`, and `layouts/main.json` files supplied by Herdr.
+If any required file is missing, initialize the separate test home with Herdr before installation.
 A valid source and layout are sufficient without `keys.json`.
 The installer never starts Herdr or initializes shortcut files.
 
@@ -44,16 +44,14 @@ It excludes hidden entries, `node_modules`, Python bytecode caches, `jsconfig.js
 It requires `main.js` and `mod.json` with `"place":"none"`, which prevents automatic docking into the active layout.
 It does not build artwork or validate runtime behavior.
 
-The installer calls `tools/compat.py` with the destination's `mods/agents/main.js` source and parsed `layouts/main.json` layout.
-The compatibility check requires `export default class Agents extends View` and the methods `init`, `render`, `status`, `subRow`, and `tree`.
-It also requires the native folded-group set used by the ship control.
-It rejects detected module imports outside `herdr`, `gpui-kit`, and `gpui-base`.
+The installer calls `tools/compat.py` with both installed module sources and the parsed main layout.
+It validates the Agents and Spaces classes, their overridden rendering methods, and supported module imports.
 The layout must contain exactly one Spaces node and one Agents node under the same parent.
 Unsupported source or layout structures stop installation before destination writes.
 
-The generated `mods/one-piece/herdr-agents.js` preserves the installed Agents source contents, including line endings.
-The adapter imports that local module to retain Herdr's existing agent behavior.
-The generated `layouts/one-piece.json` replaces the Spaces node with `one-piece` and removes the sibling Agents node.
+Generated `herdr-agents.js` and `herdr-spaces.js` files preserve the installed source contents, including line endings.
+The adapter subclasses these local modules to retain native behavior.
+The generated `layouts/one-piece.json` retains both sidebar nodes and assigns their Spaces or Agents presentation through region properties.
 It adds the approved palette defaults while preserving explicit source color overrides.
 Other layout values remain unchanged, but serialization changes formatting.
 The installer does not read a repository `layouts/one-piece.json`.

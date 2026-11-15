@@ -1,16 +1,15 @@
 # Herdr One Piece
 
-Grand Fleet presents firstmate coordinators as ships and captains, with their workers nested as crewmates.
-Machines appear as islands while retaining their actual names.
-Herdr supplies writable terminals, workspaces, tabs, splits, panels, and session management.
-Ships only fold their characters, and selecting a character uses native terminal focus or writable preview.
+Grand Fleet presents Herdr agents as crewmembers in the native Agents region.
+Explicitly identify an agent running Firstmate as a captain through Crew appearance.
+Its space displays the selected ship in the native Spaces region.
+Clicking the ship selects that workspace, while clicking a crewmember uses native terminal navigation.
+Spaces and Agents each retain one scrolling list and native machine identities.
 Personal terminals remain ordinary Herdr terminals.
 
 The mod works with unmodified Firstmate and requires no upstream patch or additional hooks.
-Choose a coordinator terminal through Link captain on its machine.
-Associate its existing worker group using Firstmate's `firstmate.home` and `firstmate.task` labels.
-The mod stores this choice without changing Firstmate or terminal metadata.
-It does not infer relationships from names, folders, or process parenting.
+Captain choices use terminal addresses and creation timestamps without changing session metadata.
+Crewmembers require no captain association or Firstmate worker labels.
 
 This project remains experimental.
 Unmodified Firstmate completed local and physical remote tasks, direct input, navigation, reconnection, and normal cleanup in the isolated lab.
@@ -28,15 +27,15 @@ Use a separate test home before considering your daily configuration.
 
 ## Installation model
 
-The installer reads `mods/agents/main.js` and `layouts/main.json` from the destination app home, Herdr's configuration directory.
-It validates the installed Agents interface and requires one Spaces slot and one Agents slot under the same parent.
-It generates `mods/one-piece/herdr-agents.js` from the installed source without changing its contents.
-It replaces the Spaces slot with the fleet sidebar and removes the sibling Agents slot to avoid duplicate navigation.
+The installer reads the installed Spaces and Agents modules and `layouts/main.json` from the destination app home, Herdr's configuration directory.
+It validates both module interfaces and requires one Spaces slot and one Agents slot under the same parent.
+It copies their source unchanged to `mods/one-piece/herdr-spaces.js` and `mods/one-piece/herdr-agents.js`.
+The generated layout retains both slots and selects the appropriate One Piece presentation through their region properties.
 It supplies teal and gold palette defaults while preserving explicit source color overrides.
 Other native controls remain in the generated layout.
-Both generated files belong to the destination installation, not the source checkout.
+Generated files belong to the destination installation, not the source checkout.
 
-Run installation again after Herdr updates to refresh the generated Agents module and layout.
+Run installation again after Herdr updates to refresh both native modules and the layout.
 Unsupported source or layout structures fail before installation writes.
 New installations never read or change `keys.json`.
 Upgrading a version 2 installation removes its owned shortcuts while preserving unrelated bindings.
@@ -55,9 +54,9 @@ python3 -B -m unittest discover -s tests -p test_compat.py -v
 Installer tests use temporary homes.
 Compatibility tests check source preservation and layout changes.
 These checks do not establish behavior inside a running Herdr window.
-Run `npm test` for fleet membership and artwork checks.
+Run `npm test` for generic crewmember, captain identity, and artwork checks.
 Run `node tools/check-parity.mjs <app-home>` for simulated native command comparisons.
-The [current verification record](docs/NATIVE-INTEGRATION.md#current-verification-2026-11-14) distinguishes live checks from simulations and historical results.
+The [current verification record](docs/NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) distinguishes live checks from simulations and historical results.
 
 ## Historical prototype
 

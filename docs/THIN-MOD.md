@@ -1,75 +1,54 @@
 # Thin One Piece presentation
 
-Grand Fleet presents firstmate coordinators and workers through the approved fleet sidebar.
-The [native-flow prototype](http://tiagos-macbook-pro-1.tail707c05.ts.net:4387/session/0782435952d24d57) supplies the visual reference.
+Grand Fleet decorates Herdr's native Spaces and Agents regions.
+The author’s 2026-11-15 decision supersedes the nested fleet in the historical prototype.
 Herdr owns terminal processes, workspaces, input, arrangement, and reconnection.
 
 ## Current design
 
-Machines appear as islands with their actual machine names retained.
-Each registered coordinator has a ship row and a captain beneath it.
-The ship only folds its characters, and its appearance menu selects artwork without changing sessions.
-Workers appear below their coordinator using explicit Firstmate metadata.
-Other live Herdr agents appear as unassigned crewmates, with character artwork and their native workspace.
-Artwork does not depend on captain setup and does not imply an unknown coordinator relationship.
-Personal terminals keep native controls and have no character assignment.
-Ordinary workspaces remain accessible without duplicate destinations for represented characters.
+Each sidebar region retains one native scrolling list.
+Machine groups share the Spaces scroll, and native agent groups share the Agents scroll.
+No machine or ship introduces a nested scroll container.
+Every live Herdr agent receives crewmember artwork without Firstmate worker metadata or captain ownership.
+Personal terminals retain ordinary native presentation.
 
-Firstmate requires no modifications, extra hooks, or special fork.
-Link captain selects an existing terminal explicitly and stores its address and creation timestamp in the mod's settings.
-A captain can be linked before its first worker exists.
-Edit captain link later selects a worker group from existing `firstmate.home` and `firstmate.task` labels on that machine.
-New workers with the selected home label join automatically.
-Unlink captain removes presentation grouping without changing any terminal, workspace, or Firstmate record.
-An ended captain's association cannot transfer to a reused terminal identifier.
+Crew appearance lets the user explicitly identify an agent running Firstmate as a captain.
+The mod records its terminal address and creation timestamp without modifying Firstmate or terminal metadata.
+An ended captain designation cannot transfer to a reused terminal address.
+The captain chooses its crew artwork through the appearance menu.
+A space containing a captain shows that crew's ship.
+Clicking the ship selects the space through Herdr's native command.
+If several captains share a space, the first captain in native agent order supplies its ship.
+All captains remain independently accessible in Agents.
+Spaces without captains retain native presentation.
 
-A home label identifies a worker group, not a canonical directory.
-Independent Firstmate homes can share that label when they use the same installation.
-The setup menu displays the label, tasks, and terminal addresses for explicit selection.
-Do not associate a shared label when its workers belong to separate coordinators.
-Those workers remain accessible as unassigned crewmates through native Herdr commands.
-The menu refuses a group already associated with another live captain.
-Conflicting saved associations keep captains visible and leave workers ungrouped.
-The mod does not guess a relationship from names, directories, or process parents.
-
-[Firstmate PR 8484](https://github.com/kunchenguid/firstmate/pull/8484) was rejected as an architectural dependency and closed.
-Earlier patched-producer evidence is historical and does not validate this replacement.
-Unmodified Firstmate passed local and physical remote task, input, navigation, reconnect, and cleanup checks.
-
-Selecting a placed character focuses its native terminal.
-An unplaced character opens Herdr's writable preview, including its native keep action.
-Selection does not silently create workspaces or adopt terminals.
-Native controls continue to supply creation, folder inheritance, machine selection, tabs, splits, resizing, zoom, closing, and panels.
-There is no custom Restore layout or terminal recovery flow.
-
-The sidebar uses the approved teal and gold palette while retaining explicit layout color overrides.
-Narrow sidebars use compact artwork with terminal identities available through tooltips and accessibility labels.
-Unavailable machines display connection state instead of animated characters.
-Surviving sessions keep character assignments when other workers enter or leave.
+Selecting a crewmember retains native focus or writable preview behavior.
+Native sorting, pinning, grouping, terminal creation, tabs, splits, and panels remain available.
+Character assignments remain stable for surviving sessions.
+Idle characters sleep, working characters walk, and blocked characters sit.
+Appearance settings can pause animation without changing session state.
+There is no custom workspace ownership, worker association, task polling, or terminal recovery flow.
 
 ## Compatibility approach
 
-A native loading probe confirmed that Herdr rejects imports outside a mod directory.
-Herdr exposes no documented status-artwork hook in the shipped Agents mod.
-The installer therefore generates a local base module from the installed Agents source and derives the layout from the installed main layout.
-The repository maintains the fleet sidebar and artwork adapter while delegating terminal actions to native commands.
-Installation checks the methods and layout slots used by the adapter before writing files.
-Unsupported structures fail with a useful message and preserve the existing installation.
-Refresh the installation after a Herdr update to inherit changes to Agents and the main layout.
-Directly referenced shipped mods receive their normal updates.
-No promise of compatibility with every future Herdr version is possible without a supported extension hook.
-
-Generating the base from installed source avoids maintaining a static fork of native initialization.
-The custom sidebar still requires compatibility verification when Herdr changes.
+Herdr rejects imports outside a mod directory.
+The installer copies the installed Spaces and Agents modules unchanged into the mod directory.
+The adapter subclasses their rendering methods and retains their native controllers.
+The generated layout retains both sidebar slots and selects their presentation with region properties.
+Teal and gold defaults preserve explicit layout color overrides.
+Unsupported source methods, imports, or layout structure fail before installation writes files.
+Refresh the installation after Herdr updates to inherit native module changes.
+The adapter still requires compatibility verification against each new upstream structure.
 
 ## Verification
 
-Compare emitted terminal commands with native Herdr and verify fleet membership separately.
-Verify that the generated layout changes only approved sidebar slots and palette defaults.
-Test installation, upgrade, removal, modified files, unsupported upstream source, and legacy shortcut cleanup.
-Use disposable local and remote sessions to verify navigation, typing, native creation, and preservation of process identities.
-Inspect the native layout at compact and large sizes.
-Keep interactive validation stopped if user input changes the test window.
+Compare emitted navigation commands with native Herdr and test captain identity separately.
+Count scrolling containers in both native and decorated regions.
+Verify generated module contents and preservation of unrelated layout properties.
+Exercise installation, upgrade, removal, and rejection of unsupported or modified installations.
+Use disposable local and remote sessions for physical navigation and direct input checks.
+Initial rendering and simulated command checks do not prove reconnection or pixel accuracy.
+The [acceptance review](ACCEPTANCE.md) distinguishes current evidence from historical checks.
 
 ## Historical candidate verification on 2026-11-14
 

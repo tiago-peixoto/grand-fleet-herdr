@@ -151,13 +151,14 @@ def source_files(repo, home):
     if not isinstance(metadata, dict) or metadata.get('place') != 'none':
         raise ValueError('mod.json must use place=none to avoid docking into the active layout')
     agents = home / 'mods/agents/main.js'
+    spaces = home / 'mods/spaces/main.js'
     layout = home / 'layouts/main.json'
-    for path in (agents, layout):
+    for path in (agents, spaces, layout):
         check_parents(path.parent)
         inventory(path)
     try:
         files.update(compat.generate(agents.read_bytes().decode('utf-8'),
-                                     strict_json(layout.read_bytes())))
+                                     strict_json(layout.read_bytes()), spaces.read_bytes().decode('utf-8')))
     except (AttributeError, TypeError) as error:
         raise ValueError('Unsupported Herdr main layout; preserving installation') from error
     return files

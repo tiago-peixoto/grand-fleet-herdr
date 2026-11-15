@@ -1,73 +1,34 @@
 # Native acceptance review
 
-The implementation objective is verified for the recorded isolated workflows.
-Release acceptance remains separate and subject to the limitations below.
-Read [current native verification](NATIVE-INTEGRATION.md#mod-only-association-2026-11-14) for observed behavior and limits.
-The historical table describes retired implementations and must not be used as the current acceptance verdict.
+## Current objective audit: native regions, 2026-11-15
 
-## Current objective audit
+The current objective preserves native Spaces and Agents and decorates their existing navigation.
+The implementation remains under verification.
+Historical nested-fleet evidence does not establish acceptance of the current adapter.
 
-This audit covers the approved native-flow objective, not the retired inspection model.
-The approved native-flow reference is `/Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html` and its Lavish session `0782435952d24d57`.
-The browser simulation in `prototype/flow` predates that reference and does not decide acceptance.
-Recorded runtime evidence applies to its tested source and fixtures only.
-Current stock checks supersede the rejected registration fixtures.
-
-| Requirement | Current evidence | Status or remaining proof |
+| Requirement | Evidence | Remaining proof |
 | --- | --- | --- |
-| Machines retain actual identities beneath island names | Current sidebar source and recorded local/remote navigation | Local and remote captures confirm the hierarchy and identities |
-| Explicit coordinator and worker relationships | Mod-owned captain choice and stock worker labels pass automated checks | Stock local and remote tasks, association, direct typing, navigation, reconnect, and normal cleanup passed |
-| Ship folds only; captain appears first | Recorded native collapse/expand and captain selection | No known functional gap in tested inventory |
-| Characters open existing writable terminals | Recorded captain focus, worker focus, and unplaced captain preview | Stock local and remote task flows passed without path corrections |
-| Ordinary workspaces and terminals remain accessible | Native reproduction and fixes for unplaced terminals and workspace menus | No known functional gap in tested inventory |
-| Native Settings, Add machine, plus, Files, and Changes | Recorded pointer checks in the current native window | No known functional gap in tested controls |
-| Personal terminals inherit folder and machine without character assignment | Four-case default/mod comparison on local and physical remote machines | No known functional gap in tested cases |
-| Native tabs, splits, grids, zoom, resizing, and closing | Twelve disposable shells plus local/remote pointer resizing | No known functional gap in tested arrangements |
-| Navigation and reconnect preserve sessions and output | Process identity and output comparisons against default Herdr | Published recovery build remains unverified |
-| No custom ownership or recovery workflows | Current thin-mod design and native command routing | Current main.js and fleet.js retain native commands and explicit metadata grouping |
-| Approved artwork and sleeping/walking/seated states | Native local captures with simulated terminal status reports | Real local and remote tasks showed working and Done; coordinator approval showed Needs you |
-| Surviving characters keep their assignments | Recorded Franky identity after closing Chopper | No known gap in tested removal case |
-| Unavailable machines do not imply live activity | Recorded transport interruption hides captain artwork and shows Unavailable | No known gap for transport loss with a live remote service |
-| Tested code, documentation, and reviewable pull request | Mod pull request exists; current review fixes have regression checks | Firstmate PR 8484 is closed; stock lifecycle checks passed and review corrections have regression coverage |
+| Two independent sidebar scrolls | Executed native modules each contain one scroll at two widths and two sort modes; physical Spaces scrolling leaves Agents fixed | No known gap in tested layouts |
+| Ships identify spaces containing captains | Mapping tests cover explicit identity, remote addresses, and multiple captains; Sunny and Red Force observed locally and remotely | No known gap in tested inventory |
+| Clicking a ship selects its space | Physical Sunny and Red Force selection matches native space identifiers | No known gap in tested inventory |
+| Every agent receives crewmember artwork | Generic membership tests and native rendering include agents without Firstmate labels; expanded and compact artwork inspected | No known gap in tested inventory |
+| Native agent navigation and direct input | Command comparison covers selection, pinning, sorting, and previews; local captain, crewmember, and remote captain acknowledged typed input | Other native controls were not exhaustively retested |
+| Firstmate remains unmodified | Adapter uses explicit mod settings and Herdr snapshots only | No Firstmate dependency added |
+| Unsupported installations fail safely | 43 Python tests pass, including compatibility rejection and transactional installation | Future Herdr releases require validation |
+| Reviewable implementation | Independent follow-up review found no further concrete defects | Review pipeline and updated pull request |
 
-All 9 JavaScript tests and the command comparison passed on commit `97e0b40`.
-All 42 Python tests passed before its presentation-only error-status correction.
-The installed native loading check and command parity comparison also passed.
-These checks cover grouping, artwork, installation, compatibility, and emitted native actions.
-They do not replace the recorded interactive workflow checks.
+The current implementation passed 12 JavaScript tests and 43 Python tests.
+Its native loading check and command comparison passed against `/private/tmp/op-app-31618`.
+[Native interaction evidence](NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) records exact terminal and workspace identities.
+Herdr reported no runtime errors after the recorded navigation checks.
 
-Final visible verification against the approved native-flow reference remains pending.
-Crew assignment and release changed after the last complete native comparison.
-[Crew scrolling verification](NATIVE-INTEGRATION.md#crew-scrolling-verification) records direct input after scrolling with simulated fixtures only.
-The published-Core release limitations below still apply.
+## Release limitations
 
-See [current native verification](NATIVE-INTEGRATION.md#mod-only-association-2026-11-14) for the runtime observations and their limits.
-See [local discovery](NATIVE-INTEGRATION.md#local-automatic-discovery-and-animated-states) for the simulated startup and state checks.
-Stock cleanup and reconnect completed the tested lifecycle without modifying Firstmate.
-
-## Remaining verification limits
-
-- Before release acceptance, validate a published Herdr Core build containing the recovery fix.
-  The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) identifies the exact tested source build and checksum.
-  The implementation goal delivers a reviewable pull request and does not authorize a release or daily installation.
-- Complete pointer and keyboard comparisons for all native terminal controls remain unverified.
-  Native keyboard checks now cover local and physical remote splitting, zoom, tab creation, and closing.
-  The remote keyboard sequence also passed in default Herdr.
-  Recorded pointer checks cover mod plus-menu creation, panels in both layouts, and resizing locally and remotely in both layouts.
-- Captures establish the approved palette, artwork, hierarchy, and native controls, but not exact pixel equivalence with the prototype.
-- Error-state artwork passed a physical native-window check with a simulated status producer.
-  A real Firstmate failure was not induced.
-- Independent coordinators can share a stock worker-group label.
-  Leave such groups unlinked and use native worker navigation rather than assigning ambiguous workers to a captain.
-
-Historical local and remote Claude tasks used the rejected Firstmate patch.
-Their automatic grouping does not establish acceptance of the mod-only replacement.
-Remote normal cleanup released the worktree lease and removed the worker terminal.
-Local cleanup passed after correcting only the disposable task record to the pool path spelling.
-The original failure remains tracked by [Firstmate issue 4708](https://github.com/kunchenguid/firstmate/issues/4708).
-Pointer resizing passed locally and remotely in Grand Fleet and default Herdr with preserved processes and output.
-Sleeping, walking, and seated animations passed with simulated status reports, and real tasks exercised corresponding status changes.
-Local and remote captures confirm the approved sidebar hierarchy and artwork alongside native terminal controls.
+The project remains experimental and is not installed into the user's daily configuration by this work.
+The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) records the isolated recovery build used for historical checks.
+A published Core build still needs separate recovery verification before release acceptance.
+Exact pixel equivalence with the historical browser prototype is not the current contract because the author replaced its sidebar model.
+Current native input checks use disposable interface fixtures rather than a new Firstmate delegation lifecycle.
 
 ## Historical acceptance review
 
