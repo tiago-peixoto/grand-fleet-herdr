@@ -2,7 +2,7 @@ import Agents from './herdr-agents.js';
 import { div, image } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, panes, focused, layout, setAgentOrder, shared, setShared, props, openOverlay, closeOverlay, theme, run } from 'herdr';
-import { identity, crews, assignCrew, releaseCrew } from './artwork.js';
+import { identity, crews, assignCrew, assignUnassigned, releaseCrew } from './artwork.js';
 import { groupFleet, machineOf, workerHome } from './fleet.js';
 
 const displayName = name => name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
@@ -89,8 +89,7 @@ export default class OnePieceAgents extends Agents {
         if (space) represented.add(space.id);
       }
     }
-    const survivors = unassigned.map(terminal => characters[identity(terminal)]).filter(Boolean);
-    characters = assignCrew(unassigned.filter(terminal => !characters[identity(terminal)]), characters, {terminal: 'unassigned', created: 0, crew: 'strawhat'}, survivors);
+    characters = assignUnassigned(unassigned, characters);
     for (const terminal of unassigned) {
       const pane = allPanes.find(p => p.terminal === terminal.address);
       const space = allSpaces.find(s => s.tabs?.some(tab => tab.id === pane?.tab));
