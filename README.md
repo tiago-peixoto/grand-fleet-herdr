@@ -51,6 +51,8 @@ python3 -B -m unittest discover -s tests -p test_install.py -v
 python3 -B -m unittest discover -s tests -p test_compat.py -v
 ```
 
+GitHub Actions runs the JavaScript, Python, and artwork tests on macOS for pull requests and pushes to main.
+Native Herdr interaction checks still run locally because hosted runners do not have the application installed.
 Installer tests use temporary homes.
 Compatibility tests check source preservation and layout changes.
 These checks do not establish behavior inside a running Herdr window.

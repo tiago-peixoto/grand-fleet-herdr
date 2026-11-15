@@ -1,0 +1,25 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install artwork tools
+        run: brew install imagemagick
+      - name: JavaScript tests
+        run: node --test tests/*.test.js
+      - name: Python and artwork tests
+        run: python3 -m unittest discover -s tests
