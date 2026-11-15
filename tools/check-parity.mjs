@@ -23,6 +23,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
         if(key==='accessibility_label') target.label=args[0];
         if(key==='tooltip') target.tip=args[0];
         if(key==='text_color') target.color=args[0];
+        if(key==='bg') target.background=args[0];
         if(key==='w') target.width=args[0];
         if(key==='overflow_y_scrollbar') target.scrolls=true;
         if(key==='flex_1') target.grows=true;
@@ -48,18 +49,19 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     {address:'t3',created_ms:3,state:'live',status:'idle',parent:'t1',program,labels:{}},
     {address:'remote/t1',created_ms:4,state:'live',status:'idle',program,labels:{}},
     {address:'t4',created_ms:5,state:'live',labels:{}},
-    {address:'t5',created_ms:6,state:'live',name:'unregistered-child',parent:'t1',program,labels:{}}];
+    {address:'t5',created_ms:6,state:'live',name:'unregistered-child',parent:'t1',program,labels:{}},
+    {address:'t6',created_ms:7,state:'live',status:'done',program,labels:{}}];
   state.set('one-piece.captains', {'t1:1':{home:'local'}, 'remote/t1:4':{home:'remote'}});
   all[2].labels={'firstmate.task':'fm-1','firstmate.home':'local'};
   all[3].labels={'firstmate.task':'fm-2','firstmate.home':'local'};
-  const agents=[all[1],all[3],all[4]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
+  const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
   const context={...fleet,captainSpaces,crewmembers,machineOf,View:class{},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:element,h_flex:element,v_flex:element,
     machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
-    theme:()=>({blocked:'#ff0000',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
+    theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
     setAgentOrder:order=>calls.push(['order',order]),run:(name,args)=>calls.push([name,args]),
     openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
@@ -82,6 +84,13 @@ for (const width of [310, 120]) {
     assert.equal(scrolls(standard),1);
     assert.equal(scrolls(decorated),1,'Agents must retain one scrolling list');
     if (width === 120) assert.ok(descendants(decorated.root).filter(n => n.path?.includes('crew-')).every(n => n.width <= 14), 'compact characters must fit native status slots');
+    if (width === 120) {
+      const cells = descendants(decorated.root).filter(n => n.kids.some(kid => kid?.path?.includes('crew-')));
+      const doneDot = cell => cell.kids.some(kid => kid?.background === '#00ff00');
+      assert.ok(descendants(standard.root).some(n => n.background === '#00ff00'), 'native rail shows done');
+      assert.equal(cells.filter(doneDot).length, 1, 'compact rail keeps the done indicator only for the done crewmember');
+      assert.ok(cells.filter(doneDot).every(cell => cell.kids.some(kid => kid?.path?.endsWith('-idle.gif'))), 'done crewmember keeps its artwork');
+    }
     for (const id of ['ag-t1','ag-remote/t1', ...(width===310 ? ['sub-t2','sub-t3'] : ['ag-t3'])]) {
       assert.ok(decorated.nodes.has(id),`missing native agent ${id}`);
       standard.nodes.get(id).click(null,standard.cx);

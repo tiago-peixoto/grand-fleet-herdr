@@ -2532,6 +2532,11 @@ Regression checks failed before the corresponding fixes and passed afterward.
 Follow-up review found no further concrete defect.
 
 The native loading check and all 43 Python tests passed after the fixes.
+All 12 JavaScript tests passed with `npm test`.
+A later review found that the collapsed rail showed done crewmembers with the same sleeping artwork as idle ones, hiding Herdr's done dot.
+The adapter now keeps the artwork and overlays a 6-pixel dot in the native done color at the sprite's top-right corner in compact rows.
+The executed comparison now includes a done agent and failed on the earlier adapter before passing with this change.
+`herdr-app check` passed on the reinstalled mod in /private/tmp/op-app-31618.
 The executed native-module comparison covers two widths, priority and grouped sorting, ship selection, agent focus and previews, pinning, and appearance settings.
 It also verifies that retired inspection panes cannot create a third agent list or open a recycled terminal identity.
 Simulation does not establish every keyboard interaction, published Core recovery, or pixel fidelity across all displays.

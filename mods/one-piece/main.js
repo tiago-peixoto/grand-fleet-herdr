@@ -98,10 +98,11 @@ export default class OnePieceAgents extends Agents {
     if (!art) return super.status(t, agent, compact);
     const name = assigned?.number && !captain ? `Pirate ${assigned.number}` : displayName(art.replace(/^crew-/, ''));
     const state = agent.status === 'blocked' ? 'Needs you' : agent.status === 'done' ? 'Done' : agent.status ?? 'Unknown';
-    return h_flex().flex_none().items_center().gap(4)
+    return h_flex().flex_none().items_center().gap(4).relative()
       .tooltip(`${name}${captain ? ' · Firstmate captain' : ''} · ${state}`)
       .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
       .child(sprite(art, agent.status, sidebarWidth() < 160 ? 14 : 24))
+      .when(compact && agent.status === 'done', el => el.child(div().absolute().top(0).right(0).size(6).rounded(3).bg(t.done)))
       .when(!compact && (agent.status === 'blocked' || agent.status === 'done'), el => el.child(div().text_size(10.5).text_color(t[agent.status]).child(state)));
   }
 
