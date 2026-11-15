@@ -26,6 +26,7 @@ Selecting a crewmember retains native focus or writable preview behavior.
 Native sorting, pinning, grouping, terminal creation, tabs, splits, and panels remain available.
 Character assignments remain stable for surviving sessions.
 Idle characters sleep, working characters walk, and blocked characters sit.
+Done characters sleep beside Herdr's done label, or under its done dot in the collapsed sidebar.
 Appearance settings can pause animation without changing session state.
 There is no custom workspace ownership, worker association, task polling, or terminal recovery flow.
 
@@ -94,11 +95,10 @@ Raising the lab window allowed direct typing, and the remote test program echoed
 The initial unavailable-state screenshot was inconclusive.
 A subsequent isolated transport interruption showed Wano as unavailable with its live character rows removed.
 Local terminals remained intact, and the remote crew returned after reconnection.
-Machine headings now remain visible while their contents scroll independently.
-Crews now scroll beneath their ship and captain, matching the approved native-flow prototype.
-Other destinations scroll separately.
-When several ships exceed the available height, the machine body scrolls so every ship remains reachable.
+Later nested candidates kept machine headings visible while their contents scrolled independently.
+They scrolled crews beneath their ship and captain, matching the approved native-flow prototype.
+The current design replaces these nested scrolls with one scrolling list per native region.
 Firstmate starts workers with `--no-parent`, so its workers do not acquire native nesting automatically.
-The current coordinator model resolves that design choice through explicit mod-owned associations.
+A later candidate resolved that design choice through explicit mod-owned associations, which the current design removes.
 Current stock verification supersedes this historical candidate record.
 See [Native verification](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct-input-2026-11-14) for its evidence and limits.

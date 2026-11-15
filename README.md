@@ -62,7 +62,7 @@ The [current verification record](docs/NATIVE-INTEGRATION.md#native-spaces-and-a
 
 Open `prototype/index.html` in a browser to inspect the historical simulation.
 It contains simulated replies and terminals without connecting to machines or executing commands.
-Its historical behaviors are superseded by the approved native-flow prototype linked in the thin presentation design.
+Its historical behaviors are superseded by the [thin presentation design](docs/THIN-MOD.md).
 [Prototype inventory](docs/PROTOTYPE.md) and [prototype specification](docs/PROTOTYPE-SPEC.md) preserve earlier design context.
 
 Rebuild the preview from its editable sources:
