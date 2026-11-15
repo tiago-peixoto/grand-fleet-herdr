@@ -66,36 +66,37 @@ Only a legacy version 2 receipt authorizes shortcut cleanup, as described below.
 
 After installation, open the destination's Herdr window and select One Piece through Herdr's layout selector.
 Use Herdr's existing Spaces, Agents, menus, and terminal controls.
-A registered firstmate coordinator receives ship and captain artwork, with explicitly associated workers below it.
+Every live Herdr agent appears in Agents with crewmember artwork.
+Crewmember artwork needs no Firstmate labels, worker metadata, or captain ownership.
+Personal terminals that are not agents keep their native presentation.
 Firstmate requires no patch, extra hook, or special fork.
-Choose Link captain under the correct machine, then choose the terminal running your coordinator.
-Choose its worker group by the displayed home label and task list.
-Choose Captain only if no workers exist yet.
-Right-click the ship and choose Edit captain link when its first workers become available.
-Right-click the ship and choose Unlink captain to remove only its presentation association.
-The mod saves these choices in Herdr's persisted settings under `one-piece.captains`.
-The association includes the terminal creation timestamp and never transfers automatically to a replacement session.
 
-Worker discovery uses existing `firstmate.home` and `firstmate.task` labels on the same machine.
-A group includes every worker with that home label.
-If independent coordinators share one label, leave that group unlinked and use native worker navigation.
-Competing live captain choices are refused rather than guessing ownership.
+To designate a captain, choose Crew in the Agents region and pick the agent running Firstmate.
+You can also right-click that agent's artwork.
+Choose This agent runs Firstmate in the menu that opens.
+The same menu then lists the crews, so you can choose the captain's ship and crew artwork.
+Choose Remove captain designation to return the agent to ordinary crewmember artwork.
+The mod saves designations in Herdr's persisted settings under `one-piece.captains`.
+A designation includes the terminal creation timestamp and never transfers to a replacement session.
 Do not use terminal names, folders, or native process parenting as substitutes for an explicit choice.
+
+A space containing a captain shows that captain's ship in Spaces.
+Clicking the ship selects that space through Herdr's native command.
+Spaces without captains keep their native presentation.
 Artwork assignment does not change terminal parent relationships or workspace labels.
-The ship control folds its crew.
-Native agent selection and child actions remain in use.
+Native agent selection, sorting, pinning, grouping, and previews remain in use.
 
 Type directly into worker, secondmate, or personal terminals through Herdr's normal terminal input.
 Native new-terminal actions retain Herdr's folder inheritance.
 Nested terminals without panes use Herdr's terminal preview and its native option to keep the terminal.
 The adapter does not replace that action with workspace creation.
-Disposable local and remote sessions passed direct typing and new-terminal folder checks in the isolated lab.
-The [current verification record](NATIVE-INTEGRATION.md#current-verification-2026-11-14) describes the exact checks and remaining limits.
+Disposable local and remote sessions passed direct typing and ship selection checks in the isolated lab.
+The [current verification record](NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) describes the exact checks and remaining limits.
 
 ## Refresh after updates
 
 Run the install command again from the updated checkout, using the same destination.
-Repeat installation after Herdr updates to inherit changes to Agents and the main layout.
+Repeat installation after Herdr updates to inherit changes to Spaces, Agents, and the main layout.
 The generated files capture the destination's source and layout at installation time.
 Other shipped mods referenced by the layout receive their normal updates directly.
 Compatibility checks do not promise support for every future Herdr version.
