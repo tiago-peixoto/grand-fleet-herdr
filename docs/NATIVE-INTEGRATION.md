@@ -2403,3 +2403,61 @@ They are simulated UI fixtures, not evidence of stock Firstmate delegation.
 The native app renders, but the current accessibility tree exposes only window controls.
 The app accepted a native `terminal.peek` command for fixture `t4d`, but accessibility inspection still did not expose its controls.
 Direct typing and full hierarchy interaction remain unverified in this session.
+
+
+### Resumed visible verification
+
+Native controls became reachable again in Grand Fleet Lab.
+The accessibility tree exposes sidebar controls but omits the visible setup and terminal preview dialogs.
+Screenshot inspection confirmed those dialogs and allowed direct interaction.
+
+The local captain fixture `t4c` was linked through the visible dialog to the `sidebar-check` worker group.
+The sidebar displayed Luffy followed by Chopper (`t4d`) and Franky (`t4f`) beneath Thousand Sunny.
+Clicking Chopper opened the native terminal preview.
+Typing `FLEET_LOCAL_DIRECT_INPUT` produced the visible response `ACK FLEET_LOCAL_DIRECT_INPUT` from process 78282.
+The native Keep control placed that terminal in the current `thin-mod-check` workspace.
+Collapsing Sunny hid its character rows without changing the active terminal, workspace, tab, or focused pane.
+Native status reported no errors.
+
+The remote captain fixture `op-hz-lab/t2k` was linked through the visible dialog to its machine's `sidebar-check` group.
+The sidebar displayed Luffy and Chopper beneath a separate Thousand Sunny.
+The remote group contained only `op-hz-lab/t2m`, despite the identical local group label.
+Clicking the remote Chopper opened its native terminal preview with process 1988401.
+Typing `FLEET_REMOTE_DIRECT_INPUT` produced the visible response `ACK FLEET_REMOTE_DIRECT_INPUT`.
+These checks prove direct local and remote input through the corrected sidebar using simulated fixtures.
+The remote ship appearance was changed through its context menu to Red Hair Pirates.
+The sidebar changed to Red Force, Shanks, and Benn Beckman.
+Selecting Shanks opened the remote captain fixture with process 1988054.
+
+The native plus menu opened a regular zsh terminal in the current `thin-mod-check` workspace.
+Its new tab was `tb384bb52af3d105c47cf8d462cb033f95`.
+Direct input printed `FLEET_PERSONAL_SHELL` and the inherited folder `/Users/tiago/Workspace/herdr-one-piece-native`.
+The personal terminal retained Herdr's ordinary shell header without character artwork.
+Selecting the crewmate's native tab returned to terminal `t4d`, its original tab, and its original focused pane.
+Native status reported no errors after both transitions.
+The shell printed existing mise trust warnings, which did not prevent command execution.
+No trust settings were changed.
+
+The repository's imported prototype is older than the approved native-flow prototype.
+The approved reference is `/Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html`.
+It keeps machine headings visible and scrolls crewmates beneath ships and captains.
+The earlier comparison against the imported prototype did not establish fidelity to that reference.
+
+### Machine visibility and offline recovery
+
+A fresh native check interrupted only the disposable `op-hz-lab` SSH transport.
+During the interruption, Wano displayed `Unavailable` and removed its live character rows.
+Local terminal `t4d` retained its visible output, and the other remote machine remained available.
+After transport recovery, both remote machine aliases reported connected and the remote crew returned.
+This supersedes the earlier inconclusive offline screenshot.
+
+The sidebar now gives each machine a fixed heading and independently scrolling contents.
+Native screenshots confirmed Water 7 and both Wano headings remained visible while the local section scrolled.
+The active terminal, tab, workspace, and focused pane retained their identifiers.
+The approved prototype also keeps ships and captains above scrolling crewmates.
+That part of the comparison remains unfinished because the current machine body scrolls those rows together.
+
+After the machine-heading change, all nine JavaScript tests and native command comparisons passed.
+Herdr's installed-mod rendering check passed for `/private/tmp/op-app-31618/mods/one-piece`.
+Native status reported no errors and still selected terminal `t4d`.
+The complete visual workflow is not yet verified.
