@@ -8,7 +8,9 @@ Read the [thin presentation design](THIN-MOD.md) for the current contract.
 This implementation remains experimental.
 Use a separate test home before considering your daily configuration.
 The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
-Current local and remote checks used unmodified Firstmate, including normal cleanup.
+Historical isolated worker checks used unchanged Firstmate revisions locally and remotely, including normal cleanup.
+The current local fleet has separate delegation and physical interaction evidence.
+The actual remote secondmate lifecycle remains unverified in the current acceptance run.
 The documented path and Core release limitations still apply.
 
 ## Choose an app home
@@ -69,7 +71,9 @@ Use Herdr's existing Spaces, Agents, menus, and terminal controls.
 Every live Herdr agent appears in Agents with crewmember artwork.
 Crewmember artwork needs no Firstmate labels, worker metadata, or captain ownership.
 Personal terminals that are not agents keep their native presentation.
-Firstmate requires no patch, extra hook, or special fork.
+The mod requires no mod-specific Firstmate patches or hooks.
+Complete hc fleets require compatible generic hc support in Firstmate.
+The [acceptance evidence](THIN-MOD.md#fork-main-acceptance-2026-11-16) records the tested fork revision.
 
 The mod detects captains automatically from Firstmate's existing session lock, startup script, and secondmate marker.
 Detected captains need no manual step, and Firstmate sends no registration or artwork commands.

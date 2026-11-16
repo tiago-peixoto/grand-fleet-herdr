@@ -8,12 +8,16 @@ Clicking the ship selects that workspace, while clicking a crewmember uses nativ
 Spaces and Agents each retain one scrolling list and native machine identities.
 Personal terminals remain ordinary Herdr terminals.
 
-The mod works with unmodified Firstmate and requires no upstream patch or additional hooks.
+The mod requires no mod-specific Firstmate patches or hooks.
+Complete hc fleets require compatible generic hc support in Firstmate.
+The [acceptance evidence](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16) records the tested fork revision.
 Captain choices use terminal addresses and creation timestamps without changing session metadata.
 Crewmembers require no captain association or Firstmate worker labels.
 
 This project remains experimental.
-Unmodified Firstmate completed local and physical remote tasks, direct input, navigation, reconnection, and normal cleanup in the isolated lab.
+Historical isolated worker trials passed locally and remotely, including direct input, navigation, reconnection, and normal cleanup.
+The current local fleet has separate delegation and physical interaction evidence.
+The actual remote secondmate lifecycle remains unverified in the current acceptance run.
 The [acceptance review](docs/ACCEPTANCE.md) records test coverage and remaining release limitations.
 Use a separate test home before considering your daily configuration.
 

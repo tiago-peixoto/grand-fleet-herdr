@@ -133,7 +133,7 @@ A read of the running lab captain through `hc get t42` showed only Herdr placeme
 The stock `bin/backends/hc.sh` creates worker terminals with `firstmate.task` and `firstmate.home`, but these do not identify the captain terminal.
 The stock `bin/fm-spawn.sh` explicitly refuses `--backend hc --secondmate` before launching a terminal.
 An isolated invocation using disposable home directories reproduced exit status 1 with `error: backend=hc does not support --secondmate spawns yet`.
-The current upstream [hc backend documentation](https://github.com/kunchenguid/firstmate/blob/main/docs/hc-backend.md) confirms that limitation.
+The upstream [hc backend documentation](https://github.com/kunchenguid/firstmate/blob/main/docs/hc-backend.md) inspected during that historical trial confirmed that limitation.
 The documented `herdr` backend is the older multiplexer and is not interchangeable with Herdr Core.
 
 Automatic crew allocation is covered for explicitly registered captains, including cross-machine assignments, disconnected machines, exhausted rosters, and manual overrides.
@@ -171,6 +171,8 @@ Native agent navigation reached all three terminals without app errors.
 An app-only restart preserved their creation identities, shell and agent processes, ownership, placement, and artwork assignments.
 The merged commit passed seven routing cases and the real-core secondmate dispatch test.
 The fresh mod installation passed its native render check and behavior comparison.
-Physical pointer and crew-picker interactions were not repeated because native accessibility access timed out.
+Physical pointer and crew-picker interactions were initially unverified because native accessibility access timed out.
+The later [local physical harness check](ACCEPTANCE.md#local-physical-harness-evidence-2026-11-16) verified navigation, actual worker input, and manual crew persistence.
+Physical overflow scrolling remains unverified by that report.
 Remote execution remains unverified in this acceptance run.
 This verifies the local mod candidate with fork main and does not mean the candidate has merged into this mod repository's main branch.

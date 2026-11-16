@@ -84,7 +84,9 @@ Animation supports recognition without concealing failures, decisions, or risks.
 ## Scope
 
 This project is an optional One Piece presentation of Herdr agents and spaces, with captain artwork for Firstmate instances.
-The mod must work with unmodified firstmate and must not require an upstream patch, special fork, or additional firstmate hooks.
+The mod must require no mod-specific Firstmate patches or hooks.
+Complete hc fleets may require generic hc compatibility support in Firstmate.
+Acceptance evidence must identify the tested Firstmate revision rather than imply compatibility with every unmodified revision.
 Captain identification belongs to the mod and requires no manual registration or artwork commands from Firstmate.
 The primary defaults to Straw Hats, while secondmates receive unused secondary crews before crews repeat.
 User selections remain unchanged by automatic discovery.

@@ -13,7 +13,7 @@ Historical nested-fleet evidence does not establish acceptance of the current ad
 | Clicking a ship selects its space | Physical Sunny and Red Force selection matches native space identifiers | No known gap in tested inventory |
 | Every agent receives crewmember artwork | Generic membership tests and native rendering include agents without Firstmate labels; expanded and compact artwork inspected | No known gap in tested inventory |
 | Native agent navigation and direct input | Command comparison covers selection, pinning, sorting, and previews; local captain, crewmember, and remote captain acknowledged typed input | Other native controls were not exhaustively retested |
-| Firstmate remains unmodified | Adapter reads Firstmate's existing session lock, startup script, and secondmate marker through Herdr file reads, plus mod settings and Herdr snapshots | No Firstmate dependency added |
+| No mod-specific Firstmate patches or hooks | Adapter reads existing session evidence through Herdr file reads, plus mod settings and Herdr snapshots | Complete hc fleets need generic hc support; evidence identifies the tested revision |
 | Unsupported installations fail safely | Python tests cover compatibility rejection and transactional installation | Future Herdr releases require validation |
 | Reviewable implementation | Independent follow-up review found no further concrete defects | Review pipeline and updated pull request |
 
@@ -29,7 +29,29 @@ The project remains experimental and is not installed into the user's daily conf
 The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) records the isolated recovery build used for historical checks.
 A published Core build still needs separate recovery verification before release acceptance.
 Exact pixel equivalence with the historical browser prototype is not the current contract because the author replaced its sidebar model.
-Current native input checks use disposable interface fixtures rather than a new Firstmate delegation lifecycle.
+Historical native input checks used disposable interface fixtures.
+The later local physical harness check below reached an actual delegated worker.
+The current actual remote secondmate lifecycle remains unverified.
+Exact signed-release and final merged-main acceptance remain pending.
+
+## Local physical harness evidence, 2026-11-16
+
+The [local delegation trial](THIN-MOD.md#fork-main-acceptance-2026-11-16) used Firstmate fork main `653744ef90aad29eb4c65e3cbba59827b2d1690e`.
+A later isolated harness verified physical ship and character navigation, direct input to the actual worker, and persistence of a manual crew choice.
+The worker returned `LOCAL_UI_ACCEPTANCE_20261116_BENN_OK`, and working artwork appeared in both native regions.
+Big Mom remained selected after reopening the isolated application.
+The core and terminal creation identities, shell processes, foreground processes, and lifetime fields remained unchanged.
+All 22 executable sections and all bundle resources matched the source application.
+The harness had a different signature and bundle identity, so this does not establish exact signed-release or final merged-main acceptance.
+Input stopped when computer control reported that the user changed the application.
+Restoring Straw Hats and physical overflow scrolling remained outstanding in that report.
+The report did not induce a blocked state or resolve the historical blocked-Luffy symptom.
+The actual remote secondmate lifecycle remains pending, including delegation, direct input, acknowledgment, and transport recovery.
+Historical remote worker fixtures do not establish that current lifecycle.
+
+Private evidence is stored outside this repository under the workspace's `.task-notes/grand-fleet-multimachine-20261116/` directory.
+`candidate-refresh/physical-report.md` records the physical checks and points to `adhoc-parity.json` for executable and resource comparisons.
+`final-acceptance-checklist.md` remains incomplete and records the outstanding final verification.
 
 ## Historical acceptance review
 
