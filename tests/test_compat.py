@@ -28,6 +28,7 @@ export default class Spaces extends View {
   row() {}
   compact() {}
   grouped() {}
+  gitTail() {}
   menu() {}
 }
 '''
@@ -57,6 +58,10 @@ class CompatibilityTests(unittest.TestCase):
         self.assertEqual(colors['chrome'], '#14272d')
         self.assertEqual(colors['accent'], '#e8bd70')
         self.assertEqual(layout, self.layout)
+
+    def test_rejects_missing_git_tail(self):
+        with self.assertRaisesRegex(ValueError, "Unsupported Herdr Spaces"):
+            compat.generate(SOURCE, self.layout, SPACES_SOURCE.replace("  gitTail()", "  renamedGitTail()"))
 
     def test_rejects_unsupported_spaces_interface(self):
         for source in (SPACES_SOURCE.replace('  compact()', '  rail()'),
@@ -88,3 +93,13 @@ class CompatibilityTests(unittest.TestCase):
         result = json.loads(compat.generate(SOURCE, self.layout, SPACES_SOURCE)['layouts/one-piece.json'])
         self.assertEqual(result['colors']['accent'], '#123456')
         self.assertEqual(result['colors']['chrome'], '#14272d')
+
+
+class MenuCompatibilityTests(unittest.TestCase):
+    def test_exposes_items_without_replacing_native_actions(self):
+        source = 'export default class Menu extends View {\n  choose() { return items(props(), this.git); }\n  render() { return items(props(), this.git); }\n}'
+        generated = compat.generate_menu(source).decode()
+        self.assertEqual(generated.count('this.items()'), 2)
+        self.assertIn('items() { return items(props(), this.git); }', generated)
+        with self.assertRaises(ValueError):
+            compat.generate_menu(source.replace('items(props(), this.git)', 'changed()'))

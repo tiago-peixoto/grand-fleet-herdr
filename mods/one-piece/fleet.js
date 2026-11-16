@@ -7,6 +7,22 @@ export function crewmembers(terminals, agents) {
     (terminal.program?.agent || reported.has(terminal.address)));
 }
 
+export function managedCrew(captain, terminals, agents, captains) {
+  const link = captains[identity(captain)];
+  if (link?.source === 'session-lock' && captain.state === 'live') {
+    const space = agents.find(agent => agent.address === captain.address)?.space;
+    if (captainSpaces(terminals, agents, captains).get(space)?.address !== captain.address) return [];
+    const members = new Set(agents.filter(agent => space && agent.space === space).map(agent => agent.address));
+    return crewmembers(terminals, agents).filter(terminal => members.has(terminal.address) && !captains[identity(terminal)]);
+  }
+  const home = link?.home;
+  if (!home || captain.state !== 'live') return [];
+  return crewmembers(terminals, agents).filter(terminal =>
+    machineOf(terminal) === machineOf(captain) &&
+    terminal.labels?.['firstmate.home'] === home &&
+    terminal.labels?.['firstmate.task'] && !captains[identity(terminal)]);
+}
+
 export function captainSpaces(terminals, agents, captains) {
   const live = new Map(terminals.filter(terminal => terminal.state === 'live')
     .map(terminal => [terminal.address, terminal]));

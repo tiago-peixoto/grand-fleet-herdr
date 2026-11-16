@@ -20,12 +20,16 @@ The primary path leads to firstmate, which carries the captain's direction and g
 Herdr supplies terminal attention, focus, writable previews, and session management.
 The fleet sidebar retains native machine identities and grouping.
 Every Herdr agent is a crewmember, regardless of who started it.
-Any agent running a Firstmate instance can be explicitly identified as a captain.
+The mod automatically identifies running Firstmate instances as captains from existing session evidence.
 Spaces containing captains display ship artwork and remain ordinary Herdr workspaces.
 Selecting a ship selects its space rather than collapsing a crew group.
-Captain and crewmember artwork appears in the Agents region.
+Captain and crewmember artwork appears in the Agents region and in the Space containing their terminals.
+Expanded captain Space rows combine the ship, captain, and miniature managed crew on one background without a letter avatar or visible Space name.
+The captain replaces the name above the crew strip.
+Automatically detected captains show the other agents in their native Space as crewmates.
+This visual summary does not move terminals or change native Space membership.
 Spaces and Agents each have one scrolling list, without scrolling inside individual machines or ships.
-Crewmember artwork requires no coordinator association or worker ownership metadata.
+Ordinary crewmember artwork requires no coordinator association or worker ownership metadata.
 Native agent grouping, sorting, pinning, and terminal navigation remain available.
 Selecting the captain or a crewmate uses the corresponding native agent action.
 An unplaced crewmate opens in Herdr's writable preview with Herdr's option to keep its terminal.
@@ -81,7 +85,9 @@ Animation supports recognition without concealing failures, decisions, or risks.
 
 This project is an optional One Piece presentation of Herdr agents and spaces, with captain artwork for Firstmate instances.
 The mod must work with unmodified firstmate and must not require an upstream patch, special fork, or additional firstmate hooks.
-Captain identification belongs to the mod and uses explicit user choices when existing metadata does not establish it.
+Captain identification belongs to the mod and requires no manual registration or artwork commands from Firstmate.
+The primary defaults to Straw Hats, while secondmates receive unused secondary crews before crews repeat.
+User selections remain unchanged by automatic discovery.
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
 Ordinary Herdr workspaces remain accessible without firstmate registration.

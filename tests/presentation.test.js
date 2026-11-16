@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { captainSpaces, crewmembers } from '../mods/one-piece/fleet.js';
+import { captainSpaces, crewmembers, managedCrew } from '../mods/one-piece/fleet.js';
 
 const terminal = (address, extra = {}) => ({address, created_ms: 10, state: 'live', program: {agent: true}, ...extra});
 
@@ -30,4 +30,29 @@ test('remote addresses remain distinct and the first native captain determines t
   const a = terminal('t1'), b = terminal('remote/t1'), c = terminal('t2');
   const agents = [{address:'t2',space:'s'}, {address:'t1',space:'s'}, {address:'remote/t1',space:'remote/s'}];
   assert.deepEqual([...captainSpaces([a,b,c], agents, {'t1:10':{}, 'remote/t1:10':{}, 't2:10':{}})], [['s',c], ['remote/s',b]]);
+});
+
+test('captain crew crosses Spaces only through explicit matching home and machine', () => {
+  const captain = terminal('t1');
+  const labels = {'firstmate.home':'crew', 'firstmate.task':'scout'};
+  const worker = terminal('t2', {labels});
+  const source = [captain, worker, terminal('remote/t2', {labels}),
+    terminal('t3', {labels, state:'exited'}), terminal('t4', {labels}),
+    terminal('t5', {parent:'t1'}), terminal('t6', {labels:{'firstmate.home':'crew'}})];
+  const agents = [{address:'t1',space:'captain'}, {address:'t2',space:'workers'}];
+  const captains = {'t1:10':{home:'crew'}, 't4:10':{}};
+  const before = structuredClone(source);
+  assert.deepEqual(managedCrew(captain, source, agents, captains), [worker]);
+  assert.deepEqual(managedCrew(captain, source, agents, {'t1:10':{}}), []);
+  assert.deepEqual(managedCrew({...captain,created_ms:11}, source, agents, captains), []);
+  assert.deepEqual(source, before);
+});
+
+test('discovered captains use native Space membership, excluding other captains and personal shells', () => {
+  const captain = terminal('t1'), worker = terminal('t2'), other = terminal('t3');
+  const coCaptain = terminal('t4'), shell = terminal('t5');
+  const agents = [{address:'t1',space:'s'}, {address:'t2',space:'s'}, {address:'t3',space:'other'}, {address:'t4',space:'s'}];
+  const captains = {'t1:10':{source:'session-lock'},'t4:10':{source:'session-lock'}};
+  assert.deepEqual(managedCrew(captain,[captain,worker,other,coCaptain,shell],agents,captains),[worker]);
+  assert.deepEqual(managedCrew(coCaptain,[captain,worker,other,coCaptain,shell],agents,captains),[]);
 });

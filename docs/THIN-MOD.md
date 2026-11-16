@@ -12,15 +12,32 @@ No machine or ship introduces a nested scroll container.
 Every live Herdr agent receives crewmember artwork without Firstmate worker metadata or captain ownership.
 Personal terminals retain ordinary native presentation.
 
-Crew appearance lets the user explicitly identify an agent running Firstmate as a captain.
+The mod automatically identifies Firstmate captains using their existing session lock and live foreground process.
+It checks the Firstmate startup script and secondmate marker without executing either file.
 The mod records its terminal address and creation timestamp without modifying Firstmate or terminal metadata.
+A detected primary Firstmate defaults to Straw Hats, regardless of discovery order.
+Detected secondmates use the least-used secondary crew, with ties ordered Red Hair, Big Mom, then Beasts.
+This selects unused crews first across machines and reserves assignments on disconnected machines.
+Manual selections, including duplicates, remain unchanged.
+Firstmate sends no artwork commands and requires no mod-specific registration.
+Manual designation remains available for instances whose session evidence cannot be read.
 An ended captain designation cannot transfer to a reused terminal address.
-The captain chooses its crew artwork through the appearance menu.
+Right-click a captain Space and choose “Choose ship and crew” directly below Rename.
+The picker changes the ship, captain, and associated crewmates together.
+New associated crewmates receive artwork from the selected crew.
+Fleet cards have six pixels of bottom spacing.
 A space containing a captain shows that crew's ship.
 Clicking the ship selects the space through Herdr's native command.
 If several captains share a space, the first captain in native agent order supplies its ship.
 All captains remain independently accessible in Agents.
-Spaces without captains retain native presentation.
+Expanded Spaces with agents show their miniature crewmembers below the name, replacing the letter avatar.
+A captain Space combines its ship, captain sprite, and miniature managed crew on one continuous row background.
+The captain sprite replaces the visible Space name, which remains available in its tooltip and accessibility label.
+Automatically detected captains use native Space membership for the lower crew strip.
+Existing manual home links retain their previous matching behavior.
+The entire row selects the Space and retains native drag ordering and the workspace menu.
+Ordinary Spaces continue to show only agents placed in that Space.
+Spaces without agents retain native presentation.
 
 Selecting a crewmember retains native focus or writable preview behavior.
 Native sorting, pinning, grouping, terminal creation, tabs, splits, and panels remain available.
@@ -28,13 +45,15 @@ Character assignments remain stable for surviving sessions.
 Idle characters sleep, working characters walk, and blocked characters sit.
 Done characters sleep beside Herdr's done label, or under its done dot in the collapsed sidebar.
 Appearance settings can pause animation without changing session state.
-There is no custom workspace ownership, worker association, task polling, or terminal recovery flow.
+The managed crew strip is a visual summary only, without custom workspace ownership, task polling, or terminal recovery.
 
 ## Compatibility approach
 
 Herdr rejects imports outside a mod directory.
 The installer copies the installed Spaces and Agents modules unchanged into the mod directory.
 The adapter subclasses their rendering methods and retains their native controllers.
+The installer also generates a copy of the native menu with an overridable item method.
+The fleet menu inserts its picker after Rename while retaining native actions and keyboard navigation.
 The generated layout retains both sidebar slots and selects their presentation with region properties.
 Teal and gold defaults preserve explicit layout color overrides.
 Unsupported source methods, imports, or layout structure fail before installation writes files.
@@ -102,3 +121,53 @@ Firstmate starts workers with `--no-parent`, so its workers do not acquire nativ
 A later candidate resolved that design choice through explicit mod-owned associations, which the current design removes.
 Current stock verification supersedes this historical candidate record.
 See [Native verification](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct-input-2026-11-14) for its evidence and limits.
+
+
+## Captain discovery verification on 2026-11-15
+
+Automatic startup discovery is not implemented or claimed.
+A read of the running lab captain through `hc get t42` showed only Herdr placement labels, without a Firstmate role or home label.
+The stock `bin/backends/hc.sh` creates worker terminals with `firstmate.task` and `firstmate.home`, but these do not identify the captain terminal.
+The stock `bin/fm-spawn.sh` explicitly refuses `--backend hc --secondmate` before launching a terminal.
+An isolated invocation using disposable home directories reproduced exit status 1 with `error: backend=hc does not support --secondmate spawns yet`.
+The current upstream [hc backend documentation](https://github.com/kunchenguid/firstmate/blob/main/docs/hc-backend.md) confirms that limitation.
+The documented `herdr` backend is the older multiplexer and is not interchangeable with Herdr Core.
+
+Automatic crew allocation is covered for explicitly registered captains, including cross-machine assignments, disconnected machines, exhausted rosters, and manual overrides.
+This does not make a simulated captain a real delegated secondmate.
+Closing the remaining gap requires a supported secondmate launch path and a reliable captain identity supplied through that path.
+No Firstmate source changes, process-name guesses, or folder-based role inference were introduced.
+
+## Automatic discovery trial, 2026-11-16
+
+The isolated local trial detected a real primary and delegated secondmate with no manual captain records.
+A fresh app launch showed Sunny with Luffy, Red Force with Shanks, and Benn Beckman for the secondmate worker.
+The mod matches the foreground process to `state/.lock` and verifies `bin/fm-session-start.sh` before reading `.fm-secondmate-home`.
+Remote file reads use the terminal machine, but a real remote trial remains unverified.
+Custom state directories and harnesses whose foreground process differs from the lock owner remain unverified.
+The compatibility findings above describe the earlier stock integration, not proof of this trial’s remote behavior.
+
+Discovery probes run independently per terminal, so a slow machine does not delay other captains.
+Each sidebar owns its pending probes, matching Herdr’s cancellation lifetime.
+Repeated scans do not queue duplicate probes for that sidebar.
+Discovery rereads the session lock and foreground process before publishing a captain.
+A failed machine read preserves the last known record until evidence can be read again.
+A verified role correction updates automatic crew choices while preserving explicit picker selections.
+When captains share a Space, its first native captain determines both the ship and the crew artwork.
+The local acceptance run passed 23 JavaScript tests, 44 Python tests, the installed native render check, and the native behavior verifier.
+The behavior verifier also exercised asynchronous discovery, stale records, a held remote request, and replacement sidebar instances.
+
+## Fork main acceptance, 2026-11-16
+
+Firstmate fork PR #122 merged as `653744ef90aad29eb4c65e3cbba59827b2d1690e`.
+A fresh isolated primary and secondmate both ran that exact commit from `tiago-peixoto/firstmate` main.
+The primary automatically detected hc, provisioned a secondmate, and routed a disposable task through it.
+The secondmate dispatched a real Claude worker, which committed the requested `hello.txt` locally.
+The mod automatically displayed Sunny/Luffy, Red Force/Shanks, and Benn Beckman without manual captain records.
+Native agent navigation reached all three terminals without app errors.
+An app-only restart preserved their creation identities, shell and agent processes, ownership, placement, and artwork assignments.
+The merged commit passed seven routing cases and the real-core secondmate dispatch test.
+The fresh mod installation passed its native render check and behavior comparison.
+Physical pointer and crew-picker interactions were not repeated because native accessibility access timed out.
+Remote execution remains unverified in this acceptance run.
+This verifies the local mod candidate with fork main and does not mean the candidate has merged into this mod repository's main branch.

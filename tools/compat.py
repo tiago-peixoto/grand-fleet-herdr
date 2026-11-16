@@ -16,7 +16,7 @@ def generate(agents_source, main_layout, spaces_source):
         raise ValueError('Herdr Agents has new module dependencies; update the One Piece adapter before installing.')
     if ('export default class Spaces extends View' not in spaces_source
             or any(not re.search(r'^  ' + name + r'\(', spaces_source, re.M)
-                   for name in ('init', 'render', 'row', 'compact', 'grouped', 'menu'))
+                   for name in ('init', 'render', 'row', 'compact', 'grouped', 'menu', 'gitTail'))
             or any(not re.search(r'^export function ' + name + r'\(', spaces_source, re.M)
                    for name in ('glyph', 'tone'))):
         raise ValueError('Unsupported Herdr Spaces interface; keep the existing installation and update the One Piece adapter.')
@@ -57,3 +57,15 @@ def generate(agents_source, main_layout, spaces_source):
         'mods/one-piece/herdr-spaces.js': spaces_source.encode('utf-8'),
         'layouts/one-piece.json': (json.dumps(layout, indent=2) + '\n').encode('utf-8'),
     }
+
+
+def generate_menu(source):
+    """Expose native menu items for the additive fleet menu subclass."""
+    marker = 'export default class Menu extends View {'
+    if source.count(marker) != 1 or source.count('items(props(), this.git)') != 2:
+        raise ValueError('Unsupported Herdr Menu interface; preserving installation')
+    imports = re.findall(r"\bfrom\s+['\"]([^'\"]+)", source)
+    if any(name not in ('herdr', 'gpui-kit', 'gpui-base') for name in imports):
+        raise ValueError('Unsupported Herdr Menu dependencies; preserving installation')
+    return source.replace('items(props(), this.git)', 'this.items()').replace(
+        marker, marker + '\n  items() { return items(props(), this.git); }').encode('utf-8')

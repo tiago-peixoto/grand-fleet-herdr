@@ -22,7 +22,7 @@ The author explicitly approved direct typing into worker and secondmate terminal
 The current request preserves native workspace and terminal behavior beneath the approved fleet sidebar.
 The latest approved design uses native Spaces and Agents regions, each with one scrolling list.
 Ships identify spaces containing Firstmate captains, and clicking a ship selects that space.
-Every agent is a crewmember, with captain artwork for explicitly identified Firstmate instances.
+Every agent is a crewmember, with captain artwork for automatically detected Firstmate instances.
 Retain native grouping, sorting, pinning, workspace menus, and terminal navigation.
 Do not reintroduce custom workspace ownership, worker associations, or task polling.
 The mod must work with unmodified firstmate.

@@ -49,7 +49,11 @@ class InstallTests(unittest.TestCase):
         self.put(home, 'mods/spaces/main.js',
                  'export function glyph() {}\nexport function tone() {}\nimport { View } from "gpui-kit";\nexport default class Spaces extends View {\n'
                  + ''.join('  ' + name + '() {}\n' for name in
-                           ('init', 'render', 'row', 'compact', 'grouped', 'menu')) + '}\n')
+                           ('init', 'render', 'row', 'compact', 'grouped', 'menu', 'gitTail')) + '}\n')
+        self.put(home, 'mods/menu/main.js',
+                 'export default class Menu extends View {\n'
+                 '  choose() { return items(props(), this.git); }\n'
+                 '  render() { return items(props(), this.git); }\n}\n')
         self.put(home, 'layouts/main.json', json.dumps({'children': [
             {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}))
 
@@ -124,6 +128,7 @@ class InstallTests(unittest.TestCase):
                 self.make_v2_install()
             for name, invalid in (
                     ('mods/agents/main.js', 'export default class Agents {}'),
+                    ('mods/spaces/main.js', (self.home / 'mods/spaces/main.js').read_text().replace('  gitTail()', '  renamedGitTail()')),
                     ('layouts/main.json', '{}'),
                     ('layouts/main.json', '{'),
                     ('layouts/main.json', '[]'),

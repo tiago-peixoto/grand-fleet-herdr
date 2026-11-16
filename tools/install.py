@@ -152,8 +152,9 @@ def source_files(repo, home):
         raise ValueError('mod.json must use place=none to avoid docking into the active layout')
     agents = home / 'mods/agents/main.js'
     spaces = home / 'mods/spaces/main.js'
+    menu = home / 'mods/menu/main.js'
     layout = home / 'layouts/main.json'
-    for path in (agents, spaces, layout):
+    for path in (agents, spaces, menu, layout):
         check_parents(path.parent)
         inventory(path)
     try:
@@ -161,6 +162,7 @@ def source_files(repo, home):
                                      strict_json(layout.read_bytes()), spaces.read_bytes().decode('utf-8')))
     except (AttributeError, TypeError) as error:
         raise ValueError('Unsupported Herdr main layout; preserving installation') from error
+    files['mods/one-piece/herdr-menu.js'] = compat.generate_menu(menu.read_text())
     return files
 
 

@@ -42,3 +42,31 @@ export function assignCrew(workers,previous,coordinator,reserved=[]) {
   }
   return assigned;
 }
+
+export function selectDefaultCrews(terminals, captains, selected, machines, preferences = {}) {
+  const assigned = {...selected};
+  for (const [key, captain] of Object.entries(captains)) {
+    if (captain.role && preferences.roles?.[key] && captain.role !== preferences.roles[key] && !preferences.manualCrews?.[key]) delete assigned[key];
+  }
+  const live = new Set(terminals.filter(t => t.state === 'live').map(identity));
+  const online = new Set(machines.filter(m => m.layout === 'ready').map(m => m.name ?? null));
+  const present = key => {
+    const address = key.slice(0, key.lastIndexOf(':'));
+    const machine = address.includes('/') ? address.split('/')[0] : null;
+    return live.has(key) || !online.has(machine);
+  };
+  const active = Object.keys(captains).filter(present).sort((a, b) =>
+    Number(captains[b]?.role === 'firstmate') - Number(captains[a]?.role === 'firstmate'));
+  const counts = Object.fromEntries(Object.keys(crews).map(id => [id, 0]));
+  for (const key of active) if (crews[assigned[key]]) counts[assigned[key]]++;
+  for (const key of active) {
+    if (assigned[key] || !live.has(key)) continue;
+    const role = captains[key]?.role;
+    const primary = role === 'firstmate' || (!role && !Object.values(counts).some(Boolean));
+    const candidates = primary ? ['strawhat'] : ['redhair', 'bigmom', 'beasts'];
+    const crew = candidates.reduce((best, id) => counts[id] < counts[best] ? id : best);
+    assigned[key] = crew;
+    counts[crew]++;
+  }
+  return assigned;
+}

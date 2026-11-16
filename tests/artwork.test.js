@@ -114,3 +114,54 @@ test('crewmates that lose their captain keep their characters beside unassigned 
   for(const w of ['wu','wa','wb']) assert.deepEqual(after[`${w}:12`],linked[`${w}:12`]);
   assert.equal(after['wn:12'].art,'crew-zoro');
 });
+
+
+test('captains default to Straw Hats then unused secondary crews without changing manual choices', async () => {
+  const {selectDefaultCrews, identity} = await import('../mods/one-piece/artwork.js');
+  const terminals = ['t1','t2','remote/t1','t4','t5'].map(address => ({address, created_ms:1, state:'live'}));
+  const captains = Object.fromEntries(terminals.map(t => [identity(t), {}]));
+  const machines = [{name:null,layout:'ready'},{name:'remote',layout:'ready'}];
+  const selected = selectDefaultCrews(terminals,captains,{},machines);
+  assert.deepEqual(Object.values(selected),['strawhat','redhair','bigmom','beasts','redhair']);
+  const manual = {...selected, 't2:1':'beasts'};
+  assert.deepEqual(selectDefaultCrews(terminals,captains,manual,machines),manual);
+  assert.deepEqual(selectDefaultCrews([...terminals].reverse(),captains,manual,machines),manual);
+});
+
+test('unused crews exclude ended captains but reserve disconnected machines and allow manual duplicates', async () => {
+  const {selectDefaultCrews, identity} = await import('../mods/one-piece/artwork.js');
+  const terminals = ['t1','t2','t3'].map(address => ({address,created_ms:1,state:'live'}));
+  const captains = {'t1:1':{},'remote/t1:1':{},'ended:1':{},'t2:1':{},'t3:1':{}};
+  const selected = {'t1:1':'strawhat','remote/t1:1':'redhair','ended:1':'bigmom'};
+  const assigned = selectDefaultCrews(terminals,captains,selected,[{name:null,layout:'ready'}]);
+  assert.equal(assigned['t2:1'],'bigmom');
+  assert.equal(assigned['t3:1'],'beasts');
+  const duplicates = {...selected,'t2:1':'strawhat','t3:1':'strawhat'};
+  assert.deepEqual(selectDefaultCrews(terminals,captains,duplicates,[]),duplicates);
+  assert.deepEqual(selectDefaultCrews(terminals,{},selected,[]),selected);
+});
+
+test('automatic roles select the right crews even when secondmates appear first', async () => {
+  const {selectDefaultCrews} = await import('../mods/one-piece/artwork.js');
+  const second = {address:'t2',created_ms:1,state:'live'};
+  const primary = {address:'t1',created_ms:1,state:'live'};
+  const captains = {'t2:1':{role:'secondmate'},'t1:1':{role:'firstmate'}};
+  const machines = [{name:null,layout:'ready'}];
+  const before = selectDefaultCrews([second],{'t2:1':captains['t2:1']},{},machines);
+  assert.equal(before['t2:1'],'redhair');
+  const after = selectDefaultCrews([second,primary],captains,before,machines);
+  assert.equal(after['t1:1'],'strawhat');
+  assert.equal(after['t2:1'],'redhair');
+  const chosen = {...after,'t1:1':'beasts','t2:1':'strawhat'};
+  assert.deepEqual(selectDefaultCrews([second,primary],captains,chosen,machines),chosen);
+});
+
+test('a corrected role updates automatic artwork but preserves a user selection', async () => {
+  const {selectDefaultCrews} = await import('../mods/one-piece/artwork.js');
+  const live = [{address:'t1',created_ms:1,state:'live'}];
+  const captains = {'t1:1':{role:'secondmate'}};
+  const selected = {'t1:1':'strawhat'};
+  const preferences = {roles:{'t1:1':'firstmate'}};
+  assert.equal(selectDefaultCrews(live,captains,selected,[],preferences)['t1:1'],'redhair');
+  assert.equal(selectDefaultCrews(live,captains,selected,[],{...preferences,manualCrews:{'t1:1':true}})['t1:1'],'strawhat');
+});
