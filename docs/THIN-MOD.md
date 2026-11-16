@@ -174,5 +174,11 @@ The fresh mod installation passed its native render check and behavior compariso
 Physical pointer and crew-picker interactions were initially unverified because native accessibility access timed out.
 The later [local physical harness check](ACCEPTANCE.md#local-physical-harness-evidence-2026-11-16) verified navigation, actual worker input, and manual crew persistence.
 Physical overflow scrolling remains unverified by that report.
-Remote execution remains unverified in this acceptance run.
-This verifies the local mod candidate with fork main and does not mean the candidate has merged into this mod repository's main branch.
+The later candidate remote lifecycle passed, including normal primary acknowledgment and physical input after transport recovery.
+Mod PR 1 subsequently merged as `436678c561bf42f0a39951f9ed574af003134d9d`.
+Its tree exactly matches reviewed revision `200896b298b389c3589edbf21da0caa7f76fd599`.
+Firstmate main `00311fea94041f7794f3b2690f7df70f6942687d` has the tested combined candidate tree.
+Normal `fm-update` completed successfully at 20:49:12 UTC.
+Independent snapshots confirmed four clean final-main checkouts and matching private remote worker code and process-lock identities.
+The prescribed restart completed two of two secondmates with zero nudged or unreachable targets.
+Final post-restart reconciliation completed at 20:55:14 UTC with all five terminals alive, but remote file bytes were not reread.
