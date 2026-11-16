@@ -20,7 +20,13 @@ The private remote job worker matched its recorded process lock and current code
 These snapshots were sequential, not atomic.
 The updater requested an instruction reread and restarts of `fm-main-hello-mate` and `fm-grand-hz-mate`, with no nudges.
 The normal restart completed at 20:51:34 UTC with exit code 0: two of two restarted, zero nudged, and zero unreachable.
-Final post-restart reconciliation remains in progress.
+`final-main-supervision/receipt.md` records final post-restart reconciliation at 20:55:14 UTC.
+The actual primary resolved all six pending reply records, and the remote reply watcher reported zero pending messages.
+All five terminals kept their address, creation time, shell PID, parent, keep, and die_with_parent values.
+Only the two secondmate Claude processes changed, as expected from normal restart.
+Session-lock discovery found the primary and both secondmates after restart, with crew choices and worker assignments unchanged.
+The local worker's `hello.txt` was reread after restart, but remote file bytes were not reread in this reconciliation.
+Both tasks remain open intentionally, with no merge, push, cleanup, or repeat dispatch.
 The final mod installation preserved all five terminal identities and matched all 217 copied source files.
 Its native loading and asynchronous parity checks passed without app errors.
 A real primary approval prompt displayed seated Luffy in both Spaces and Agents after the restart.

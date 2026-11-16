@@ -33,7 +33,7 @@ Historical native input checks used disposable interface fixtures.
 The later local physical harness check below reached an actual delegated worker.
 The candidate remote lifecycle passed, including the primary acknowledgment of completion marker 3.
 The isolated app retains a different signature and bundle identity.
-Final post-restart reconciliation remains in progress.
+Final post-restart reconciliation completed at 20:55:14 UTC with all five terminals alive, but remote file bytes were not reread.
 
 ## Local physical harness evidence, 2026-11-16
 
@@ -66,7 +66,13 @@ This closes current physical attention-state verification without explaining the
 Default Core and holder socket ownership also matched.
 The earlier timeout log and absent SSH socket remain explicit differences, not unchanged original metadata.
 The protected remote comparison excluded private code and homes undergoing authorized updates.
-Final post-restart reconciliation remains in progress.
+`final-main-supervision/receipt.md` records final post-restart reconciliation at 20:55:14 UTC.
+The actual primary resolved all six pending reply records, and the remote reply watcher reported zero pending messages.
+All five terminals kept their address, creation time, shell PID, parent, keep, and die_with_parent values.
+Only the two secondmate Claude processes changed, as expected from normal restart.
+Session-lock discovery found the primary and both secondmates after restart, with crew choices and worker assignments unchanged.
+The local worker's `hello.txt` was reread after restart, but remote file bytes were not reread in this reconciliation.
+Both tasks remain open intentionally, with no merge, push, cleanup, or repeat dispatch.
 
 ## Historical acceptance review
 

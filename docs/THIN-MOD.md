@@ -181,4 +181,4 @@ Firstmate main `00311fea94041f7794f3b2690f7df70f6942687d` has the tested combine
 Normal `fm-update` completed successfully at 20:49:12 UTC.
 Independent snapshots confirmed four clean final-main checkouts and matching private remote worker code and process-lock identities.
 The prescribed restart completed two of two secondmates with zero nudged or unreachable targets.
-Final post-restart reconciliation remains in progress.
+Final post-restart reconciliation completed at 20:55:14 UTC with all five terminals alive, but remote file bytes were not reread.

@@ -13,7 +13,7 @@ The current local fleet has separate delegation and physical interaction evidenc
 The candidate remote lifecycle and physical recovery passed in the isolated acceptance app.
 Normal final-main source updates passed.
 Both prescribed secondmate restarts completed successfully.
-Final post-restart reconciliation remains in progress.
+Final post-restart reconciliation completed at 20:55:14 UTC with all five terminals alive, but remote file bytes were not reread.
 The documented path and Core release limitations still apply.
 
 ## Choose an app home
