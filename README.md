@@ -1,5 +1,14 @@
 # Herdr One Piece
 
+![Grand Fleet in Herdr](preview.png)
+
+Install through Herdr's community flow by giving your agent this request:
+
+> Read https://github.com/tiago-peixoto/herdr-one-piece/blob/main/RECIPE.md and install Grand Fleet into my existing Herdr configuration.
+
+The [recipe](RECIPE.md) describes the interface, permissions, installation, and verification.
+The [installation guide](docs/INSTALL.md) also provides manual commands.
+
 Grand Fleet presents Herdr agents as crewmembers in the native Agents region.
 The mod detects agents running Firstmate as captains from Firstmate's existing session lock.
 If that evidence cannot be read, identify the captain manually through Crew appearance.
