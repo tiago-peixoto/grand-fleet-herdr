@@ -4,6 +4,33 @@ The current fleet sidebar uses automatic Firstmate captain discovery, native Spa
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
 
+## Candidate completion and final-main transition, 2026-11-16
+
+The actual remote secondmate lifecycle completed with the primary acknowledging completion marker 3.
+The physical preservation receipt records independent sidebar scrolling, persisted crew choices, app reopening, and remote transport recovery.
+All five terminal identities survived, and direct remote input returned `REMOTE_RECONNECT_20261116_KING_OK`.
+The local Core executable matches the official 0.1.21 macOS ARM64 release, as recorded in [Installation](INSTALL.md#core-build-used-for-current-recovery-verification).
+The remote running Core executable also matches the official Linux x86_64 0.1.20 release.
+The historical debug binary below is different from this acceptance runtime.
+Mod main `436678c561bf42f0a39951f9ed574af003134d9d` has the exact reviewed `200896b298b389c3589edbf21da0caa7f76fd599` tree.
+Normal `fm-update` completed with exit code 0 at 20:49:12 UTC.
+It updated the primary and both secondmates to Firstmate main `00311fea94041f7794f3b2690f7df70f6942687d`.
+Independent snapshots at 20:50:09-10 UTC found the primary, local secondmate, remote code checkout, and remote secondmate clean at that commit.
+The private remote job worker matched its recorded process lock and current code hashes.
+These snapshots were sequential, not atomic.
+The updater requested an instruction reread and restarts of `fm-main-hello-mate` and `fm-grand-hz-mate`, with no nudges.
+The normal restart completed at 20:51:34 UTC with exit code 0: two of two restarted, zero nudged, and zero unreachable.
+Final post-restart reconciliation remains in progress.
+The final mod installation preserved all five terminal identities and matched all 217 copied source files.
+Its native loading and asynchronous parity checks passed without app errors.
+A real primary approval prompt displayed seated Luffy in both Spaces and Agents after the restart.
+The saved `final-mod-install/actual-primary-blocked-both-regions.png` closes the physical attention-state check without establishing the historical capture failure cause.
+The final protected-state comparison retained all 19 remote baseline records.
+Four original local process identities and the default Core and holder socket ownership also matched.
+The earlier 57-byte timeout log and missing SSH socket remained recorded differences.
+The remote comparison excluded private code and homes undergoing authorized updates.
+The isolated app signature and incomplete comparison of every native control remain limitations.
+
 ## Mod-only association, 2026-11-14
 
 The author rejected any requirement to modify Firstmate.

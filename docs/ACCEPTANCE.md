@@ -27,12 +27,13 @@ Herdr reported no runtime errors after the recorded navigation checks.
 
 The project remains experimental and is not installed into the user's daily configuration by this work.
 The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) records the isolated recovery build used for historical checks.
-A published Core build still needs separate recovery verification before release acceptance.
+Current local Core release provenance and candidate recovery evidence are recorded in the installation guide.
 Exact pixel equivalence with the historical browser prototype is not the current contract because the author replaced its sidebar model.
 Historical native input checks used disposable interface fixtures.
 The later local physical harness check below reached an actual delegated worker.
-The current actual remote secondmate lifecycle remains unverified.
-Exact signed-release and final merged-main acceptance remain pending.
+The candidate remote lifecycle passed, including the primary acknowledgment of completion marker 3.
+The isolated app retains a different signature and bundle identity.
+Final post-restart reconciliation remains in progress.
 
 ## Local physical harness evidence, 2026-11-16
 
@@ -46,12 +47,26 @@ The harness had a different signature and bundle identity, so this does not esta
 Input stopped when computer control reported that the user changed the application.
 Restoring Straw Hats and physical overflow scrolling remained outstanding in that report.
 The report did not induce a blocked state or resolve the historical blocked-Luffy symptom.
-The actual remote secondmate lifecycle remains pending, including delegation, direct input, acknowledgment, and transport recovery.
+The later candidate remote lifecycle passed delegation, direct input, acknowledgment, and transport recovery.
 Historical remote worker fixtures do not establish that current lifecycle.
 
 Private evidence is stored outside this repository under the workspace's `.task-notes/grand-fleet-multimachine-20261116/` directory.
 `candidate-refresh/physical-report.md` records the physical checks and points to `adhoc-parity.json` for executable and resource comparisons.
-`final-acceptance-checklist.md` remains incomplete and records the outstanding final verification.
+`physical-preservation-receipt.md` supersedes the earlier outstanding scrolling, crew restoration, reopening, and reconnection checks.
+All five terminal identities survived, and the remote worker replied `REMOTE_RECONNECT_20261116_KING_OK`.
+`model-update-final-main.log` records successful normal source updates to final Firstmate main at 20:49:12 UTC.
+`final-main-runtime-state/receipt.json` records four clean checkouts at `00311fea94041f7794f3b2690f7df70f6942687d`.
+Its sequential snapshots also confirm matching private remote worker code and process-lock identities.
+`remote-core-provenance-20261116T204958Z/receipt.md` establishes the running remote executable matches the official Linux 0.1.20 release.
+`model-restart-final-main.log` records two successful secondmate restarts, zero nudged or unreachable targets, and exit code 0 at 20:51:34 UTC.
+`final-mod-install/receipt.md` records installed mod main `436678c561bf42f0a39951f9ed574af003134d9d`, matching source files, passing checks, and five preserved terminal identities.
+`final-mod-install/actual-primary-blocked-both-regions.png` shows seated Luffy in Spaces and Agents during a real primary approval prompt.
+This closes current physical attention-state verification without explaining the historical capture failure.
+`final-update-preservation-20261116T205246Z/receipt.md` confirms all 19 protected remote records and four original local process identities matched.
+Default Core and holder socket ownership also matched.
+The earlier timeout log and absent SSH socket remain explicit differences, not unchanged original metadata.
+The protected remote comparison excluded private code and homes undergoing authorized updates.
+Final post-restart reconciliation remains in progress.
 
 ## Historical acceptance review
 

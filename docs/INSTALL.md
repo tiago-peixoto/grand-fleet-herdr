@@ -10,13 +10,16 @@ Use a separate test home before considering your daily configuration.
 The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
 Historical isolated worker checks used unchanged Firstmate revisions locally and remotely, including normal cleanup.
 The current local fleet has separate delegation and physical interaction evidence.
-The actual remote secondmate lifecycle remains unverified in the current acceptance run.
+The candidate remote lifecycle and physical recovery passed in the isolated acceptance app.
+Normal final-main source updates passed.
+Both prescribed secondmate restarts completed successfully.
+Final post-restart reconciliation remains in progress.
 The documented path and Core release limitations still apply.
 
 ## Choose an app home
 
 An app home is Herdr's configuration directory.
-The destination must contain supported `mods/agents/main.js`, `mods/spaces/main.js`, and `layouts/main.json` files supplied by Herdr.
+The destination must contain supported `mods/agents/main.js`, `mods/spaces/main.js`, `mods/menu/main.js`, and `layouts/main.json` files supplied by Herdr.
 If any required file is missing, initialize the separate test home with Herdr before installation.
 A valid source and layout are sufficient without `keys.json`.
 The installer never starts Herdr or initializes shortcut files.
@@ -223,8 +226,22 @@ These tests do not install into your real configuration or verify a running wind
 
 ### Core build used for current recovery verification
 
+The 2026-11-16 acceptance socket belongs to local Core process `24694`, which maps the installed Core executable.
+That executable reports `hc 0.1.21` and has SHA-256 `8df48976b421aa60c0508e0807017f1cea75ca8d6ef43dd8d439786b3724e929`.
+It exactly matches the executable in the official macOS ARM64 0.1.21 archive.
+The archive matches the [official manifest](https://releases.herdr.dev/core/latest.json) checksum `1ab38dd9270f63a8f794d6d60e8702eb0d1c85a72bda85d735e5eea43f05ffed`.
+The candidate physical recovery receipt records preserved terminal identities and a fresh typed remote response on this installation.
+The remote Core process `1099249` reports `hc 0.1.20` and owns the private `fm-remote` listening socket.
+Its running executable has SHA-256 `0e4a0c2f7ddfd9eb083f8ff3256968376b24f7577e172cd6c66f9ab0aa53c95e`.
+It exactly matches the official Linux x86_64 0.1.20 archive executable.
+That archive matches the [versioned manifest](https://releases.herdr.dev/core/0.1.20/manifest.json) checksum `ac6b86890c451a37584620aaa438b71bc0d0bd430a2e7c1d7e095f052c414e74`.
+These comparisons establish the tested release binaries, not their source commits.
+The isolated app reports 0.1.16 and retains its separate ad-hoc signature limitation.
+
+The following source-build evidence is historical and does not identify the current acceptance runtime.
+
 Herdr Core is the component that manages terminal sessions.
-Current remote recovery verification used a macOS Apple Silicon debug build from [commit e12fee23768764e8c85699f30ce520e53fcffb32](https://github.com/herdrdev/herdr-core/commit/e12fee23768764e8c85699f30ce520e53fcffb32).
+Historical recovery verification on 2026-11-14 used a macOS Apple Silicon debug build from [commit e12fee23768764e8c85699f30ce520e53fcffb32](https://github.com/herdrdev/herdr-core/commit/e12fee23768764e8c85699f30ce520e53fcffb32).
 That commit contains the active-viewer recovery fix merged in [Core pull request 271](https://github.com/herdrdev/herdr-core/pull/271).
 The lab binary's SHA-256 checksum is `ba1e95793d976e1314eb3c1592a4d24ddf7caf0ca6eaee5239dd980fd20245d0`.
 A fresh checksum comparison on 2026-11-14 matched the lab executable, the clean merged-source build, and the preserved fallback artifact.

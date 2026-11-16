@@ -17,7 +17,10 @@ Crewmembers require no captain association or Firstmate worker labels.
 This project remains experimental.
 Historical isolated worker trials passed locally and remotely, including direct input, navigation, reconnection, and normal cleanup.
 The current local fleet has separate delegation and physical interaction evidence.
-The actual remote secondmate lifecycle remains unverified in the current acceptance run.
+The candidate remote lifecycle and physical recovery passed in the isolated acceptance app.
+Normal final-main source updates passed.
+Both prescribed secondmate restarts completed successfully.
+Final post-restart reconciliation remains in progress.
 The [acceptance review](docs/ACCEPTANCE.md) records test coverage and remaining release limitations.
 Use a separate test home before considering your daily configuration.
 
