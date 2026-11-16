@@ -46,7 +46,7 @@ export function assignCrew(workers,previous,coordinator,reserved=[]) {
 export function selectDefaultCrews(terminals, captains, selected, machines, preferences = {}) {
   const assigned = {...selected};
   for (const [key, captain] of Object.entries(captains)) {
-    if (captain.role && preferences.roles?.[key] && captain.role !== preferences.roles[key] && !preferences.manualCrews?.[key]) delete assigned[key];
+    if (captain.role && captain.role !== preferences.roles?.[key] && !preferences.manualCrews?.[key]) delete assigned[key];
   }
   const live = new Set(terminals.filter(t => t.state === 'live').map(identity));
   const online = new Set(machines.filter(m => m.layout === 'ready').map(m => m.name ?? null));

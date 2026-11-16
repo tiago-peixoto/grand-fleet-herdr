@@ -71,18 +71,27 @@ Crewmember artwork needs no Firstmate labels, worker metadata, or captain owners
 Personal terminals that are not agents keep their native presentation.
 Firstmate requires no patch, extra hook, or special fork.
 
-To designate a captain, choose Crew in the Agents region and pick the agent running Firstmate.
-You can also right-click that agent's artwork.
+The mod detects captains automatically from Firstmate's existing session lock, startup script, and secondmate marker.
+Detected captains need no manual step, and Firstmate sends no registration or artwork commands.
+A detected primary defaults to Straw Hats, and secondmates default to unused secondary crews.
+To choose a different ship and crew, right-click the captain's artwork in Agents.
+You can also right-click the captain's Space and choose Choose ship and crew.
+Your choice stays in place when discovery runs again.
+
+If the mod cannot read a captain's session evidence, designate the captain manually.
+Choose Crew in the Agents region and pick the agent running Firstmate, or right-click that agent's artwork.
 Choose This agent runs Firstmate in the menu that opens.
-The same menu then lists the crews, so you can choose the captain's ship and crew artwork.
-Choose Remove captain designation to return the agent to ordinary crewmember artwork.
-The mod saves designations in Herdr's persisted settings under `one-piece.captains`.
+Choose Remove captain designation to return a manually designated agent to ordinary crewmember artwork.
+The mod saves manual designations in Herdr's persisted settings under `one-piece.captains`.
 A designation includes the terminal creation timestamp and never transfers to a replacement session.
 Do not use terminal names, folders, or native process parenting as substitutes for an explicit choice.
 
 A space containing a captain shows that captain's ship in Spaces.
 Clicking the ship selects that space through Herdr's native command.
-Spaces without captains keep their native presentation.
+The captain's Space row shows the other agents in that Space as its crew.
+This summary does not move terminals or change native Space membership.
+A Space with agents but no captain shows their artwork in place of the letter avatar.
+Spaces without agents keep their native presentation.
 Artwork assignment does not change terminal parent relationships or workspace labels.
 Native agent selection, sorting, pinning, grouping, and previews remain in use.
 

@@ -153,7 +153,8 @@ test('automatic roles select the right crews even when secondmates appear first'
   assert.equal(after['t1:1'],'strawhat');
   assert.equal(after['t2:1'],'redhair');
   const chosen = {...after,'t1:1':'beasts','t2:1':'strawhat'};
-  assert.deepEqual(selectDefaultCrews([second,primary],captains,chosen,machines),chosen);
+  const saved = {roles:{'t1:1':'firstmate','t2:1':'secondmate'}};
+  assert.deepEqual(selectDefaultCrews([second,primary],captains,chosen,machines,saved),chosen);
 });
 
 test('a corrected role updates automatic artwork but preserves a user selection', async () => {
@@ -164,4 +165,16 @@ test('a corrected role updates automatic artwork but preserves a user selection'
   const preferences = {roles:{'t1:1':'firstmate'}};
   assert.equal(selectDefaultCrews(live,captains,selected,[],preferences)['t1:1'],'redhair');
   assert.equal(selectDefaultCrews(live,captains,selected,[],{...preferences,manualCrews:{'t1:1':true}})['t1:1'],'strawhat');
+});
+
+test('a manually designated captain that later gains a role leaves Straw Hats to the primary', async () => {
+  const {selectDefaultCrews} = await import('../mods/one-piece/artwork.js');
+  const live = [{address:'t1',created_ms:1,state:'live'},{address:'remote/t2',created_ms:2,state:'live'}];
+  const machines = [{name:null,layout:'ready'},{name:'remote',layout:'ready'}];
+  const manual = selectDefaultCrews(live,{'remote/t2:2':{}},{},machines);
+  assert.deepEqual(manual,{'remote/t2:2':'strawhat'});
+  const discovered = {'t1:1':{role:'firstmate'},'remote/t2:2':{role:'secondmate'}};
+  assert.deepEqual(selectDefaultCrews(live,discovered,manual,machines,{roles:{}}),{'t1:1':'strawhat','remote/t2:2':'redhair'});
+  const picked = selectDefaultCrews(live,discovered,manual,machines,{roles:{},manualCrews:{'remote/t2:2':true}});
+  assert.equal(picked['remote/t2:2'],'strawhat');
 });

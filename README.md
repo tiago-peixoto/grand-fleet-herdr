@@ -1,7 +1,8 @@
 # Herdr One Piece
 
 Grand Fleet presents Herdr agents as crewmembers in the native Agents region.
-Explicitly identify an agent running Firstmate as a captain through Crew appearance.
+The mod detects agents running Firstmate as captains from Firstmate's existing session lock.
+If that evidence cannot be read, identify the captain manually through Crew appearance.
 Its space displays the selected ship in the native Spaces region.
 Clicking the ship selects that workspace, while clicking a crewmember uses native terminal navigation.
 Spaces and Agents each retain one scrolling list and native machine identities.

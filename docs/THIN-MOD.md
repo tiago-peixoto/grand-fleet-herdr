@@ -23,18 +23,20 @@ Firstmate sends no artwork commands and requires no mod-specific registration.
 Manual designation remains available for instances whose session evidence cannot be read.
 An ended captain designation cannot transfer to a reused terminal address.
 Right-click a captain Space and choose “Choose ship and crew” directly below Rename.
-The picker changes the ship, captain, and associated crewmates together.
-New associated crewmates receive artwork from the selected crew.
+The picker changes the ship, captain, and the crewmates in the captain's Space together.
+New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
 A space containing a captain shows that crew's ship.
 Clicking the ship selects the space through Herdr's native command.
 If several captains share a space, the first captain in native agent order supplies its ship.
 All captains remain independently accessible in Agents.
 Expanded Spaces with agents show their miniature crewmembers below the name, replacing the letter avatar.
+Worktree Spaces keep Herdr's indent and branch icon.
+Rows with crew artwork are 64 pixels tall, compared with Herdr's 30-pixel Space rows and 28-pixel worktree rows.
 A captain Space combines its ship, captain sprite, and miniature managed crew on one continuous row background.
 The captain sprite replaces the visible Space name, which remains available in its tooltip and accessibility label.
-Automatically detected captains use native Space membership for the lower crew strip.
-Existing manual home links retain their previous matching behavior.
+Every captain uses native Space membership for the lower crew strip, whether detected or manually designated.
+The mod never associates workers in other Spaces with a captain, including through Firstmate labels.
 The entire row selects the Space and retains native drag ordering and the workspace menu.
 Ordinary Spaces continue to show only agents placed in that Space.
 Spaces without agents retain native presentation.
@@ -125,7 +127,8 @@ See [Native verification](NATIVE-INTEGRATION.md#stock-firstmate-tasks-and-direct
 
 ## Captain discovery verification on 2026-11-15
 
-Automatic startup discovery is not implemented or claimed.
+This section is historical, and the automatic discovery trial on 2026-11-16 supersedes it.
+At that time, automatic startup discovery was not implemented or claimed.
 A read of the running lab captain through `hc get t42` showed only Herdr placement labels, without a Firstmate role or home label.
 The stock `bin/backends/hc.sh` creates worker terminals with `firstmate.task` and `firstmate.home`, but these do not identify the captain terminal.
 The stock `bin/fm-spawn.sh` explicitly refuses `--backend hc --secondmate` before launching a terminal.

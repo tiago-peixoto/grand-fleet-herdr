@@ -13,11 +13,12 @@ Historical nested-fleet evidence does not establish acceptance of the current ad
 | Clicking a ship selects its space | Physical Sunny and Red Force selection matches native space identifiers | No known gap in tested inventory |
 | Every agent receives crewmember artwork | Generic membership tests and native rendering include agents without Firstmate labels; expanded and compact artwork inspected | No known gap in tested inventory |
 | Native agent navigation and direct input | Command comparison covers selection, pinning, sorting, and previews; local captain, crewmember, and remote captain acknowledged typed input | Other native controls were not exhaustively retested |
-| Firstmate remains unmodified | Adapter uses explicit mod settings and Herdr snapshots only | No Firstmate dependency added |
-| Unsupported installations fail safely | 43 Python tests pass, including compatibility rejection and transactional installation | Future Herdr releases require validation |
+| Firstmate remains unmodified | Adapter reads Firstmate's existing session lock, startup script, and secondmate marker through Herdr file reads, plus mod settings and Herdr snapshots | No Firstmate dependency added |
+| Unsupported installations fail safely | Python tests cover compatibility rejection and transactional installation | Future Herdr releases require validation |
 | Reviewable implementation | Independent follow-up review found no further concrete defects | Review pipeline and updated pull request |
 
-The current implementation passed 12 JavaScript tests and 43 Python tests.
+At this revision, all 24 JavaScript tests and the 9 compatibility tests pass, and the native behavior verifier passes against a disposable app home.
+The suites define 46 Python tests, and the pipeline's test step runs the remaining installation and artwork tests.
 Its native loading check and command comparison passed against `/private/tmp/op-app-31618`.
 [Native interaction evidence](NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) records exact terminal and workspace identities.
 Herdr reported no runtime errors after the recorded navigation checks.

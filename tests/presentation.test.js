@@ -32,19 +32,18 @@ test('remote addresses remain distinct and the first native captain determines t
   assert.deepEqual([...captainSpaces([a,b,c], agents, {'t1:10':{}, 'remote/t1:10':{}, 't2:10':{}})], [['s',c], ['remote/s',b]]);
 });
 
-test('captain crew crosses Spaces only through explicit matching home and machine', () => {
+test('every captain summarizes its native Space, never labelled workers in other Spaces', () => {
   const captain = terminal('t1');
   const labels = {'firstmate.home':'crew', 'firstmate.task':'scout'};
-  const worker = terminal('t2', {labels});
-  const source = [captain, worker, terminal('remote/t2', {labels}),
-    terminal('t3', {labels, state:'exited'}), terminal('t4', {labels}),
-    terminal('t5', {parent:'t1'}), terminal('t6', {labels:{'firstmate.home':'crew'}})];
-  const agents = [{address:'t1',space:'captain'}, {address:'t2',space:'workers'}];
-  const captains = {'t1:10':{home:'crew'}, 't4:10':{}};
+  const neighbour = terminal('t2'), elsewhere = terminal('t3', {labels});
+  const source = [captain, neighbour, elsewhere];
+  const agents = [{address:'t1',space:'s'}, {address:'t2',space:'s'}, {address:'t3',space:'other'}];
   const before = structuredClone(source);
-  assert.deepEqual(managedCrew(captain, source, agents, captains), [worker]);
-  assert.deepEqual(managedCrew(captain, source, agents, {'t1:10':{}}), []);
-  assert.deepEqual(managedCrew({...captain,created_ms:11}, source, agents, captains), []);
+  for (const link of [{}, {home:'crew'}, {source:'session-lock'}]) {
+    assert.deepEqual(managedCrew(captain, source, agents, {'t1:10':link}), [neighbour]);
+  }
+  assert.deepEqual(managedCrew({...captain,created_ms:11}, source, agents, {'t1:10':{}}), []);
+  assert.deepEqual(managedCrew(captain, source, agents, {}), []);
   assert.deepEqual(source, before);
 });
 

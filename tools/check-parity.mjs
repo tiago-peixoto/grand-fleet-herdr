@@ -61,7 +61,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:element,h_flex:element,v_flex:element,
+  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
@@ -129,12 +129,16 @@ for (const width of [310, 120]) {
       const row = descendants(ships.nodes.get(rowId));
       assert.ok(row.some(n => n.path?.endsWith('crew-luffy-working.gif')));
       assert.ok(row.some(n => n.path?.endsWith('crew-chopper-idle.gif')));
-      assert.ok(!row.some(n => n.path?.endsWith('crew-franky-idle.gif')), 'unrelated agents in the same Space are not managed crew');
+      assert.ok(row.some(n => n.path?.endsWith('crew-franky-idle.gif')), 'every agent in the captain Space is its crew');
       assert.ok(!row.some(n => n.kids.includes('project')), 'captain replaces the visible Space name');
       const strip = row.find(n => n.kids.includes(ships.nodes.get('portrait-t3:3')));
       assert.ok(!descendants(strip).some(n => n.path?.includes('crew-luffy')), 'captain is above the crew strip');
       assert.ok(!row.some(n => n.kids.includes('P')), 'space initial must not duplicate crew artwork');
       assert.ok(!ships.nodes.has('ship-s'), 'expanded ship belongs to the native row');
+      const worktree = view => descendants(view.row({w:{id:'s',name:'project',status:'idle',tabs:[]}, i:0, g:null, tree:'└─'}, {dim:'#888888'}));
+      const branch = nodes => nodes.filter(n => n.path === 'mods/workspace-chrome/branch.svg').map(n => n.color);
+      assert.deepEqual(branch(worktree(ships.controller.spacesView)), branch(worktree(nativeSpaces.controller)), 'worktree rows keep the native branch icon');
+      assert.equal(branch(worktree(nativeSpaces.controller)).length, 1);
     } else ships.nodes.get(rowId).click();
     if(width===310) {
       nativeSpaces.nodes.get('space-s').left();
@@ -175,8 +179,8 @@ const menu=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
 menu.nodes.get('crew-redhair').click();
 assert.equal(menu.state.get('one-piece.art').manualCrews['t1:1'],true,'the picker records an explicit choice');
 assert.equal(menu.state.get('one-piece.art').crews['t1:1'],'redhair');
-assert.equal(menu.state.get('one-piece.art').characters['t3:3'].art,'crew-yasopp');
-assert.equal(menu.state.get('one-piece.art').characters['t6:7'].art,'crew-franky');
+assert.equal(menu.state.get('one-piece.art').characters['t3:3'].art,'crew-benn-beckman');
+assert.equal(menu.state.get('one-piece.art').characters['t6:7'].art,'crew-yasopp','the picker restyles every agent in the captain Space');
 menu.nodes.get('motion').click();
 assert.equal(menu.state.get('one-piece.art').paused,true);
 menu.nodes.get('unlink-captain').click();
@@ -243,9 +247,10 @@ for (const git of [null, 'main', 'linked']) {
 const selectedCrew=host(true);
 selectedCrew.state.get('one-piece.art').crews['t1:1']='beasts';
 selectedCrew.controller.render(selectedCrew.cx);
-assert.equal(selectedCrew.state.get('one-piece.art').characters['t3:3'].art,'crew-queen');
-assert.equal(selectedCrew.state.get('one-piece.art').characters['t6:7'].art,'crew-franky');
-selectedCrew.all.push({address:'new',created_ms:8,state:'live',program:selectedCrew.all[1].program,labels:{'firstmate.task':'new','firstmate.home':'local'}});
+assert.equal(selectedCrew.state.get('one-piece.art').characters['t3:3'].art,'crew-king');
+assert.equal(selectedCrew.state.get('one-piece.art').characters['t6:7'].art,'crew-queen');
+selectedCrew.all.push({address:'new',created_ms:8,state:'live',program:selectedCrew.all[1].program,labels:{}});
+selectedCrew.context.agents().push({address:'new',space:'s'});
 selectedCrew.controller.render(selectedCrew.cx);
 assert.equal(selectedCrew.state.get('one-piece.art').characters['new:8'].art,'crew-jack');
 

@@ -1,7 +1,7 @@
 import Agents from './herdr-agents.js';
 import Menu from './herdr-menu.js';
 import Spaces, { glyph, tone } from './herdr-spaces.js';
-import { div, image } from 'gpui-kit';
+import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile } from 'herdr';
 import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews } from './artwork.js';
@@ -115,7 +115,8 @@ class OnePieceSpaces extends Spaces {
         cx.notify();
       })
       .on_mouse_down('right', () => this.menu(w))
-      .child(h_flex().gap(10).items_center().when(Boolean(tree), el => el.pl(22))
+      .child(h_flex().gap(10).items_center()
+        .when(Boolean(tree), el => el.pl(22).child(svg('mods/workspace-chrome/branch.svg').size(13).text_color(t.dim)))
         .when(Boolean(crew), el => el.child(sprite(crew.ship, 'idle', 48, true)))
         .child(v_flex().flex_1().min_w(0).gap(2)
           .child(h_flex().items_center().gap(8)

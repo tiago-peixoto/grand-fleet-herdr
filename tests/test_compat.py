@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import unittest
 
 spec = importlib.util.spec_from_file_location('compat', Path(__file__).resolve().parents[1] / 'tools/compat.py')
@@ -96,10 +97,30 @@ class CompatibilityTests(unittest.TestCase):
 
 
 class MenuCompatibilityTests(unittest.TestCase):
-    def test_exposes_items_without_replacing_native_actions(self):
-        source = 'export default class Menu extends View {\n  choose() { return items(props(), this.git); }\n  render() { return items(props(), this.git); }\n}'
-        generated = compat.generate_menu(source).decode()
-        self.assertEqual(generated.count('this.items()'), 2)
-        self.assertIn('items() { return items(props(), this.git); }', generated)
+    SOURCE = (
+        'import { View } from "gpui-kit";\n'
+        'export default class Menu extends View {\n'
+        '  choose(i) { return items(props(), this.git)[i]; }\n'
+        '  render() { return items(props(), this.git).map(item => item[0]); }\n'
+        '}\n')
+    RUN = r"""
+const vm = require('node:vm');
+const source = require('node:fs').readFileSync(0, 'utf8')
+  .replace(/^import .*;\n/gm, '').replace('export default class Menu', 'globalThis.Menu = class Menu');
+const context = {View: class {}, props: () => ({}), items: () => [['Rename', 'space.rename']]};
+vm.runInNewContext(source, context);
+class Fleet extends context.Menu { items() { return [...super.items(), ['Choose ship and crew', 'one-piece.appearance']]; } }
+const menu = new Fleet();
+process.stdout.write(JSON.stringify({chosen: menu.choose(1), rendered: menu.render()}));
+"""
+
+    def test_subclass_items_drive_rendering_and_activation(self):
+        generated = compat.generate_menu(self.SOURCE)
+        result = subprocess.run(['node', '-e', self.RUN], input=generated, capture_output=True, check=True)
+        self.assertEqual(json.loads(result.stdout), {
+            'chosen': ['Choose ship and crew', 'one-piece.appearance'],
+            'rendered': ['Rename', 'Choose ship and crew']})
+
+    def test_rejects_changed_native_menu_interface(self):
         with self.assertRaises(ValueError):
-            compat.generate_menu(source.replace('items(props(), this.git)', 'changed()'))
+            compat.generate_menu(self.SOURCE.replace('items(props(), this.git)', 'changed()'))
