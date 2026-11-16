@@ -1,31 +1,76 @@
 # Herdr One Piece
 
-Grand Fleet is an optional One Piece interface specifically for firstmate in Herdr.
-Support for other session managers is outside this repository's scope.
-Its vision extends [firstmate's governing vision](https://github.com/kunchenguid/firstmate/blob/main/VISION.md).
-It keeps coordinators, workers, and personal terminals clear across machines.
-It also supports ordinary Herdr sessions in an explicitly unsupervised mode.
-This repository currently contains the approved vision, prototype, custom artwork, and design specification.
-It does not contain an installable native Herdr mod yet.
+Grand Fleet presents Herdr agents as crewmembers in the native Agents region.
+The mod detects agents running Firstmate as captains from Firstmate's existing session lock.
+If that evidence cannot be read, identify the captain manually through Crew appearance.
+Its space displays the selected ship in the native Spaces region.
+Clicking the ship selects that workspace, while clicking a crewmember uses native terminal navigation.
+Spaces and Agents each retain one scrolling list and native machine identities.
+Personal terminals remain ordinary Herdr terminals.
+
+The mod requires no mod-specific Firstmate patches or hooks.
+Complete hc fleets require compatible generic hc support in Firstmate.
+The [acceptance evidence](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16) records the tested fork revision.
+Captain choices use terminal addresses and creation timestamps without changing session metadata.
+Crewmembers require no captain association or Firstmate worker labels.
+
+This project remains experimental.
+Historical isolated worker trials passed locally and remotely, including direct input, navigation, reconnection, and normal cleanup.
+The current local fleet has separate delegation and physical interaction evidence.
+The actual remote secondmate lifecycle remains unverified in the current acceptance run.
+The [acceptance review](docs/ACCEPTANCE.md) records test coverage and remaining release limitations.
+Use a separate test home before considering your daily configuration.
 
 ## Start here
 
-- [VISION.md](VISION.md) defines the approved acceptance policy.
-- [Prototype specification](docs/PROTOTYPE-SPEC.md) records accepted choices, proposed operating rules, and native integration checks.
-- [Prototype inventory](docs/PROTOTYPE.md) maps every retained design stage and explains what differs from the accepted decisions.
-- [Artwork inventory](docs/ARTWORK.md) records current coverage, source prompts, and historical reference assets.
+- [Thin presentation design](docs/THIN-MOD.md) describes the current implementation contract.
+- [Installation](docs/INSTALL.md) explains generation, refresh, legacy cleanup, and removal.
+- [VISION.md](VISION.md) records the approved acceptance policy and its relationship to firstmate.
+- [Artwork inventory](docs/ARTWORK.md) records artwork sources and coverage.
+- [Native verification](docs/NATIVE-INTEGRATION.md) records current checks and clearly separated historical observations.
+- [Acceptance review](docs/ACCEPTANCE.md) lists current acceptance gaps and historical evidence.
 
-## Development
+## Installation model
 
-Read [AGENTS.md](AGENTS.md) before changing the project.
-Start with the [native integration plan](docs/superpowers/plans/2026-11-12-native-integration.md).
-It tests the session guarantees that the browser prototype cannot establish.
+The installer reads the installed Spaces and Agents modules and `layouts/main.json` from the destination app home, Herdr's configuration directory.
+It validates both module interfaces and requires one Spaces slot and one Agents slot under the same parent.
+It copies their source unchanged to `mods/one-piece/herdr-spaces.js` and `mods/one-piece/herdr-agents.js`.
+The generated layout retains both slots and selects the appropriate One Piece presentation through their region properties.
+It supplies teal and gold palette defaults while preserving explicit source color overrides.
+Other native controls remain in the generated layout.
+Generated files belong to the destination installation, not the source checkout.
 
-## Open the current prototype
+Run installation again after Herdr updates to refresh both native modules and the layout.
+Unsupported source or layout structures fail before installation writes.
+New installations never read or change `keys.json`.
+Upgrading a version 2 installation removes its owned shortcuts while preserving unrelated bindings.
+The [installation guide](docs/INSTALL.md) explains checks that block unsafe cleanup or replacement.
 
-Open `prototype/index.html` in a browser.
-It is a portable preview with embedded artwork, simulated replies, and simulated terminals.
-It does not connect to machines or execute commands.
+## Development and verification
+
+Read [AGENTS.md](AGENTS.md) and [the thin presentation design](docs/THIN-MOD.md) before changing the project.
+Run installer and compatibility tests from the repository:
+
+```sh
+python3 -B -m unittest discover -s tests -p test_install.py -v
+python3 -B -m unittest discover -s tests -p test_compat.py -v
+```
+
+GitHub Actions runs the JavaScript, Python, and artwork tests on macOS for pull requests and pushes to main.
+Native Herdr interaction checks still run locally because hosted runners do not have the application installed.
+Installer tests use temporary homes.
+Compatibility tests check source preservation and layout changes.
+These checks do not establish behavior inside a running Herdr window.
+Run `npm test` for generic crewmember, captain identity, and artwork checks.
+Run `node tools/check-parity.mjs <app-home>` for simulated native command comparisons.
+The [current verification record](docs/NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) distinguishes live checks from simulations and historical results.
+
+## Historical prototype
+
+Open `prototype/index.html` in a browser to inspect the historical simulation.
+It contains simulated replies and terminals without connecting to machines or executing commands.
+Its historical behaviors are superseded by the [thin presentation design](docs/THIN-MOD.md).
+[Prototype inventory](docs/PROTOTYPE.md) and [prototype specification](docs/PROTOTYPE-SPEC.md) preserve earlier design context.
 
 Rebuild the preview from its editable sources:
 
@@ -35,23 +80,9 @@ python3 prototype/flow/build.py
 
 Edit `prototype/flow/app.js` and `prototype/flow/screen.html`, then rebuild.
 Do not edit the generated `prototype/index.html` directly.
-The exported preview preserves the reviewed design, including behavior that the later specification replaces.
-
-## Verify the browser preview
-
-The browser checks require `chrome-devtools-axi` on PATH.
-Open the rebuilt HTML with that tool before running the check script:
-
-```sh
-chrome-devtools-axi open "file://$(pwd)/prototype/index.html"
-python3 prototype/flow/check-browser.py
-```
-
-These checks exercise the simulation, not Herdr's native behavior.
-Worker placement into separate spaces and grid preservation require native verification before implementation can promise them.
+Browser simulation checks cannot verify native terminal behavior.
 
 ## Repository boundary
 
 Review boards and author verdict transcripts stay outside this repository.
-The author approved the vision on 2026-11-12.
 The project does not claim ownership of One Piece characters or grant rights to historical third-party reference artwork.

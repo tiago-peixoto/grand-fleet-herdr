@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .lavish/
+.superpowers/
+mods/*/*.d.ts
+mods/*/jsconfig.json

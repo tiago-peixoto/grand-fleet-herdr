@@ -6,18 +6,31 @@ It extends firstmate's governing vision and is the authoritative local acceptanc
 ## What exists
 
 The prototype and artwork live under prototype/.
-The current preview is generated from prototype/flow/app.js and prototype/flow/screen.html.
+The approved native-flow reference is /Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html and its Lavish session 0782435952d24d57.
+The browser simulation is generated from prototype/flow/app.js and prototype/flow/screen.html.
 Rebuild it with `python3 prototype/flow/build.py` rather than editing prototype/index.html.
 The docs directory contains the prototype inventory, artwork coverage, and historical specification.
-No native mod is implemented yet.
+The experimental native mod lives in mods/one-piece.
+The installer generates its base module and layout from the destination Herdr installation.
+Read docs/THIN-MOD.md for the current simplification and candidate verification.
+Read docs/NATIVE-INTEGRATION.md for verified behavior and outstanding checks.
 
 ## Resolve design conflicts
 
 VISION.md takes precedence over docs/PROTOTYPE-SPEC.md and the browser simulation.
-The snapshot's proposed direct worker input conflicts with inspection-only supervised worker and secondmate views.
+The author explicitly approved direct typing into worker and secondmate terminals on 2026-11-14.
+The current request preserves native workspace and terminal behavior beneath the approved fleet sidebar.
+The latest approved design uses native Spaces and Agents regions, each with one scrolling list.
+Ships identify spaces containing Firstmate captains, and clicking a ship selects that space.
+Every agent is a crewmember, with captain artwork for automatically detected Firstmate instances.
+Retain native grouping, sorting, pinning, workspace menus, and terminal navigation.
+Do not reintroduce custom workspace ownership, worker associations, or task polling.
+The mod must work with unmodified firstmate.
+Do not infer coordinator identity from terminal names, folders, or process parents.
+Do not require firstmate.home.path, firstmate.role, or any Firstmate patch.
 The snapshot's cached offline fleet conflicts with the approved distinct offline presentation.
-Native terminal embedding alone does not prove inspection-only access.
-Preserve independent personal terminals and the accepted Unsupervised mode without adding another command path into the supervised fleet.
+Do not recreate the retired inspection-only workspace or custom arrangement workflows.
+Preserve independent personal terminals without inventing supervision labels.
 
 ## Native development
 
@@ -33,7 +46,9 @@ Treat role registration details in the prototype specification as proposals unti
 
 Run `git diff --check` for every change.
 For prototype behavior changes, rebuild, open prototype/index.html with chrome-devtools-axi, and run `python3 prototype/flow/check-browser.py`.
-For a native mod, run `herdr-app check <mod-folder>` and inspect its behavior in the running application.
-The native check only exercises initial rendering and cannot establish session preservation, remote recovery, or inspection-only access.
+Run `herdr-app check <installed-mod-folder>` after generating the native base module.
+Run `node tools/check-parity.mjs <app-home>` against the same Herdr version.
+Inspect the interface in the isolated Grand Fleet Lab.
+The native check only exercises initial rendering and cannot establish session preservation, remote recovery, or correct terminal adoption.
 Record those limits explicitly when reporting results.
 Review boards and verdict transcripts stay outside this repository.
