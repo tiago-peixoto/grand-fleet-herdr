@@ -44,4 +44,6 @@ Animation quality, pixel alignment, and every native asset-loading path remain t
 Their historical completeness, availability, and pricing claims were not reverified during repository creation.
 No blanket license is asserted for these reference files.
 One Piece character rights remain with their respective owners.
-The repository is private, and no public asset distribution decision has been made.
+The author approved publishing this repository on 2026-11-16.
+Only `mods/one-piece/assets/` supplies the installed artwork.
+Historical reference files are not part of the installed mod.
