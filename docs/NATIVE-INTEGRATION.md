@@ -1,6 +1,6 @@
 # Native verification
 
-The current fleet sidebar uses mod-owned captain associations and native terminal controls.
+The current fleet sidebar uses automatic Firstmate captain discovery, native Space membership, and native terminal controls.
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
 
