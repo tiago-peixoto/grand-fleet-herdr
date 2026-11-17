@@ -1,5 +1,20 @@
 # Native repaint reproduction
 
+## Signed-release reproduction, 2026-11-17
+
+The minimal panel below reproduced missing text in the installed, originally signed Herdr App 0.1.16.
+Strict signature verification passed before testing.
+The test used an isolated app home and disposable terminals.
+Both labels were visible with a personal terminal split beside the panel.
+Executing `pane.zoom` for the panel removed both labels from native window capture while retaining the yellow rectangle.
+Clicking the rectangle restored the static label, but the interactive label remained absent in the observed capture.
+The test did not use the last-frame `herdr-app shot` command.
+The private evidence includes `.task-notes/grand-fleet-release-20261117/resize-missing.png` in the workspace.
+[Issue 2](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) remains open because this reproduction rules out closing the release check.
+The observation does not identify the rendering cause or independently establish physical-display behavior.
+
+## Historical observations
+
 Native captures of Herdr App 0.1.15 intermittently omitted static text after zooming a mod pane or restoring its grid.
 Captures of the minimal panel below showed the same discrepancy without artwork, terminal output, or polling.
 These observations do not independently establish that text disappeared on the physical display.

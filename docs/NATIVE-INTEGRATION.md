@@ -4,6 +4,57 @@ The current fleet sidebar uses automatic Firstmate captain discovery, native Spa
 Read [Thin mod design](THIN-MOD.md) for the implementation contract.
 Historical observations below do not establish acceptance of the current implementation.
 
+## Signed application and daily installation, 2026-11-17
+
+Revision `c1603a3b5794e2f3f42bc32751407242c0ab7b43` contains the merged 38-character expansion.
+Verification used the installed `/Applications/Herdr.app` version 0.1.16 with its original Developer ID signature.
+`codesign --verify --deep --strict --verbose=2 /Applications/Herdr.app` passed.
+The local Core was official 0.1.21, and the remote Core was official Linux 0.1.20.
+The isolated home and private Core session kept disposable verification terminals separate from daily sessions.
+
+`node --test tests/*.test.js` passed all 26 tests.
+`python3 -B -m unittest discover -s tests` passed all 47 tests.
+`herdr-app check <app-home>/mods/one-piece` and `node tools/check-parity.mjs <app-home>` passed for both the isolated home and daily home.
+These commands verify initial loading and retained command behavior, while the interactions below provide separate runtime evidence.
+
+Disposable fixtures supplied Firstmate session evidence and terminal status without running actual Firstmate delegation.
+Automatic discovery displayed the primary as Luffy and the secondmate as Shanks.
+Direct typing into the local secondmate returned `ACK SIGNED_APP_INPUT_1117`.
+Selecting Big Mom through the crew menu displayed Big Mom and Queen Mama Chanter in the native sidebar.
+Reopening the signed application retained that choice, Shanks, and the three local and remote terminal identities.
+Terminal addresses, creation times, shell processes, foreground processes, parents, and lifetime settings matched before and after reopening.
+
+The remote recovery test interrupted only the disposable session's transport for 28 seconds.
+Herdr displayed an unavailable machine and reconnecting terminal, then recovered automatically before any click or typing.
+The terminal briefly reported 200 by 120 cells before automatically returning to its original 113 by 36 cells.
+The recovered native capture showed correctly wrapped output, and subsequent typing returned `ACK REMOTE_RECOVERED_1117`.
+The terminal identity, shell process, foreground process, parent, and lifetime settings remained unchanged.
+Native recovery passed for this single trial, but [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3) stays open.
+The historical two-viewer reproduction was intermittent, so one passing trial cannot show that the ordering defect is fixed.
+Clean Core v0.1.21 still collects relayed attachments without sorting, marks returning viewers resumed, and starts them without activity timestamps.
+That source comparison is a reason for further regression testing, not a fresh reproduction of the failure.
+
+The clean upstream Core v0.1.21 checkout was `1b0393f80c35b1dae34f37934d33d0144a8fc8d7`.
+Using Zig 0.16.0, `cargo test --locked -p herdr-core --test foreground -- --test-threads=1` passed all seven tests.
+This resolves the current baseline check in [issue 4](https://github.com/tiago-peixoto/herdr-one-piece/issues/4), without identifying the historical failure's cause or testing the full Core suite.
+
+The [minimal resize probe](NATIVE-RESIZE-REPRO.md#signed-release-reproduction-2026-11-17) reproduced missing text in the signed application without One Piece artwork.
+Both labels disappeared after pane zoom while the yellow rectangle remained visible in native window capture.
+The last-frame `herdr-app shot` command was not used for this observation.
+[Issue 2](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) therefore remains a release blocker.
+
+After backing up the daily home, the installer refreshed `~/.config/herdr-app` from the merged revision.
+All 979 owned files matched the installation receipt, and all 975 copied source files matched the checkout.
+Reopening the daily application preserved settings, shortcuts, workspace inventory, terminal inventory, and machine inventory.
+Herdr reported no runtime errors, and native capture showed the empty Spaces and Agents regions with both machines available.
+The daily home had no live terminals before installation, so this refresh cannot establish preservation of active daily conversations.
+
+Private screenshots, test logs, the backup, and comparison receipts remain outside this repository under `.task-notes/grand-fleet-release-20261117/` in the workspace.
+Disposable terminals were closed after verification, and the isolated application and local Core were stopped.
+These fixture checks complement the actual Firstmate lifecycle evidence below without repeating it.
+Every native control and the full upstream Core suite were not tested.
+Installation is complete, but final release acceptance remains blocked by the rendering failure.
+
 ## Candidate completion and final-main transition, 2026-11-16
 
 The actual remote secondmate lifecycle completed with the primary acknowledging completion marker 3.
