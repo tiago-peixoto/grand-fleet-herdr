@@ -57,7 +57,8 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     {address:'t4',created_ms:5,state:'live',labels:{}},
     {address:'t5',created_ms:6,state:'live',name:'unregistered-child',parent:'t1',program,labels:{}},
     {address:'t6',created_ms:7,state:'live',status:'done',program,labels:{}},
-    {address:'t7',created_ms:8,state:'live',status:'error',parent:'t1',program,labels:{}}];
+    {address:'t7',created_ms:8,state:'live',status:'error',parent:'t1',program,labels:{}},
+    {address:'t8',created_ms:9,state:'live',status:'done',parent:'t1',program,labels:{}}];
   state.set('one-piece.art', {crews:{}, characters:{'t3:3':{art:'crew-chopper'},'t6:7':{art:'crew-franky'}}, paused:false});
   state.set('one-piece.captains', {'t1:1':{home:'local'}, 'remote/t1:4':{home:'remote'}});
   all[2].labels={'firstmate.task':'fm-1','firstmate.home':'local'};
@@ -196,6 +197,7 @@ for (const width of [310, 120]) {
   assert.ok(sub.path.endsWith('-blocked.gif')&&sub.width===26,'a subagent row shows its crewmember in the icon slot');
   const failed=descendants(decorated.nodes.get('sub-t7')).find(n=>n.path?.includes('crew-'));
   assert.ok(failed.path.endsWith('-blocked.gif'),'a failed subagent needs attention like the native blocked row');
+  assert.ok(descendants(decorated.nodes.get('sub-t8')).some(n=>typeof n.tip==='string'&&n.tip.endsWith(' · idle')),'a finished subagent reads idle like the native row');
 }
 for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Claude']]) {
   const view=host(true,'grouped',310,props);

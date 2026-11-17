@@ -263,7 +263,8 @@ export default class OnePieceAgents extends Agents {
   icon(agent, size, color) {
     const terminal = live(agent.address), face = art(terminal);
     if (!face) return super.icon(agent, size, color);
-    const status = this.listed?.get(agent.address) ?? agent.status;
+    const listed = this.listed?.get(agent.address) ?? agent.status;
+    const status = agent.pane == null && listed === 'done' ? 'idle' : listed;
     // The crewmember is drawn larger than the program icon it replaces so its pose stays readable.
     return div().flex_none().tooltip(describe(terminal, status))
       .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
