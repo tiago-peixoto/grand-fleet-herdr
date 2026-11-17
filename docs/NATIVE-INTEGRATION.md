@@ -29,7 +29,10 @@ Herdr displayed an unavailable machine and reconnecting terminal, then recovered
 The terminal briefly reported 200 by 120 cells before automatically returning to its original 113 by 36 cells.
 The recovered native capture showed correctly wrapped output, and subsequent typing returned `ACK REMOTE_RECOVERED_1117`.
 The terminal identity, shell process, foreground process, parent, and lifetime settings remained unchanged.
-This closes the tested persistent-dimensions failure in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3), without claiming dimensions never changed during recovery.
+Native recovery passed for this single trial, but [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3) stays open.
+The historical two-viewer reproduction was intermittent, so one passing trial cannot show that the ordering defect is fixed.
+Clean Core v0.1.21 still collects relayed attachments without sorting, marks returning viewers resumed, and starts them without activity timestamps.
+That source comparison is a reason for further regression testing, not a fresh reproduction of the failure.
 
 The clean upstream Core v0.1.21 checkout was `1b0393f80c35b1dae34f37934d33d0144a8fc8d7`.
 Using Zig 0.16.0, `cargo test --locked -p herdr-core --test foreground -- --test-threads=1` passed all seven tests.

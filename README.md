@@ -245,7 +245,7 @@ Complete Firstmate fleets need compatible support for `hc`, the Herdr Core comma
 The [Firstmate acceptance record](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16) identifies the tested integration.
 
 Recorded checks cover local and remote navigation, direct worker input, crew choices, app reopening, and remote reconnection in isolated sessions.
-The [acceptance review](docs/ACCEPTANCE.md#release-limitations) records remaining limits, including the isolated app identity and remote files not reread after final restarts.
+The [acceptance review](docs/ACCEPTANCE.md#current-release-verification-2026-11-17) records remaining limits, including the open native rendering blocker and the untested multiple-viewer recovery regression.
 See [Core build details](docs/INSTALL.md#core-build-used-for-current-recovery-verification) for the tested executables and recovery limitations.
 
 ### Update or remove

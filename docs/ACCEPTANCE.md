@@ -20,6 +20,7 @@ The [signed-application verification record](NATIVE-INTEGRATION.md#signed-applic
 
 The daily home had no live terminals before installation, so that refresh does not prove preservation of active daily conversations.
 Today's isolated fixtures do not repeat the actual Firstmate delegation checks recorded on 2026-11-16.
+The multiple-viewer recovery regression in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3) was not retested, so that issue stays open.
 The complete upstream Core suite and every native control were not tested.
 The rendering issue remains a release blocker rather than an accepted exception.
 
