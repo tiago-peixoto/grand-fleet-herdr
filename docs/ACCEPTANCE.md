@@ -1,5 +1,28 @@
 # Native acceptance review
 
+## Generic fleets in the isolated lab, 2026-11-17
+
+The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable probe agents.
+`herdr-app check` and `node tools/check-parity.mjs` passed against that home.
+
+| Check | Result |
+| --- | --- |
+| One agent without a captain | The Space showed a ship, its name above the crew strip, and one crewmate |
+| Two agents without a captain | The Space showed a ship and two crewmates from that ship's crew |
+| Captain Space | A detected primary kept Sunny, Luffy, and its crewmate without a visible Space name |
+| Crew choice at startup | After clearing stored discovery and crews, the captain received Straw Hats and the two fleets received Red Hair and Big Mom |
+| Startup regression | Without the discovery wait, the same relaunch gave Straw Hats to a generic fleet while the captain was live |
+| Compact sidebar | At 120 pixels, all three Spaces showed their ships with native status dots |
+| Firstmate-style worker Space | Two terminals started with `herdr.space=fm-labtag` labels formed a Beasts fleet without a captain |
+| Core restart | `hc server restart` kept all four Space identifiers, seven live terminals, and every stored fleet crew |
+| Remote Space | A second local Core added with `hc machine add --via` produced a `gfr/` Space that received the Heart crew |
+| Unavailable machine | Removing that machine kept the Heart crew, and adding it back restored the same Space with the same crew |
+| Closed Space | Closing a local fleet Space released its stored crew |
+
+The simulated parity check exercises the Choose ship and crew menu, the ship picker, and crew changes for generic fleets.
+That menu was not opened physically, because posting mouse events would take focus from the person using the computer.
+The second Core used a local command transport, not SSH to a separate host.
+
 ## Current release verification, 2026-11-17
 
 The daily installation now includes the 38 new crewmembers from merged revision `c1603a3b5794e2f3f42bc32751407242c0ab7b43`.

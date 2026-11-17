@@ -226,3 +226,18 @@ test('expanding a three-member crew keeps saved named and numbered artwork while
     }
   }
 });
+
+test('generic fleets take the least-used crew, allowing Straw Hats only without a live captain', async () => {
+  const {selectFleetCrews} = await import('../mods/one-piece/artwork.js');
+  const keep = () => false;
+  assert.deepEqual(selectFleetCrews(['a', 'b'], {}, [], keep), {a:'strawhat', b:'redhair'});
+  assert.deepEqual(selectFleetCrews(['a', 'b'], {}, ['strawhat'], keep), {a:'redhair', b:'bigmom'});
+  assert.deepEqual(selectFleetCrews(['a'], {a:'strawhat'}, ['strawhat'], keep), {a:'strawhat'});
+});
+
+test('fleet crews persist for retained spaces and are released for spaces that are gone', async () => {
+  const {selectFleetCrews} = await import('../mods/one-piece/artwork.js');
+  const selected = {led:'kid', offline:'heart', gone:'roger', bad:'nobody'};
+  const result = selectFleetCrews(['new'], selected, [], id => id === 'led' || id === 'offline');
+  assert.deepEqual(result, {led:'kid', offline:'heart', new:'strawhat'});
+});

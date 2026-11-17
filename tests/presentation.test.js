@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { captainSpaces, crewmembers, managedCrew } from '../mods/one-piece/fleet.js';
+import { captainSpaces, crewmembers, genericFleets, managedCrew } from '../mods/one-piece/fleet.js';
 
 const terminal = (address, extra = {}) => ({address, created_ms: 10, state: 'live', program: {agent: true}, ...extra});
 
@@ -54,4 +54,23 @@ test('discovered captains use native Space membership, excluding other captains 
   const captains = {'t1:10':{source:'session-lock'},'t4:10':{source:'session-lock'}};
   assert.deepEqual(managedCrew(captain,[captain,worker,other,coCaptain,shell],agents,captains),[worker]);
   assert.deepEqual(managedCrew(coCaptain,[captain,worker,other,coCaptain,shell],agents,captains),[]);
+});
+
+test('the primary and then the oldest captain supply a shared ship regardless of tab order', () => {
+  const old = terminal('t1', {created_ms: 5}), young = terminal('t2', {created_ms: 9}), primary = terminal('t3', {created_ms: 20});
+  const agents = [{address:'t2',space:'s'}, {address:'t1',space:'s'}];
+  assert.equal(captainSpaces([old, young], agents, {'t1:5':{}, 't2:9':{}}).get('s'), old);
+  const withPrimary = [...agents, {address:'t3',space:'s'}];
+  const captains = {'t1:5':{role:'secondmate'}, 't2:9':{}, 't3:20':{role:'firstmate'}};
+  assert.equal(captainSpaces([old, young, primary], withPrimary, captains).get('s'), primary);
+});
+
+test('a space with one or more agents and no captain is a generic fleet', () => {
+  const solo = terminal('t1'), pair = [terminal('t2'), terminal('t3')], captain = terminal('t4'), worker = terminal('t5');
+  const shell = terminal('t6', {program: {shell: true}}), ended = terminal('t7', {state: 'exited'});
+  const agents = [{address:'t1',space:'a'}, {address:'t2',space:'b'}, {address:'t3',space:'b'},
+    {address:'t4',space:'c'}, {address:'t5',space:'c'}, {address:'t7',space:'d'}];
+  const fleets = genericFleets([solo, ...pair, captain, worker, shell, ended], agents, {'t4:10':{}});
+  assert.deepEqual([...fleets], [['a', [solo]], ['b', pair]]);
+  assert.deepEqual([...genericFleets([solo, ...pair, captain, worker], agents, {})].map(([id]) => id), ['a', 'b', 'c']);
 });

@@ -23,13 +23,21 @@ Manual selections, including duplicates, remain unchanged.
 Firstmate sends no artwork commands and requires no mod-specific registration.
 Manual designation remains available for instances whose session evidence cannot be read.
 An ended captain designation cannot transfer to a reused terminal address.
-Right-click a captain Space and choose “Choose ship and crew” directly below Rename.
-The picker changes the ship, captain, and the crewmates in the captain's Space together.
+Right-click a Space with a ship and choose “Choose ship and crew” directly below Rename.
+The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
 A space containing a captain shows that crew's ship.
+A space with live agents and no captain is a generic fleet.
+A generic fleet shows a ship, keeps its Space name above the crew strip, and has no captain artwork.
+Each generic fleet receives the least-used crew, counting live captains and other fleets.
+Straw Hats are eligible only while no captain is live.
+The mod stores generic crews by Space identifier and releases them when the Space is gone from an online machine.
+Generic fleet crewmates come from that fleet's crew, so an agent moved to another Space takes that Space's crew.
+When a captain arrives, the Space follows the captain presentation and keeps its stored generic crew for later.
 Clicking the ship selects the space through Herdr's native command.
-If several captains share a space, the first captain in native agent order supplies its ship.
+If several captains share a space, the primary supplies its ship, followed by the oldest terminal.
+Manual designation is unavailable for an agent whose Space already has a captain.
 All captains remain independently accessible in Agents.
 Expanded Spaces with agents show their miniature crewmembers below the name, replacing the letter avatar.
 Worktree Spaces keep Herdr's indent and branch icon.
@@ -39,7 +47,7 @@ The captain sprite replaces the visible Space name, which remains available in i
 Every captain uses native Space membership for the lower crew strip, whether detected or manually designated.
 The mod never associates workers in other Spaces with a captain, including through Firstmate labels.
 The entire row selects the Space and retains native drag ordering and the workspace menu.
-Ordinary Spaces continue to show only agents placed in that Space.
+Every fleet shows only agents placed in its Space.
 Spaces without agents retain native presentation.
 
 Selecting a crewmember retains native focus or writable preview behavior.
