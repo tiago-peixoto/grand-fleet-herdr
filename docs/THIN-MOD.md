@@ -24,7 +24,7 @@ Firstmate sends no artwork commands and requires no mod-specific registration.
 Manual designation remains available for instances whose session evidence cannot be read.
 An ended captain designation cannot transfer to a reused terminal address.
 Right-click a Space with a ship and choose “Choose ship and crew” directly below Rename.
-The picker changes the ship, captain, and the crewmates in the captain's Space together.
+The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
 A space containing a captain shows that crew's ship.

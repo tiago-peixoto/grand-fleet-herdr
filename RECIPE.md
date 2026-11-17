@@ -92,7 +92,7 @@ Do not invent replacements for missing native dependencies or overwrite an exist
 The destination needs compatible Agents, Spaces, and Menu sources and exactly one Spaces and one Agents slot under the same parent.
 The mod never moves workers between Spaces or changes process ownership.
 It identifies captains from existing Firstmate evidence, not names or folders alone.
-Generic agents work without Firstmate.
+Ships, crews, and character artwork work without Firstmate.
 Complete Firstmate fleets need the generic hc support available in the tested fork revision documented in [Acceptance](docs/ACCEPTANCE.md).
 This is not a promise that every Firstmate revision supports hc fleets.
 The verified setup used Herdr 0.1.16, local Core 0.1.21, and remote Linux Core 0.1.20.
