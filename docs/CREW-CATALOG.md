@@ -1,10 +1,65 @@
 # Crew catalog
 
 The native picker now offers eight crews.
-Batch one adds Heart, Whitebeard, Roger, and Kid with named members beyond each crew's best-known trio.
+The rosters contain 139 distinct named crewmembers and eight captains.
+Four shared historical designs bring the number of named crew entries to 151, including captains.
 The lists below follow character allocation order after the captain.
 When a roster runs out, numbered generic pirates continue without limiting the number of agents.
 Existing assignments remain stable within each crew.
+
+## Straw Hat Pirates
+
+Captain: Monkey D. Luffy.
+Ship: Thousand Sunny.
+Named workers: 9.
+
+Chopper, Franky, Zoro, Nami, Usopp, Sanji, Robin, Brook, and Jinbe.
+
+## Red Hair Pirates
+
+Captain: Shanks.
+Ship: Red Force.
+Named workers: 10.
+
+- Original selection: Benn Beckman, Yasopp, and Lucky Roux.
+- NEW: Limejuice, Bonk Punch, Monster, Building Snake, Hongo, Howling Gab, and Rockstar.
+
+Monster has his own design.
+Rockstar is outside the core officer group.
+The [official Film Red crew guide](https://www.onepiece-film.jp/red/en/info-en/528/) supports the expanded selection.
+
+## Big Mom Pirates
+
+Captain: Charlotte Linlin, known as Big Mom.
+Ship: Queen Mama Chanter.
+Named workers: 19.
+
+- Original selection: Katakuri, Smoothie, and Cracker.
+- NEW: Charlotte Perospero, Charlotte Compote, Charlotte Daifuku, Charlotte Oven, Charlotte Snack, Charlotte Brulee, Charlotte Mont-d'Or, and Charlotte Amande.
+- NEW: Charlotte Galette, Charlotte Opera, Charlotte Pudding, Charlotte Flampe, Baron Tamago, Pekoms, Streusen, and Bobbin.
+
+This selection uses Whole Cake Island-era appearances and affiliations.
+Snack is a former Sweet Commander, one of Big Mom's highest-ranking combat officers.
+Pekoms, Opera, and Bobbin's inclusion does not establish their later survival or loyalty.
+The [Big Mom Pirates reference](https://onepiece.fandom.com/wiki/Big_Mom_Pirates) documents the broader roster.
+
+## Beasts Pirates
+
+Captain: Kaido.
+Ship: Mammoth, Jack's ship.
+Named workers: 18.
+
+- Original selection: King, Queen, and Jack.
+- NEW: Who's-Who, Sasaki, Black Maria, Ulti, Page One, and X Drake.
+- NEW: Basil Hawkins, Sheepshead, Ginrummy, Holed'em, Speed, Babanuki, Daifugo, Solitaire, and Bao Huang.
+
+The first six additions form the historical Tobiroppo, the senior officers below Kaido's three highest commanders.
+This roster uses Wano-era affiliations.
+X Drake is an undercover Marine.
+Speed, Babanuki, and Daifugo later become Tama's allies.
+The [Beasts Pirates reference](https://onepiece.fandom.com/wiki/Beasts_Pirates) documents the historical crew.
+
+The [expansion record](EMPEROR-CREW-EXPANSION.md) explains the 38 NEW designs and their historical labels.
 
 ## Heart Pirates
 

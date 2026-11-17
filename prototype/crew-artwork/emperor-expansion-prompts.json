@@ -1,0 +1,351 @@
+{
+  "status": "Approved artwork enabled in the runtime roster",
+  "date": "2026-11-17",
+  "generator": "Built-in image generation",
+  "styleReference": "prototype/crew-artwork/shanks-study-v1.png",
+  "characters": [
+    {
+      "id": "limejuice",
+      "name": "Limejuice",
+      "crew": "redhair",
+      "prompt": "Use case: stylized-concept. Production animation sprite sheet of Limejuice from One Piece, Red Hair Pirates. Slim muscular man with waist-length blond hair, black nut-shaped cap bearing a small skull emblem, dark sunglasses, white gloves, pale cape over his shoulders, red V-neck shirt, light pants, sash, staff. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks features. Match its chibi pixel-art style, crisp dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with alternating legs. Row 3: four cross-legged sitting attention frames, blinking and subtle head movement. Consistent character size across all twelve cells. Keep every sprite entirely inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid lines, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "revision": "Edit this Limejuice from One Piece sprite sheet. Preserve character identity, outfit, hair, exact 4-column by 3-row layout, all twelve poses, and transparent background. Fix two details consistently in every cell: keep black sunglasses over his eyes in every frame including the blinking sitting frame; replace every sword and sword hilt with his simple straight wooden staff. No blade, no sword guard, no sheath. The staff rests beside him when sleeping or sitting and is carried diagonally behind him when walking. Keep each full sprite inside its cell with padding. Match existing illustration and proportions. No other changes.",
+      "source": "prototype/crew-artwork/limejuice-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "bonk-punch",
+      "name": "Bonk Punch",
+      "crew": "redhair",
+      "appearance": "Huge burly bald man, dark rings around his eyes, a scar down the left side of his face and neck. Brown open shirt with ruffled collar and rolled sleeves, pale pants and sandals. Draw him alone, without his monkey companion. Sitting pose is cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Bonk Punch from One Piece. Huge burly bald man, dark rings around his eyes, a scar down the left side of his face and neck. Brown open shirt with ruffled collar and rolled sleeves, pale pants and sandals. Draw him alone, without his monkey companion. Sitting pose is cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/bonk-punch-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "monster",
+      "name": "Monster",
+      "crew": "redhair",
+      "appearance": "Large brown-furred monkey with a cream-white face, stomach and hands, tiny dark eyes and a tuft of head fur. No clothing. This is the Red Hair Pirates' musician, not a human. Adapt sleep, walking right and sitting poses to natural monkey anatomy. No human companion",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Monster from One Piece. Large brown-furred monkey with a cream-white face, stomach and hands, tiny dark eyes and a tuft of head fur. No clothing. This is the Red Hair Pirates' musician, not a human. Adapt sleep, walking right and sitting poses to natural monkey anatomy. No human companion. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/monster-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "building-snake",
+      "name": "Building Snake",
+      "crew": "redhair",
+      "appearance": "Massive muscular man with long wavy dark brown hair, narrow dark sunglasses, red dragon tattoo on right chest and neck. Open blue vest, light lavender cape, white trousers, green sash and two sheathed swords. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Building Snake from One Piece. Massive muscular man with long wavy dark brown hair, narrow dark sunglasses, red dragon tattoo on right chest and neck. Open blue vest, light lavender cape, white trousers, green sash and two sheathed swords. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/building-snake-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "hongo",
+      "name": "Hongo",
+      "crew": "redhair",
+      "appearance": "Slender adult man with dirty-blond hair in a short ponytail, stitched scar on his left forehead. Unfastened long dark green coat over bare chest, dark trousers, brown boots and belt. Crew doctor, calm focused expression, sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Hongo from One Piece. Slender adult man with dirty-blond hair in a short ponytail, stitched scar on his left forehead. Unfastened long dark green coat over bare chest, dark trousers, brown boots and belt. Crew doctor, calm focused expression, sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/hongo-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "howling-gab",
+      "name": "Howling Gab",
+      "crew": "redhair",
+      "appearance": "Very large broad dark-skinned man with a shaggy dark brown lion-like mane, short beard and sharp teeth. Brown cape over a white shirt, dark trousers and boots. Oversized head and thick torso, shaggy hair, not an animal. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Howling Gab from One Piece. Very large broad dark-skinned man with a shaggy dark brown lion-like mane, short beard and sharp teeth. Brown cape over a white shirt, dark trousers and boots. Oversized head and thick torso, shaggy hair, not an animal. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/howling-gab-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "rockstar",
+      "name": "Rockstar",
+      "crew": "redhair",
+      "appearance": "Burly dark-skinned man with vivid red liberty-spike hair. Dark purple double-breasted coat, light orange wide-collar shirt, red neckerchief, yellow double-sided sash, light blue trousers, brown boots and a sheathed green-hilt saber. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Rockstar from One Piece. Burly dark-skinned man with vivid red liberty-spike hair. Dark purple double-breasted coat, light orange wide-collar shirt, red neckerchief, yellow double-sided sash, light blue trousers, brown boots and a sheathed green-hilt saber. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/rockstar-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "perospero",
+      "name": "Charlotte Perospero",
+      "crew": "bigmom",
+      "appearance": "Very tall slender man with a long tongue, pointed nose, navy-blue hair with pale blue dots curving upward. Yellow long coat with candy buttons and checkerboard hem, striped orange-red tall candy hat with pink plume and lollipops, pink candy cane. Whole Cake wedding appearance with both natural arms. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Perospero from One Piece. Very tall slender man with a long tongue, pointed nose, navy-blue hair with pale blue dots curving upward. Yellow long coat with candy buttons and checkerboard hem, striped orange-red tall candy hat with pink plume and lollipops, pink candy cane. Whole Cake wedding appearance with both natural arms. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/perospero-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "compote",
+      "name": "Charlotte Compote",
+      "crew": "bigmom",
+      "appearance": "Heavyset woman with large nose and prominent lips, long bushy teal hair, light purple frilly full-length dress and a bowl of colorful fruit parfait balanced on her head. Sitting with legs tucked under dress",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Compote from One Piece. Heavyset woman with large nose and prominent lips, long bushy teal hair, light purple frilly full-length dress and a bowl of colorful fruit parfait balanced on her head. Sitting with legs tucked under dress. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/compote-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "daifuku",
+      "name": "Charlotte Daifuku",
+      "crew": "bigmom",
+      "appearance": "Extremely broad tall man with a small shaved blond head, small mustache, stern yellow eyes. Dark blue long coat with huge blue-white striped shoulder pads and fur trim, yellow cape, orange gloves and boots, gold genie-lamp belt. No summoned genie. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Daifuku from One Piece. Extremely broad tall man with a small shaved blond head, small mustache, stern yellow eyes. Dark blue long coat with huge blue-white striped shoulder pads and fur trim, yellow cape, orange gloves and boots, gold genie-lamp belt. No summoned genie. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/daifuku-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "oven",
+      "name": "Charlotte Oven",
+      "crew": "bigmom",
+      "appearance": "Huge muscular man with thick neck, hair in three curved flame-shaped sections grading from blond to dark orange, short spiky orange beard. High-collar orange cape tied with yellow bow, bare chest, short gloves, thick belt, capri trousers, striped socks, loafers. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Oven from One Piece. Huge muscular man with thick neck, hair in three curved flame-shaped sections grading from blond to dark orange, short spiky orange beard. High-collar orange cape tied with yellow bow, bare chest, short gloves, thick belt, capri trousers, striped socks, loafers. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/oven-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "snack",
+      "name": "Charlotte Snack",
+      "crew": "bigmom",
+      "appearance": "Very wide heavyset body, tiny head, long nose, black hair with red topknot and jeweled hairpin, blue tattoo above eyes. Thick yellow wool coat with orange sleeves, black scarf with orange stripes, black pinstripe pants, armored forearms. Omit tiny lettering at sprite scale. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Snack from One Piece. Very wide heavyset body, tiny head, long nose, black hair with red topknot and jeweled hairpin, blue tattoo above eyes. Thick yellow wool coat with orange sleeves, black scarf with orange stripes, black pinstripe pants, armored forearms. Omit tiny lettering at sprite scale. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/snack-study-v1.png",
+      "note": "Former Sweet Commander"
+    },
+    {
+      "id": "brulee",
+      "name": "Charlotte Brulee",
+      "crew": "bigmom",
+      "appearance": "Tall thin gray-skinned witch-like woman, lavender hair with outward hooked locks, huge red hooked nose, diagonal face scar. Whitish long frilled gown with red roses and moss-green feathered sleeveless coat. No hat. Sitting with legs tucked under gown",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Brulee from One Piece. Tall thin gray-skinned witch-like woman, lavender hair with outward hooked locks, huge red hooked nose, diagonal face scar. Whitish long frilled gown with red roses and moss-green feathered sleeveless coat. No hat. Sitting with legs tucked under gown. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/brulee-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "mont-d-or",
+      "name": "Charlotte Mont-d'Or",
+      "crew": "bigmom",
+      "appearance": "Lanky pale man with thin long limbs, stocky abdomen, blond hair flaring outward, long pointed nose and protruding chin. Black top hat with pink band, black jumpsuit printed with white skeleton bones, dark lipstick and vertical black lines over eyes. Sitting cross-legged",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Mont-d'Or from One Piece. Lanky pale man with thin long limbs, stocky abdomen, blond hair flaring outward, long pointed nose and protruding chin. Black top hat with pink band, black jumpsuit printed with white skeleton bones, dark lipstick and vertical black lines over eyes. Sitting cross-legged. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/mont-d-or-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "amande",
+      "name": "Charlotte Amande",
+      "appearance": "Extremely tall slim pale woman with a long neck and short curled light blue hair. Huge broad black hat, hoop earrings, long light-blue vertically striped dress, red sash and sheathed long sword. Keep the distinctive long neck readable in chibi proportions",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Amande from One Piece. Extremely tall slim pale woman with a long neck and short curled light blue hair. Huge broad black hat, hoop earrings, long light-blue vertically striped dress, red sash and sheathed long sword. Keep the distinctive long neck readable in chibi proportions. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/amande-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "galette",
+      "name": "Charlotte Galette",
+      "appearance": "Pale woman with shoulder-length curled fuchsia hair, bangs over right side, yellow eyes. Two small black arrow-shaped hair accessories, red-violet dress with modest neckline, dark purple feather coat, magenta gloves and dark shoes. Neutral nonsexual pose",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Galette from One Piece. Pale woman with shoulder-length curled fuchsia hair, bangs over right side, yellow eyes. Two small black arrow-shaped hair accessories, red-violet dress with modest neckline, dark purple feather coat, magenta gloves and dark shoes. Neutral nonsexual pose. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/galette-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "opera",
+      "name": "Charlotte Opera",
+      "appearance": "Huge rotund man with very short legs and a great flowing white cream beard. White cream covers his head and arms with softly dripping edges. High-collared dark cape, dark bow tie over his beard, broad belt and dotted wristbands. Clearly one human-shaped cream man",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Opera from One Piece. Huge rotund man with very short legs and a great flowing white cream beard. White cream covers his head and arms with softly dripping edges. High-collared dark cape, dark bow tie over his beard, broad belt and dotted wristbands. Clearly one human-shaped cream man. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/opera-study-v1.png",
+      "note": "Whole Cake era"
+    },
+    {
+      "id": "pudding",
+      "name": "Charlotte Pudding",
+      "appearance": "Young woman with light brown pigtails and a third eye centered on her forehead. Canonical patisserie outfit: pink chef hat, pink blouse and knee-length pink skirt, white apron and simple shoes. All three eyes visible. Fully clothed neutral nonsexual pose",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Pudding from One Piece. Young woman with light brown pigtails and a third eye centered on her forehead. Canonical patisserie outfit: pink chef hat, pink blouse and knee-length pink skirt, white apron and simple shoes. All three eyes visible. Fully clothed neutral nonsexual pose. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/pudding-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "flampe",
+      "name": "Charlotte Flampe",
+      "appearance": "Young girl with dark ponytail ending in a curl, square bangs, red flower hair tie. Dark red frilled high-collar long-sleeved outfit, red tights, light loafers and round inflated white jellybean-like overgarment with large dark red polka dots. Fully clothed childlike neutral posture",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Flampe from One Piece. Young girl with dark ponytail ending in a curl, square bangs, red flower hair tie. Dark red frilled high-collar long-sleeved outfit, red tights, light loafers and round inflated white jellybean-like overgarment with large dark red polka dots. Fully clothed childlike neutral posture. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/flampe-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "tamago",
+      "name": "Baron Tamago",
+      "appearance": "Very tall egg-shaped male body on two extremely long thin legs. Magenta formal coat and matching teacup hat, sunglasses, large curled moustache, yellow bow tie and pink shirt, small cane. Preserve egg-shaped silhouette and long legs",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Baron Tamago from One Piece. Very tall egg-shaped male body on two extremely long thin legs. Magenta formal coat and matching teacup hat, sunglasses, large curled moustache, yellow bow tie and pink shirt, small cane. Preserve egg-shaped silhouette and long legs. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/tamago-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "pekoms",
+      "name": "Pekoms",
+      "appearance": "Upright humanoid lion with golden fur, round afro-like golden mane, sunglasses, feline muzzle, small rounded ears. Pink suit over salmon shirt, navy blue bow tie, black boots, white chest ruff and a sheathed sword. Two human-like arms and two legs",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Pekoms from One Piece. Upright humanoid lion with golden fur, round afro-like golden mane, sunglasses, feline muzzle, small rounded ears. Pink suit over salmon shirt, navy blue bow tie, black boots, white chest ruff and a sheathed sword. Two human-like arms and two legs. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/pekoms-study-v1.png",
+      "note": "Whole Cake era"
+    },
+    {
+      "id": "streusen",
+      "name": "Streusen",
+      "appearance": "Short rotund elderly man with hooked nose, large lips and white clover-shaped moustache. Pink buttoned shirt, light apron, dark pink trousers, yellow neckerchief and a very large pink floppy hat with a feather, small stopwatch at hip. Compact elderly chef silhouette",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Streusen from One Piece. Short rotund elderly man with hooked nose, large lips and white clover-shaped moustache. Pink buttoned shirt, light apron, dark pink trousers, yellow neckerchief and a very large pink floppy hat with a feather, small stopwatch at hip. Compact elderly chef silhouette. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/streusen-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "bobbin",
+      "name": "Bobbin",
+      "appearance": "Short wide man with very broad grin and red lips, white face mask with dark glasses. Black broad hat with white plume, pink shirt, purple-and-black pinstripe trousers, brown belt and gloves, dark boots, light blue cape, oversized sword sheathed on back",
+      "crew": "bigmom",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Bobbin from One Piece. Short wide man with very broad grin and red lips, white face mask with dark glasses. Black broad hat with white plume, pink shirt, purple-and-black pinstripe trousers, brown belt and gloves, dark boots, light blue cape, oversized sword sheathed on back. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/bobbin-study-v1.png",
+      "note": "Whole Cake era"
+    },
+    {
+      "id": "whos-who",
+      "name": "Who's-Who",
+      "appearance": "Lean muscular man with waist-length wavy pink hair. Red horned mask with yellow eye circles, open red suit over black shirt, black gloves, purple belt with round golden buckle, black shoes. Eye-shaped tattoo on chest and a sheathed sword. Human form",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Who's-Who from One Piece. Lean muscular man with waist-length wavy pink hair. Red horned mask with yellow eye circles, open red suit over black shirt, black gloves, purple belt with round golden buckle, black shoes. Eye-shaped tattoo on chest and a sheathed sword. Human form. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/whos-who-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "sasaki",
+      "name": "Sasaki",
+      "appearance": "Portly pale fish-man with long yellow-green hair, two prominent lower tusks and blue eyes. Extra-wide puffy white military cap with black visor and gold horns. White-and-orange flame-hem cape, bare tattooed chest, beige-and-orange buttoned hakama trousers, gold belt, brown gloves and wooden sandals. Human fish-man form",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Sasaki from One Piece. Portly pale fish-man with long yellow-green hair, two prominent lower tusks and blue eyes. Extra-wide puffy white military cap with black visor and gold horns. White-and-orange flame-hem cape, bare tattooed chest, beige-and-orange buttoned hakama trousers, gold belt, brown gloves and wooden sandals. Human fish-man form. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/sasaki-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "black-maria",
+      "name": "Black Maria",
+      "appearance": "Tall blonde woman with elaborate geisha hairstyle, two red horns and sword-shaped hairpins. Blue eyes and red lips. Fully closed black kimono with blue and yellow flowers, turquoise obi sash, white socks and black sandals with red straps. Neutral human form, no spider body, no exposed chest",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Black Maria from One Piece. Tall blonde woman with elaborate geisha hairstyle, two red horns and sword-shaped hairpins. Blue eyes and red lips. Fully closed black kimono with blue and yellow flowers, turquoise obi sash, white socks and black sandals with red straps. Neutral human form, no spider body, no exposed chest. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/black-maria-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "ulti",
+      "name": "Ulti",
+      "appearance": "Young adult woman with very long blue hair streaked pink, curved white horns, pink scalloped face mask edged white. White long-sleeve pleated upper dress with blue bow, pink skirt, dark blue cape and dark shoes. Fully clothed neutral human form",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Ulti from One Piece. Young adult woman with very long blue hair streaked pink, curved white horns, pink scalloped face mask edged white. White long-sleeve pleated upper dress with blue bow, pink skirt, dark blue cape and dark shoes. Fully clothed neutral human form. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/ulti-study-v1.png",
+      "note": "Wano-era affiliation"
+    },
+    {
+      "id": "page-one",
+      "name": "Page One",
+      "appearance": "Young adult man with purple side-shaved hair long on right, green eyes, small horns and two-tone white-and-green bucket hat. White-and-black mouth mask, white cape with lavender lining and purple hem. White shirt, gray tie and gloves, green suspenders and baggy knee-length green pants, green high boots. Human form",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Page One from One Piece. Young adult man with purple side-shaved hair long on right, green eyes, small horns and two-tone white-and-green bucket hat. White-and-black mouth mask, white cape with lavender lining and purple hem. White shirt, gray tie and gloves, green suspenders and baggy knee-length green pants, green high boots. Human form. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/page-one-study-v1.png",
+      "note": "Wano-era affiliation"
+    },
+    {
+      "id": "x-drake",
+      "name": "X Drake",
+      "appearance": "Post-timeskip human form with short light orange fauxhawk, brush-like sideburns and X-shaped chin scar. Black slanted headband and eye mask, no bicorne hat. Black leather outfit with X-shaped exposed chest, black cape red lining white fur collar, armored long gloves and knee-high boots, round belt buckle, sheathed sword and axe at hip",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of X Drake from One Piece. Post-timeskip human form with short light orange fauxhawk, brush-like sideburns and X-shaped chin scar. Black slanted headband and eye mask, no bicorne hat. Black leather outfit with X-shaped exposed chest, black cape red lining white fur collar, armored long gloves and knee-high boots, round belt buckle, sheathed sword and axe at hip. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/x-drake-study-v1.png",
+      "note": "Undercover Marine · Wano era"
+    },
+    {
+      "id": "basil-hawkins",
+      "name": "Basil Hawkins",
+      "appearance": "Tall pale man with waist-length golden blond hair, red eyes and three small black triangles over each eyebrow. Black cross tattoo at throat. Wano anime outfit: long black cape, white ruffled shirt, cream cravat with black cross pendant, purple checkered trousers, brown gloves and boots. Sheathed sword with doll-shaped pommel",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Basil Hawkins from One Piece. Tall pale man with waist-length golden blond hair, red eyes and three small black triangles over each eyebrow. Black cross tattoo at throat. Wano anime outfit: long black cape, white ruffled shirt, cream cravat with black cross pendant, purple checkered trousers, brown gloves and boots. Sheathed sword with doll-shaped pommel. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/basil-hawkins-study-v1.png",
+      "note": "Wano-era affiliation"
+    },
+    {
+      "id": "sheepshead",
+      "name": "Sheepshead",
+      "appearance": "Muscular man with slick short blond hair, black horns and goggles. Open black cloak with white fur shoulders and gold chain, bare scarred chest, three dark straps across abdomen, fingerless gloves, black pants, kneepads and black boots. Human baseline form, hands and legs human",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Sheepshead from One Piece. Muscular man with slick short blond hair, black horns and goggles. Open black cloak with white fur shoulders and gold chain, bare scarred chest, three dark straps across abdomen, fingerless gloves, black pants, kneepads and black boots. Human baseline form, hands and legs human. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/sheepshead-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "ginrummy",
+      "name": "Ginrummy",
+      "appearance": "Young adult woman with long pink hair, pale blue eyes, small black horns and gold hoop earrings. Red-violet fitted armor, black cloak with white fur collar, black gloves and calf-high boots. Neutral fully clothed pose, human baseline form",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Ginrummy from One Piece. Young adult woman with long pink hair, pale blue eyes, small black horns and gold hoop earrings. Red-violet fitted armor, black cloak with white fur collar, black gloves and calf-high boots. Neutral fully clothed pose, human baseline form. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/ginrummy-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "holedem",
+      "name": "Holed'em",
+      "appearance": "Large man with long brown hair, square jaw, pointed nose, whiskers and black lips. Tall dark hat with simple insignia, bare hairy chest and sun-like upper-arm tattoos, dark pants, tan boots and gloves. His waist has a living golden lion head and two lion forelegs, lion tail behind him. Human head above lion head, human arms and two human legs. Lion attached to waist in every frame",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Holed'em from One Piece. Large man with long brown hair, square jaw, pointed nose, whiskers and black lips. Tall dark hat with simple insignia, bare hairy chest and sun-like upper-arm tattoos, dark pants, tan boots and gloves. His waist has a living golden lion head and two lion forelegs, lion tail behind him. Human head above lion head, human arms and two human legs. Lion attached to waist in every frame. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/holedem-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "speed",
+      "name": "Speed",
+      "appearance": "Woman-horse centaur with human upper body, horse lower body with exactly FOUR horse legs. Hair split white on her right and dark blue on left, matching split horse tail, horse ears, pink goggles. White-and-blue fitted jacket, dark blue shoulder armor, dark feather cape, pink bead necklace, white gloves, saddle and small longbow. Sleeping with all horse legs folded, sitting with horse body resting and legs folded, never replace horse body with human legs",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Speed from One Piece. Woman-horse centaur with human upper body, horse lower body with exactly FOUR horse legs. Hair split white on her right and dark blue on left, matching split horse tail, horse ears, pink goggles. White-and-blue fitted jacket, dark blue shoulder armor, dark feather cape, pink bead necklace, white gloves, saddle and small longbow. Sleeping with all horse legs folded, sitting with horse body resting and legs folded, never replace horse body with human legs. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/speed-study-v1.png",
+      "note": "Wano era · later Tama ally"
+    },
+    {
+      "id": "babanuki",
+      "name": "Babanuki",
+      "appearance": "Huge tan muscular man with long black hair, black beard, two bottom tusks and two horns. Gold-dotted arm armor, purple-and-gold gauntlets, round belt buckle, dark yellow trousers and boots. A yellow elephant HEAD with trunk and tusks grows from his CHEST below his human head, consistently in all frames. Two human arms and two human legs",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Babanuki from One Piece. Huge tan muscular man with long black hair, black beard, two bottom tusks and two horns. Gold-dotted arm armor, purple-and-gold gauntlets, round belt buckle, dark yellow trousers and boots. A yellow elephant HEAD with trunk and tusks grows from his CHEST below his human head, consistently in all frames. Two human arms and two human legs. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/babanuki-study-v1.png",
+      "note": "Wano era · later Tama ally"
+    },
+    {
+      "id": "daifugo",
+      "name": "Daifugo",
+      "appearance": "Tan muscular man wearing a black armored helmet. Pale purple hair forms a long raised scorpion tail and stinger. Sleeveless open purple leather jacket, purple trousers covering exactly SIX human-like legs, lavender spiked kneepads, dark boots. Six legs in walking frames and all six folded in sitting frames. Two human arms, no pincers. Small sheathed sword at back",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Daifugo from One Piece. Tan muscular man wearing a black armored helmet. Pale purple hair forms a long raised scorpion tail and stinger. Sleeveless open purple leather jacket, purple trousers covering exactly SIX human-like legs, lavender spiked kneepads, dark boots. Six legs in walking frames and all six folded in sitting frames. Two human arms, no pincers. Small sheathed sword at back. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "revision": "Use case: precise-object-edit. Correct only Daifugo's leg count in this One Piece sprite sheet. Daifugo has exactly SIX human-shaped legs. The current sheet mistakenly shows five. Every walking and seated frame must show all six distinct purple trouser legs with six lavender kneepads and six dark boots, arranged symmetrically in three pairs. In sleeping poses all six legs fold behind him. Preserve his two human arms, face, purple scorpion-tail hair, black helmet, clothes, colors, art style, exact 4 columns by 3 rows, twelve separate sprites, transparent background, padding and all other details. No text, no other characters, no extra body parts beyond the specified six legs and two arms.",
+      "source": "prototype/crew-artwork/daifugo-study-v1.png",
+      "note": "Wano era · later Tama ally"
+    },
+    {
+      "id": "solitaire",
+      "name": "Solitaire",
+      "appearance": "Young adult woman with short mint-green wing-shaped hair, magenta aviator helmet with blue visor and small horns. Orange one-piece jacket dress with four sleeves and six frilled shoulder pads. Exactly SIX arms, lower pair bare, magenta gloves and boots, long monkey tail. Fully clothed neutral pose, six hands visible in sitting frames",
+      "crew": "beasts",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Solitaire from One Piece. Young adult woman with short mint-green wing-shaped hair, magenta aviator helmet with blue visor and small horns. Orange one-piece jacket dress with four sleeves and six frilled shoulder pads. Exactly SIX arms, lower pair bare, magenta gloves and boots, long monkey tail. Fully clothed neutral pose, six hands visible in sitting frames. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/solitaire-study-v1.png",
+      "note": ""
+    },
+    {
+      "id": "bao-huang",
+      "name": "Bao Huang",
+      "crew": "beasts",
+      "appearance": "Short young woman with short light blond hair, two long upright red horns and a large fluffy squirrel tail. White paper mask covers face with a single large black eye drawing and yellow iris, four crenellated bottom bumps. Red kimono with black and yellow floral patterns, big bow at back, wooden sandals and a folded fan. Fully clothed neutral pose, closed kimono neckline.",
+      "prompt": "Use case: stylized-concept. Create a production animation sprite sheet of Bao Huang from One Piece. Short young woman with short light blond hair, two long upright red horns and a large fluffy squirrel tail. White paper mask covers face with a single large black eye drawing and yellow iris, four crenellated bottom bumps. Red kimono with black and yellow floral patterns, big bow at back, wooden sandals and a folded fan. Fully clothed neutral pose, closed kimono neckline.. Input image: Shanks sheet is STYLE AND GRID REFERENCE ONLY. Never copy Shanks hair, clothing, scars or sword. Match its chibi pixel-art style, dark pixel outlines, shaded colors, oversized head and compact body. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, 12 separate full-body sprites. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames, visibly alternating legs. Row 3: four sitting attention frames, blinking and subtle head movement. All clothing and accessories must stay consistent in every frame. Consistent character size across twelve cells. Entire sprite inside its cell with ample padding, bottom aligned. Landscape 4:3. No text, labels, grid, ground, shadows, scenery, checkerboard or extra characters. Clean silhouette for downsampling to 56 pixels tall.",
+      "source": "prototype/crew-artwork/bao-huang-study-v1.png",
+      "note": ""
+    }
+  ]
+}

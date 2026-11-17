@@ -7,9 +7,9 @@ const registration = {terminal:'t1',created:12};
 test('crew assignments use named characters before varied pirates and preserve identities',async()=>{
   const {assignCrew}=await import('../mods/one-piece/artwork.js');
   const coordinator={...registration,crew:'redhair'};
-  const workers=Array.from({length:6},(_,i)=>terminal(`t${i+20}`));
+  const workers=Array.from({length:13},(_,i)=>terminal(`t${i+20}`));
   const assigned=assignCrew(workers,{},coordinator);
-  assert.deepEqual(Object.values(assigned).map(a=>a.art),['crew-benn-beckman','crew-yasopp','crew-lucky-roux','crew-pirate-blue','crew-pirate-amber','crew-pirate-green']);
+  assert.deepEqual(Object.values(assigned).map(a=>a.art),['crew-benn-beckman','crew-yasopp','crew-lucky-roux','crew-limejuice','crew-bonk-punch','crew-monster','crew-building-snake','crew-hongo','crew-howling-gab','crew-rockstar','crew-pirate-blue','crew-pirate-amber','crew-pirate-green']);
   const next=assignCrew(workers.slice(1),assigned,coordinator);
   assert.deepEqual(next,assigned);
   const changed=assignCrew(workers,next,{...coordinator,crew:'beasts'});
@@ -94,8 +94,8 @@ test('a newcomer never takes the character of a surviving unassigned crewmate',a
   const after=assignCrew([terminal('t3')],formerCaptain,unassigned,[survivor]);
   assert.deepEqual(after['t2:12'],survivor);
   assert.equal(after['t3:12'].art,'crew-franky');
-  const redhair=assignCrew([1,2,3,4].map(i=>terminal(`r${i}`)),{},{terminal:'t9',created:5,crew:'redhair'});
-  const pirate=redhair['r4:12'];
+  const redhair=assignCrew(Array.from({length:11},(_,i)=>terminal(`r${i}`)),{},{terminal:'t9',created:5,crew:'redhair'});
+  const pirate=redhair['r10:12'];
   assert.equal(pirate.number,1);
   const many=Array.from({length:10},(_,i)=>terminal(`u${i}`));
   const crowded=assignCrew(many,redhair,unassigned,[pirate]);
@@ -183,7 +183,7 @@ test('a manually designated captain that later gains a role leaves Straw Hats to
 
 test('expanded crews assign every named member before generic pirates and retain survivors',async()=>{
   const {assignCrew,crewOf}=await import('../mods/one-piece/artwork.js');
-  for(const [crew,count,last] of [['heart',8,'hakugan'],['whitebeard',27,'islewan'],['roger',31,'toki'],['kid',21,'disc-j']]) {
+  for(const [crew,count,last] of [['redhair',10,'rockstar'],['bigmom',19,'bobbin'],['beasts',18,'bao-huang'],['heart',8,'hakugan'],['whitebeard',27,'islewan'],['roger',31,'toki'],['kid',21,'disc-j']]) {
     const coordinator={...registration,crew};
     const workers=Array.from({length:count+1},(_,i)=>terminal(`expanded-${i}`));
     const assigned=assignCrew(workers,{},coordinator);
@@ -192,7 +192,7 @@ test('expanded crews assign every named member before generic pirates and retain
     assert.ok(named.every(a=>a.number===null),crew);
     assert.equal(named.at(-1).art,`crew-${last}`);
     assert.equal(assigned[`expanded-${count}:12`].number,1);
-    const changed=assignCrew(workers,assigned,{...coordinator,crew:'redhair'});
+    const changed=assignCrew(workers,assigned,{...coordinator,crew:'strawhat'});
     const restored=assignCrew(workers.slice(1).reverse(),changed,coordinator);
     for(const worker of workers.slice(1)) assert.equal(restored[`${worker.address}:12`].art,assigned[`${worker.address}:12`].art);
     const selected=crewOf(coordinator);
@@ -201,6 +201,28 @@ test('expanded crews assign every named member before generic pirates and retain
       for(const name of [selected.captain,...selected.workers]) for(const state of ['idle','working','blocked']) {
         assert.ok(existsSync(new URL(`../mods/one-piece/assets/crew-${name}-${state}.${ext}`,import.meta.url)),`${name} ${state} ${ext}`);
       }
+    }
+  }
+});
+
+test('expanding a three-member crew keeps saved named and numbered artwork while filling new slots',async()=>{
+  const {assignCrew,crews}=await import('../mods/one-piece/artwork.js');
+  for(const [crew,original] of Object.entries({redhair:['benn-beckman','yasopp','lucky-roux'],bigmom:['katakuri','smoothie','cracker'],beasts:['king','queen','jack']})) {
+    const coordinator={...registration,crew},owner=`t1:12:${crew}`;
+    const previous=Object.fromEntries([...original,'pirate-blue','pirate-amber'].map((name,i)=>[
+      `saved-${i}:12`,{art:`crew-${name}`,number:i<3?null:i-2,owner}
+    ]));
+    const newcomers=Array.from({length:crews[crew].workers.length-2},(_,i)=>terminal(`new-${i}`));
+    const workers=[...Object.keys(previous).map(key=>terminal(key.split(':')[0])),...newcomers];
+    const assigned=assignCrew(workers,previous,coordinator);
+    for(const [key,value] of Object.entries(previous)) assert.deepEqual(assigned[key],value,crew);
+    assert.equal(assigned['new-0:12'].art,`crew-${crews[crew].workers[3]}`);
+    assert.equal(assigned[`${newcomers.at(-1).address}:12`].number,3);
+    const changed=assignCrew(workers,assigned,{...coordinator,crew:'strawhat'});
+    const restored=assignCrew([...workers].reverse(),changed,coordinator);
+    for(const [key,value] of Object.entries(assigned)) {
+      assert.equal(restored[key].art,value.art,crew);
+      assert.equal(restored[key].number,value.number,crew);
     }
   }
 });
