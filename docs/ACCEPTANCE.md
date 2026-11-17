@@ -1,6 +1,29 @@
 # Native acceptance review
 
-## Current objective audit: native regions, 2026-11-15
+## Current release verification, 2026-11-17
+
+The daily installation now includes the 38 new crewmembers from merged revision `c1603a3b5794e2f3f42bc32751407242c0ab7b43`.
+Installation and the completed checks do not establish full release acceptance because [native text loss after pane zoom](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) remains reproducible.
+The [signed-application verification record](NATIVE-INTEGRATION.md#signed-application-and-daily-installation-2026-11-17) identifies the tested versions, commands, and limits.
+
+| Check | Result |
+| --- | --- |
+| Daily installation | All 979 owned files matched their receipt, including 975 copied source files matching the checkout |
+| Daily reopening | Settings, shortcuts, workspace inventory, terminal inventory, and machine inventory matched their pre-installation values |
+| Application provenance | The installed Herdr App 0.1.16 passed strict signature verification without copying or signing the application again |
+| Repository checks | 26 JavaScript tests and 47 Python tests passed |
+| Native loading and command behavior | Both checks passed in the isolated home and daily home |
+| Isolated interactions | Discovery, direct typing, manual crew selection, and reopening passed with disposable fixtures |
+| Remote recovery | A 28-second transport interruption recovered automatically with the original terminal identity and final dimensions |
+| Core foreground checks | All seven tests passed against clean upstream Core v0.1.21 |
+| Native rendering | The minimal panel lost both text labels after zoom while its rectangle remained visible in native window capture |
+
+The daily home had no live terminals before installation, so that refresh does not prove preservation of active daily conversations.
+Today's isolated fixtures do not repeat the actual Firstmate delegation checks recorded on 2026-11-16.
+The complete upstream Core suite and every native control were not tested.
+The rendering issue remains a release blocker rather than an accepted exception.
+
+## Historical objective audit: native regions, 2026-11-15
 
 The current objective preserves native Spaces and Agents and decorates their existing navigation.
 The implementation remains under verification.
@@ -23,9 +46,9 @@ Its native loading check and command comparison passed against `/private/tmp/op-
 [Native interaction evidence](NATIVE-INTEGRATION.md#native-spaces-and-agents-verification-2026-11-15) records exact terminal and workspace identities.
 Herdr reported no runtime errors after the recorded navigation checks.
 
-## Release limitations
+## Historical release limitations, 2026-11-16
 
-The project remains experimental and is not installed into the user's daily configuration by this work.
+The project remained experimental and had not been installed into the user's daily configuration by that work.
 The [installation guide](INSTALL.md#core-build-used-for-current-recovery-verification) records the isolated recovery build used for historical checks.
 Current local Core release provenance and candidate recovery evidence are recorded in the installation guide.
 Exact pixel equivalence with the historical browser prototype is not the current contract because the author replaced its sidebar model.

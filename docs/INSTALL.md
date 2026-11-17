@@ -7,6 +7,9 @@ Read the [thin presentation design](THIN-MOD.md) for the current contract.
 
 This implementation remains experimental.
 Use a separate test home before considering your daily configuration.
+The authorized daily installation was refreshed and reopened on 2026-11-17 with the 38 new crewmembers.
+The [signed-application checks](NATIVE-INTEGRATION.md#signed-application-and-daily-installation-2026-11-17) passed installation, reopening, and remote recovery.
+[Native text loss after pane zoom](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) still blocks full release acceptance.
 The [acceptance review](ACCEPTANCE.md) and [native verification record](NATIVE-INTEGRATION.md) distinguish current checks from historical evidence.
 Historical isolated worker checks used unchanged Firstmate revisions locally and remotely, including normal cleanup.
 The current local fleet has separate delegation and physical interaction evidence.
