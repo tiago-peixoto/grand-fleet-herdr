@@ -27,7 +27,7 @@ function crewName(terminal) {
 }
 
 function describe(terminal, status) {
-  const state = status === 'blocked' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
+  const state = status === 'blocked' || status === 'error' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
   return `${crewName(terminal)}${captainLinks()[identity(terminal)] ? ' · Firstmate captain' : ''} · ${state}`;
 }
 
@@ -57,7 +57,7 @@ function sidebarWidth(node = layout()) {
 }
 
 function sprite(name, status, size, ship = false) {
-  const state = status === 'working' ? 'working' : status === 'blocked' ? 'blocked' : 'idle';
+  const state = status === 'working' ? 'working' : status === 'blocked' || status === 'error' ? 'blocked' : 'idle';
   return image(`mods/one-piece/assets/${name}${ship ? '' : `-${state}`}.${appearance().paused ? 'png' : 'gif'}`)
     .w(size).h(size).flex_none();
 }
