@@ -42,10 +42,8 @@ class OnePieceTabs extends Tabs {
 
 class OnePiecePane extends Pane {
   me() {
-    const pane = super.me(), program = portraitProgram(pane);
-    if (program === pane?.program) return pane;
-    const base = pane.program?.name ?? pane.title ?? 'Agent';
-    return {...pane, program:{...program, agent:true, name:`${crewName(live(pane.terminal))} · ${base}`}};
+    const pane = super.me();
+    return pane && {...pane, program:portraitProgram(pane)};
   }
 }
 
@@ -325,7 +323,7 @@ export default class OnePieceAgents extends Agents {
       .filter(space => space !== spaceId && appearance().spaceCrews?.[space] === id).length +
       [...captainSpaces(terminals(), agents(), captainLinks())].filter(([space, terminal]) => space !== spaceId && appearance().crews[identity(terminal)] === id).length;
     // Key events can arrive before the next render, so handlers read the choice live instead of this render's copy.
-    const picked = () => this.flagPick ?? (ids.includes(flying) ? flying : ids.find(id => !locked(id)));
+    const picked = () => this.flagPick ?? (ids.includes(flying) && !locked(flying) ? flying : ids.find(id => !locked(id)));
     const pick = picked();
     const sail = id => {
       if (locked(id)) return;
@@ -359,7 +357,7 @@ export default class OnePieceAgents extends Agents {
         .child(v_flex().px(12).pt(4).pb(10).gap(1)
           .child(div().truncate().font_semibold().text_size(14).child(crew.name))
           .child(div().truncate().text_size(12).text_color(t.muted).child(crew.title)))
-        .when(id === flying, el => el.child(badge('Flying now', color, '#111111').left(8)))
+        .when(id === flying && !locked(id), el => el.child(badge('Flying now', color, '#111111').left(8)))
         .when(locked(id), el => el.child(badge('Reserved for the captain', '#00000099', t.foreground).left(8)))
         .when(used > 0 && id !== flying && !locked(id), el => el.child(badge(`${used} fleet${used > 1 ? 's' : ''}`, '#00000099', t.foreground).right(8)));
     };
