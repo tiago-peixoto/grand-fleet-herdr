@@ -70,6 +70,9 @@ Sources live in `prototype/crew-artwork/` as `<character>-study-v1.png`.
 Exports live in `mods/one-piece/assets/` as `crew-<character>-<state>.png` and `.gif`.
 The [prompt manifest](../prototype/crew-artwork/emperor-expansion-prompts.json) records the built-in generation prompts, revisions, crew assignments, and historical labels.
 The [existing exporter](../tools/build-artwork.py) generates all outputs without manually editing generated artwork.
+Some walking poses cross a third of their sheet, so the exporter cuts each row at the nearest empty scanline instead, as [ARTWORK-NATIVE.md](ARTWORK-NATIVE.md) describes.
+That exporter fix also re-exported five characters merged in PR 7: CB Gallant, Izo, Blamenco, Petermoo, and Wire.
+It resolves issue 8, which tracked pieces of walking poses under their sleeping sprites.
 
 The new illustrations match the existing Shanks reference and use the project's established palette and proportions.
 Stylized details and interpreted colors are not official color references.
@@ -80,8 +83,9 @@ Its review surface includes all eight crews, search, three pose controls, animat
 
 Verification on 2026-11-17 passed `npm test` with 26 JavaScript tests.
 Assignment tests cover the expanded rosters, generic overflow, saved assignments from the original three-member crews, and returning to a previous crew.
-`python3 -m unittest discover -s tests -p 'test_*.py'` passed all 46 Python tests.
+`python3 -m unittest discover -s tests -p 'test_*.py'` passed all 47 Python tests.
 Artwork tests rebuilt all exports and compared pixels, dimensions, animation frames, and repeatability.
+A pixel regression test checks that every crew animation frame is one unbroken pose resting on the baseline.
 An isolated installation passed `herdr-app check` and `node tools/check-parity.mjs` against Herdr 0.1.16.
 `git diff --check` passed for staged and unstaged changes.
 The catalog loaded 167 images for all three poses without missing files.
