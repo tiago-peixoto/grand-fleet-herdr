@@ -74,3 +74,17 @@ export function selectDefaultCrews(terminals, captains, selected, machines, pref
   }
   return assigned;
 }
+
+export function selectFleetCrews(fleets, selected, captainCrews, retained) {
+  const assigned = Object.fromEntries(Object.entries(selected).filter(([id, crew]) => crews[crew] && (fleets.includes(id) || retained(id))));
+  const counts = Object.fromEntries(Object.keys(crews).map(id => [id, 0]));
+  for (const crew of [...captainCrews, ...Object.values(assigned)]) if (crew in counts) counts[crew]++;
+  const candidates = Object.keys(crews).filter(id => id !== 'strawhat' || !captainCrews.length);
+  for (const id of fleets) {
+    if (assigned[id]) continue;
+    const crew = candidates.reduce((best, candidate) => counts[candidate] < counts[best] ? candidate : best);
+    assigned[id] = crew;
+    counts[crew]++;
+  }
+  return assigned;
+}

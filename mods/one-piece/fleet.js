@@ -18,12 +18,26 @@ export function managedCrew(captain, terminals, agents, captains) {
 export function captainSpaces(terminals, agents, captains) {
   const live = new Map(terminals.filter(terminal => terminal.state === 'live')
     .map(terminal => [terminal.address, terminal]));
+  // Native order changes when tabs are dragged, so the primary and then the oldest captain supply the ship.
+  const rank = terminal => [captains[identity(terminal)].role === 'firstmate' ? 0 : 1, terminal.created_ms];
+  const before = (a, b) => rank(a)[0] - rank(b)[0] || rank(a)[1] - rank(b)[1];
   const result = new Map();
   for (const agent of agents) {
     const terminal = live.get(agent.address);
-    if (terminal && captains[identity(terminal)] && !result.has(agent.space)) {
-      result.set(agent.space, terminal);
-    }
+    if (!terminal || !captains[identity(terminal)]) continue;
+    const current = result.get(agent.space);
+    if (!current || before(terminal, current) < 0) result.set(agent.space, terminal);
+  }
+  return result;
+}
+
+export function genericFleets(terminals, agents, captains) {
+  const led = captainSpaces(terminals, agents, captains);
+  const members = new Map(crewmembers(terminals, agents).map(terminal => [terminal.address, terminal]));
+  const result = new Map();
+  for (const agent of agents) {
+    const terminal = members.get(agent.address);
+    if (terminal && !led.has(agent.space)) result.set(agent.space, [...(result.get(agent.space) ?? []), terminal]);
   }
   return result;
 }

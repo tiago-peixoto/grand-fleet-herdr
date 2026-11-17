@@ -86,17 +86,21 @@ Detected captains need no manual step, and Firstmate sends no registration or ar
 A detected primary defaults to Straw Hats, and secondmates default to unused secondary crews.
 To choose a different ship and crew, right-click the captain's artwork in Agents.
 You can also right-click the captain's Space and choose Choose ship and crew.
+The same menu item chooses the ship and crew of a Space without a captain.
 Your choice stays in place when discovery runs again.
 
 If the mod cannot read a captain's session evidence, designate the captain manually.
 Choose Crew in the Agents region and pick the agent running Firstmate, or right-click that agent's artwork.
 Choose This agent runs Firstmate in the menu that opens.
+The item is hidden when the agent's Space already has a captain.
 Choose Remove captain designation to return a manually designated agent to ordinary crewmember artwork.
 The mod saves manual designations in Herdr's persisted settings under `one-piece.captains`.
 A designation includes the terminal creation timestamp and never transfers to a replacement session.
 Do not use terminal names, folders, or native process parenting as substitutes for an explicit choice.
 
-A space containing a captain shows that captain's ship in Spaces.
+Every space containing a live agent shows a ship in Spaces.
+A space without a captain is a generic fleet, which shows its name above the crew strip instead of a captain.
+A space containing a captain shows that captain's ship.
 Clicking the ship selects that space through Herdr's native command.
 The captain's Space row shows the other agents in that Space as its crew.
 This summary does not move terminals or change native Space membership.

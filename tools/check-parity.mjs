@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { discoverCaptain } from '../mods/one-piece/discovery.js';
 import * as fleet from '../mods/one-piece/artwork.js';
-import { captainSpaces, crewmembers, managedCrew, machineOf } from '../mods/one-piece/fleet.js';
+import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from '../mods/one-piece/fleet.js';
 const home=process.argv[2];
 if(!home) throw new Error('Usage: node tools/check-parity.mjs HERDR_APP_HOME');
 const native=readFileSync(resolve(home,'mods/agents/main.js'),'utf8');
@@ -61,7 +61,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
+  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,

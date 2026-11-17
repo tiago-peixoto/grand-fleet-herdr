@@ -4,9 +4,9 @@ import Spaces, { glyph, tone } from './herdr-spaces.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile } from 'herdr';
-import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews } from './artwork.js';
+import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
-import { captainSpaces, crewmembers, managedCrew, machineOf } from './fleet.js';
+import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from './fleet.js';
 
 const displayName = name => name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
 const appearance = () => shared('one-piece.art') ?? { crews: {}, characters: {}, paused: false };
@@ -43,20 +43,31 @@ class FleetMenu extends Menu {
   choose(index, cx) {
     if (this.items()[index]?.[1] !== 'one-piece.appearance') return super.choose(index, cx);
     closeOverlay(props().overlay);
-    appearanceMenu(props().captain);
+    if (props().shipSpace) openOverlay({mod:'one-piece', kind:'popup', width:390, height:430, props:{shipSpace:props().shipSpace}});
+    else appearanceMenu(props().captain);
   }
 }
 
 class OnePieceSpaces extends Spaces {
   menu(space) {
     const captain = this.captain(space);
-    if (!captain) return super.menu(space);
+    if (!captain && !this.fleet(space)) return super.menu(space);
     openOverlay({mod:'one-piece', kind:'popup', width:230, height:300,
-      props:{fleetMenu:true, tab:'space', target:{id:space.id}, captain:identity(captain)}});
+      props:{fleetMenu:true, tab:'space', target:{id:space.id}, ...(captain ? {captain:identity(captain)} : {shipSpace:space.id})}});
   }
 
   captain(space) {
     return captainSpaces(terminals(), agents(), captainLinks()).get(space.id);
+  }
+
+  fleet(space) {
+    return genericFleets(terminals(), agents(), captainLinks()).get(space.id);
+  }
+
+  ship(space) {
+    const captain = this.captain(space);
+    if (captain) return crewFor(captain);
+    return this.fleet(space) ? crews[appearance().spaceCrews?.[space.id]] : null;
   }
 
   portrait(terminal, art, label, t) {
@@ -72,8 +83,7 @@ class OnePieceSpaces extends Spaces {
   row(info, t) {
     const {w, i, g, tree} = info, captain = this.captain(w);
     const live = new Map(terminals().filter(terminal => terminal.state === 'live').map(terminal => [terminal.address, terminal]));
-    const members = captain ? managedCrew(captain, terminals(), agents(), captainLinks()) :
-      agents().filter(agent => agent.space === w.id && live.has(agent.address)).map(agent => live.get(agent.address));
+    const members = captain ? managedCrew(captain, terminals(), agents(), captainLinks()) : [...(this.fleet(w) ?? [])];
     if (captain) {
       for (const agent of agents()) {
         const terminal = live.get(agent.address);
@@ -83,7 +93,7 @@ class OnePieceSpaces extends Spaces {
       }
     }
     if (!captain && !members.length) return super.row(info, t);
-    const crew = captain && crewFor(captain);
+    const crew = this.ship(w);
     const portraits = h_flex().gap(2).items_center().overflow_hidden();
     for (const terminal of members) {
       const key = identity(terminal);
@@ -127,9 +137,8 @@ class OnePieceSpaces extends Spaces {
   }
 
   compact(info, t) {
-    const captain = this.captain(info.w);
-    if (!captain) return super.compact(info, t);
-    const crew = crewFor(captain);
+    const crew = this.ship(info.w);
+    if (!crew) return super.compact(info, t);
     return Button.new(`ship-${info.w.id}`).tab_index(0).h(36).mb(6).flex_none().rounded(6).relative()
       .accessibility_label(`${crew.title}, select workspace ${info.w.name}`)
       .tooltip(`${crew.title} · ${info.w.name}`)
@@ -153,7 +162,7 @@ export default class OnePieceAgents extends Agents {
       this.spacesView.init(p, cx);
       return;
     }
-    if (props()?.appearance || props()?.setup) {
+    if (props()?.appearance || props()?.setup || props()?.shipSpace) {
       this.menuFocus = cx.focus_handle();
       this.menuFocus.focus();
       return;
@@ -244,13 +253,32 @@ export default class OnePieceAgents extends Agents {
         }));
       if (!shared('one-piece.discovered')?.[key]) menu.child(Button.new('unlink-captain').flex_none().accessibility_label('Remove captain designation').tab_index(0).p(7).child('Remove captain designation')
         .on_click(() => { const links = {...(shared('one-piece.captains') ?? {})}; delete links[key]; setShared('one-piece.captains', links); closeOverlay(props().overlay); }));
-    } else {
+    } else if (!this.spaceHasCaptain(terminal)) {
       menu.child(Button.new('mark-captain').flex_none().accessibility_label('This agent runs Firstmate').tab_index(0).track_focus(this.menuFocus).p(7)
         .child('This agent runs Firstmate')
         .on_click(() => { setShared('one-piece.captains', {...(shared('one-piece.captains') ?? {}), [key]:{}}); closeOverlay(props().overlay); }));
     }
     return menu.child(Button.new('motion').flex_none().accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
       .on_click(() => { save({paused:!appearance().paused}); closeOverlay(props().overlay); }));
+  }
+
+  spaceHasCaptain(terminal) {
+    const space = agents().find(agent => agent.address === terminal.address)?.space;
+    return space !== undefined && captainSpaces(terminals(), agents(), captainLinks()).has(space);
+  }
+
+  shipMenu() {
+    const t = theme(), id = props().shipSpace;
+    const menu = v_flex().size_full().p(8).gap(4).overflow_y_scrollbar().bg(t.popover).text_color(t.foreground).text_size(13);
+    if (!genericFleets(terminals(), agents(), captainLinks()).has(id)) return menu.child(div().child('This space no longer has a fleet without a captain.'));
+    const current = appearance().spaceCrews?.[id];
+    for (const [crewId, crew] of Object.entries(crews)) menu.child(Button.new(`ship-crew-${crewId}`).flex_none().accessibility_label(crew.name).tab_index(0).p(7).rounded(5)
+      .when(crewId === (current ?? 'strawhat'), el => el.track_focus(this.menuFocus)).focus(el => el.bg(t.selected)).hover(el => el.bg(t.hover)).child(`${crew.title} · ${crew.name}`)
+      .on_click(() => {
+        save({spaceCrews:{...appearance().spaceCrews, [id]:crewId}});
+        closeOverlay(props().overlay);
+      }));
+    return menu;
   }
 
   setupMenu() {
@@ -270,7 +298,7 @@ export default class OnePieceAgents extends Agents {
   }
 
   render(cx) {
-    if (!this.spacesView && !this.fleetMenu && !props()?.setup && !props()?.appearance && !props()?.view &&
+    if (!this.spacesView && !this.fleetMenu && !props()?.setup && !props()?.appearance && !props()?.shipSpace && !props()?.view &&
         crewmembers(terminals(), agents()).map(identity).join('|') !== this.discoverySignature) this.discover(cx);
     const selected = selectDefaultCrews(terminals(), captainLinks(), appearance().crews, machines(), appearance());
     const roles = {...appearance().roles};
@@ -280,6 +308,7 @@ export default class OnePieceAgents extends Agents {
     if (this.spacesView) return this.spacesView.render(cx);
     if (props()?.setup) return this.setupMenu();
     if (props()?.appearance) return this.appearanceMenu();
+    if (props()?.shipSpace) return this.shipMenu();
     if (props()?.view) {
       const target = props().target;
       const terminal = terminals().find(t => t.address === target?.terminal && t.created_ms === target?.created && t.state === 'live');
@@ -289,14 +318,26 @@ export default class OnePieceAgents extends Agents {
           .on_click(() => run('terminal.peek', { terminal: terminal.address }))));
     }
     const members = crewmembers(terminals(), agents());
+    const fleets = genericFleets(terminals(), agents(), captainLinks());
+    const known = new Set(spaces().map(space => space.id));
+    const online = new Set(machines().filter(machine => machine.layout === 'ready').map(machine => machine.name ?? null));
+    const retained = id => known.has(id) || !online.has(id.includes('/') ? id.split('/')[0] : null);
+    const captainCrews = members.map(terminal => captainLinks()[identity(terminal)] && selected[identity(terminal)]).filter(Boolean);
+    // Straw Hats belong to a live captain, so new fleets wait until pending captain discovery settles.
+    const settled = !this.pendingCaptains?.size;
+    const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()] : [], appearance().spaceCrews ?? {}, captainCrews, retained);
+    if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
-    const survivors = members.map(terminal => characters[identity(terminal)]).filter(Boolean);
-    characters = assignCrew(members.filter(terminal => !characters[identity(terminal)]), characters,
-      {terminal:'crewmembers', created:0, crew:'strawhat'}, survivors);
+    for (const [id, fleet] of fleets) {
+      if (spaceCrews[id]) characters = assignCrew(fleet, characters, {terminal:`space:${id}`, created:0, crew:spaceCrews[id]});
+    }
     for (const captain of members.filter(terminal => captainLinks()[identity(terminal)] && appearance().crews[identity(terminal)])) {
       characters = assignCrew(managedCrew(captain, terminals(), agents(), captainLinks()), characters,
         {terminal:captain.address, created:captain.created_ms, crew:appearance().crews[identity(captain)]});
     }
+    const survivors = members.map(terminal => characters[identity(terminal)]).filter(Boolean);
+    characters = assignCrew(members.filter(terminal => !characters[identity(terminal)]), characters,
+      {terminal:'crewmembers', created:0, crew:'strawhat'}, survivors);
     if (JSON.stringify(characters) !== JSON.stringify(appearance().characters)) save({characters});
     return super.render(cx).child(Button.new('crew-appearance').tab_index(0).flex_none().h(28)
       .accessibility_label('Crew appearance').tooltip('Choose captain and ship artwork').child('Crew')

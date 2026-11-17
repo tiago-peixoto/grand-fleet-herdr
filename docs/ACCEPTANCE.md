@@ -1,5 +1,21 @@
 # Native acceptance review
 
+## Generic fleets in the isolated lab, 2026-11-17
+
+The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable probe agents.
+`herdr-app check` and `node tools/check-parity.mjs` passed against that home.
+
+| Check | Result |
+| --- | --- |
+| One agent without a captain | The Space showed a ship, its name above the crew strip, and one crewmate |
+| Two agents without a captain | The Space showed a ship and two crewmates from that ship's crew |
+| Captain Space | A detected primary kept Sunny, Luffy, and its crewmate without a visible Space name |
+| Crew choice at startup | After clearing stored discovery and crews, the captain received Straw Hats and the two fleets received Red Hair and Big Mom |
+| Startup regression | Without the discovery wait, the same relaunch gave Straw Hats to a generic fleet while the captain was live |
+
+The right-click Choose ship and crew menu for a generic fleet was not exercised physically.
+Compact sidebar ships, remote Spaces, and Space identifiers across a Core restart were not tested.
+
 ## Current release verification, 2026-11-17
 
 The daily installation now includes the 38 new crewmembers from merged revision `c1603a3b5794e2f3f42bc32751407242c0ab7b43`.

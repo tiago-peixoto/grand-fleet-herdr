@@ -27,9 +27,9 @@
 Grand Fleet is a One Piece mod for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
 Every agent becomes a crewmember in Herdr's sidebar.
 [Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains and ships for their workspaces.
-Ordinary agents get character artwork without Firstmate.
+Without Firstmate, every Space with an agent still becomes a small fleet with a ship and crewmates.
 
-- **Ships for your Spaces:** Herdr's workspaces display a ship when a Firstmate captain is aboard.
+- **Ships for your Spaces:** every Herdr workspace with an agent displays a ship, and a captain boards only when Firstmate runs there.
 - **Characters for your agents:** familiar faces keep their assignments beside actual session labels as other agents arrive or leave.
 - **One click to your work:** ships select existing workspaces, while characters use native agent navigation and writable terminal previews.
 - **Your terminals stay familiar:** keep native tabs, splits, resizing, pinning, sorting, workspace menus, and direct typing into worker and personal terminals.
@@ -183,8 +183,9 @@ Your manual crew selections take priority over automatic discovery.
 Extra agents receive numbered generic Pirates after a crew's named artwork runs out.
 Your fleet can grow beyond the named roster.
 
-**Choose your colors:** right-click a captain's Space and select **Choose ship and crew**.
-The choice updates its ship, captain, and crewmembers in that Space together.
+**Choose your colors:** right-click any Space with a ship and select **Choose ship and crew**.
+The choice updates its ship, its captain if one is aboard, and its crewmembers together.
+A Space without a captain receives the least-used crew, and Straw Hats are available when no Firstmate captain is running.
 The crew strip reflects existing Space membership without moving terminals or assigning work.
 
 ## Read the crew
