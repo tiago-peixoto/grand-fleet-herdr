@@ -23,10 +23,12 @@ The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable p
 | New fleet timing | After an app relaunch, new probe Spaces received a crew about 1.5 seconds after creation |
 | Unanswered discovery | Before the five-second bound, new Spaces in a long-running session waited about 65 seconds, and one never received a crew before the app relaunched |
 | Live fleet menu | Opening the fleet menu and the ship picker as mod tabs rendered Rename, Choose ship and crew, Close, and all eight crews |
+| Separate host | The VPS `firstmate-hz`, added over SSH with `hc machine add` on its own session `gfvps1117`, ran a probe agent whose `gfvps/` Space showed Sunny and a Straw Hat crewmate because no captain was live |
+| Separate host offline | Removing that machine kept the Straw Hat crew, and adding it back showed the same probe process and the same crew |
 
 The simulated parity check exercises the Choose ship and crew menu, the ship picker, and crew changes for generic fleets.
 In the live app, the menu and picker were rendered but not clicked, because the screen was locked and posted mouse events could not reach the app.
-The second Core used a local command transport, not SSH to a separate host.
+The `gfr` check used a second local Core over a command transport, and the `gfvps` check used SSH to a separate host.
 The cause of the unanswered discovery check was not isolated, so the five-second bound limits its effect rather than removing it.
 
 ## Current release verification, 2026-11-17
