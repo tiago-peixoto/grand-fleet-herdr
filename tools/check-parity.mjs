@@ -239,6 +239,66 @@ for (const source of ['session-lock', 'manual']) {
 
 console.log('Native parity passed: two scroll regions, ship selection, ordinary spaces, captain and crewmember artwork, agent focus/preview, pinning, sorting, compact view, and appearance settings.');
 
+const captainless = (view, art) => {
+  view.state.delete('one-piece.captains');
+  if (art) view.state.set('one-piece.art', art);
+  view.nodes.clear();
+  view.root = view.controller.render(view.cx);
+  return view;
+};
+const waiting = host(true);
+waiting.controller.pendingCaptains = new Set(['t9:9']);
+captainless(waiting);
+assert.deepEqual(waiting.state.get('one-piece.art').spaceCrews ?? {}, {}, 'new fleets wait for pending captain discovery');
+waiting.controller.pendingCaptains.clear();
+captainless(waiting);
+const fleetArt = waiting.state.get('one-piece.art');
+assert.deepEqual(fleetArt.spaceCrews, {s:'strawhat', 'remote/s':'redhair'}, 'fleets without a live captain take the least-used crews, Straw Hats first');
+assert.ok(['t1:1', 't3:3', 't6:7'].every(key => fleetArt.characters[key].owner === 'space:s:0:strawhat'), 'every agent in a generic fleet is its crewmate');
+for (const width of [310, 120]) {
+  const fleetView = captainless(host(true, 'priority', width, {region:'spaces'}), structuredClone(fleetArt));
+  const nativeView = host(false, 'priority', width, {region:'spaces'});
+  assert.equal(scrolls(fleetView), 1, 'generic fleets keep one Spaces scroll');
+  assert.ok(!descendants(fleetView.nodes.get(width === 310 ? 'space-personal' : 'space-personal')).some(n => n.path?.endsWith('.gif')), 'a Space without agents keeps native presentation');
+  if (width === 310) {
+    const row = descendants(fleetView.nodes.get('space-s'));
+    assert.ok(row.some(n => n.path?.endsWith('/sunny.gif')), 'a generic fleet shows its ship');
+    assert.ok(row.some(n => n.kids.includes('project')), 'a generic fleet keeps its Space name');
+    assert.ok(!row.some(n => n.path?.includes('crew-luffy')), 'a generic fleet has no captain artwork');
+    assert.ok(['t1:1', 't3:3', 't6:7'].every(key => fleetView.nodes.has(`portrait-${key}`)));
+    assert.ok(descendants(fleetView.nodes.get('space-remote/s')).some(n => n.path?.endsWith('/crew-red-force.gif')));
+    for (const view of [nativeView, fleetView]) { view.nodes.get('space-s').left(); view.nodes.get('space-s').leftUp(null, view.cx); }
+    sameCall(nativeView, fleetView);
+    fleetView.nodes.get('space-s').right();
+    assert.equal(fleetView.calls.at(-1)[1].props.fleetMenu, true);
+    assert.equal(fleetView.calls.at(-1)[1].props.shipSpace, 's');
+    assert.equal(fleetView.calls.at(-1)[1].props.captain, undefined);
+  } else {
+    assert.ok(descendants(fleetView.nodes.get('ship-s')).some(n => n.path?.endsWith('/sunny.gif')), 'compact generic fleet shows its ship');
+    fleetView.nodes.get('ship-s').click();
+    assert.equal(JSON.stringify(fleetView.calls.at(-1)), JSON.stringify(['space.select', {id:'s'}]));
+  }
+}
+const shipFleetMenu = host(true, 'priority', 310, {fleetMenu:true, tab:'space', target:{id:'s'}, shipSpace:'s', overlay:'fleet'});
+shipFleetMenu.controller.fleetMenu.choose(1, shipFleetMenu.cx);
+assert.equal(shipFleetMenu.calls.at(-1)[1].props.shipSpace, 's', 'Choose ship and crew opens the ship picker for a generic fleet');
+const picker = captainless(host(true, 'priority', 310, {shipSpace:'s', overlay:'picker'}), structuredClone(fleetArt));
+assert.equal(scrolls(picker), 1, 'the ship picker scrolls when constrained');
+assert.ok(Object.keys(fleet.crews).every(id => picker.nodes.has(`ship-crew-${id}`)));
+picker.nodes.get('ship-crew-kid').click();
+assert.equal(picker.state.get('one-piece.art').spaceCrews.s, 'kid');
+const restyled = captainless(host(true), picker.state.get('one-piece.art'));
+assert.equal(restyled.state.get('one-piece.art').spaceCrews.s, 'kid', 'a chosen fleet crew persists');
+assert.equal(restyled.state.get('one-piece.art').characters['t3:3'].owner, 'space:s:0:kid', 'crewmates follow the chosen fleet crew');
+const ledPicker = host(true, 'priority', 310, {shipSpace:'s', overlay:'picker'});
+assert.ok(!ledPicker.nodes.has('ship-crew-kid'), 'a Space with a captain is not offered generic fleet crews');
+const retainedArt = {...structuredClone(fleetArt), spaceCrews:{...fleetArt.spaceCrews, gone:'kid', 'remote/gone':'heart'}};
+const offline = captainless(host(true, 'priority', 310, {}, 'offline'), retainedArt);
+assert.equal(offline.state.get('one-piece.art').spaceCrews.gone, undefined, 'a crew is released when its Space is gone from an online machine');
+assert.equal(offline.state.get('one-piece.art').spaceCrews['remote/gone'], 'heart', 'a crew is kept while its machine is offline');
+assert.ok(!host(true, 'priority', 310, {appearance:'t3:3', overlay:'menu'}).nodes.has('mark-captain'), 'manual designation is unavailable in a Space that has a captain');
+console.log('Generic fleets passed: ship, name, crewmates, compact ship, selection, menu, ship picker, crew persistence, offline retention, and discovery wait.');
+
 for (const git of [null, 'main', 'linked']) {
   const fleetMenu=host(true,'priority',310,{fleetMenu:true,tab:'space',target:{id:'s'},captain:'t1:1',overlay:'fleet'});
   const controller=fleetMenu.controller.fleetMenu;

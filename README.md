@@ -26,7 +26,7 @@
 
 Grand Fleet is a One Piece mod for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
 Every agent becomes a crewmember in Herdr's sidebar.
-[Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains and ships for their workspaces.
+[Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains to the ships of their workspaces.
 Without Firstmate, every Space with an agent still becomes a small fleet with a ship and crewmates.
 
 - **Ships for your Spaces:** every Herdr workspace with an agent displays a ship, and a captain boards only when Firstmate runs there.
@@ -180,6 +180,8 @@ Whitebeard and Roger share four historical characters, so their rosters overlap.
 The primary Firstmate defaults to the Straw Hats.
 Secondmates, delegated Firstmate coordinators, receive unused secondary crews before crews repeat.
 Your manual crew selections take priority over automatic discovery.
+When several captains share a Space, the primary and then the oldest terminal supply its ship.
+Firstmate places its workers in their own Space, so they sail as a separate fleet without a captain.
 Extra agents receive numbered generic Pirates after a crew's named artwork runs out.
 Your fleet can grow beyond the named roster.
 
@@ -218,7 +220,7 @@ Discovery runs every ten seconds and when terminal identities change.
 | `hc get`, the terminal inspection command | Check the terminal's foreground process |
 | `state/.lock`, `bin/fm-session-start.sh`, and `.fm-secondmate-home` in that process's folder | Verify Firstmate identity and distinguish primary captains from secondmates |
 | Herdr's existing remote machine connection | Read the same evidence on a remote machine |
-| Herdr's persisted mod settings | Save captain designations, crew choices, character assignments, and animation preferences |
+| Herdr's persisted mod settings | Save captain designations, crew choices for captains and Spaces, character assignments, and animation preferences |
 
 The mod bundles its artwork and makes no external web requests.
 It reads discovery files without executing them.
@@ -241,11 +243,12 @@ These are tested versions, not a promise of support for every newer release.
 | Firstmate | [Tested fork revision `653744e`](https://github.com/tiago-peixoto/firstmate/commit/653744ef90aad29eb4c65e3cbba59827b2d1690e), followed by recorded updates to `00311fe` |
 | Destination layout | Compatible Spaces, Agents, and Menu modules, with one Spaces slot and one Agents slot under the same parent |
 
-Generic agent artwork works without Firstmate.
+Ships, crews, and character artwork work without Firstmate.
 Complete Firstmate fleets need compatible support for `hc`, the Herdr Core command-line tool.
 The [Firstmate acceptance record](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16) identifies the tested integration.
 
 Recorded checks cover local and remote navigation, direct worker input, crew choices, app reopening, and remote reconnection in isolated sessions.
+The [generic fleet checks](docs/ACCEPTANCE.md#generic-fleets-in-the-isolated-lab-2026-11-17) cover Spaces without a captain.
 The [acceptance review](docs/ACCEPTANCE.md#current-release-verification-2026-11-17) records remaining limits, including the open native rendering blocker and the untested multiple-viewer recovery regression.
 See [Core build details](docs/INSTALL.md#core-build-used-for-current-recovery-verification) for the tested executables and recovery limitations.
 

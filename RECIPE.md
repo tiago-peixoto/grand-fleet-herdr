@@ -13,7 +13,8 @@ Agents occupy the lower region with Herdr's status groups and session labels.
 Each region scrolls independently.
 A captain's expanded Space row is 64 pixels high with a 6-pixel gap below it.
 Its 48-pixel ship sits beside a 24-pixel captain portrait, with 24-pixel crewmates underneath.
-Compact captain rows show a 32-pixel ship in a 36-pixel row.
+A Space with agents but no captain uses the same row with its Space name in place of the captain portrait.
+Compact fleet rows show a 32-pixel ship in a 36-pixel row.
 The Crew button opens appearance controls below Agents.
 Settings and Add machine remain native controls.
 The generated layout supplies dark teal backgrounds and gold accents while preserving explicit user colors.
@@ -28,10 +29,12 @@ Ships animate without changing session state.
 Pause animation selects static PNG frames instead of GIF animation.
 Clicking a ship selects its existing Space.
 Clicking a portrait focuses that agent's existing terminal.
-Right-click a captain's Space to choose a ship and crew directly below Rename.
+Right-click any Space with a ship to choose a ship and crew directly below Rename.
 Right-click a character or use Crew for appearance controls and manual captain designation.
 A primary Firstmate defaults to Straw Hats.
 Secondmates receive unused secondary crews before crews repeat.
+A Space without a captain receives the least-used crew, and Straw Hats only while no captain is live.
+When several captains share a Space, the primary and then the oldest terminal supply its ship.
 Manual choices survive discovery and do not transfer to replacement terminal identities.
 Extra workers receive numbered generic Pirates after named artwork is exhausted.
 Unavailable machines retain Herdr's connection behavior without fabricated live activity.
