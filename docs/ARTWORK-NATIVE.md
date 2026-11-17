@@ -57,6 +57,8 @@ The current bands, with both endpoints included, are:
 
 Equal-height worker rows would cut across these bands and can include neighboring poses.
 Sunny and flag use one row, while Luffy uses two equal-height rows.
+Crew character sheets start from equal thirds, but each row line that crosses a pose moves to the nearest scanline with no alpha above 160.
+Some walking poses cross a third, and cutting there leaves pieces of them under the sleeping sprites.
 Column boundaries and equal-height row boundaries use JavaScript's positive-number rounding behavior.
 Within each cell, the bounding box includes pixels whose alpha exceeds 160.
 The crop retains the original pixels inside that box, including partial transparency.
