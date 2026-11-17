@@ -8,7 +8,7 @@ The sidebar retains two native regions, Spaces and Agents, while Herdr owns work
 ## Firstmate supplies the governing vision
 
 This vision extends [firstmate's vision](https://github.com/kunchenguid/firstmate/blob/main/VISION.md).
-Its baseline is the [revision reviewed for this draft](https://github.com/kunchenguid/firstmate/blob/90cd351ac8b828d7074fe4a432acda246355bec7/VISION.md).
+Its baseline is [this revision](https://github.com/kunchenguid/firstmate/blob/90cd351ac8b828d7074fe4a432acda246355bec7/VISION.md).
 Firstmate's commitments to one captain, explicit authority, durable obligations, supervised delegation, and vendor independence govern this extension.
 This document adds presentation commitments and does not replace those rules with a second command policy.
 Changes to the upstream vision require an explicit compatibility review.
@@ -21,7 +21,11 @@ Herdr supplies terminal attention, focus, writable previews, and session managem
 The fleet sidebar retains native machine identities and grouping.
 Every Herdr agent is a crewmember, regardless of who started it.
 The mod automatically identifies running Firstmate instances as captains from existing session evidence.
-Spaces containing captains display ship artwork and remain ordinary Herdr workspaces.
+Every space containing at least one live agent displays ship artwork and remains an ordinary Herdr workspace.
+Captain artwork appears only for a Firstmate instance that the mod detects or that the captain marks by hand in the appearance menu.
+A space with agents but no such captain is a generic fleet, and its ship carries no captain artwork.
+A generic fleet keeps the space name above the crew strip, and every agent in it is a crewmate, even when it holds one agent.
+When a captain appears in a generic fleet, the space becomes that captain's fleet and the existing captain presentation applies.
 Selecting a ship selects its space rather than collapsing a crew group.
 Captain and crewmember artwork appears in the Agents region and in the Space containing their terminals.
 Expanded captain Space rows combine the ship, captain, and miniature managed crew on one background without a letter avatar or visible Space name.
@@ -34,7 +38,7 @@ Native agent grouping, sorting, pinning, and terminal navigation remain availabl
 Selecting the captain or a crewmate uses the corresponding native agent action.
 An unplaced crewmate opens in Herdr's writable preview with Herdr's option to keep its terminal.
 The mod does not create a workspace merely because a crewmate was selected.
-Worker and secondmate terminals accept direct typing, as explicitly approved by the captain.
+Worker and secondmate terminals accept direct typing.
 Firstmate remains the usual conversation, while the captain can type directly into any crewmate terminal.
 
 ## Independent work stays independent
@@ -89,6 +93,9 @@ Complete hc fleets may require generic hc compatibility support in Firstmate.
 Acceptance evidence must identify the tested Firstmate revision rather than imply compatibility with every unmodified revision.
 Captain identification belongs to the mod and requires no manual registration or artwork commands from Firstmate.
 The primary defaults to Straw Hats, while secondmates receive unused secondary crews before crews repeat.
+Each generic fleet receives the least-used crew, and Straw Hats are eligible when no Firstmate captain is live.
+A Firstmate primary still receives Straw Hats when a generic fleet already shows them.
+The captain can choose the ship and crew of any fleet, and that choice persists for the space.
 User selections remain unchanged by automatic discovery.
 Support for other session managers is outside this repository's scope.
 It is not a scheduler, a replacement terminal system, or a second firstmate implementation.
@@ -97,13 +104,7 @@ Character artwork does not establish a coordinator relationship.
 Unregistered terminals do not acquire a coordinator relationship from their names, folders, or process parents.
 This mod adds no command hierarchy, merge authority, or automatic delegation policy.
 Personal preferences, credentials, and fleet records remain private to the captain's home.
-The imported prototype records visual intent, while accepted decisions and this inherited policy take precedence over simulated behavior.
-The author approved this vision on 2026-11-12.
-On 2026-11-14, the author approved the simplified interface and replaced Restore layout with Add terminal.
-The author then approved one writable terminal per crewmate and ordinary Herdr controls, replacing the inspection-only design.
-The author subsequently requested a thin mod that replaces agent activity dots while reusing Herdr's Spaces and nested agents.
-The earlier nested fleet decision was superseded on 2026-11-15 by two native sidebar regions and generic crewmember presentation.
-Ships now identify spaces containing Firstmate captains, and clicking a ship selects that space.
+The imported prototype records visual intent, and this vision takes precedence over simulated behavior.
 Workers retain their own workspaces, and personal terminals retain native behavior.
 
 A change aligns when it reduces the captain's attention burden while preserving firstmate's authority, durable truth, and independent terminal work.
