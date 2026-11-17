@@ -32,6 +32,7 @@ A space with live agents and no captain is a generic fleet.
 A generic fleet shows a ship, keeps its Space name above the crew strip, and has no captain artwork.
 Each generic fleet receives the least-used crew, counting live captains and other fleets.
 Straw Hats are eligible only while no captain is live.
+A new fleet waits for the first discovery check of each agent, for at most five seconds, before choosing its crew.
 The mod stores generic crews by Space identifier and releases them when the Space is gone from an online machine.
 Generic fleet crewmates come from that fleet's crew, so an agent moved to another Space takes that Space's crew.
 When a captain arrives, the Space follows the captain presentation and keeps its stored generic crew for later.
