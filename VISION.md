@@ -51,7 +51,8 @@ Changing selection or enlarging a pane preserves running sessions.
 Herdr owns terminal reconnection.
 Add terminal uses Herdr's native folder inheritance and machine selection.
 Herdr supplies the tab bar, terminal input, splitting, resizing, zoom, and closing behavior.
-Terminal headers, tabs, and personal terminal controls remain Herdr's shipped interface.
+Terminal headers, tabs, and personal terminal controls keep Herdr's shipped behavior.
+Agent icons in tabs, terminal headers, and the Agents list show that agent's crewmember.
 The mod does not track missing personal shells or offer a separate Restore layout workflow.
 A new shell is a new process and does not restore a previous command or conversation.
 Native Herdr close controls end terminal processes according to Herdr's normal behavior.

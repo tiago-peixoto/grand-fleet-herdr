@@ -24,6 +24,8 @@ for character, start, limit in [('chopper', 0, 44), ('franky', 12, 56), ('pirate
             'prototype/flow/assets/worker-states-v1.png', 64, limit,
             list(range(start+offset, start+offset+4)), [delay]*4)
 
+APPROVED_PORTRAITS = {'crew-shanks': (19, 4), 'crew-kaido': (20, 5), 'crew-jozu': (16, 5), 'crew-lucky-roux': (18, 7)}
+
 
 def im(*args):
     return subprocess.check_output(['magick', *map(str, args)])
@@ -64,6 +66,11 @@ class ArtworkTests(unittest.TestCase):
                 ship = name in ('red-force', 'queen-mama-chanter', 'mammoth',
                                 'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
                 names = [f'crew-{name}'] if ship else [f'crew-{name}-{state}' for state in ('idle', 'working', 'blocked')]
+                if not ship:
+                    portrait = f'portrait-crew-{name}.png'
+                    expected_names.add(portrait)
+                    self.assertEqual(im('identify', '-format', '%w %h', output / portrait), b'28 28')
+                    self.assertEqual((ASSETS / portrait).read_bytes(), (output / portrait).read_bytes())
                 for animation in names:
                     expected_names.update(animation+ext for ext in ('.gif', '.png'))
                     gif = output / (animation+'.gif')
@@ -115,6 +122,13 @@ class ArtworkTests(unittest.TestCase):
                     self.assertEqual(decoded(ASSETS / gif.name), decoded(gif))
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
             self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
+
+    def test_portraits_match_the_approved_head_crops(self):
+        # Crop origins measured for the reviewed mock; a changed crop rule moves these faces.
+        for name, (x, y) in APPROVED_PORTRAITS.items():
+            with self.subTest(name=name):
+                expected = im(ASSETS / f'{name}-working.png', '-crop', f'28x28+{x}+{y}', '+repage', '-depth', '8', 'rgba:-')
+                self.assertEqual(im(ASSETS / f'portrait-{name}.png', '-depth', '8', 'rgba:-'), expected)
 
     def test_crew_frames_hold_one_pose_on_the_baseline(self):
         # A pose crossing its sheet's row line used to leave detached pieces of the

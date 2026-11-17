@@ -57,9 +57,11 @@ It validates the Agents and Spaces classes, their overridden rendering methods, 
 The layout must contain exactly one Spaces node and one Agents node under the same parent.
 Unsupported source or layout structures stop installation before destination writes.
 
-Generated `herdr-agents.js` and `herdr-spaces.js` files preserve the installed source contents, including line endings.
+Generated `herdr-spaces.js` and `herdr-pane.js` files preserve the installed source contents, including line endings.
+Generated `herdr-agents.js` and `herdr-tabs.js` files change only the lines that read a program icon, so the adapter can supply a crewmember instead.
+The installer refuses a Herdr version whose source no longer contains each of those lines exactly once.
 The adapter subclasses these local modules to retain native behavior.
-The generated `layouts/one-piece.json` retains both sidebar nodes and assigns their Spaces or Agents presentation through region properties.
+The generated `layouts/one-piece.json` retains both sidebar nodes, the tab bar, and the pane header, and assigns their presentation through region properties.
 It adds the approved palette defaults while preserving explicit source color overrides.
 Other layout values remain unchanged, but serialization changes formatting.
 The installer does not read a repository `layouts/one-piece.json`.
@@ -85,7 +87,7 @@ The mod detects captains automatically from Firstmate's existing session lock, s
 Detected captains need no manual step, and Firstmate sends no registration or artwork commands.
 A detected primary defaults to Straw Hats, and secondmates default to unused secondary crews.
 To choose a different ship and crew, right-click the captain's artwork in Agents.
-You can also right-click the captain's Space and choose Choose ship and crew.
+You can also right-click the captain's Space and choose Raise a new flag….
 The same menu item chooses the ship and crew of a Space without a captain.
 Your choice stays in place when discovery runs again.
 

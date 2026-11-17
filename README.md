@@ -19,6 +19,7 @@
 <p align="center">
   <a href="#set-sail">Install</a> ·
   <a href="#meet-the-fleet">Meet the fleet</a> ·
+  <a href="#raise-your-flag">Raise your flag</a> ·
   <a href="#read-the-crew">Read the crew</a> ·
   <a href="#compatibility">Compatibility</a> ·
   <a href="#contribute">Contribute</a>
@@ -31,8 +32,10 @@ Without Firstmate, every Space with an agent still becomes a small fleet with a 
 
 - **Ships for your Spaces:** every Herdr workspace with an agent displays a ship, and a captain boards only when Firstmate runs there.
 - **Characters for your agents:** familiar faces keep their assignments beside actual session labels as other agents arrive or leave.
+- **Faces where you look:** each agent's crewmember replaces the program icon in its tab, its pane title, and its Agents row.
+- **Raise your flag:** a gallery of eight pirate crews, each with its animated ship and crew, chooses who sails a Space.
 - **One click to your work:** ships select existing workspaces, while characters use native agent navigation and writable terminal previews.
-- **Your terminals stay familiar:** keep native tabs, splits, resizing, pinning, sorting, workspace menus, and direct typing into worker and personal terminals.
+- **Your terminals stay familiar:** keep native tab behavior, splits, resizing, pinning, sorting, workspace menus, and direct typing into worker and personal terminals.
 - **A calm sidebar:** Spaces and Agents each retain one scrolling list, with native machine identities and optional animation.
 
 Firstmate owns delegation and work records.
@@ -185,12 +188,51 @@ Firstmate places its workers in their own Space, so they sail as a separate flee
 Extra agents receive numbered generic Pirates after a crew's named artwork runs out.
 Your fleet can grow beyond the named roster.
 
-**Choose your colors:** right-click any Space with a ship and select **Choose ship and crew**.
-The choice updates its ship, its captain if one is aboard, and its crewmembers together.
-A Space without a captain receives the least-used crew, and Straw Hats are available when no Firstmate captain is running.
 The crew strip reflects existing Space membership without moving terminals or assigning work.
 
+## Raise your flag
+
+Every ship flies the colors you choose.
+Right-click a Space with a ship and select **Raise a new flag…**.
+
+<p align="center">
+  <img src="docs/images/raise-your-flag.png" width="765" alt="The Raise your flag dialog: eight crew cards, each with an animated ship over the sea, its captain and three crewmembers lined up in front, and the Straw Hat Pirates marked Flying now">
+</p>
+
+Each card shows the crew's ship riding the waves, with the captain and three crewmembers lined up in front.
+**Flying now** marks the current crew, and a count shows how many other fleets already fly each flag.
+Choose a card with the pointer or the arrow keys, then press **Set sail** or Enter.
+Press Esc to stay with your current crew.
+
+Setting sail changes the ship, its captain if one is aboard, and every crewmember in that Space together.
+A notification announces the departure, for example: *The Red Force sets sail. Red Hair Pirates now fly over Docs.*
+
+A Space without a captain receives the least-used crew automatically.
+While a Firstmate captain is running, the Straw Hats stay **Reserved for the captain** in Spaces without one.
+Right-clicking a captain's character in Agents also offers **Raise a new flag…** for that captain's crew.
+
 ## Read the crew
+
+Every agent wears its crewmember's face where you look for it.
+The tab and the pane title show a pixel portrait in place of the program icon.
+In Agents, the full animated crewmember takes the icon's place.
+
+<p align="center">
+  <img src="docs/images/crew-faces.png" width="575" alt="Chopper's face on a Claude Code tab and in its Claude Code pane title, with sleeping Chopper sprites in two Agents rows">
+</p>
+
+<p align="center">
+  <img src="mods/one-piece/assets/portrait-crew-luffy.png" width="28" height="28" alt="Luffy">
+  <img src="mods/one-piece/assets/portrait-crew-shanks.png" width="28" height="28" alt="Shanks">
+  <img src="mods/one-piece/assets/portrait-crew-big-mom.png" width="28" height="28" alt="Big Mom">
+  <img src="mods/one-piece/assets/portrait-crew-kaido.png" width="28" height="28" alt="Kaido">
+  <img src="mods/one-piece/assets/portrait-crew-law.png" width="28" height="28" alt="Law">
+  <img src="mods/one-piece/assets/portrait-crew-whitebeard.png" width="28" height="28" alt="Whitebeard">
+  <img src="mods/one-piece/assets/portrait-crew-roger.png" width="28" height="28" alt="Roger">
+  <img src="mods/one-piece/assets/portrait-crew-kid.png" width="28" height="28" alt="Kid">
+  <br>
+  <sub>Every named crewmember has a portrait, cut from its own standing sprite.</sub>
+</p>
 
 Character poses follow Herdr's actual agent status.
 Session labels remain visible, so you can identify agents even when characters repeat.
@@ -200,7 +242,7 @@ Session labels remain visible, so you can identify agents even when characters r
 | <img src="mods/one-piece/assets/crew-chopper-idle.gif" width="64" height="64" alt="Chopper sleeping"> | <img src="mods/one-piece/assets/crew-chopper-working.gif" width="64" height="64" alt="Chopper walking"> | <img src="mods/one-piece/assets/crew-chopper-blocked.gif" width="64" height="64" alt="Chopper sitting"> |
 | Idle agents sleep | Working agents walk | Blocked agents sit beside Herdr's attention indication |
 
-**Done** agents rest beside Herdr's completion label or compact completion dot.
+**Done** agents rest beside Herdr's completion dot.
 A resting pose alone does not mean work is complete.
 Unavailable machines retain Herdr's connection handling without invented live activity.
 
