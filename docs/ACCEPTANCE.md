@@ -18,10 +18,16 @@ The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable p
 | Remote Space | A second local Core added with `hc machine add --via` produced a `gfr/` Space that received the Heart crew |
 | Unavailable machine | Removing that machine kept the Heart crew, and adding it back restored the same Space with the same crew |
 | Closed Space | Closing a local fleet Space released its stored crew |
+| Real Firstmate delegation | A Firstmate primary from fork revision `ce729c2` with the hc backend kept Sunny and Luffy, and its dispatched worker formed a separate captainless fleet in `fm-firstmate-c70f7e36` |
+| Worker result | That worker committed `hello.txt` with the expected text on its own branch |
+| New fleet timing | After an app relaunch, new probe Spaces received a crew about 1.5 seconds after creation |
+| Unanswered discovery | Before the five-second bound, new Spaces in a long-running session waited about 65 seconds, and one never received a crew before the app relaunched |
+| Live fleet menu | Opening the fleet menu and the ship picker as mod tabs rendered Rename, Choose ship and crew, Close, and all eight crews |
 
 The simulated parity check exercises the Choose ship and crew menu, the ship picker, and crew changes for generic fleets.
-That menu was not opened physically, because posting mouse events would take focus from the person using the computer.
+In the live app, the menu and picker were rendered but not clicked, because the screen was locked and posted mouse events could not reach the app.
 The second Core used a local command transport, not SSH to a separate host.
+The cause of the unanswered discovery check was not isolated, so the five-second bound limits its effect rather than removing it.
 
 ## Current release verification, 2026-11-17
 

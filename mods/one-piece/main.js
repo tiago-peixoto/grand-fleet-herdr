@@ -187,6 +187,10 @@ export default class OnePieceAgents extends Agents {
       const key = identity(candidate);
       if (pendingCaptains.has(key)) continue;
       pendingCaptains.add(key);
+      if (!this.checkedCaptains?.has(key) && !this.firstChecks?.has(key)) {
+        (this.firstChecks ??= new Map()).set(key, Date.now());
+        cx.timer.after(5000, cx => cx.notify());
+      }
       cx.spawn(async cx => {
         try {
           const result = await hc(['get', candidate.address, '--json']);
@@ -324,8 +328,10 @@ export default class OnePieceAgents extends Agents {
     const online = new Set(machines().filter(machine => machine.layout === 'ready').map(machine => machine.name ?? null));
     const retained = id => known.has(id) || !online.has(id.includes('/') ? id.split('/')[0] : null);
     const captainCrews = members.map(terminal => captainLinks()[identity(terminal)] && selected[identity(terminal)]).filter(Boolean);
-    // Straw Hats belong to a live captain, so new fleets wait until each crewmember's first discovery settles.
-    const settled = [...this.pendingCaptains ?? []].every(key => this.checkedCaptains?.has(key));
+    // Straw Hats belong to a live captain, so new fleets wait for each crewmember's first discovery,
+    // but no longer than five seconds, because one unanswered check would otherwise hold back every new fleet.
+    const settled = [...this.pendingCaptains ?? []].every(key =>
+      this.checkedCaptains?.has(key) || Date.now() - (this.firstChecks?.get(key) ?? Date.now()) >= 5000);
     const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()] : [], appearance().spaceCrews ?? {}, captainCrews, retained);
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
