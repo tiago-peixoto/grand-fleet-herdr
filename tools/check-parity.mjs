@@ -250,6 +250,12 @@ const waiting = host(true);
 waiting.controller.pendingCaptains = new Set(['t9:9']);
 captainless(waiting);
 assert.deepEqual(waiting.state.get('one-piece.art').spaceCrews ?? {}, {}, 'new fleets wait for pending captain discovery');
+const unsettled = structuredClone(waiting.state.get('one-piece.art'));
+waiting.controller.checkedCaptains = new Set(waiting.controller.pendingCaptains);
+captainless(waiting);
+assert.ok(waiting.state.get('one-piece.art').spaceCrews?.s, 'repeated discovery of a checked crewmember does not hold back new fleets');
+waiting.state.set('one-piece.art', unsettled);
+delete waiting.controller.checkedCaptains;
 waiting.controller.pendingCaptains.clear();
 captainless(waiting);
 const fleetArt = waiting.state.get('one-piece.art');
@@ -259,7 +265,8 @@ for (const width of [310, 120]) {
   const fleetView = captainless(host(true, 'priority', width, {region:'spaces'}), structuredClone(fleetArt));
   const nativeView = host(false, 'priority', width, {region:'spaces'});
   assert.equal(scrolls(fleetView), 1, 'generic fleets keep one Spaces scroll');
-  assert.ok(!descendants(fleetView.nodes.get(width === 310 ? 'space-personal' : 'space-personal')).some(n => n.path?.endsWith('.gif')), 'a Space without agents keeps native presentation');
+  assert.ok(fleetView.nodes.has('space-personal'), 'the Space without agents is rendered');
+  assert.ok(!descendants(fleetView.nodes.get('space-personal')).some(n => n.path?.endsWith('.gif')), 'a Space without agents keeps native presentation');
   if (width === 310) {
     const row = descendants(fleetView.nodes.get('space-s'));
     assert.ok(row.some(n => n.path?.endsWith('/sunny.gif')), 'a generic fleet shows its ship');

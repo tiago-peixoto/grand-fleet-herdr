@@ -207,6 +207,7 @@ export default class OnePieceAgents extends Agents {
         } catch (_) { /* Keep the last evidence when a machine cannot be read. */ }
         finally {
           pendingCaptains.delete(key);
+          (this.checkedCaptains ??= new Set()).add(key);
           cx.notify();
         }
       });
@@ -323,8 +324,8 @@ export default class OnePieceAgents extends Agents {
     const online = new Set(machines().filter(machine => machine.layout === 'ready').map(machine => machine.name ?? null));
     const retained = id => known.has(id) || !online.has(id.includes('/') ? id.split('/')[0] : null);
     const captainCrews = members.map(terminal => captainLinks()[identity(terminal)] && selected[identity(terminal)]).filter(Boolean);
-    // Straw Hats belong to a live captain, so new fleets wait until pending captain discovery settles.
-    const settled = !this.pendingCaptains?.size;
+    // Straw Hats belong to a live captain, so new fleets wait until each crewmember's first discovery settles.
+    const settled = [...this.pendingCaptains ?? []].every(key => this.checkedCaptains?.has(key));
     const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()] : [], appearance().spaceCrews ?? {}, captainCrews, retained);
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
