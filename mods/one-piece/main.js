@@ -187,7 +187,10 @@ export default class OnePieceAgents extends Agents {
       const key = identity(candidate);
       if (pendingCaptains.has(key)) continue;
       pendingCaptains.add(key);
-      if (!this.checkedCaptains?.has(key)) (this.firstChecks ??= new Map()).set(key, this.firstChecks.get(key) ?? Date.now());
+      if (!this.checkedCaptains?.has(key) && !this.firstChecks?.has(key)) {
+        (this.firstChecks ??= new Map()).set(key, Date.now());
+        cx.timer.after(5000, cx => cx.notify());
+      }
       cx.spawn(async cx => {
         try {
           const result = await hc(['get', candidate.address, '--json']);

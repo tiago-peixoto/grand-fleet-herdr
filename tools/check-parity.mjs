@@ -60,7 +60,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   all[3].labels={'firstmate.task':'fm-2','firstmate.home':'local'};
   const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
-  const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
+  const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){},after(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
   const context={...fleet,discoverCaptain,captainSpaces,crewmembers,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
@@ -360,8 +360,11 @@ discovery.context.readTextFile=async path=>{
 };
 const pending=[];
 discovery.cx.spawn=fn=>{pending.push(fn(discovery.cx));};
+const bounds=[];
+discovery.cx.timer={...discovery.cx.timer,after(ms,handler){bounds.push(ms);let notified=false;handler({notify(){notified=true;}});assert.ok(notified,'the discovery bound redraws the sidebar');}};
 discovery.controller.discovering=false;
 discovery.controller.discover(discovery.cx);
+assert.ok(bounds.length>0&&bounds.every(ms=>ms===5000),'each first discovery schedules a redraw when its five-second wait ends');
 await Promise.all(pending.splice(0));
 assert.equal(discovery.state.get('one-piece.discovered')['t1:1'].role,'firstmate');
 assert.equal(discovery.state.get('one-piece.discovered')['remote/t1:4'].role,'secondmate');
