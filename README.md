@@ -214,11 +214,11 @@ Right-clicking a captain's character in Agents also offers **Raise a new flag…
 ## Read the crew
 
 Every agent wears its crewmember's face where you look for it.
-The tab and the pane title show a pixel portrait in place of the program icon, and the pane title names the crewmember.
+The tab and the pane title show a pixel portrait in place of the program icon.
 In Agents, the full animated crewmember takes the icon's place.
 
 <p align="center">
-  <img src="docs/images/crew-faces.png" width="575" alt="Chopper's face on a Claude Code tab and in the pane title Chopper · Claude Code, with sleeping Chopper sprites in two Agents rows">
+  <img src="docs/images/crew-faces.png" width="575" alt="Chopper's face on a Claude Code tab and in its Claude Code pane title, with sleeping Chopper sprites in two Agents rows">
 </p>
 
 <p align="center">

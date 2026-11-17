@@ -194,12 +194,12 @@ for (const width of [310, 120]) {
   const sub=descendants(decorated.nodes.get('sub-t2')).find(n=>n.path?.includes('crew-'));
   assert.ok(sub.path.endsWith('-blocked.gif')&&sub.width===26,'a subagent row shows its crewmember in the icon slot');
 }
-for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Franky · Claude']]) {
+for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Claude']]) {
   const view=host(true,'grouped',310,props);
   const nodes=descendants(view.root);
   assert.ok(nodes.some(n=>n.path===`mods/one-piece/assets/portrait-${face}.png`),`${props.region} shows the crewmember portrait`);
   assert.ok(!nodes.some(n=>n.path==='icons/claude.svg'),`${props.region} drops the program icon for a crewmember`);
-  if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title names the crewmember and keeps the program');
+  if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title keeps its native name');
   assert.equal(view.state.get('one-piece.art').characters['t2:2'],undefined,`${props.region} copies leave crew bookkeeping to the Agents list`);
 }
 {

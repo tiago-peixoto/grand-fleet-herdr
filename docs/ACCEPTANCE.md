@@ -25,7 +25,7 @@ The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable p
 | Live fleet menu | Opening the fleet menu and the ship picker as mod tabs rendered Rename, Choose ship and crew, Close, and all eight crews |
 | Live crew choice | A person right-clicked a generic fleet's ship, chose Choose ship and crew, and picked Whitebeard. The stored crew changed from Straw Hats to Whitebeard, and the sidebar showed the Moby Dick with a Whitebeard crewmate |
 | Separate host | The VPS `firstmate-hz`, added over SSH with `hc machine add` on its own session `gfvps1117`, ran a probe agent whose `gfvps/` Space showed Sunny and a Straw Hat crewmate because no captain was live |
-| Crewmember portraits | A probe agent's tab and pane title showed Chopper's face at 14 points, the pane title read "Chopper · release-probe", and its Agents row showed the sleeping animated Chopper in the icon slot with the native idle ring at the end |
+| Crewmember portraits | A probe agent's tab and pane title showed Chopper's face at 14 points, and its Agents row showed the sleeping animated Chopper in the icon slot with the native idle ring at the end |
 | Flag dialog | Opened as a mod tab with `tab.new --mod one-piece`, the dialog rendered eight crew cards with animated ships, standing lineups, and Flying now on the Straw Hats |
 | Separate host offline | Removing that machine kept the Straw Hat crew, and adding it back showed the same probe process and the same crew |
 
