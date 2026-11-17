@@ -129,6 +129,19 @@ def build(output):
             (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
             for row, (state, delay) in enumerate([('idle', 85), ('working', 22), ('blocked', 70)])]
         export(sheet, boxes, 128 if ship else 64, 116 if ship else 56, animations, output)
+        if not ship:
+            portrait(output / f'crew-{name}-working.png', output / f'portrait-crew-{name}.png')
+
+
+def portrait(sprite, output, side=28):
+    # Standing sprites put the head at the top, so a 28px crop there reads as a 14pt face at 2x.
+    alpha = im(sprite, '-alpha', 'extract', '-depth', '8', 'gray:-')
+    opaque = [(i % 64, i // 64) for i, a in enumerate(alpha) if a]
+    top = min(y for _, y in opaque)
+    band = [x for x, y in opaque if y < top+22]
+    x = min(max(round((min(band)+max(band))/2 - side/2), 0), 64-side)
+    im(sprite, '-crop', f'{side}x{side}+{x}+{max(top-1, 0)}', '+repage',
+       '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{output}')
 
 
 if __name__ == '__main__':

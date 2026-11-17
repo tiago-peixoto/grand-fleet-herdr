@@ -1,18 +1,53 @@
 import Agents from './herdr-agents.js';
 import Menu from './herdr-menu.js';
+import Pane from './herdr-pane.js';
 import Spaces, { glyph, tone } from './herdr-spaces.js';
+import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
-import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile } from 'herdr';
+import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify } from 'herdr';
 import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from './fleet.js';
 
+const CREW_COLORS = {strawhat:'#e8b04b', redhair:'#d4483f', bigmom:'#e98fb8', beasts:'#9b7bd1', heart:'#e5d14a', whitebeard:'#6fb0e6', roger:'#d9a62b', kid:'#c9443a'};
 const displayName = name => name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
 const appearance = () => shared('one-piece.art') ?? { crews: {}, characters: {}, paused: false };
 const captainLinks = () => ({...(shared('one-piece.captains') ?? {}), ...(shared('one-piece.discovered') ?? {})});
 const save = patch => setShared('one-piece.art', { ...appearance(), ...patch });
 const crewFor = terminal => crews[appearance().crews[identity(terminal)]] ?? crews.strawhat;
+const live = address => terminals().find(terminal => terminal.address === address && terminal.state === 'live');
+// The crewmember test from fleet.js, applied to one terminal so each icon avoids copying the terminal list.
+const art = terminal => !terminal || !(terminal.program?.agent || agents().some(agent => agent.address === terminal.address)) ? null :
+  captainLinks()[identity(terminal)] ? `crew-${crewFor(terminal).captain}` : appearance().characters[identity(terminal)]?.art ?? null;
+
+function crewName(terminal) {
+  const assigned = appearance().characters[identity(terminal)];
+  return assigned?.number && !captainLinks()[identity(terminal)] ? `Pirate ${assigned.number}` : displayName(art(terminal).replace(/^crew-/, ''));
+}
+
+function describe(terminal, status) {
+  const state = status === 'blocked' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
+  return `${crewName(terminal)}${captainLinks()[identity(terminal)] ? ' · Firstmate captain' : ''} · ${state}`;
+}
+
+function portraitProgram(pane) {
+  const face = art(live(pane?.terminal));
+  return face ? {...pane.program, icon:`mods/one-piece/assets/portrait-${face}.png`, tint:false} : pane?.program;
+}
+
+class OnePieceTabs extends Tabs {
+  program(pane) { return portraitProgram(pane); }
+}
+
+class OnePiecePane extends Pane {
+  me() {
+    const pane = super.me(), program = portraitProgram(pane);
+    if (program === pane?.program) return pane;
+    const base = pane.program?.name ?? pane.title ?? 'Agent';
+    return {...pane, program:{...program, agent:true, name:`${crewName(live(pane.terminal))} · ${base}`}};
+  }
+}
 
 function sidebarWidth(node = layout()) {
   if (node?.id === 'sidebar') return node.size?.px ?? Infinity;
@@ -33,18 +68,21 @@ function appearanceMenu(key) {
   openOverlay({mod:'one-piece', kind:'popup', width:390, height:430, props:{appearance:key}});
 }
 
+function flagDialog(flag) {
+  openOverlay({mod:'one-piece', kind:'dialog', width:760, height:572, props:{flag}});
+}
+
 class FleetMenu extends Menu {
   items() {
     const items = super.items();
-    items.splice(1, 0, ['Choose ship and crew', 'one-piece.appearance', {}]);
+    items.splice(1, 0, ['Raise a new flag…', 'one-piece.appearance', {}]);
     return items;
   }
 
   choose(index, cx) {
     if (this.items()[index]?.[1] !== 'one-piece.appearance') return super.choose(index, cx);
     closeOverlay(props().overlay);
-    if (props().shipSpace) openOverlay({mod:'one-piece', kind:'popup', width:390, height:430, props:{shipSpace:props().shipSpace}});
-    else appearanceMenu(props().captain);
+    flagDialog(props().shipSpace ? {space:props().shipSpace} : {captain:props().captain});
   }
 }
 
@@ -96,10 +134,9 @@ class OnePieceSpaces extends Spaces {
     const crew = this.ship(w);
     const portraits = h_flex().gap(2).items_center().overflow_hidden();
     for (const terminal of members) {
-      const key = identity(terminal);
-      const art = captainLinks()[key] ? `crew-${crewFor(terminal).captain}` : appearance().characters[key]?.art;
-      if (art) portraits.child(this.portrait(terminal, art,
-        `${displayName(art.replace(/^crew-/, ''))} · ${terminal.title || terminal.address}`, t));
+      const face = art(terminal);
+      if (face) portraits.child(this.portrait(terminal, face,
+        `${displayName(face.replace(/^crew-/, ''))} · ${terminal.title || terminal.address}`, t));
     }
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(space => space.id === this.pressed);
     return v_flex().id(`space-${w.id}`).relative().px(8).h(64).mb(6).flex_none().justify_center().rounded(8)
@@ -162,7 +199,14 @@ export default class OnePieceAgents extends Agents {
       this.spacesView.init(p, cx);
       return;
     }
-    if (props()?.appearance || props()?.setup || props()?.shipSpace) {
+    const Portraits = {tabs:OnePieceTabs, pane:OnePiecePane}[props()?.region];
+    if (Portraits) {
+      this.portraitView = new Portraits();
+      this.portraitView.init(p, cx);
+      return;
+    }
+    if (props()?.appearance || props()?.setup || props()?.flag) {
+      this.flagPick = null;
       this.menuFocus = cx.focus_handle();
       this.menuFocus.focus();
       return;
@@ -218,28 +262,25 @@ export default class OnePieceAgents extends Agents {
     }
   }
 
-  subRow(t, entry, shown, compact) {
-    // Native subrows pass only status, so retain identity while their status cell renders.
-    this.subTerminal = entry.t;
-    try { return super.subRow(t, entry, shown, compact); }
-    finally { this.subTerminal = null; }
+  icon(agent, size, color) {
+    const terminal = live(agent.address), face = art(terminal);
+    if (!face) return super.icon(agent, size, color);
+    const status = this.listed?.get(agent.address) ?? agent.status;
+    // The crewmember is drawn larger than the program icon it replaces so its pose stays readable.
+    return div().flex_none().tooltip(describe(terminal, status))
+      .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
+      .child(sprite(face, status, size + 12));
   }
 
   status(t, agent, compact = false) {
-    const terminal = this.subTerminal ?? terminals().find(terminal => terminal.address === agent.address && terminal.state === 'live');
-    if (!terminal) return super.status(t, agent, compact);
-    const captain = captainLinks()[identity(terminal)];
-    const assigned = appearance().characters[identity(terminal)];
-    const art = captain ? `crew-${crewFor(terminal).captain}` : assigned?.art;
-    if (!art) return super.status(t, agent, compact);
-    const name = assigned?.number && !captain ? `Pirate ${assigned.number}` : displayName(art.replace(/^crew-/, ''));
-    const state = agent.status === 'blocked' ? 'Needs you' : agent.status === 'done' ? 'Done' : agent.status ?? 'Unknown';
-    return h_flex().flex_none().items_center().gap(4).relative()
-      .tooltip(`${name}${captain ? ' · Firstmate captain' : ''} · ${state}`)
+    // The rail has no icon column, so only there the crewmember stands in for the status mark.
+    const terminal = sidebarWidth() < 160 && live(agent.address), face = art(terminal);
+    if (!face) return super.status(t, agent, compact);
+    return h_flex().flex_none().items_center().relative()
+      .tooltip(describe(terminal, agent.status))
       .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
-      .child(sprite(art, agent.status, sidebarWidth() < 160 ? 14 : 24))
-      .when(compact && agent.status === 'done', el => el.child(div().absolute().top(0).right(0).size(6).rounded(3).bg(t.done)))
-      .when(!compact && (agent.status === 'blocked' || agent.status === 'done'), el => el.child(div().text_size(10.5).text_color(t[agent.status]).child(state)));
+      .child(sprite(face, agent.status, 14))
+      .when(agent.status === 'done', el => el.child(div().absolute().top(0).right(0).size(6).rounded(3).bg(t.done)));
   }
 
   appearanceMenu() {
@@ -248,14 +289,9 @@ export default class OnePieceAgents extends Agents {
     const menu = v_flex().size_full().p(8).gap(4).overflow_y_scrollbar().bg(t.popover).text_color(t.foreground).text_size(13);
     if (!terminal) return menu.child(div().child('This terminal is no longer available.'));
     if (captainLinks()[key]) {
-      for (const [id, crew] of Object.entries(crews)) menu.child(Button.new(`crew-${id}`).flex_none().accessibility_label(crew.name).tab_index(0).p(7).rounded(5)
-        .when(id === 'strawhat', el => el.track_focus(this.menuFocus)).focus(el => el.bg(t.selected)).hover(el => el.bg(t.hover)).child(`${crew.title} · ${crew.name}`)
-        .on_click(() => {
-          const characters = assignCrew(managedCrew(terminal, terminals(), agents(), captainLinks()), appearance().characters,
-            {terminal:terminal.address, created:terminal.created_ms, crew:id});
-          save({crews:{...appearance().crews, [key]:id}, manualCrews:{...appearance().manualCrews,[key]:true}, characters});
-          closeOverlay(props().overlay);
-        }));
+      menu.child(Button.new('raise-flag').flex_none().accessibility_label('Raise a new flag').tab_index(0).p(7).rounded(5)
+        .track_focus(this.menuFocus).focus(el => el.bg(t.selected)).hover(el => el.bg(t.hover)).child('Raise a new flag…')
+        .on_click(() => { closeOverlay(props().overlay); flagDialog({captain:key}); }));
       if (!shared('one-piece.discovered')?.[key]) menu.child(Button.new('unlink-captain').flex_none().accessibility_label('Remove captain designation').tab_index(0).p(7).child('Remove captain designation')
         .on_click(() => { const links = {...(shared('one-piece.captains') ?? {})}; delete links[key]; setShared('one-piece.captains', links); closeOverlay(props().overlay); }));
     } else if (!this.spaceHasCaptain(terminal)) {
@@ -272,18 +308,86 @@ export default class OnePieceAgents extends Agents {
     return space !== undefined && captainSpaces(terminals(), agents(), captainLinks()).has(space);
   }
 
-  shipMenu() {
-    const t = theme(), id = props().shipSpace;
-    const menu = v_flex().size_full().p(8).gap(4).overflow_y_scrollbar().bg(t.popover).text_color(t.foreground).text_size(13);
-    if (!genericFleets(terminals(), agents(), captainLinks()).has(id)) return menu.child(div().child('This space no longer has a fleet without a captain.'));
-    const current = appearance().spaceCrews?.[id];
-    for (const [crewId, crew] of Object.entries(crews)) menu.child(Button.new(`ship-crew-${crewId}`).flex_none().accessibility_label(crew.name).tab_index(0).p(7).rounded(5)
-      .when(crewId === (current ?? 'strawhat'), el => el.track_focus(this.menuFocus)).focus(el => el.bg(t.selected)).hover(el => el.bg(t.hover)).child(`${crew.title} · ${crew.name}`)
-      .on_click(() => {
-        save({spaceCrews:{...appearance().spaceCrews, [id]:crewId}});
-        closeOverlay(props().overlay);
-      }));
-    return menu;
+  flagMenu() {
+    const t = theme(), flag = props().flag, ids = Object.keys(crews);
+    const captain = flag.captain && terminals().find(terminal => identity(terminal) === flag.captain && terminal.state === 'live');
+    const valid = captain ? captainLinks()[flag.captain] : genericFleets(terminals(), agents(), captainLinks()).has(flag.space);
+    const shell = v_flex().size_full().bg(t.popover).text_color(t.foreground).text_size(13);
+    if (!valid) return shell.p(16).child(flag.captain ? 'This captain is no longer available.' : 'This space no longer has a fleet without a captain.');
+    const spaceId = captain ? agents().find(agent => agent.address === captain.address)?.space : flag.space;
+    const spaceName = spaces().find(space => space.id === spaceId)?.name ?? 'this fleet';
+    const flying = captain ? ids.find(id => crews[id] === crewFor(captain)) : appearance().spaceCrews?.[flag.space];
+    const captainCrews = crewmembers(terminals(), agents()).filter(terminal => captainLinks()[identity(terminal)])
+      .map(terminal => appearance().crews[identity(terminal)]).filter(Boolean);
+    // Generic fleets give the Straw Hats to Firstmate captains, the same rule selectFleetCrews applies.
+    const locked = id => !captain && id === 'strawhat' && captainCrews.length > 0;
+    const others = id => [...genericFleets(terminals(), agents(), captainLinks()).keys()]
+      .filter(space => space !== spaceId && appearance().spaceCrews?.[space] === id).length +
+      [...captainSpaces(terminals(), agents(), captainLinks())].filter(([space, terminal]) => space !== spaceId && appearance().crews[identity(terminal)] === id).length;
+    // Key events can arrive before the next render, so handlers read the choice live instead of this render's copy.
+    const picked = () => this.flagPick ?? (ids.includes(flying) ? flying : ids.find(id => !locked(id)));
+    const pick = picked();
+    const sail = id => {
+      if (locked(id)) return;
+      if (captain) {
+        const characters = assignCrew(managedCrew(captain, terminals(), agents(), captainLinks()), appearance().characters,
+          {terminal:captain.address, created:captain.created_ms, crew:id});
+        save({crews:{...appearance().crews, [flag.captain]:id}, manualCrews:{...appearance().manualCrews, [flag.captain]:true}, characters});
+      } else save({spaceCrews:{...appearance().spaceCrews, [flag.space]:id}});
+      const crew = crews[id];
+      notify({title:`The ${crew.title} sets sail`, body:`${crew.name} now fly over ${spaceName}`,
+        icon:`mods/one-piece/assets/portrait-crew-${crew.captain}.png`});
+      closeOverlay(props().overlay);
+    };
+    const badge = (text, bg, color) => div().absolute().top(8).px(8).h(19).flex().items_center().rounded(10)
+      .text_size(11).font_semibold().bg(bg).text_color(color).child(text);
+    const card = id => {
+      const crew = crews[id], color = CREW_COLORS[id], chosen = id === pick, used = others(id);
+      return v_flex().id(`flag-${id}`).flex_1().min_w(0).relative().rounded(12).overflow_hidden()
+        .border(chosen ? 2 : 1).border_color(chosen ? color : t.border).bg(t.raised)
+        .accessibility_label(`${crew.name}, ${crew.title}${locked(id) ? ', reserved for the captain' : ''}`)
+        .when(locked(id), el => el.opacity(0.45))
+        .when(!locked(id), el => el.cursor_pointer().hover(card => card.border_color(color))
+          .on_click((_event, cx) => { this.flagPick = id; cx.notify(); }))
+        .child(div().h(92).relative().flex().justify_center().items_end().overflow_hidden().bg('#0f3b55')
+          .child(div().absolute().left(0).right(0).bottom(0).h(46).bg('#0b2737'))
+          .child(div().absolute().left(0).right(0).top(0).bottom(0).bg(color + '30'))
+          .child(sprite(crew.ship, 'idle', 84, true).relative()
+            .when(!appearance().paused, ship => ship.loop('top', {from:3, to:-3, period:chosen ? 1200 : 2400}))))
+        .child(h_flex().h(40).mt(-6).justify_center().relative()
+          .children([crew.captain, ...crew.workers.slice(0, 3)].map(name => sprite(`crew-${name}`, 'working', 40).mx(-4))))
+        .child(v_flex().px(12).pt(4).pb(10).gap(1)
+          .child(div().truncate().font_semibold().text_size(14).child(crew.name))
+          .child(div().truncate().text_size(12).text_color(t.muted).child(crew.title)))
+        .when(id === flying, el => el.child(badge('Flying now', color, '#111111').left(8)))
+        .when(locked(id), el => el.child(badge('Reserved for the captain', '#00000099', t.foreground).left(8)))
+        .when(used > 0 && id !== flying && !locked(id), el => el.child(badge(`${used} fleet${used > 1 ? 's' : ''}`, '#00000099', t.foreground).right(8)));
+    };
+    const move = step => {
+      let index = ids.indexOf(picked());
+      do index = (index + step + ids.length) % ids.length; while (locked(ids[index]));
+      this.flagPick = ids[index];
+    };
+    const key = kbd => div().px(5).rounded(4).border(1).border_b(2).border_color(t.border).text_color(t.foreground).text_size(12).child(kbd);
+    return shell.id('flag-dialog').track_focus(this.menuFocus)
+      .on_key_down((event, cx) => {
+        const step = {right:1, left:-1, down:4, up:-4}[event.key];
+        if (step) move(step);
+        else if (event.key === 'enter') return sail(picked());
+        else return;
+        cx.notify();
+      })
+      .child(v_flex().px(22).pt(18).pb(10).gap(2)
+        .child(div().text_size(12).text_color(t.accent).child(`${captain ? 'CAPTAIN' : 'FLEET'} · ${spaceName.toUpperCase()}`))
+        .child(div().text_size(22).font_bold().child('Raise your flag')))
+      .child(v_flex().id('flag-cards').flex_1().min_h(0).px(22).pt(8).pb(18).gap(12).overflow_y_scrollbar()
+        .child(h_flex().gap(12).children(ids.slice(0, 4).map(card)))
+        .child(h_flex().gap(12).children(ids.slice(4).map(card))))
+      .child(h_flex().flex_none().px(22).py(12).gap(16).items_center().border_t(1).border_color(t.border).bg(t.chrome).text_color(t.muted)
+        .child(h_flex().flex_1().min_w(0).gap(4).items_center()
+          .children(['←', '→', '↑', '↓'].map(key)).child('choose ·').child(key('Enter')).child('set sail ·').child(key('Esc')).child('stay'))
+        .child(Button.new('set-sail').tab_index(0).px(16).py(8).rounded(8).bg(t.accent).text_color('#1a1a1a').font_bold()
+          .accessibility_label(`Set sail with the ${crews[pick].name}`).child('Set sail').on_click(() => sail(picked()))));
   }
 
   setupMenu() {
@@ -303,7 +407,9 @@ export default class OnePieceAgents extends Agents {
   }
 
   render(cx) {
-    if (!this.spacesView && !this.fleetMenu && !props()?.setup && !props()?.appearance && !props()?.shipSpace && !props()?.view &&
+    // Tab and pane copies only read the appearance, so they skip the crew bookkeeping below.
+    if (this.portraitView) return this.portraitView.render(cx);
+    if (!this.spacesView && !this.fleetMenu && !props()?.setup && !props()?.appearance && !props()?.flag && !props()?.view &&
         crewmembers(terminals(), agents()).map(identity).join('|') !== this.discoverySignature) this.discover(cx);
     const selected = selectDefaultCrews(terminals(), captainLinks(), appearance().crews, machines(), appearance());
     const roles = {...appearance().roles};
@@ -313,7 +419,7 @@ export default class OnePieceAgents extends Agents {
     if (this.spacesView) return this.spacesView.render(cx);
     if (props()?.setup) return this.setupMenu();
     if (props()?.appearance) return this.appearanceMenu();
-    if (props()?.shipSpace) return this.shipMenu();
+    if (props()?.flag) return this.flagMenu();
     if (props()?.view) {
       const target = props().target;
       const terminal = terminals().find(t => t.address === target?.terminal && t.created_ms === target?.created && t.state === 'live');

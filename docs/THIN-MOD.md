@@ -23,11 +23,16 @@ Manual selections, including duplicates, remain unchanged.
 Firstmate sends no artwork commands and requires no mod-specific registration.
 Manual designation remains available for instances whose session evidence cannot be read.
 An ended captain designation cannot transfer to a reused terminal address.
-Right-click a Space with a ship and choose “Choose ship and crew” directly below Rename.
+Right-click a Space with a ship and choose “Raise a new flag…” directly below Rename.
+The flag dialog shows all eight crews, and arrow keys, Enter, and Esc work as well as the pointer.
+For a generic fleet, the Straw Hats show as reserved while a Firstmate captain is live, the same rule that automatic choice follows.
+Set sail posts a notification that names the ship and the Space.
 The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
 A space containing a captain shows that crew's ship.
+An agent's crewmember takes the program icon's place in the Agents row, its tab, and its pane title.
+The narrow sidebar rail has no icon column, so there the crewmember stays in the status cell.
 A space with live agents and no captain is a generic fleet.
 A generic fleet shows a ship, keeps its Space name above the crew strip, and has no captain artwork.
 Each generic fleet receives the least-used crew, counting live captains and other fleets.

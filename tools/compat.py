@@ -23,6 +23,11 @@ def generate(agents_source, main_layout, spaces_source):
     imports = re.findall(r'\bfrom\s+[\'"]([^\'"]+)', spaces_source)
     if any(name not in ('herdr', 'gpui-kit', 'gpui-base') for name in imports):
         raise ValueError('Herdr Spaces has new module dependencies; update the One Piece adapter before installing.')
+    agents_source = hook(agents_source, 'export default class Agents extends View {',
+                         'icon(agent, size, color) { return icon(agent.program, size, color); }',
+                         {'icon(a.program, 16, t.foreground)': 'this.icon(a, 16, t.foreground)',
+                          'icon(k.program, 14, t.foreground)': 'this.icon(k, 14, t.foreground)'},
+                         'Unsupported Herdr Agents icons; keep the existing installation and update the One Piece adapter.')
     layout = copy.deepcopy(main_layout)
     layout['colors'] = {
         'background': '#101f25', 'canvas': '#102128', 'chrome': '#14272d',
@@ -34,10 +39,16 @@ def generate(agents_source, main_layout, spaces_source):
     }
     slots = []
     space_slots = []
+    portrait_slots = []
 
     def visit(node, parent=None):
         if not isinstance(node, dict):
             raise ValueError('Invalid Herdr main layout node')
+        if node.get('content', {}).get('mod') == 'tabs':
+            portrait_slots.append((node['content'], 'tabs'))
+        header = node.get('content', {}).get('pane', {}).get('header', {})
+        if header.get('content', {}).get('mod') == 'pane':
+            portrait_slots.append((header['content'], 'pane'))
         if node.get('content', {}).get('mod') == 'agents':
             slots.append((node, parent))
         if node.get('content', {}).get('mod') == 'spaces':
@@ -50,6 +61,9 @@ def generate(agents_source, main_layout, spaces_source):
         raise ValueError('Expected adjacent Spaces and Agents slots in Herdr main layout; update the One Piece adapter before installing.')
     for region, entries in (('spaces', space_slots), ('agents', slots)):
         content = entries[0][0]['content']
+        content['mod'] = 'one-piece'
+        content['props'] = {**content.get('props', {}), 'region': region}
+    for content, region in portrait_slots:
         content['mod'] = 'one-piece'
         content['props'] = {**content.get('props', {}), 'region': region}
     return {
@@ -69,3 +83,30 @@ def generate_menu(source):
         raise ValueError('Unsupported Herdr Menu dependencies; preserving installation')
     return source.replace('items(props(), this.git)', 'this.items()').replace(
         marker, marker + '\n  items() { return items(props(), this.git); }').encode('utf-8')
+
+
+def hook(source, marker, method, replacements, error):
+    """Route one native call through an overridable method, refusing sources that changed shape."""
+    if source.count(marker) != 1 or any(source.count(old) != 1 for old in replacements):
+        raise ValueError(error)
+    for old, new in replacements.items():
+        source = source.replace(old, new)
+    return source.replace(marker, marker + '\n  ' + method)
+
+
+def generate_portraits(tabs_source, pane_source):
+    """Let tab and pane titles show each agent's crewmember instead of its program icon."""
+    error = 'Unsupported Herdr {} interface; preserving installation'
+    for name, source in (('Tabs', tabs_source), ('Pane', pane_source)):
+        imports = re.findall(r"\bfrom\s+['\"]([^'\"]+)", source)
+        if any(module not in ('herdr', 'gpui-kit', 'gpui-base') for module in imports):
+            raise ValueError(error.format(name))
+    if not re.search(r'^  me\(\) \{', pane_source, re.M) or pane_source.count('const p = this.me();') != 1:
+        raise ValueError(error.format('Pane'))
+    tabs = hook(tabs_source, 'export default class Tabs extends View {',
+                'program(pane) { return pane?.program; }',
+                {'const program = lead?.program;': 'const program = this.program(lead);'}, error.format('Tabs'))
+    if 'export default class Pane extends View {' not in pane_source:
+        raise ValueError(error.format('Pane'))
+    return {'mods/one-piece/herdr-tabs.js': tabs.encode('utf-8'),
+            'mods/one-piece/herdr-pane.js': pane_source.encode('utf-8')}

@@ -29,8 +29,7 @@ class InstallTests(unittest.TestCase):
         self.put(self.repo, 'mods/one-piece/mod.json', '{"place":"none"}')
         self.put(self.repo, 'mods/one-piece/assets/image.png', b'\x00\xffPNG')
         shutil.copyfile(ROOT / 'tools/compat.py', self.repo / 'tools/compat.py')
-        for name in ('settings.json', 'shared.json', 'view.json', 'sessions.json',
-                     'mods/tabs/main.js'):
+        for name in ('settings.json', 'shared.json', 'view.json', 'sessions.json'):
             self.put(self.home, name, 'keep ' + name)
         self.upstream(self.home)
         self.keys = (b'{\r\n  "global": {"cmd-w": "tab.close", "cmd-shift-w": "pane.close"},'
@@ -43,8 +42,8 @@ class InstallTests(unittest.TestCase):
     def upstream(self, home):
         self.put(home, 'mods/agents/main.js',
                  'import { View } from "herdr";\nexport default class Agents extends View {\n'
-                 + ''.join('  ' + name + '() {}\n' for name in
-                           ('render', 'status', 'subRow', 'tree'))
+                 '  render() { return [icon(a.program, 16, t.foreground), icon(k.program, 14, t.foreground)]; }\n'
+                 + ''.join('  ' + name + '() {}\n' for name in ('status', 'subRow', 'tree'))
                  + '  init() { this.folded = new Set(); }\n}\n')
         self.put(home, 'mods/spaces/main.js',
                  'export function glyph() {}\nexport function tone() {}\nimport { View } from "gpui-kit";\nexport default class Spaces extends View {\n'
@@ -54,6 +53,10 @@ class InstallTests(unittest.TestCase):
                  'export default class Menu extends View {\n'
                  '  choose() { return items(props(), this.git); }\n'
                  '  render() { return items(props(), this.git); }\n}\n')
+        self.put(home, 'mods/tabs/main.js',
+                 'export default class Tabs extends View {\n  render() { const program = lead?.program; }\n}\n')
+        self.put(home, 'mods/pane/main.js',
+                 'export default class Pane extends View {\n  me() {}\n  render() { const p = this.me(); }\n}\n')
         self.put(home, 'layouts/main.json', json.dumps({'children': [
             {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}))
 
@@ -101,8 +104,8 @@ class InstallTests(unittest.TestCase):
     def test_new_install_generates_files_without_changing_keys(self):
         self.run_cli()
         self.assertEqual((self.home / 'keys.json').read_bytes(), self.keys)
-        self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(),
-                         (self.home / 'mods/agents/main.js').read_bytes())
+        self.assertEqual((self.home / 'mods/one-piece/herdr-pane.js').read_bytes(),
+                         (self.home / 'mods/pane/main.js').read_bytes())
         expected = json.loads((self.home / 'layouts/main.json').read_bytes())
         for index, region in enumerate(('spaces', 'agents')):
             expected['children'][index]['content'] = {'mod': 'one-piece', 'props': {'region': region}}
@@ -169,8 +172,8 @@ class InstallTests(unittest.TestCase):
         layout['children'].append({'content': {'mod': 'tabs'}})
         self.put(self.home, 'layouts/main.json', json.dumps(layout))
         self.run_cli()
-        self.assertEqual((self.home / 'mods/one-piece/herdr-agents.js').read_bytes(), agents.read_bytes())
-        for index, region in enumerate(('spaces', 'agents')):
+        self.assertTrue((self.home / 'mods/one-piece/herdr-agents.js').read_bytes().endswith(b'// upstream update\r\n'))
+        for index, region in enumerate(('spaces', 'agents', 'tabs')):
             layout['children'][index]['content'] = {'mod': 'one-piece', 'props': {'region': region}}
         actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
         self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')

@@ -10,7 +10,10 @@ const home=process.argv[2];
 if(!home) throw new Error('Usage: node tools/check-parity.mjs HERDR_APP_HOME');
 const native=readFileSync(resolve(home,'mods/agents/main.js'),'utf8');
 const nativeSpaces=readFileSync(resolve(home,'mods/spaces/main.js'),'utf8');
-const nativeMenu=readFileSync(resolve(home,'mods/one-piece/herdr-menu.js'),'utf8');
+// The decorated host runs the copies the installer generated, so their hooks are exercised too.
+const generated=name=>readFileSync(resolve(home,`mods/one-piece/${name}`),'utf8');
+const nativeMenu=generated('herdr-menu.js'), hookedAgents=generated('herdr-agents.js');
+const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js');
 const adapter=readFileSync(new URL('../mods/one-piece/main.js',import.meta.url),'utf8');
 const compile=(source,name)=>'(()=>{'+source.replace(/^import .*;\n/gm,'').replace(/export default class \w+/,`globalThis.${name} = class ${name}`).replace(/export function (\w+)/g,'globalThis.$1 = function $1')+'})();';
 
@@ -62,16 +65,17 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){},after(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
   const context={...fleet,discoverCaptain,captainSpaces,crewmembers,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
-    keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all,panes:()=>panes,focused:()=>({agent:'t1'}),
-    spaces:()=>[{id:'s',name:'project',status:'blocked',tabs:[{id:'tab',name:'project'}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
+    keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all.map(t=>({...t})),panes:()=>panes,focused:()=>({agent:'t1'}),
+    spaces:()=>[{id:'s',name:'project',status:'blocked',active:true,tabs:[{id:'tab',name:'project',active:true}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
     theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
     setAgentOrder:order=>calls.push(['order',order]),run:(name,args)=>calls.push([name,args]),
-    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),
+    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),
+    settings:()=>({zoom:1}),home:()=>'/home/pirate',
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
-  runInNewContext(compile(native,'Agents'),context);
+  runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
   runInNewContext(compile(nativeSpaces,'Spaces'),context);
-  if(decorated) runInNewContext(compile(nativeMenu,'Menu'),context);
+  if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane']]) runInNewContext(compile(source,name),context);
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':overlayProps.region==='spaces'?'Spaces':'Agents']();
   const discover=controller.discover;
@@ -175,13 +179,56 @@ for (const width of [310, 120]) {
   }
 }
 
+{
+  const standard=host(false,'grouped',310), decorated=host(true,'grouped',310);
+  const nativeIcon=descendants(standard.nodes.get('agent-fold-t6')).find(n=>n.path);
+  assert.equal(nativeIcon.path,'icons/claude.svg');
+  const icon=descendants(decorated.nodes.get('agent-fold-t6')).find(n=>n.path);
+  assert.equal(icon.path,'mods/one-piece/assets/crew-franky-idle.gif','the animated crewmember takes the program icon slot');
+  assert.equal(icon.width,28);
+  const row=descendants(decorated.nodes.get('ag-t6'));
+  assert.equal(row.filter(n=>n.path?.includes('crew-')).length,1,'no second crewmember at the end of the row');
+  assert.ok(row.some(n=>n.background==='#00ff00'),'the native done mark stays at the end of the row');
+  row.find(n=>n.kids.includes(icon)).right();
+  assert.equal(JSON.stringify(decorated.calls.at(-1)[1].props),JSON.stringify({appearance:'t6:7'}),'right-clicking the crewmember opens its appearance menu');
+  const sub=descendants(decorated.nodes.get('sub-t2')).find(n=>n.path?.includes('crew-'));
+  assert.ok(sub.path.endsWith('-blocked.gif')&&sub.width===26,'a subagent row shows its crewmember in the icon slot');
+}
+for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Franky · Claude']]) {
+  const view=host(true,'grouped',310,props);
+  const nodes=descendants(view.root);
+  assert.ok(nodes.some(n=>n.path===`mods/one-piece/assets/portrait-${face}.png`),`${props.region} shows the crewmember portrait`);
+  assert.ok(!nodes.some(n=>n.path==='icons/claude.svg'),`${props.region} drops the program icon for a crewmember`);
+  if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title names the crewmember and keeps the program');
+  assert.equal(view.state.get('one-piece.art').characters['t2:2'],undefined,`${props.region} copies leave crew bookkeeping to the Agents list`);
+}
+{
+  const view=host(true,'grouped',310,{region:'pane', pane:'p3', terminal:'t6'});
+  view.state.set('one-piece.art',{crews:{},characters:{},paused:false});
+  view.state.delete('one-piece.captains');
+  view.nodes.clear();
+  const nodes=descendants(view.controller.render(view.cx));
+  assert.ok(nodes.some(n=>n.path==='icons/claude.svg'),'an agent without a crewmember keeps its program icon');
+  assert.ok(nodes.some(n=>n.kids.includes('Claude')));
+}
 const menu=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
 assert.equal(scrolls(menu),1,'the expanded crew picker must scroll when constrained');
+menu.nodes.get('raise-flag').click();
+assert.equal(JSON.stringify(menu.calls.at(-1)[1].props),JSON.stringify({flag:{captain:'t1:1'}}), 'a captain raises its flag in the gallery dialog');
+assert.equal(menu.calls.at(-1)[1].kind, 'dialog');
 for (const [id, crew] of Object.entries(fleet.crews)) {
-  const picker=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
-  const button=picker.nodes.get(`crew-${id}`);
+  const picker=host(true,'priority',310,{flag:{captain:'t1:1'},overlay:'flag'});
+  const button=picker.nodes.get(`flag-${id}`);
   assert.ok(button,`missing crew choice: ${id}`);
-  button.click();
+  assert.ok('click' in button,`a captain may raise any flag, including ${id}`);
+  button.click(null,picker.cx);
+  picker.nodes.clear(); picker.root=picker.controller.render(picker.cx);
+  picker.nodes.get('set-sail').click();
+  assert.equal(picker.calls.at(-2)[0],'notify');
+  assert.equal(picker.calls.at(-2)[1].title,`The ${crew.title} sets sail`);
+  assert.equal(picker.calls.at(-2)[1].body,`${crew.name} now fly over project`);
+  assert.equal(picker.calls.at(-2)[1].icon,`mods/one-piece/assets/portrait-crew-${crew.captain}.png`);
+  assert.equal(JSON.stringify(picker.calls.at(-1)),JSON.stringify(['closeOverlay','flag']));
   assert.equal(picker.state.get('one-piece.art').crews['t1:1'],id);
   assert.equal(picker.state.get('one-piece.art').characters['t3:3'].art,`crew-${crew.workers[0]}`);
   const ships=host(true,'priority',310,{region:'spaces'});
@@ -190,11 +237,14 @@ for (const [id, crew] of Object.entries(fleet.crews)) {
   assert.ok(paths(ships).some(path=>path.endsWith(`/${crew.ship}.gif`)));
   assert.ok(paths(ships).some(path=>path.endsWith(`/crew-${crew.captain}-working.gif`)));
 }
-menu.nodes.get('crew-redhair').click();
-assert.equal(menu.state.get('one-piece.art').manualCrews['t1:1'],true,'the picker records an explicit choice');
-assert.equal(menu.state.get('one-piece.art').crews['t1:1'],'redhair');
-assert.equal(menu.state.get('one-piece.art').characters['t3:3'].art,'crew-benn-beckman');
-assert.equal(menu.state.get('one-piece.art').characters['t6:7'].art,'crew-yasopp','the picker restyles every agent in the captain Space');
+const flagKeys=host(true,'priority',310,{flag:{captain:'t1:1'},overlay:'flag'});
+assert.ok(descendants(flagKeys.nodes.get('flag-strawhat')).some(n=>n.kids.includes('Flying now')),'the current crew is marked');
+flagKeys.nodes.get('flag-dialog').keydown({key:'right'},flagKeys.cx);
+flagKeys.nodes.get('flag-dialog').keydown({key:'enter'},flagKeys.cx);
+assert.equal(flagKeys.state.get('one-piece.art').manualCrews['t1:1'],true,'the picker records an explicit choice');
+assert.equal(flagKeys.state.get('one-piece.art').crews['t1:1'],'redhair');
+assert.equal(flagKeys.state.get('one-piece.art').characters['t3:3'].art,'crew-benn-beckman');
+assert.equal(flagKeys.state.get('one-piece.art').characters['t6:7'].art,'crew-yasopp','the picker restyles every agent in the captain Space');
 menu.nodes.get('motion').click();
 assert.equal(menu.state.get('one-piece.art').paused,true);
 menu.nodes.get('unlink-captain').click();
@@ -297,17 +347,33 @@ for (const width of [310, 120]) {
 }
 const shipFleetMenu = host(true, 'priority', 310, {fleetMenu:true, tab:'space', target:{id:'s'}, shipSpace:'s', overlay:'fleet'});
 shipFleetMenu.controller.fleetMenu.choose(1, shipFleetMenu.cx);
-assert.equal(shipFleetMenu.calls.at(-1)[1].props.shipSpace, 's', 'Choose ship and crew opens the ship picker for a generic fleet');
-const picker = captainless(host(true, 'priority', 310, {shipSpace:'s', overlay:'picker'}), structuredClone(fleetArt));
-assert.equal(scrolls(picker), 1, 'the ship picker scrolls when constrained');
-assert.ok(Object.keys(fleet.crews).every(id => picker.nodes.has(`ship-crew-${id}`)));
-picker.nodes.get('ship-crew-kid').click();
+assert.equal(JSON.stringify(shipFleetMenu.calls.at(-1)[1].props),JSON.stringify({flag:{space:'s'}}), 'Raise a new flag opens the gallery for a generic fleet');
+const picker = captainless(host(true, 'priority', 310, {flag:{space:'s'}, overlay:'picker'}), structuredClone(fleetArt));
+assert.equal(scrolls(picker), 1, 'the flag gallery scrolls when constrained');
+assert.ok(Object.keys(fleet.crews).every(id => picker.nodes.has(`flag-${id}`)));
+assert.ok(descendants(picker.nodes.get('flag-redhair')).some(n => n.kids.includes('1 fleet')), 'a card counts the other fleets flying its crew');
+assert.ok(descendants(picker.nodes.get('flag-redhair')).some(n => n.path === 'mods/one-piece/assets/crew-shanks-working.gif'), 'the crew lines up standing');
+picker.nodes.get('flag-kid').click(null, picker.cx);
+assert.equal(picker.state.get('one-piece.art').spaceCrews.s, 'strawhat', 'choosing a card does not set sail yet');
+picker.nodes.clear(); picker.root = picker.controller.render(picker.cx);
+picker.nodes.get('set-sail').click();
 assert.equal(picker.state.get('one-piece.art').spaceCrews.s, 'kid');
+assert.equal(picker.calls.at(-2)[1].body, 'Kid Pirates now fly over project');
+const reserved = captainless(host(true, 'priority', 310, {flag:{space:'s'}, overlay:'picker'}), structuredClone(fleetArt));
+reserved.state.set('one-piece.captains', {'remote/t1:4':{home:'remote'}});
+reserved.state.get('one-piece.art').crews = {'remote/t1:4':'strawhat'};
+reserved.state.get('one-piece.art').spaceCrews.s = 'redhair';
+reserved.nodes.clear(); reserved.root = reserved.controller.render(reserved.cx);
+assert.ok(descendants(reserved.nodes.get('flag-strawhat')).some(n => n.kids.includes('Reserved for the captain')), 'Straw Hats stay with a live Firstmate captain');
+assert.ok(!('click' in reserved.nodes.get('flag-strawhat')) && 'click' in reserved.nodes.get('flag-kid'), 'a reserved crew cannot be chosen');
+reserved.nodes.get('flag-dialog').keydown({key:'left'}, reserved.cx);
+reserved.nodes.get('flag-dialog').keydown({key:'enter'}, reserved.cx);
+assert.equal(reserved.state.get('one-piece.art').spaceCrews.s, 'kid', 'keyboard choice skips the reserved crew');
 const restyled = captainless(host(true), picker.state.get('one-piece.art'));
 assert.equal(restyled.state.get('one-piece.art').spaceCrews.s, 'kid', 'a chosen fleet crew persists');
 assert.equal(restyled.state.get('one-piece.art').characters['t3:3'].owner, 'space:s:0:kid', 'crewmates follow the chosen fleet crew');
-const ledPicker = host(true, 'priority', 310, {shipSpace:'s', overlay:'picker'});
-assert.ok(!ledPicker.nodes.has('ship-crew-kid'), 'a Space with a captain is not offered generic fleet crews');
+const ledPicker = host(true, 'priority', 310, {flag:{space:'s'}, overlay:'picker'});
+assert.ok(!ledPicker.nodes.has('flag-kid'), 'a Space with a captain is not offered generic fleet crews');
 const retainedArt = {...structuredClone(fleetArt), spaceCrews:{...fleetArt.spaceCrews, gone:'kid', 'remote/gone':'heart'}};
 const offline = captainless(host(true, 'priority', 310, {}, 'offline'), retainedArt);
 assert.equal(offline.state.get('one-piece.art').spaceCrews.gone, undefined, 'a crew is released when its Space is gone from an online machine');
@@ -321,13 +387,13 @@ for (const git of [null, 'main', 'linked']) {
   controller.git=git;
   const items=controller.items();
   assert.equal(items[0][0],'Rename');
-  assert.equal(items[1][0],'Choose ship and crew');
+  assert.equal(items[1][0],'Raise a new flag…');
   assert.equal(items.at(-1)[1],'space.close');
   assert.equal(items.length,git==='linked'?6:git?5:3);
   controller.choose(0,fleetMenu.cx);
   assert.equal(fleetMenu.calls.at(-1)[0],'space.rename');
   controller.choose(1,fleetMenu.cx);
-  assert.equal(fleetMenu.calls.at(-1)[1].props.appearance,'t1:1');
+  assert.equal(JSON.stringify(fleetMenu.calls.at(-1)[1].props),JSON.stringify({flag:{captain:'t1:1'}}));
   if (git) {
     controller.choose(2,fleetMenu.cx);
     assert.equal(fleetMenu.calls.at(-1)[1].mod,'worktree');
