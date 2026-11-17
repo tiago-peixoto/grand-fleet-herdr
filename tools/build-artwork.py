@@ -17,7 +17,7 @@ def js_round(value):
     return int(value + .5)
 
 
-def extract_boxes(path, rows, worker=False):
+def extract_boxes(path, rows, worker=False, split=None):
     width, height = map(int, im('identify', '-format', '%w %h', path).split())
     alpha = im(path, '-alpha', 'extract', '-depth', '8', 'gray:-')
     bands = []
@@ -33,8 +33,12 @@ def extract_boxes(path, rows, worker=False):
             raise ValueError(f'Expected nine worker animation rows, found {len(bands)}')
     boxes = []
     for row in range(rows):
-        y0, y1 = (bands[row][0], bands[row][1]+1) if worker else (
-            js_round(row*height/rows), js_round((row+1)*height/rows))
+        if worker:
+            y0, y1 = bands[row][0], bands[row][1]+1
+        elif split:
+            y0, y1 = split[row], split[row+1]
+        else:
+            y0, y1 = js_round(row*height/rows), js_round((row+1)*height/rows)
         for col in range(4):
             x0, x1 = js_round(col*width/4), js_round((col+1)*width/4)
             left, right, top, bottom = x1, x0, y1, y0
@@ -47,6 +51,23 @@ def extract_boxes(path, rows, worker=False):
                 raise ValueError(f'Empty frame: {path}, row {row}, column {col}')
             boxes.append((left, top, right-left+1, bottom-top+1))
     return boxes
+
+
+def row_gaps(path, rows):
+    # Poses can cross a sheet's equal thirds, so move each row line to the nearest empty pixel row.
+    width, height = map(int, im('identify', '-format', '%w %h', path).split())
+    alpha = im(path, '-alpha', 'extract', '-depth', '8', 'gray:-')
+    filled = [any(a > 160 for a in alpha[y*width:(y+1)*width]) for y in range(height)]
+    split = [0]
+    for row in range(1, rows):
+        third = js_round(row*height/rows)
+        if not filled[third]:
+            split.append(third)
+            continue
+        above = next(y for y in range(third, -1, -1) if not filled[y])
+        below = next(y for y in range(third, height) if not filled[y])
+        split.append(above if third-above < below-third else below)
+    return split + [height]
 
 
 def export(sheet, boxes, size, limit, animations, output, flag=False):
@@ -102,7 +123,8 @@ def build(output):
         name = sheet.name.removesuffix('-study-v1.png')
         ship = name in ('red-force', 'queen-mama-chanter', 'mammoth',
                         'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
-        boxes = extract_boxes(sheet, 1 if ship else 3)
+        boxes = extract_boxes(sheet, 1) if ship else extract_boxes(
+            sheet, 3, split=row_gaps(sheet, 3))
         animations = [(f'crew-{name}', range(4), [52]*4)] if ship else [
             (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
             for row, (state, delay) in enumerate([('idle', 85), ('working', 22), ('blocked', 70)])]

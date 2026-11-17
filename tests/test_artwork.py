@@ -116,6 +116,22 @@ class ArtworkTests(unittest.TestCase):
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
             self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
 
+    def test_crew_frames_hold_one_pose_on_the_baseline(self):
+        # A pose crossing its sheet's row line used to leave detached pieces of the
+        # next row under sleeping sprites and lift them off the baseline.
+        for sheet in sorted((ROOT / 'prototype/crew-artwork').glob('*-study-v1.png')):
+            name = sheet.name.removesuffix('-study-v1.png')
+            for state in ('idle', 'working', 'blocked'):
+                gif = ASSETS / f'crew-{name}-{state}.gif'
+                if not gif.exists():
+                    continue
+                alpha = im(gif, '-coalesce', '-alpha', 'extract', '-depth', '8', 'gray:-')
+                for frame in range(len(alpha)//(64*64)):
+                    with self.subTest(animation=gif.name, frame=frame):
+                        pixels = alpha[frame*64*64:(frame+1)*64*64]
+                        rows = [y for y in range(64) if any(pixels[y*64:(y+1)*64])]
+                        self.assertEqual(rows, list(range(rows[0], 61)))
+
     def test_rejects_missing_worker_bands_and_empty_cells(self):
         self.assertTrue(SCRIPT.is_file(), 'native artwork exporter is missing')
         spec = importlib.util.spec_from_file_location('artwork', SCRIPT)

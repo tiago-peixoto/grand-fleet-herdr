@@ -2,9 +2,9 @@ export const identity = terminal => `${terminal.address}:${terminal.created_ms}`
 
 export const crews = {
   strawhat:{name:'Straw Hat Pirates',ship:'sunny',title:'Thousand Sunny',captain:'luffy',workers:['chopper','franky','zoro','nami','usopp','sanji','robin','brook','jinbe']},
-  redhair:{name:'Red Hair Pirates',ship:'crew-red-force',title:'Red Force',captain:'shanks',workers:['benn-beckman','yasopp','lucky-roux']},
-  bigmom:{name:'Big Mom Pirates',ship:'crew-queen-mama-chanter',title:'Queen Mama Chanter',captain:'big-mom',workers:['katakuri','smoothie','cracker']},
-  beasts:{name:'Beasts Pirates',ship:'crew-mammoth',title:'Mammoth',captain:'kaido',workers:['king','queen','jack']},
+  redhair:{name:'Red Hair Pirates',ship:'crew-red-force',title:'Red Force',captain:'shanks',workers:['benn-beckman','yasopp','lucky-roux','limejuice','bonk-punch','monster','building-snake','hongo','howling-gab','rockstar']},
+  bigmom:{name:'Big Mom Pirates',ship:'crew-queen-mama-chanter',title:'Queen Mama Chanter',captain:'big-mom',workers:['katakuri','smoothie','cracker','perospero','compote','daifuku','oven','snack','brulee','mont-d-or','amande','galette','opera','pudding','flampe','tamago','pekoms','streusen','bobbin']},
+  beasts:{name:'Beasts Pirates',ship:'crew-mammoth',title:'Mammoth',captain:'kaido',workers:['king','queen','jack','whos-who','sasaki','black-maria','ulti','page-one','x-drake','basil-hawkins','sheepshead','ginrummy','holedem','speed','babanuki','daifugo','solitaire','bao-huang']},
   heart:{name:'Heart Pirates',ship:'crew-polar-tang',title:'Polar Tang',captain:'law',workers:['bepo','shachi','penguin','jean-bart','ikkaku','uni','clione','hakugan']},
   whitebeard:{name:'Whitebeard Pirates',ship:'crew-moby-dick',title:'Moby Dick',captain:'whitebeard',workers:['marco','ace','jozu','thatch','vista','blamenco','rakuyo','namur','blenheim','curiel','kingdew','haruta','atmos','speed-jiru','fossa','izo','tate','oden','toki','young-inuarashi','young-nekomamushi','young-teach','young-whitey-bay','young-andre','young-epoida','young-kinga','islewan']},
   roger:{name:'Roger Pirates',ship:'crew-oro-jackson',title:'Oro Jackson',captain:'roger',workers:['rayleigh','gaban','crocus','oden','seagull-guns-nozdon','sunbell','spencer','moon-isaac-jr','donquino','millet-pine','rowing','erio','petermoo','jacksonbanner','blumarine','max-marx','taro','doringo','ganryu','cb-gallant','mr-momora','yui','rangram','mugren','bankuro','yamon','young-shanks','young-buggy','young-inuarashi','young-nekomamushi','toki']},

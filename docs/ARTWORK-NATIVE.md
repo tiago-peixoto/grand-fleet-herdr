@@ -57,6 +57,8 @@ The current bands, with both endpoints included, are:
 
 Equal-height worker rows would cut across these bands and can include neighboring poses.
 Sunny and flag use one row, while Luffy uses two equal-height rows.
+Crew character sheets start from equal thirds, but each row line that crosses a pose moves to the nearest scanline with no alpha above 160.
+Some walking poses cross a third, and cutting there leaves pieces of them under the sleeping sprites.
 Column boundaries and equal-height row boundaries use JavaScript's positive-number rounding behavior.
 Within each cell, the bounding box includes pixels whose alpha exceeds 160.
 The crop retains the original pixels inside that box, including partial transparency.
@@ -131,7 +133,7 @@ Unknown status uses the idle sheet, consistent with the current native renderer.
 
 ## Crew batch one, 2026-11-16
 
-The source directory now contains 124 sheets: 117 characters and seven ships.
+Batch one brought the source directory to 124 sheets: 117 characters and seven ships.
 Sunny still uses its existing source outside that directory.
 The 117 characters cover eight captains, 101 unique named workers, and eight generic pirate colors.
 This batch adds 87 unique character sheets and four ship sheets.
@@ -155,3 +157,17 @@ Ship frames last 520 milliseconds.
 [The crew catalog](CREW-CATALOG.md) records membership sources and historical distinctions.
 These are stylized interpretations of canonical characters, not official character renders.
 Colors for members known primarily through monochrome author sketches are artistic choices.
+
+## Emperor crew expansion, 2026-11-17
+
+The approved expansion adds seven Red Hair, sixteen Big Mom, and fifteen Beasts characters to their runtime rosters.
+The crews now assign ten, nineteen, and eighteen named workers respectively before generic pirates.
+The original three entries remain first, and saved named and numbered assignments remain unchanged.
+New agents can fill the added named slots while existing generic pirates retain their numbers.
+
+The source directory now contains 162 sheets: 155 characters and seven ships.
+Characters comprise eight captains, 139 unique named workers, and eight generic pirate colors.
+The 38 new sheets produce 228 exports through the existing exporter.
+The canvas sizes, pose order, timing, and assignment logic are unchanged.
+
+The [expansion record](EMPEROR-CREW-EXPANSION.md) lists every addition, provenance, historical affiliation, and verification result.

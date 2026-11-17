@@ -96,7 +96,7 @@ See [Installation](docs/INSTALL.md) for custom destinations, ownership conflicts
 
 ## Meet the fleet
 
-Eight ships, eight captains, and 101 distinct named crewmembers accompany your agents.
+Eight ships, eight captains, and 139 distinct named crewmembers accompany your agents.
 These animations use the same artwork shipped with the mod.
 
 <table>
@@ -115,7 +115,7 @@ These animations use the same artwork shipped with the mod.
       <img src="mods/one-piece/assets/crew-red-force.gif" width="96" height="96" alt="Red Force">
       <img src="mods/one-piece/assets/crew-shanks-working.gif" width="48" height="48" alt="Shanks walking">
       <p><strong>Red Force · Shanks</strong></p>
-      <p>Benn Beckman, Yasopp, and Lucky Roux</p>
+      <p>10 named crewmembers, including Benn Beckman, Yasopp, Lucky Roux, Limejuice, and Rockstar</p>
     </td>
   </tr>
   <tr>
@@ -127,13 +127,13 @@ These animations use the same artwork shipped with the mod.
       <img src="mods/one-piece/assets/crew-queen-mama-chanter.gif" width="96" height="96" alt="Queen Mama Chanter">
       <img src="mods/one-piece/assets/crew-big-mom-working.gif" width="48" height="48" alt="Big Mom walking">
       <p><strong>Queen Mama Chanter · Big Mom</strong></p>
-      <p>Katakuri, Smoothie, and Cracker</p>
+      <p>19 named crewmembers, including Katakuri, Smoothie, Cracker, Perospero, and Pudding</p>
     </td>
     <td align="center" valign="top">
       <img src="mods/one-piece/assets/crew-mammoth.gif" width="96" height="96" alt="Mammoth">
       <img src="mods/one-piece/assets/crew-kaido-working.gif" width="48" height="48" alt="Kaido walking">
       <p><strong>Mammoth · Kaido</strong></p>
-      <p>King, Queen, and Jack</p>
+      <p>18 named crewmembers from the Wano era, including King, Queen, Jack, and all six Tobiroppo officers</p>
     </td>
   </tr>
   <tr>
