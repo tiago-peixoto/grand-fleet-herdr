@@ -77,6 +77,10 @@ Artwork is horizontally centered, except the flag starts two pixels from the lef
 The crop bottom sits three pixels above the canvas bottom.
 Transparent source pixels at the crop edge can leave additional visible space after downsampling.
 
+Each crew character also receives a static 28 × 28 `portrait-crew-<name>.png`.
+The portrait crops the top of the static working frame, centered on the opaque pixels in its top 22 rows.
+At twice the display density, it reads as a 14-point face in tabs and pane titles.
+
 [ImageMagick documents `-sample`](https://imagemagick.org/command-line-options/#sample) as direct pixel sampling without introducing new colors.
 This matches the prototype's request for unsmoothed pixel artwork, although browser sampling can differ at fractional boundaries.
 [ImageMagick's animation options](https://imagemagick.org/command-line-options/#delay) express delays in hundredths of a second by default.
