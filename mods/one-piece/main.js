@@ -30,7 +30,7 @@ function sprite(name, status, size, ship = false) {
 }
 
 function appearanceMenu(key) {
-  openOverlay({mod:'one-piece', kind:'popup', width:390, height:290, props:{appearance:key}});
+  openOverlay({mod:'one-piece', kind:'popup', width:390, height:430, props:{appearance:key}});
 }
 
 class FleetMenu extends Menu {
@@ -231,10 +231,10 @@ export default class OnePieceAgents extends Agents {
   appearanceMenu() {
     const t = theme(), key = props().appearance;
     const terminal = terminals().find(terminal => identity(terminal) === key && terminal.state === 'live');
-    const menu = v_flex().size_full().p(8).gap(4).bg(t.popover).text_color(t.foreground).text_size(13);
+    const menu = v_flex().size_full().p(8).gap(4).overflow_y_scrollbar().bg(t.popover).text_color(t.foreground).text_size(13);
     if (!terminal) return menu.child(div().child('This terminal is no longer available.'));
     if (captainLinks()[key]) {
-      for (const [id, crew] of Object.entries(crews)) menu.child(Button.new(`crew-${id}`).accessibility_label(crew.name).tab_index(0).p(7).rounded(5)
+      for (const [id, crew] of Object.entries(crews)) menu.child(Button.new(`crew-${id}`).flex_none().accessibility_label(crew.name).tab_index(0).p(7).rounded(5)
         .when(id === 'strawhat', el => el.track_focus(this.menuFocus)).focus(el => el.bg(t.selected)).hover(el => el.bg(t.hover)).child(`${crew.title} · ${crew.name}`)
         .on_click(() => {
           const characters = assignCrew(managedCrew(terminal, terminals(), agents(), captainLinks()), appearance().characters,
@@ -242,14 +242,14 @@ export default class OnePieceAgents extends Agents {
           save({crews:{...appearance().crews, [key]:id}, manualCrews:{...appearance().manualCrews,[key]:true}, characters});
           closeOverlay(props().overlay);
         }));
-      if (!shared('one-piece.discovered')?.[key]) menu.child(Button.new('unlink-captain').accessibility_label('Remove captain designation').tab_index(0).p(7).child('Remove captain designation')
+      if (!shared('one-piece.discovered')?.[key]) menu.child(Button.new('unlink-captain').flex_none().accessibility_label('Remove captain designation').tab_index(0).p(7).child('Remove captain designation')
         .on_click(() => { const links = {...(shared('one-piece.captains') ?? {})}; delete links[key]; setShared('one-piece.captains', links); closeOverlay(props().overlay); }));
     } else {
-      menu.child(Button.new('mark-captain').accessibility_label('This agent runs Firstmate').tab_index(0).track_focus(this.menuFocus).p(7)
+      menu.child(Button.new('mark-captain').flex_none().accessibility_label('This agent runs Firstmate').tab_index(0).track_focus(this.menuFocus).p(7)
         .child('This agent runs Firstmate')
         .on_click(() => { setShared('one-piece.captains', {...(shared('one-piece.captains') ?? {}), [key]:{}}); closeOverlay(props().overlay); }));
     }
-    return menu.child(Button.new('motion').accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
+    return menu.child(Button.new('motion').flex_none().accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
       .on_click(() => { save({paused:!appearance().paused}); closeOverlay(props().overlay); }));
   }
 

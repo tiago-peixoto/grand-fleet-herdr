@@ -1,0 +1,471 @@
+{
+  "characterTemplate": "Use case: stylized-concept. Production sprite sheet of SUBJECT from One Piece. APPEARANCE. Match the supplied Shanks reference's chibi pixel-art style, crisp dark pixel outlines, shaded colors, oversized head and compact body. Reference is STYLE AND GRID ONLY, never copy Shanks's features. True transparent alpha background. EXACTLY 4 equal columns and 3 equal rows, twelve separate full-body sprites, no overlap. Row 1: four distinct sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four sitting cross-legged attention frames with subtle blinking and head movement. Consistent character size across all twelve frames. Each pose completely inside its cell with ample transparent padding and bottom alignment. Landscape sheet 4:3. No labels, text except specified costume lettering, grid, ground, shadow, scenery, checkerboard, or extra characters. Intended for clean downsampling to 56px tall.",
+  "styleReference": "prototype/crew-artwork/shanks-study-v1.png",
+  "characters": [
+    {
+      "id": "law",
+      "name": "Trafalgar Law",
+      "appearance": "Spotted white fur cap, yellow and black hoodie, blue spotted jeans, small goatee and earrings, long sheathed sword"
+    },
+    {
+      "id": "bepo",
+      "name": "Bepo",
+      "appearance": "White anthropomorphic polar bear with small round ears, black nose and paw pads, orange zipped Heart Pirates jumpsuit with crew emblem, no human hair"
+    },
+    {
+      "id": "shachi",
+      "name": "Shachi",
+      "appearance": "Lean human man, shoulder-length red brown hair, dark sunglasses, black and white orca-shaped cap, off-white Heart Pirates boiler suit with small black crew emblem at left chest, brown boots"
+    },
+    {
+      "id": "penguin",
+      "name": "Penguin",
+      "appearance": "Lean human man, short dark hair mostly hidden by black cap with yellow brim and a tiny emperor penguin chick figure on top, cap reads PENGUIN, off-white Heart Pirates boiler suit with black crew emblem at left chest and brown boots"
+    },
+    {
+      "id": "jean-bart",
+      "name": "Jean Bart",
+      "appearance": "Very broad muscular bearded man with a long dark mane, flame-shaped forehead tattoos, strong sideburns and full beard, fierce face, Heart Pirates off-white boiler suit with crew emblem, brown boots. Preserve his massive build in chibi proportions"
+    },
+    {
+      "id": "ikkaku",
+      "name": "Ikkaku of the Heart Pirates",
+      "appearance": "Woman with curly dark brown hair and brown eyes, yellow and orange cap, off-white zipped boiler suit with small black Heart Pirates emblem on left chest, brown boots"
+    },
+    {
+      "id": "uni",
+      "name": "Uni of the Heart Pirates",
+      "appearance": "Tall man with very puffy dark brown hair and a long gray face covering patterned with vertical black stripes, covering nose and mouth down to his upper chest, only eyes exposed. White Heart Pirates boiler suit with emblem on left chest, brown boots"
+    },
+    {
+      "id": "clione",
+      "name": "Clione of the Heart Pirates",
+      "appearance": "Man with brown bangs and a long dark blue pointed hood framing his uncovered face, white Heart Pirates boiler suit with black crew emblem on left chest, brown boots"
+    },
+    {
+      "id": "hakugan",
+      "name": "Hakugan",
+      "appearance": "Human man with light brown hair, white full-face mask with black smile design, off-white Heart Pirates boiler suit with crew emblem on left chest and brown boots"
+    },
+    {
+      "id": "whitebeard",
+      "name": "Edward Newgate, Whitebeard",
+      "appearance": "Very broad muscular older man, huge upward-curving white crescent mustache, black bandanna, scarred bare chest, open white captain coat with gold epaulettes and red lining draped on shoulders, pale pants, black boots"
+    },
+    {
+      "id": "marco",
+      "name": "Marco of the Whitebeard Pirates",
+      "appearance": "Lean man with short blond pineapple-shaped tuft, sleepy eyes and chin stubble, open purple jacket, blue Whitebeard emblem tattoo on bare chest, pale blue waist sash and gold belt, dark cropped pants and sandals. Human form"
+    },
+    {
+      "id": "ace",
+      "name": "Portgas D. Ace",
+      "appearance": "Young freckled man with shaggy black hair, orange cowboy hat with two blue face badges and red bead string, red bead necklace, bare torso, ASCE tattoo on left arm with crossed-out S, black shorts with orange belt, black boots"
+    },
+    {
+      "id": "jozu",
+      "name": "Jozu",
+      "appearance": "Extremely broad muscular dark-skinned man with short segmented black hair and beard stripes, rusty red cuirass, studded dark shoulder armor, green skirt with gold trim, large gold belt, black studded trousers and boots. Both arms intact, no diamond transformation"
+    },
+    {
+      "id": "thatch",
+      "name": "Thatch",
+      "appearance": "Tall man with orange-brown pompadour tapering behind his head, brown goatee, stitched scar at left eye, light blue shirt and matching calf-length pants, yellow neck scarf, black belt, brown shoes"
+    },
+    {
+      "id": "vista",
+      "name": "Vista",
+      "appearance": "Broad tanned man with long black curly mustache, dark blue top hat, blue cape, open dark blue shirt with white diamond stripe near shoulders, pale blue pants, white gloves, two sheathed sabers"
+    },
+    {
+      "id": "blamenco",
+      "name": "Blamenco",
+      "appearance": "Very rotund grayish-skinned man with large lips, missing front tooth and two small chin pockets, purple overalls with pig skull emblem, yellow sash, purple-gray tricorn with Whitebeard emblem. Chibi legs and broad body"
+    },
+    {
+      "id": "rakuyo",
+      "name": "Rakuyo",
+      "appearance": "Man with blond dreadlocks, thin mustache angled up on both sides, yellow-purple bandanna with Whitebeard emblem, yellow coat green edging, green vest, pale green sash, checked trousers, boots, compact spiked ball and chain"
+    },
+    {
+      "id": "namur",
+      "name": "Namur",
+      "appearance": "Rotund blue-gray shark fish-man with upwards-pointing dark hair, lower jaw fangs and neck gills, number 8 tattoo on neck, white shirt with sky-blue sleeves and orange star, gray trousers, bare webbed feet and small dorsal fin"
+    },
+    {
+      "id": "blenheim",
+      "name": "Blenheim",
+      "appearance": "Huge muscular man with dark hair in braided ponytail and gray beard, small eyes, gray vest and loose gray trousers, boots, yellow armbands and purple Whitebeard emblems on upper arms"
+    },
+    {
+      "id": "curiel",
+      "name": "Curiel",
+      "appearance": "Sturdy man with purple square glasses, green watermelon-patterned bucket hat and large ear protectors, purple Whitebeard emblem on chin, sleeveless green coat over pale pink shirt, camouflage trousers, boots, two small bazookas on his back"
+    },
+    {
+      "id": "kingdew",
+      "name": "Kingdew",
+      "appearance": "Muscular tan man with short blond hair, hollow cheeks, bare chest with blue Whitebeard tattoo on right, long blue armored gauntlets, brown cape, blue sash, black and gold vertically striped pants and boots"
+    },
+    {
+      "id": "haruta",
+      "name": "Haruta",
+      "appearance": "Short youthful male swordsman with short brown bob and blue eyes, green and white Renaissance tunic and large white ruff collar, white tights, brown shoes, sheathed saber with ruffled guard"
+    },
+    {
+      "id": "atmos",
+      "name": "Atmos",
+      "appearance": "Broad muscular man with long black mane and beard, two square upward tusk-like teeth, gray helmet with curved buffalo horns, gray and gold sleeveless armor, purple Whitebeard tattoo on upper arms, dark trousers and boots"
+    },
+    {
+      "id": "speed-jiru",
+      "name": "Speed Jiru",
+      "appearance": "Round man wearing a brown fez with white Whitebeard emblem, white tunic with brown sleeves and leggings, boots, small golden heater shield with purple Whitebeard emblem and compact jousting lance"
+    },
+    {
+      "id": "fossa",
+      "name": "Fossa",
+      "appearance": "Older muscular man with bald crown and dark side hair, black mustache, forehead scar, cleft chin, cigar, open navy sleeveless jacket with pale edges, tan loose pants, brown belt, boots, sheathed katana"
+    },
+    {
+      "id": "izo",
+      "name": "Izo",
+      "appearance": "Pale man wearing purple lipstick, black hair in a geisha-style updo with one long loose lock over right side of face, pink and purple kimono, red obi with black spots, sandals, two holstered flintlock pistols. Marineford-era appearance without later eye scar"
+    },
+    {
+      "id": "tate",
+      "name": "Tate of the Whitebeard Pirates",
+      "appearance": "Adult blonde woman with bangs covering one eye, lipstick, white nurse cap and modest short-sleeved white nurse dress, leopard-patterned stockings, dark shoes"
+    },
+    {
+      "id": "oden",
+      "name": "Kozuki Oden",
+      "appearance": "Muscular samurai with black hair in huge flat round topknot, orange short kimono, thick purple and white rope bow behind shoulders, bare lower legs and sandals, two sheathed swords at waist"
+    },
+    {
+      "id": "toki",
+      "name": "Kozuki Toki",
+      "appearance": "Woman with long mint-green hair tied high at back, pink short kimono with pale crescent patterns, dark purple obi, sandals, small sword at waist. Voyage-era appearance"
+    },
+    {
+      "id": "young-inuarashi",
+      "name": "young Inuarashi",
+      "appearance": "Young anthropomorphic brown floppy-eared dog mink, shaggy brown fur, round black nose, short white shirt and blue shorts, small cape, both legs intact, no glasses. Roger voyage-era apprentice"
+    },
+    {
+      "id": "young-nekomamushi",
+      "name": "young Nekomamushi",
+      "appearance": "Young orange-yellow cat mink with wavy thick fur, pointed ears, whiskers and striped tail, purple kimono and dark sash, both hands intact, no gun prosthesis. Roger voyage-era apprentice"
+    },
+    {
+      "id": "young-teach",
+      "name": "young Marshall D. Teach aboard Whitebeard's ship",
+      "appearance": "Heavyset boy with curly black hair, round face, missing teeth, dark bandanna, orange short-sleeved shirt, dark shorts, sash and sandals. Young Whitebeard crew era, no captain coat, no black beard"
+    },
+    {
+      "id": "young-whitey-bay",
+      "name": "young Whitey Bay",
+      "appearance": "Young adult woman with long blue hair, striped long-sleeved cropped shirt and short striped skirt, polka-dot bandanna and small pale blue pirate hat, boots. Whitebeard crew era before commanding her own ship"
+    },
+    {
+      "id": "young-andre",
+      "name": "young Andre of Whitebeard Pirates",
+      "appearance": "Large man with black curly hair, thick lips, strong jaw and sharp teeth, dark overalls over light collared shirt and boots. Whitebeard crew era before captain coat"
+    },
+    {
+      "id": "young-epoida",
+      "name": "young Epoida",
+      "appearance": "Huge rotund man with long curly orange hair hiding eyes, round orange-pink nose, white brimmed hat, polka-dotted shirt and dark trousers, thin arms and boots. Whitebeard crew era before own captainship"
+    },
+    {
+      "id": "young-kinga",
+      "name": "young Kinga",
+      "appearance": "Young man with straight upward dark brown hair, thin mustache, dark yellow kimono and sash, sandals, sheathed sword. Whitebeard crew era"
+    },
+    {
+      "id": "islewan",
+      "name": "Islewan",
+      "appearance": "Massive man with walrus-like face, long downward tusks, large chin, black rings around eyes, scar under right eye, long blond hair beneath metal helmet, barrel-shaped breastplate and shoulder pads with porthole openings, long gloves and boots"
+    },
+    {
+      "id": "roger",
+      "name": "Gol D. Roger",
+      "appearance": "Black wavy hair and long upturned black mustache, red pirate captain tricorn with skull emblem, red captain coat with gold trim and epaulettes, orange open shirt, blue sash, dark trousers and black boots, sword at waist"
+    },
+    {
+      "id": "kid",
+      "name": "Eustass Kid",
+      "appearance": "Muscular man with bright red spiky hair, goggles on forehead, scar across left face, bare chest, red fur cape, black strapped leather trousers, heavy boots, large mechanical LEFT arm and normal right arm"
+    },
+    {
+      "id": "rayleigh",
+      "name": "Silvers Rayleigh during Roger's final voyage",
+      "appearance": "Mature muscular man with strawberry-blond swept-back hair, short striped blond beard, round glasses and scar over right eye. Orange shirt, light spotted shorts, silver cloak and sandals, sheathed sword. His hair is blond, never elderly white."
+    },
+    {
+      "id": "gaban",
+      "name": "Scopper Gaban during Roger's final voyage",
+      "appearance": "Well-built man with long black hair in a bushy ponytail, two thin front strands, black round sunglasses, clean chin. Purple shirt, orange trousers and pale-yellow waist sash. Two compact axes at his waist."
+    },
+    {
+      "id": "crocus",
+      "name": "Crocus during Roger's final voyage",
+      "appearance": "Stocky muscular middle-aged doctor with black hair and short black beard, yellow flower-petal head ornament, small round glasses, dark green tank top, pale trousers, sandals and harpoons strapped on his back."
+    },
+    {
+      "id": "seagull-guns-nozdon",
+      "name": "Seagull Guns Nozdon of the Roger Pirates",
+      "appearance": "Huge muscular bald man with broad neck, square jaw, large lips and a dark vertical mark from nose up scalp. Light green sleeveless shirt, brown trousers and heavy boots, tattoo on left forearm."
+    },
+    {
+      "id": "sunbell",
+      "name": "Sunbell of the Roger Pirates",
+      "appearance": "Large stout blue-green fish-man with fin on head, prominent lips, webbed hands, dark head and arm tattoos. Open red Hawaiian shirt with pale flowers, light trousers and sandals. Clearly fish-man, never human."
+    },
+    {
+      "id": "spencer",
+      "name": "Spencer of the Roger Pirates",
+      "appearance": "Slim man with red wavy hair tied in ponytail, straight fringe with two face-framing strands. Yellow shirt, olive green jacket with patches on left sleeve, dark red trousers, brown waist wrap, flat dark shoes, sheathed sword."
+    },
+    {
+      "id": "moon-isaac-jr",
+      "name": "Moon Isaac Jr. of the Roger Pirates",
+      "appearance": "Rotund man with extremely long beaklike nose, short slicked-back brown hair and dark moustache. Tan shirt, gold cape, striped trousers, black boots, a sheathed rapier."
+    },
+    {
+      "id": "donquino",
+      "name": "Donquino of the Roger Pirates",
+      "appearance": "Large round torso and thin limbs, short dark hair with sideburns. Red captain hat, red-and-white striped tank top, blue trousers, dark shoes, pipe, anchor tattoo on each upper arm."
+    },
+    {
+      "id": "millet-pine",
+      "name": "Millet Pine of the Roger Pirates",
+      "appearance": "Short rotund Viking with curly dark hair and large black beard. Orange helmet with black horns, right horn broken. Gold armor, brown trousers and broad furry brown belt with round emblem, brown boots."
+    },
+    {
+      "id": "rowing",
+      "name": "Rowing of the Roger Pirates",
+      "appearance": "Short rotund man with thin limbs, jagged mouth and shoulder-length dark wavy hair. Purple T-shirt with lavender sleeves and collar, dark purple shorts and simple dark shoes."
+    },
+    {
+      "id": "erio",
+      "name": "Erio of the Roger Pirates",
+      "appearance": "Slim muscular tan man with shoulder-length wavy light-blue hair and dark moustache. White fedora with black band, pink shirt with green flowers, pale trousers and brown shoes."
+    },
+    {
+      "id": "petermoo",
+      "name": "Petermoo of the Roger Pirates",
+      "appearance": "Short egg-shaped man with thin legs, shoulder-length light curly hair like a colonial wig, dark moustache and beard. Wide-brimmed dark hat with plume, burgundy suit jacket, pale kerchief, high-waist cream trousers, spiral belt buckle, boots."
+    },
+    {
+      "id": "jacksonbanner",
+      "name": "Jacksonbanner of the Roger Pirates",
+      "appearance": "Tall slim man with long arms, slight hunch and curly light hair. Open dark short-sleeved shirt, baggy pale trousers, diagonal strap across chest, belt and boots."
+    },
+    {
+      "id": "blumarine",
+      "name": "Blumarine of the Roger Pirates",
+      "appearance": "Short older man with large chin, dark moustache and sideburns. Spotted bandanna, dark-and-white striped shirt, light trousers and simple shoes."
+    },
+    {
+      "id": "max-marx",
+      "name": "MAX Marx of the Roger Pirates",
+      "appearance": "Tall broad-shouldered muscular man with huge arms and slim legs, medium dark hair with widow's peak, moustache and beard, prominent lips. Bare torso showing dark neck tattoo extending down left arm, dark trousers and boots."
+    },
+    {
+      "id": "taro",
+      "name": "Taro of the Roger Pirates",
+      "appearance": "Young man with light chestnut-shaped hair and goggles atop head. Unbuttoned light coat with popped collar, dark trousers, belt and boots."
+    },
+    {
+      "id": "doringo",
+      "name": "Doringo of the Roger Pirates",
+      "appearance": "Short man with spiky hair, long limbs and wide smile. Dark two-tone jacket with light stripe down each sleeve, small batlike wings attached to jacket, pale bandanna, dark shorts, single sheath holding two swords."
+    },
+    {
+      "id": "ganryu",
+      "name": "Ganryu of the Roger Pirates",
+      "appearance": "Tall stocky man with wide abdomen and thick neck, elongated double-elbow arms. Braided top hair and two large side ponytails. Dark deep-neck shirt, neckerchief, dark coat with rolled sleeves, striped trousers and striped ankle boots."
+    },
+    {
+      "id": "cb-gallant",
+      "name": "CB Gallant of the Roger Pirates",
+      "appearance": "Large very muscular man with broad shoulders, long arms and very short legs. Large square jaw, small eyes, short beard. Dark vest, spiked shoulder plates, pale gloves, pale skirt armor and pale shoes, pale helmet with large forward-curving plume."
+    },
+    {
+      "id": "mr-momora",
+      "name": "Mr. Momora of the Roger Pirates",
+      "appearance": "Very tall thin man with long bushy light hair, pointed nose and chin. Large dark long-billed cap with pale marking, dark short-sleeved shirt, light trousers and belt, simple shoes."
+    },
+    {
+      "id": "yui",
+      "name": "Yui of the Roger Pirates",
+      "appearance": "Short man with wavy upright red hair. Pale high-collared coat covering his lower face, dark trousers and boots, compact upright silhouette."
+    },
+    {
+      "id": "rangram",
+      "name": "Rangram of the Roger Pirates",
+      "appearance": "Tall fit man with long light hair tied in tight ponytail, sharp features and pointed ears. Dark vest and trousers, light waist wrap, necklace and pale shoes."
+    },
+    {
+      "id": "mugren",
+      "name": "Colonel Mugren of the Roger Pirates",
+      "appearance": "Large broad-shouldered man with stocky abdomen, thin legs, large round chin and downward-pointed nose. Pale front-buttoned shirt with frilled collar, dark trousers and pointed dark boots, small cigar."
+    },
+    {
+      "id": "bankuro",
+      "name": "Bankuro of the Roger Pirates",
+      "appearance": "Short slender man with puffy dark hair and beard, pointed nose and horned hat. Dark short-sleeved shirt, baggy light trousers and boots."
+    },
+    {
+      "id": "yamon",
+      "name": "Yamon of the Roger Pirates",
+      "appearance": "Slim man with long light hair and thin limbs, pale furry top, light shorts and sandals, short spear strapped diagonally across back."
+    },
+    {
+      "id": "young-shanks",
+      "name": "Shanks as a young Roger Pirates apprentice",
+      "appearance": "Red-haired boy with straw hat, plain white shirt, orange waist sash, blue shorts, brown sandals and sheathed green-hilted saber. Both arms intact, no beard or adult eye scars."
+    },
+    {
+      "id": "young-buggy",
+      "name": "Buggy as a young Roger Pirates apprentice",
+      "appearance": "Blue-haired boy with natural round red nose, striped red-white T-shirt, white gloves, baggy blue trousers, pointed brown shoes and yellow sash. Dark red knit beanie, no captain coat or tricorn."
+    },
+    {
+      "id": "killer",
+      "name": "Killer of the Kid Pirates",
+      "appearance": "Muscular man with long wild blond hair and full-head white helmet with vertical light-blue stripes, rows of small holes, and round headphone-like ear covers. Blue T-shirt bearing his white skull emblem, blue sash, blue jeans and black shoes. Curved blade guards at his wrists, face completely hidden."
+    },
+    {
+      "id": "heat",
+      "name": "Heat of the Kid Pirates",
+      "appearance": "Tall lean man with long shaggy pale-blue hair, black sunken eyes, stitched scars across cheeks and chin, very wide stitched mouth, forehead bone ridges. Barbed-wire tattoos around neck and arms, dark-blue corset laced red, red trousers with armor on right thigh, long brown boots and looped gold belt."
+    },
+    {
+      "id": "wire",
+      "name": "Wire of the Kid Pirates",
+      "appearance": "Very tall lanky man with drooping eyes, dark brown hooded cloak with five spikes on top. Fishnet shirt and stockings, black shorts, looped gold belt, necklace of tiny axe blades. Pale skin and dark boots, slim long silhouette."
+    },
+    {
+      "id": "gig",
+      "name": "Gig of the Kid Pirates",
+      "appearance": "Obese round man with dark liberty-spike hair and crooked wide grin. Pearl necklace, open black leather jacket, dark trousers and heavy boots. Distinct very wide belly and small head."
+    },
+    {
+      "id": "dive",
+      "name": "Dive of the Kid Pirates",
+      "appearance": "Short adult woman with thick braided pigtails, lipstick and round sunglasses pushed up on forehead. Tattered dark shirt, necklace, dark stockings and high heels. Punk appearance, no pirate hat."
+    },
+    {
+      "id": "uk",
+      "name": "UK of the Kid Pirates",
+      "appearance": "Tall man with pronounced round gut, swept-back dark mohawk, long thin sideburns and black lipstick. Ragged black shirt with white smiley faces over fishnet sleeves, pearl necklace, dark trousers and boots."
+    },
+    {
+      "id": "pomp",
+      "name": "Pomp of the Kid Pirates",
+      "appearance": "Short stocky man with rounded bulbous nose, dark hair with heavy fringe over left side of face, dark eyeliner and lipstick. Spiked camouflage beret, studded leather belt strapped around torso, studded cuffs, black gloves, dark trousers and boots."
+    },
+    {
+      "id": "bubblegum",
+      "name": "Bubblegum of the Kid Pirates",
+      "appearance": "Very tall lean man with jagged zigzag hair projecting from both sides of head and small spiked helmet. Black eyeliner and lipstick, pale long-sleeved shirt, necklace, chain belt, dark trousers and boots."
+    },
+    {
+      "id": "reck",
+      "name": "Reck of the Kid Pirates",
+      "appearance": "Slim clean-shaven man with parted curly dark hair and black eyeliner. Black leather jacket, pale undershirt, knee-length dark trousers and ankle boots."
+    },
+    {
+      "id": "house",
+      "name": "House of the Kid Pirates",
+      "appearance": "Adult woman with wild pale hair forming two small hornlike bunches above head, opaque round glasses. Dark knee-length dress with open shirt collar, pale cross printed on front and pale circles near hem, sturdy dark boots."
+    },
+    {
+      "id": "boogie",
+      "name": "Boogie of the Kid Pirates",
+      "appearance": "Broad-shouldered man with long arms and short legs, prominent protruding jaw, parted light hair covering right eye, black lipstick. Black leather vest with small shoulder spikes over horizontal striped shirt, dark trousers and boots."
+    },
+    {
+      "id": "mosh",
+      "name": "Mosh of the Kid Pirates",
+      "appearance": "Very large muscular man, light hair in ponytail and heavy fringe covering left side of face. Dark feathered coat with spiked shoulders, dark T-shirt printed with pale guitar, dark trousers and boots."
+    },
+    {
+      "id": "hip",
+      "name": "Hip of the Kid Pirates",
+      "appearance": "Slender adult woman with short light hair, black short-sleeved shirt beneath a pale tank top, dark trousers and boots. Small restrained lettering on tank, no hat, punk look."
+    },
+    {
+      "id": "papas",
+      "name": "Papas of the Kid Pirates",
+      "appearance": "Man of average build with very sharp pointed nose. Sleeveless dark-and-light vertically striped hooded top, hood up framing face, dark trousers and boots. Long narrow face, no facial hair."
+    },
+    {
+      "id": "jaguar",
+      "name": "Jaguar of the Kid Pirates",
+      "appearance": "Large muscular man with light tousled hair, boxing gloves and shorts. Tank top split into dark half and pale half with dark spots, a small panda design at its center. Heavy dark shoes."
+    },
+    {
+      "id": "quincy",
+      "name": "Quincy of the Kid Pirates",
+      "appearance": "Slender adult woman with curly dark hair. Round crown-shaped hat, black-and-white checked jacket, enormous pale ribbon tied around waist, light skirt and dark boots."
+    },
+    {
+      "id": "moai",
+      "name": "Moai of the Kid Pirates",
+      "appearance": "Large man with pale hair in ponytail, dotted bandanna, beaded necklace, tattered pale tank top, beaded belt and low-hanging dark trousers, dark boots."
+    },
+    {
+      "id": "hop",
+      "name": "Hop of the Kid Pirates",
+      "appearance": "Slender adult woman with long light hair gathered into high ponytail. Open dark jacket over fitted top, dark skirt and boots, sword at her waist. Punk crew member, no hat."
+    },
+    {
+      "id": "emma",
+      "name": "Emma of the Kid Pirates",
+      "appearance": "Tall adult woman with pale hair in central mohawk and two loose strands beside cheeks. Open dark coat, fitted top, layered ruffled skirt and tall heeled boots."
+    },
+    {
+      "id": "compo",
+      "name": "Compo of the Kid Pirates",
+      "appearance": "Very tall heavily built man with dark head bandanna, broad thick neck, pale short-sleeved shirt, strand of beads at neck and stacked bracelets on both forearms. Dark trousers and sturdy shoes."
+    },
+    {
+      "id": "disc-j",
+      "name": "Disc J of the Kid Pirates",
+      "appearance": "Stocky man with spiky dark-blue hair, tight black shirt and many barbed green leather accessories with yellow studs across torso, shoulders and wrists. Fishnet sleeves, dark trousers and heavy boots."
+    }
+  ],
+  "shipTemplate": "Use case: stylized-concept. Production sprite sheet of SUBJECT from One Piece. APPEARANCE. Match the supplied Red Force reference's chibi pixel-art style, crisp dark outlines, shaded colors and compact proportions. Reference is STYLE AND GRID ONLY, do not copy its dragon figurehead or architecture. True transparent alpha background. EXACTLY 4 equal columns and ONE row, four separate complete ship sprites in a wide landscape strip. All four show the same ship and same three-quarter side view, bow pointing left, with subtle differing bob, flag and rigging movement to form four animation frames. The entire ship including all masts and bow must fit within each cell with generous transparent padding. No ocean, water, ground, shadow, scenery, text labels, grid or checkerboard. Distinct readable silhouette intended for 116px wide display.",
+  "shipStyleReference": "red-force-study-v1.png",
+  "ships": [
+    {
+      "id": "polar-tang",
+      "name": "Polar Tang",
+      "appearance": "Yellow metal submarine with light green underside, rounded prow, circular windows, wooden upper decks, central conning structure, two slim masts with their sails furled, Heart Pirates smiling emblem, exterior lamps. Submarine silhouette without open sails"
+    },
+    {
+      "id": "moby-dick",
+      "name": "Moby Dick",
+      "appearance": "Whitebeard's large whale-shaped flagship with a large friendly white whale head forming the bow, broad dark hull with blue bands, four wooden masts with cream-white square sails and Whitebeard Pirates emblem, rows of side cannons. Whale bow is the defining feature"
+    },
+    {
+      "id": "oro-jackson",
+      "name": "Oro Jackson",
+      "appearance": "Gol D. Roger's red and dark wood ship, three masts with red vertically striped sails and Roger Pirates skull emblem, pair of golden mermaid figureheads flanking a forward-facing cannon, large pale polka-dotted egg on the middle deck. Elegant gold trim"
+    },
+    {
+      "id": "victoria-punk",
+      "name": "Victoria Punk",
+      "appearance": "Eustass Kid's orange heavy-metal skeleton-themed pirate ship, enormous yellow dinosaur skull figurehead, dinosaur ribs along underside, TWO masts, black main sail with flame design and Kid Pirates skull emblem, smaller orange sails, jagged punk rock details"
+    }
+  ],
+  "edits": [
+    {
+      "id": "oro-jackson",
+      "prompt": "Edit only the pirate emblems on this Oro Jackson sprite sheet. The central skull must be Gol D. Roger's emblem: a bare white skull with a long bold curved black handlebar mustache and white crossed bones. Remove ALL hats from ALL skulls. NO straw hat and NO red headband anywhere. Preserve the exact ship, four-column single-row grid, transparency, red striped sails, egg, mermaids and cannons. Do not alter anything outside the emblems."
+    }
+  ]
+}

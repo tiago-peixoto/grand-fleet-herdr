@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
 const terminal = address => ({address,created_ms:12});
 const registration = {terminal:'t1',created:12};
 
@@ -118,11 +119,11 @@ test('crewmates that lose their captain keep their characters beside unassigned 
 
 test('captains default to Straw Hats then unused secondary crews without changing manual choices', async () => {
   const {selectDefaultCrews, identity} = await import('../mods/one-piece/artwork.js');
-  const terminals = ['t1','t2','remote/t1','t4','t5'].map(address => ({address, created_ms:1, state:'live'}));
+  const terminals = ['t1','t2','remote/t1','t4','t5','t6','t7','t8','t9'].map(address => ({address, created_ms:1, state:'live'}));
   const captains = Object.fromEntries(terminals.map(t => [identity(t), {}]));
   const machines = [{name:null,layout:'ready'},{name:'remote',layout:'ready'}];
   const selected = selectDefaultCrews(terminals,captains,{},machines);
-  assert.deepEqual(Object.values(selected),['strawhat','redhair','bigmom','beasts','redhair']);
+  assert.deepEqual(Object.values(selected),['strawhat','redhair','bigmom','beasts','heart','whitebeard','roger','kid','redhair']);
   const manual = {...selected, 't2:1':'beasts'};
   assert.deepEqual(selectDefaultCrews(terminals,captains,manual,machines),manual);
   assert.deepEqual(selectDefaultCrews([...terminals].reverse(),captains,manual,machines),manual);
@@ -177,4 +178,29 @@ test('a manually designated captain that later gains a role leaves Straw Hats to
   assert.deepEqual(selectDefaultCrews(live,discovered,manual,machines,{roles:{}}),{'t1:1':'strawhat','remote/t2:2':'redhair'});
   const picked = selectDefaultCrews(live,discovered,manual,machines,{roles:{},manualCrews:{'remote/t2:2':true}});
   assert.equal(picked['remote/t2:2'],'strawhat');
+});
+
+
+test('expanded crews assign every named member before generic pirates and retain survivors',async()=>{
+  const {assignCrew,crewOf}=await import('../mods/one-piece/artwork.js');
+  for(const [crew,count,last] of [['heart',8,'hakugan'],['whitebeard',27,'islewan'],['roger',31,'toki'],['kid',21,'disc-j']]) {
+    const coordinator={...registration,crew};
+    const workers=Array.from({length:count+1},(_,i)=>terminal(`expanded-${i}`));
+    const assigned=assignCrew(workers,{},coordinator);
+    const named=Object.values(assigned).slice(0,count);
+    assert.equal(new Set(named.map(a=>a.art)).size,count,crew);
+    assert.ok(named.every(a=>a.number===null),crew);
+    assert.equal(named.at(-1).art,`crew-${last}`);
+    assert.equal(assigned[`expanded-${count}:12`].number,1);
+    const changed=assignCrew(workers,assigned,{...coordinator,crew:'redhair'});
+    const restored=assignCrew(workers.slice(1).reverse(),changed,coordinator);
+    for(const worker of workers.slice(1)) assert.equal(restored[`${worker.address}:12`].art,assigned[`${worker.address}:12`].art);
+    const selected=crewOf(coordinator);
+    for(const ext of ['gif','png']) {
+      assert.ok(existsSync(new URL(`../mods/one-piece/assets/${selected.ship}.${ext}`,import.meta.url)),`${crew} ship ${ext}`);
+      for(const name of [selected.captain,...selected.workers]) for(const state of ['idle','working','blocked']) {
+        assert.ok(existsSync(new URL(`../mods/one-piece/assets/crew-${name}-${state}.${ext}`,import.meta.url)),`${name} ${state} ${ext}`);
+      }
+    }
+  }
 });

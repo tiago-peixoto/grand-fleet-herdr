@@ -176,6 +176,20 @@ for (const width of [310, 120]) {
 }
 
 const menu=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
+assert.equal(scrolls(menu),1,'the expanded crew picker must scroll when constrained');
+for (const [id, crew] of Object.entries(fleet.crews)) {
+  const picker=host(true,'priority',310,{appearance:'t1:1',overlay:'menu'});
+  const button=picker.nodes.get(`crew-${id}`);
+  assert.ok(button,`missing crew choice: ${id}`);
+  button.click();
+  assert.equal(picker.state.get('one-piece.art').crews['t1:1'],id);
+  assert.equal(picker.state.get('one-piece.art').characters['t3:3'].art,`crew-${crew.workers[0]}`);
+  const ships=host(true,'priority',310,{region:'spaces'});
+  ships.state.set('one-piece.art',picker.state.get('one-piece.art'));
+  ships.root=ships.controller.render(ships.cx);
+  assert.ok(paths(ships).some(path=>path.endsWith(`/${crew.ship}.gif`)));
+  assert.ok(paths(ships).some(path=>path.endsWith(`/crew-${crew.captain}-working.gif`)));
+}
 menu.nodes.get('crew-redhair').click();
 assert.equal(menu.state.get('one-piece.art').manualCrews['t1:1'],true,'the picker records an explicit choice');
 assert.equal(menu.state.get('one-piece.art').crews['t1:1'],'redhair');

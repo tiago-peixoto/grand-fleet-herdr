@@ -16,7 +16,8 @@ The mod automatically identifies Firstmate captains using their existing session
 It checks the Firstmate startup script and secondmate marker without executing either file.
 The mod records its terminal address and creation timestamp without modifying Firstmate or terminal metadata.
 A detected primary Firstmate defaults to Straw Hats, regardless of discovery order.
-Detected secondmates use the least-used secondary crew, with ties ordered Red Hair, Big Mom, then Beasts.
+Detected secondmates use the least-used secondary crew.
+Ties follow this order: Red Hair, Big Mom, Beasts, Heart, Whitebeard, Roger, then Kid.
 This selects unused crews first across machines and reserves assignments on disconnected machines.
 Manual selections, including duplicates, remain unchanged.
 Firstmate sends no artwork commands and requires no mod-specific registration.
@@ -47,6 +48,8 @@ Character assignments remain stable for surviving sessions.
 Idle characters sleep, working characters walk, and blocked characters sit.
 Done characters sleep beside Herdr's done label, or under its done dot in the collapsed sidebar.
 Appearance settings can pause animation without changing session state.
+The picker supports eight crews and scrolls when its choices exceed the available height.
+[The crew catalog](CREW-CATALOG.md) lists the expanded rosters and historical membership.
 The managed crew strip is a visual summary only, without custom workspace ownership, task polling, or terminal recovery.
 
 ## Compatibility approach
