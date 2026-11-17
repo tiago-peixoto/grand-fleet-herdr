@@ -96,7 +96,7 @@ See [Installation](docs/INSTALL.md) for custom destinations, ownership conflicts
 
 ## Meet the fleet
 
-Four ships, four captains, and 18 named crewmembers accompany your agents.
+Eight ships, eight captains, and 101 distinct named crewmembers accompany your agents.
 These animations use the same artwork shipped with the mod.
 
 <table>
@@ -136,7 +136,46 @@ These animations use the same artwork shipped with the mod.
       <p>King, Queen, and Jack</p>
     </td>
   </tr>
+  <tr>
+    <th>Heart Pirates</th>
+    <th>Whitebeard Pirates</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="mods/one-piece/assets/crew-polar-tang.gif" width="96" height="96" alt="Polar Tang">
+      <img src="mods/one-piece/assets/crew-law-working.gif" width="48" height="48" alt="Law walking">
+      <p><strong>Polar Tang · Law</strong></p>
+      <p>8 named crewmembers, including Bepo, Shachi, Penguin, and Jean Bart</p>
+    </td>
+    <td align="center" valign="top">
+      <img src="mods/one-piece/assets/crew-moby-dick.gif" width="96" height="96" alt="Moby Dick">
+      <img src="mods/one-piece/assets/crew-whitebeard-working.gif" width="48" height="48" alt="Whitebeard walking">
+      <p><strong>Moby Dick · Whitebeard</strong></p>
+      <p>27 named crewmembers and historical companions, including all 16 division commanders</p>
+    </td>
+  </tr>
+  <tr>
+    <th>Roger Pirates</th>
+    <th>Kid Pirates</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="mods/one-piece/assets/crew-oro-jackson.gif" width="96" height="96" alt="Oro Jackson">
+      <img src="mods/one-piece/assets/crew-roger-working.gif" width="48" height="48" alt="Roger walking">
+      <p><strong>Oro Jackson · Roger</strong></p>
+      <p>31 named crewmembers and historical companions, including Rayleigh, Gaban, Crocus, and Oden</p>
+    </td>
+    <td align="center" valign="top">
+      <img src="mods/one-piece/assets/crew-victoria-punk.gif" width="96" height="96" alt="Victoria Punk">
+      <img src="mods/one-piece/assets/crew-kid-working.gif" width="48" height="48" alt="Kid walking">
+      <p><strong>Victoria Punk · Kid</strong></p>
+      <p>21 named crewmembers, including Killer, Heat, Wire, Gig, and Dive</p>
+    </td>
+  </tr>
 </table>
+
+The [complete crew catalog](docs/CREW-CATALOG.md) lists every included member and the historical appearances.
+Whitebeard and Roger share four historical characters, so their rosters overlap.
 
 The primary Firstmate defaults to the Straw Hats.
 Secondmates, delegated Firstmate coordinators, receive unused secondary crews before crews repeat.
@@ -262,6 +301,7 @@ Complete native interaction checks in the isolated Grand Fleet Lab as described 
 | [Thin presentation design](docs/THIN-MOD.md) | Current sidebar contract and integration evidence |
 | [Acceptance review](docs/ACCEPTANCE.md) | Verified scenarios and remaining release limits |
 | [Native verification](docs/NATIVE-INTEGRATION.md) | Detailed current and historical interaction checks |
+| [Crew catalog](docs/CREW-CATALOG.md) | Complete named rosters, historical companions, and canonical sources |
 | [Artwork inventory](docs/ARTWORK.md) | Original artwork sources and historical references |
 
 The [browser prototype](prototype/index.html) preserves an earlier design with simulated terminals and replies.

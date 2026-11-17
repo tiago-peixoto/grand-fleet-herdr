@@ -2573,3 +2573,32 @@ The executed comparison now includes a done agent and failed on the earlier adap
 The executed native-module comparison covers two widths, priority and grouped sorting, ship selection, agent focus and previews, pinning, and appearance settings.
 It also verifies that retired inspection panes cannot create a third agent list or open a recycled terminal identity.
 Simulation does not establish every keyboard interaction, published Core recovery, or pixel fidelity across all displays.
+
+## Crew batch one verification, 2026-11-16
+
+Grand Fleet Lab displayed Heart, Whitebeard, Roger, and Kid in an isolated app home at `/private/tmp/op-crew-batch-20261116/app`.
+The check used Herdr app 0.1.16 and a separate local Herdr Core 0.1.21 instance.
+Four disposable spaces each contained a manually designated captain and three fixtures reporting idle, working, and blocked status.
+All four ships and their captain artwork rendered without clipping.
+The character strips displayed sleeping, walking, and sitting artwork beside the existing native workspace and terminal interface.
+The native Agents region retained its attention and working groups.
+
+The crew picker displayed all eight choices and its animation controls.
+Seven Tab presses reached Kid Pirates from the first choice.
+Return selected Kid and updated the captain and all three worker portraits.
+Selecting Heart again restored Law, Bepo, Shachi, and Penguin.
+Keyboard navigation reached Pause animation, and saved state recorded `paused: true`.
+Reopening the picker showed Resume animation, which restored motion.
+The final native status reported no overlays and no runtime errors.
+Screenshots remain outside the repository under the isolated lab directory.
+
+All 25 JavaScript tests and all 46 Python tests passed.
+The artwork checks cover every source sheet, export dimensions, frame timing, transparency, static companions, and reproducible generation.
+The expanded allocation test exhausts every named roster before assigning generic pirates and checks surviving assignments after crew changes.
+`herdr-app check` passed for the generated native mod in this isolated app home.
+`node tools/check-parity.mjs` passed against the same installed Herdr modules, including all eight crew selections and their rendered assets.
+
+This batch did not repeat live Firstmate discovery, terminal adoption, app-restart preservation, or remote recovery acceptance.
+Manual captain designations and disposable status fixtures establish presentation behavior only.
+The native loading check exercises initial rendering, while the command comparison simulates native behavior.
+The earlier recovery evidence and its recorded limits remain unchanged.

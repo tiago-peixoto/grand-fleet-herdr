@@ -4,7 +4,11 @@ export const crews = {
   strawhat:{name:'Straw Hat Pirates',ship:'sunny',title:'Thousand Sunny',captain:'luffy',workers:['chopper','franky','zoro','nami','usopp','sanji','robin','brook','jinbe']},
   redhair:{name:'Red Hair Pirates',ship:'crew-red-force',title:'Red Force',captain:'shanks',workers:['benn-beckman','yasopp','lucky-roux']},
   bigmom:{name:'Big Mom Pirates',ship:'crew-queen-mama-chanter',title:'Queen Mama Chanter',captain:'big-mom',workers:['katakuri','smoothie','cracker']},
-  beasts:{name:'Beasts Pirates',ship:'crew-mammoth',title:'Mammoth',captain:'kaido',workers:['king','queen','jack']}
+  beasts:{name:'Beasts Pirates',ship:'crew-mammoth',title:'Mammoth',captain:'kaido',workers:['king','queen','jack']},
+  heart:{name:'Heart Pirates',ship:'crew-polar-tang',title:'Polar Tang',captain:'law',workers:['bepo','shachi','penguin','jean-bart','ikkaku','uni','clione','hakugan']},
+  whitebeard:{name:'Whitebeard Pirates',ship:'crew-moby-dick',title:'Moby Dick',captain:'whitebeard',workers:['marco','ace','jozu','thatch','vista','blamenco','rakuyo','namur','blenheim','curiel','kingdew','haruta','atmos','speed-jiru','fossa','izo','tate','oden','toki','young-inuarashi','young-nekomamushi','young-teach','young-whitey-bay','young-andre','young-epoida','young-kinga','islewan']},
+  roger:{name:'Roger Pirates',ship:'crew-oro-jackson',title:'Oro Jackson',captain:'roger',workers:['rayleigh','gaban','crocus','oden','seagull-guns-nozdon','sunbell','spencer','moon-isaac-jr','donquino','millet-pine','rowing','erio','petermoo','jacksonbanner','blumarine','max-marx','taro','doringo','ganryu','cb-gallant','mr-momora','yui','rangram','mugren','bankuro','yamon','young-shanks','young-buggy','young-inuarashi','young-nekomamushi','toki']},
+  kid:{name:'Kid Pirates',ship:'crew-victoria-punk',title:'Victoria Punk',captain:'kid',workers:['killer','heat','wire','gig','dive','uk','pomp','bubblegum','reck','house','boogie','mosh','hip','papas','jaguar','quincy','moai','hop','emma','compo','disc-j']}
 };
 const pirateColors=['blue','amber','green','violet','red','cyan','pink','silver'];
 export const crewOf = coordinator => crews[coordinator?.crew]??crews.strawhat;
@@ -63,7 +67,7 @@ export function selectDefaultCrews(terminals, captains, selected, machines, pref
     if (assigned[key] || !live.has(key)) continue;
     const role = captains[key]?.role;
     const primary = role === 'firstmate' || (!role && !Object.values(counts).some(Boolean));
-    const candidates = primary ? ['strawhat'] : ['redhair', 'bigmom', 'beasts'];
+    const candidates = primary ? ['strawhat'] : Object.keys(crews).filter(id => id !== 'strawhat');
     const crew = candidates.reduce((best, id) => counts[id] < counts[best] ? id : best);
     assigned[key] = crew;
     counts[crew]++;

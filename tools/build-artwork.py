@@ -100,7 +100,8 @@ def build(output):
 
     for sheet in sorted((ROOT / 'prototype/crew-artwork').glob('*-study-v1.png')):
         name = sheet.name.removesuffix('-study-v1.png')
-        ship = name in ('red-force', 'queen-mama-chanter', 'mammoth')
+        ship = name in ('red-force', 'queen-mama-chanter', 'mammoth',
+                        'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
         boxes = extract_boxes(sheet, 1 if ship else 3)
         animations = [(f'crew-{name}', range(4), [52]*4)] if ship else [
             (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)

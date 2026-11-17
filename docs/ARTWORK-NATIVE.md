@@ -1,7 +1,7 @@
 # Native artwork exports
 
-These assets mechanically export the approved prototype artwork.
-No source artwork or generated prototype page is edited.
+These assets mechanically export the approved prototype artwork and the crew sheets described below.
+The exporter never edits source artwork or the generated prototype page.
 
 ## Rebuild and verify
 
@@ -114,7 +114,7 @@ Native playback in a running Herdr window remains an integration check for the p
 
 ## Approved crew expansion, 2026-11-14
 
-The native mod includes the 33 approved sheets in `prototype/crew-artwork`.
+The initial native expansion included 33 approved sheets in `prototype/crew-artwork`.
 Thirty character sheets contain four frames for each of sleeping, walking, and sitting.
 These cover four coordinators, eighteen named workers, and eight generic pirate colors.
 Three ship sheets cover Red Force, Queen Mama Chanter, and Mammoth.
@@ -122,9 +122,36 @@ Sunny retains its existing source.
 Mammoth represents the Beasts crew through Jack’s ship, not Kaido’s flagship.
 
 Straw Hats support nine named workers before generic pirates.
-Each other crew supports three named workers before generic pirates.
+The initial Red Hair, Big Mom, and Beasts rosters each support three named workers before generic pirates.
 Generic pirates cycle through eight colors and retain individual numbers.
 This imposes no worker limit, but colors repeat beyond eight generic workers per crew.
 Assignments persist separately for each worker identity and selected crew.
 Changing crews and returning does not exchange surviving workers’ appearances.
-Unknown status uses a static standing frame instead of claiming sleep, work, or a request for attention.
+Unknown status uses the idle sheet, consistent with the current native renderer.
+
+## Crew batch one, 2026-11-16
+
+The source directory now contains 124 sheets: 117 characters and seven ships.
+Sunny still uses its existing source outside that directory.
+The 117 characters cover eight captains, 101 unique named workers, and eight generic pirate colors.
+This batch adds 87 unique character sheets and four ship sheets.
+Oden, Toki, young Inuarashi, and young Nekomamushi share artwork between the Whitebeard and Roger rosters.
+
+| Crew | Captain | Named worker slots | Ship |
+| --- | --- | ---: | --- |
+| Heart | Trafalgar Law | 8 | Polar Tang |
+| Whitebeard | Edward Newgate | 27 | Moby Dick |
+| Roger | Gol D. Roger | 31 | Oro Jackson |
+| Kid | Eustass Kid | 21 | Victoria Punk |
+
+Every character sheet has four columns and three rows: sleeping, walking, then sitting.
+Every ship sheet has four columns and one row.
+The exporter uses 64-pixel character canvases and 128-pixel ship canvases.
+Character artwork fits within 56 pixels, and ship artwork fits within 116 pixels.
+Sleeping frames last 850 milliseconds, walking frames last 220 milliseconds, and sitting frames last 700 milliseconds.
+Ship frames last 520 milliseconds.
+
+[The prompt record](../prototype/crew-artwork/batch-one-prompts.json) records the subjects, distinguishing features, style references, and ship correction.
+[The crew catalog](CREW-CATALOG.md) records membership sources and historical distinctions.
+These are stylized interpretations of canonical characters, not official character renders.
+Colors for members known primarily through monochrome author sketches are artistic choices.

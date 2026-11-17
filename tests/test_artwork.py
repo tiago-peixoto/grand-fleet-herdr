@@ -61,7 +61,8 @@ class ArtworkTests(unittest.TestCase):
             expected_names = {name+ext for name in RECIPES for ext in ('.gif', '.png')}
             for sheet in (ROOT / 'prototype/crew-artwork').glob('*-study-v1.png'):
                 name = sheet.name.removesuffix('-study-v1.png')
-                ship = name in ('red-force', 'queen-mama-chanter', 'mammoth')
+                ship = name in ('red-force', 'queen-mama-chanter', 'mammoth',
+                                'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
                 names = [f'crew-{name}'] if ship else [f'crew-{name}-{state}' for state in ('idle', 'working', 'blocked')]
                 for animation in names:
                     expected_names.update(animation+ext for ext in ('.gif', '.png'))
