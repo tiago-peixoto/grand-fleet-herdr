@@ -1,6 +1,6 @@
 # Vision
 
-`herdr-one-piece` exists so that one captain can use firstmate's crew with confidence while keeping independent work close at hand.
+`grand-fleet-herdr` exists so that one captain can use firstmate's crew with confidence while keeping independent work close at hand.
 It serves the individual captain through an optional One Piece interface for supervised fleets and independent Herdr sessions.
 It owns the One Piece presentation of Herdr's Spaces and Agents in the fleet sidebar.
 The sidebar retains two native regions, Spaces and Agents, while Herdr owns workspace and terminal behavior.

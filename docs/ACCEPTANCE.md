@@ -38,7 +38,7 @@ The cause of the unanswered discovery check was not isolated, so the five-second
 ## Current release verification, 2026-11-17
 
 The daily installation now includes the 38 new crewmembers from merged revision `c1603a3b5794e2f3f42bc32751407242c0ab7b43`.
-Installation and the completed checks do not establish full release acceptance because [native text loss after pane zoom](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) remains reproducible.
+Installation and the completed checks do not establish full release acceptance because [native text loss after pane zoom](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/2) remains reproducible.
 The [signed-application verification record](NATIVE-INTEGRATION.md#signed-application-and-daily-installation-2026-11-17) identifies the tested versions, commands, and limits.
 
 | Check | Result |
@@ -55,7 +55,7 @@ The [signed-application verification record](NATIVE-INTEGRATION.md#signed-applic
 
 The daily home had no live terminals before installation, so that refresh does not prove preservation of active daily conversations.
 Today's isolated fixtures do not repeat the actual Firstmate delegation checks recorded on 2026-11-16.
-The multiple-viewer recovery regression in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3) was not retested, so that issue stays open.
+The multiple-viewer recovery regression in [issue 3](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/3) was not retested, so that issue stays open.
 The complete upstream Core suite and every native control were not tested.
 The rendering issue remains a release blocker rather than an accepted exception.
 

@@ -1,7 +1,7 @@
 # Red Hair, Big Mom, and Beasts crew expansion
 
 The expansion adds 38 approved character designs to the three existing crews.
-The first implementation batch was merged into main through [PR #7](https://github.com/tiago-peixoto/herdr-one-piece/pull/7).
+The first implementation batch was merged into main through [PR #7](https://github.com/tiago-peixoto/grand-fleet-herdr/pull/7).
 All 38 designs are enabled in the runtime roster after each crew's original three members.
 The Lavish catalog marks every added character NEW.
 

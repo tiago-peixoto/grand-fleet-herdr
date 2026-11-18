@@ -1,5 +1,5 @@
 {
-  "name": "herdr-one-piece",
+  "name": "grand-fleet-herdr",
   "private": true,
   "type": "module",
   "scripts": { "test": "node --test tests/*.test.js" }
