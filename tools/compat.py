@@ -49,6 +49,9 @@ def generate(agents_source, main_layout, spaces_source):
         header = node.get('content', {}).get('pane', {}).get('header', {})
         if header.get('content', {}).get('mod') == 'pane':
             portrait_slots.append((header['content'], 'pane'))
+        # The same native mod also draws the sidebar footer, which keeps Herdr's look.
+        if node.get('content', {}).get('mod') == 'workspace-chrome' and not node['content'].get('props', {}).get('footer'):
+            portrait_slots.append((node['content'], 'brand'))
         if node.get('content', {}).get('mod') == 'agents':
             slots.append((node, parent))
         if node.get('content', {}).get('mod') == 'spaces':
@@ -110,3 +113,16 @@ def generate_portraits(tabs_source, pane_source):
         raise ValueError(error.format('Pane'))
     return {'mods/one-piece/herdr-tabs.js': tabs.encode('utf-8'),
             'mods/one-piece/herdr-pane.js': pane_source.encode('utf-8')}
+
+
+def generate_brand(chrome_source):
+    """Let the sidebar header show the fleet's flag and name instead of Herdr's."""
+    error = 'Unsupported Herdr workspace chrome interface; preserving installation'
+    imports = re.findall(r"\bfrom\s+['\"]([^'\"]+)", chrome_source)
+    if any(module not in ('herdr', 'gpui-kit', 'gpui-base') for module in imports):
+        raise ValueError(error)
+    logo = 'image("frame/welcome/herdr.png").size(20).rounded(5)'
+    chrome = hook(chrome_source, 'export default class WorkspaceChrome extends View {',
+                  'logo() { return ' + logo + '; }\n  title() { return "Herdr"; }',
+                  {logo: 'this.logo()', '.child("Herdr")': '.child(this.title())'}, error)
+    return {'mods/one-piece/herdr-chrome.js': chrome.encode('utf-8')}

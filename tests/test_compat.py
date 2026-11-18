@@ -149,6 +149,28 @@ class PortraitCompatibilityTests(unittest.TestCase):
             compat.generate(SOURCE.replace('icon(k.program', 'icon(k.other'), {'children': [
                 {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}, SPACES_SOURCE)
 
+    CHROME = ('import { View } from "gpui-kit";\n'
+              'export default class WorkspaceChrome extends View {\n'
+              '  render() { return [image("frame/welcome/herdr.png").size(20).rounded(5), label().child("Herdr")]; }\n}\n')
+
+    def test_brand_logo_and_title_can_be_replaced(self):
+        source = compat.generate_brand(self.CHROME)['mods/one-piece/herdr-chrome.js'].decode()
+        self.assertIn('logo() { return image("frame/welcome/herdr.png").size(20).rounded(5); }', source)
+        self.assertIn('[this.logo(), label().child(this.title())]', source)
+        for changed in (self.CHROME.replace('.rounded(5)', '.rounded(6)'), self.CHROME.replace('"Herdr"', '"Herdr 2"'),
+                        self.CHROME.replace('"gpui-kit"', '"./helpers.js"')):
+            with self.subTest(changed=changed), self.assertRaises(ValueError):
+                compat.generate_brand(changed)
+
+    def test_layout_hosts_the_brand_but_not_the_footer(self):
+        layout = {'children': [
+            {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}},
+            {'content': {'mod': 'workspace-chrome'}},
+            {'content': {'mod': 'workspace-chrome', 'props': {'footer': True}}}]}
+        result = json.loads(compat.generate(SOURCE, layout, SPACES_SOURCE)['layouts/one-piece.json'])
+        self.assertEqual(result['children'][2]['content'], {'mod': 'one-piece', 'props': {'region': 'brand'}})
+        self.assertEqual(result['children'][3]['content'], {'mod': 'workspace-chrome', 'props': {'footer': True}})
+
     def test_layout_hosts_tabs_and_pane_headers(self):
         layout = {'children': [
             {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}},

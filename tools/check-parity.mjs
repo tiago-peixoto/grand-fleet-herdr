@@ -13,7 +13,7 @@ const nativeSpaces=readFileSync(resolve(home,'mods/spaces/main.js'),'utf8');
 // The decorated host runs the copies the installer generated, so their hooks are exercised too.
 const generated=name=>readFileSync(resolve(home,`mods/one-piece/${name}`),'utf8');
 const nativeMenu=generated('herdr-menu.js'), hookedAgents=generated('herdr-agents.js');
-const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js');
+const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js'), nativeChrome=generated('herdr-chrome.js');
 const adapter=readFileSync(new URL('../mods/one-piece/main.js',import.meta.url),'utf8');
 const compile=(source,name)=>'(()=>{'+source.replace(/^import .*;\n/gm,'').replace(/export default class \w+/,`globalThis.${name} = class ${name}`).replace(/export function (\w+)/g,'globalThis.$1 = function $1')+'})();';
 
@@ -72,12 +72,12 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
     theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
     setAgentOrder:order=>calls.push(['order',order]),run:(name,args)=>calls.push([name,args]),
-    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),
+    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),setBadge:text=>state.set('test.badge',text),nextCommand:()=>new Promise(()=>{}),
     settings:()=>({zoom:1}),home:()=>'/home/pirate',
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
   runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
   runInNewContext(compile(nativeSpaces,'Spaces'),context);
-  if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane']]) runInNewContext(compile(source,name),context);
+  if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane'],[nativeChrome,'Chrome']]) runInNewContext(compile(source,name),context);
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':overlayProps.region==='spaces'?'Spaces':'Agents']();
   const discover=controller.discover;
@@ -206,6 +206,33 @@ for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy
   assert.ok(!nodes.some(n=>n.path==='icons/claude.svg'),`${props.region} drops the program icon for a crewmember`);
   if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title keeps its native name');
   assert.equal(view.state.get('one-piece.art').characters['t2:2'],undefined,`${props.region} copies leave crew bookkeeping to the Agents list`);
+}
+{
+  const view=host(true);
+  assert.equal(view.state.get('test.badge'),null,'the Dock badge is clear while no agent is blocked');
+  view.controller.attend();
+  assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['agent.focus',{terminal:'t6'}]),'with no blocked agent, the attention key shows the finished one');
+  const waiting=view.context.agents();
+  waiting[1].status='blocked';waiting[2].status='blocked';
+  view.controller.render(view.cx);
+  assert.equal(view.state.get('test.badge'),'2','the Dock badge counts blocked agents');
+  view.controller.attend();
+  assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['agent.focus',{terminal:'remote/t1'}]),'the attention key shows the blocked agent that changed most recently');
+  await view.controller.close();
+  assert.equal(view.state.get('test.badge'),null,'closing the Agents list clears the Dock badge it set');
+}
+for (const region of ['tabs','pane','brand','spaces']) {
+  const view=host(true,'grouped',310,{region});
+  view.state.set('test.badge','2');
+  await view.controller.close();
+  assert.equal(view.state.get('test.badge'),'2',`closing the ${region} copy leaves the Agents list's Dock badge alone`);
+}
+{
+  const view=host(true,'grouped',310,{region:'brand'}), nodes=descendants(view.root);
+  assert.ok(nodes.some(n=>n.path==='mods/one-piece/assets/flag.gif'),'the sidebar header flies the Straw Hat flag');
+  assert.ok(nodes.some(n=>n.kids.includes('Grand Fleet'))&&!nodes.some(n=>n.kids.includes('Herdr')),'the sidebar header names the fleet');
+  assert.ok(!nodes.some(n=>n.path==='frame/welcome/herdr.png'),'the Herdr logo leaves the sidebar header');
+  assert.ok(['search','sidebar-toggle'].every(id=>view.nodes.has(id)),'the header keeps its native search and fold buttons');
 }
 {
   const view=host(true,'grouped',310,{region:'pane', pane:'p3', terminal:'t6'});

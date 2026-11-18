@@ -1,11 +1,12 @@
 import Agents from './herdr-agents.js';
+import Chrome from './herdr-chrome.js';
 import Menu from './herdr-menu.js';
 import Pane from './herdr-pane.js';
 import Spaces, { glyph, tone } from './herdr-spaces.js';
 import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
-import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify } from 'herdr';
+import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
 import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from './fleet.js';
@@ -45,6 +46,12 @@ class OnePiecePane extends Pane {
     const pane = super.me();
     return pane && {...pane, program:portraitProgram(pane)};
   }
+}
+
+class OnePieceChrome extends Chrome {
+  // 32 px is the artwork's own size, so every source pixel stays a whole square.
+  logo() { return image(`mods/one-piece/assets/flag.${appearance().paused ? 'png' : 'gif'}`).size(32).flex_none(); }
+  title() { return 'Grand Fleet'; }
 }
 
 function sidebarWidth(node = layout()) {
@@ -197,10 +204,11 @@ export default class OnePieceAgents extends Agents {
       this.spacesView.init(p, cx);
       return;
     }
-    const Portraits = {tabs:OnePieceTabs, pane:OnePiecePane}[props()?.region];
+    const Portraits = {tabs:OnePieceTabs, pane:OnePiecePane, brand:OnePieceChrome}[props()?.region];
     if (Portraits) {
       this.portraitView = new Portraits();
-      this.portraitView.init(p, cx);
+      // Herdr's workspace chrome has no init.
+      this.portraitView.init?.(p, cx);
       return;
     }
     if (props()?.appearance || props()?.setup || props()?.flag) {
@@ -211,8 +219,20 @@ export default class OnePieceAgents extends Agents {
     }
     if (props()?.view) return;
     super.init(p, cx);
+    // Every shown copy of the mod receives key commands, so only the Agents list acts on them.
+    cx.spawn(async () => { for (;;) if (await nextCommand() === 'attention') this.attend(); });
     this.discover(cx);
     cx.timer.every(10000, cx => this.discover(cx));
+  }
+
+  async close() {
+    if (this.badge) setBadge(null);
+  }
+
+  attend() {
+    const newest = status => agents().filter(agent => agent.status === status && !agent.focused).sort((a, b) => b.seq - a.seq)[0];
+    const agent = newest('blocked') ?? newest('done');
+    if (agent) run('agent.focus', {terminal:agent.address});
   }
 
   discover(cx) {
@@ -427,6 +447,8 @@ export default class OnePieceAgents extends Agents {
         .when(Boolean(terminal), el => el.child(Button.new('legacy-open').accessibility_label('Open terminal').tab_index(0).p(8).child('Open terminal')
           .on_click(() => run('terminal.peek', { terminal: terminal.address }))));
     }
+    const blocked = agents().filter(agent => agent.status === 'blocked').length;
+    if (blocked !== this.badge) setBadge((this.badge = blocked) ? String(blocked) : null);
     const members = crewmembers(terminals(), agents());
     const fleets = genericFleets(terminals(), agents(), captainLinks());
     const known = new Set(spaces().map(space => space.id));

@@ -30,6 +30,14 @@ Set sail posts a notification that names the ship and the Space.
 The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
+The sidebar header shows the Straw Hat flag and the name Grand Fleet in place of Herdr's logo and name.
+The flag is drawn at 32 pixels, its artwork size, and keeps the native search and fold buttons beside it.
+The Dock icon, the welcome screen, and Settings keep Herdr's own logo, because no mod can change them.
+The macOS Dock badge shows how many agents Herdr reports as blocked, and clears at zero.
+The `one-piece.attention` command shows the unfocused blocked agent that changed most recently, or else the newest finished one.
+It runs Herdr's native `agent.focus` and does nothing when no agent waits.
+The Dock badge and the `one-piece.attention` command work only while the One Piece layout is shown, because the Agents list owns both.
+Switching to another layout closes that list, which clears the badge.
 A space containing a captain shows that crew's ship.
 An agent's crewmember takes the program icon's place in the Agents row, its tab, and its pane title.
 The narrow sidebar rail has no icon column, so there the crewmember stays in the status cell.
