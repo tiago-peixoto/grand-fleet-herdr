@@ -94,8 +94,9 @@ class FleetMenu extends Menu {
 class OnePieceSpaces extends Spaces {
   machineIcon(m, connected) {
     const island = appearance().islands?.[m ?? ''];
+    // The margin keeps the 13 point box of Herdr's own icon, so the machine name and the rail's status badge stay where Herdr puts them.
     return island == null ? super.machineIcon(m, connected) :
-      image(`mods/one-piece/assets/island-${island}${connected ? '' : '-fog'}.png`).size(16).flex_none();
+      image(`mods/one-piece/assets/island-${island}${connected ? '' : '-fog'}.png`).size(16).m(-1.5).flex_none();
   }
 
   menu(space) {
