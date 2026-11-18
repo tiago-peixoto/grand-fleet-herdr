@@ -9,7 +9,7 @@ import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
 import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
-import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from './fleet.js';
+import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from './fleet.js';
 
 const CREW_COLORS = {strawhat:'#e8b04b', redhair:'#d4483f', bigmom:'#e98fb8', beasts:'#9b7bd1', heart:'#e5d14a', whitebeard:'#6fb0e6', roger:'#d9a62b', kid:'#c9443a'};
 const displayName = name => name.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
@@ -17,6 +17,9 @@ const appearance = () => shared('one-piece.art') ?? { crews: {}, characters: {},
 const captainLinks = () => ({...(shared('one-piece.captains') ?? {}), ...(shared('one-piece.discovered') ?? {})});
 const save = patch => setShared('one-piece.art', { ...appearance(), ...patch });
 const crewFor = terminal => crews[appearance().crews[identity(terminal)]] ?? crews.strawhat;
+// A flag raised by hand on a worker Space outranks the captain it would otherwise follow.
+const fleetCrew = space => appearance().spaceCrews?.[space] ??
+  (captain => captain && appearance().crews[identity(captain)])(followedCaptains(terminals(), agents(), captainLinks()).get(space));
 const live = address => terminals().find(terminal => terminal.address === address && terminal.state === 'live');
 // The crewmember test from fleet.js, applied to one terminal so each icon avoids copying the terminal list.
 const art = terminal => !terminal || !(terminal.program?.agent || agents().some(agent => agent.address === terminal.address)) ? null :
@@ -110,7 +113,7 @@ class OnePieceSpaces extends Spaces {
   ship(space) {
     const captain = this.captain(space);
     if (captain) return crewFor(captain);
-    return this.fleet(space) ? crews[appearance().spaceCrews?.[space.id]] : null;
+    return this.fleet(space) ? crews[fleetCrew(space.id)] : null;
   }
 
   portrait(terminal, art, label, t) {
@@ -335,7 +338,7 @@ export default class OnePieceAgents extends Agents {
     if (!valid) return shell.p(16).child(flag.captain ? 'This captain is no longer available.' : 'This space no longer has a fleet without a captain.');
     const spaceId = captain ? agents().find(agent => agent.address === captain.address)?.space : flag.space;
     const spaceName = spaces().find(space => space.id === spaceId)?.name ?? 'this fleet';
-    const flying = captain ? ids.find(id => crews[id] === crewFor(captain)) : appearance().spaceCrews?.[flag.space];
+    const flying = captain ? ids.find(id => crews[id] === crewFor(captain)) : fleetCrew(flag.space);
     const captainCrews = crewmembers(terminals(), agents()).filter(terminal => captainLinks()[identity(terminal)])
       .map(terminal => appearance().crews[identity(terminal)]).filter(Boolean);
     // Generic fleets give the Straw Hats to Firstmate captains, the same rule selectFleetCrews applies.
@@ -459,14 +462,18 @@ export default class OnePieceAgents extends Agents {
     // but no longer than five seconds, because one unanswered check would otherwise hold back every new fleet.
     const settled = [...this.pendingCaptains ?? []].every(key =>
       this.checkedCaptains?.has(key) || Date.now() - (this.firstChecks?.get(key) ?? Date.now()) >= 5000);
-    const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()] : [], appearance().spaceCrews ?? {}, captainCrews, retained);
+    const followed = followedCaptains(terminals(), agents(), captainLinks());
+    const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()].filter(id => !followed.has(id)) : [], appearance().spaceCrews ?? {}, captainCrews,
+      id => followed.has(id) || retained(id));
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
     for (const [id, fleet] of fleets) {
       if (spaceCrews[id]) characters = assignCrew(fleet, characters, {terminal:`space:${id}`, created:0, crew:spaceCrews[id]});
     }
     for (const captain of members.filter(terminal => captainLinks()[identity(terminal)] && appearance().crews[identity(terminal)])) {
-      characters = assignCrew(managedCrew(captain, terminals(), agents(), captainLinks()), characters,
+      // Workers in a following Space draw from the captain's roster, so both Spaces never show one character twice.
+      const workers = [...fleets].filter(([id]) => !spaceCrews[id] && followed.has(id) && identity(followed.get(id)) === identity(captain)).flatMap(([, fleet]) => fleet);
+      characters = assignCrew([...managedCrew(captain, terminals(), agents(), captainLinks()), ...workers], characters,
         {terminal:captain.address, created:captain.created_ms, crew:appearance().crews[identity(captain)]});
     }
     const survivors = members.map(terminal => characters[identity(terminal)]).filter(Boolean);

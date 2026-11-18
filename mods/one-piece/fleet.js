@@ -41,3 +41,16 @@ export function genericFleets(terminals, agents, captains) {
   }
   return result;
 }
+
+// Firstmate starts workers in a Space of their own, so a fleet whose crewmates all carry one
+// captain's home tag follows that captain. The tag only pairs an already detected captain with its workers.
+export function followedCaptains(terminals, agents, captains) {
+  const homes = new Map(crewmembers(terminals, agents).filter(terminal => captains[identity(terminal)]?.home)
+    .map(terminal => [`${machineOf(terminal)}|${captains[identity(terminal)].home}`, terminal]));
+  const result = new Map();
+  for (const [space, fleet] of genericFleets(terminals, agents, captains)) {
+    const leaders = new Set(fleet.map(terminal => homes.get(`${machineOf(terminal)}|${terminal.labels?.['firstmate.home']}`)));
+    if (leaders.size === 1 && !leaders.has(undefined)) result.set(space, [...leaders][0]);
+  }
+  return result;
+}

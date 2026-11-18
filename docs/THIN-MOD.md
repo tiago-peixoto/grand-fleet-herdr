@@ -59,7 +59,12 @@ Rows with crew artwork are 64 pixels tall, compared with Herdr's 30-pixel Space 
 A captain Space combines its ship, captain sprite, and miniature managed crew on one continuous row background.
 The captain sprite replaces the visible Space name, which remains available in its tooltip and accessibility label.
 Every captain uses native Space membership for the lower crew strip, whether detected or manually designated.
-The mod never associates workers in other Spaces with a captain, including through Firstmate labels.
+A Space whose crewmates all carry one detected captain's `firstmate.home` label follows that captain: it flies the captain's ship and its crewmates come from the captain's roster.
+The mod derives each detected captain's home tag from its home folder, as Firstmate's `bin/fm-backend-hometag-lib.sh` does, and compares it only on the captain's machine.
+That Space keeps its own row, its name, and its native membership, and shows no captain artwork.
+A flag raised by hand on that Space outranks the captain's crew.
+A captain marked by hand has no home tag, so Spaces of its workers stay generic fleets.
+The mod reads no other Firstmate label and never detects a captain from a label.
 The entire row selects the Space and retains native drag ordering and the workspace menu.
 Every fleet shows only agents placed in its Space.
 Spaces without agents retain native presentation.

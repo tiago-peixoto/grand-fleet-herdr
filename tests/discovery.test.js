@@ -13,7 +13,7 @@ const read = async (path, options) => {
   return files[path] ?? null;
 };
 test('recognizes a real secondmate without role labels or manual registration', async () => {
-  assert.deepEqual(await discoverCaptain(terminal, read), {source:'session-lock',role:'secondmate'});
+  assert.deepEqual(await discoverCaptain(terminal, read), {source:'session-lock',role:'secondmate',home:'2ndmate-hello-mate-8179f440'});
 });
 test('does not turn another agent in the same folder into a captain', async () => {
   assert.equal(await discoverCaptain({...terminal,foreground:{pid:9000,cwd:'/home/pirate'}},read), null);
@@ -24,7 +24,7 @@ test('rejects ordinary projects and missing process evidence', async () => {
   assert.equal(await discoverCaptain({...terminal,foreground:null},read),null);
 });
 test('recognizes the primary without a secondmate marker', async () => {
-  assert.deepEqual(await discoverCaptain(terminal,async (path, options) => path.endsWith('.fm-secondmate-home') ? null : read(path,options)),{source:'session-lock',role:'firstmate'});
+  assert.deepEqual(await discoverCaptain(terminal,async (path, options) => path.endsWith('.fm-secondmate-home') ? null : read(path,options)),{source:'session-lock',role:'firstmate',home:'firstmate-8179f440'});
 });
 
 test('rejects a session lock transferred while its evidence is being read', async () => {

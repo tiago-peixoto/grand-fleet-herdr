@@ -31,6 +31,7 @@ Captain and crewmember artwork appears in the Agents region and in the Space con
 Expanded captain Space rows combine the ship, captain, and miniature managed crew on one background without a letter avatar or visible Space name.
 The captain replaces the name above the crew strip.
 Automatically detected captains show the other agents in their native Space as crewmates.
+A Space holding only one detected captain's workers flies that captain's flag, because Firstmate starts workers in a Space of their own.
 This visual summary does not move terminals or change native Space membership.
 Spaces and Agents each have one scrolling list, without scrolling inside individual machines or ships.
 Ordinary crewmember artwork requires no coordinator association or worker ownership metadata.
@@ -95,6 +96,7 @@ Acceptance evidence must identify the tested Firstmate revision rather than impl
 Captain identification belongs to the mod and requires no manual registration or artwork commands from Firstmate.
 The primary defaults to Straw Hats, while secondmates receive unused secondary crews before crews repeat.
 Each generic fleet receives the least-used crew, and Straw Hats are eligible when no Firstmate captain is live.
+A fleet that follows a captain takes that captain's crew instead.
 A Firstmate primary still receives Straw Hats when a generic fleet already shows them.
 The captain can choose the ship and crew of any fleet, and that choice persists for the space.
 User selections remain unchanged by automatic discovery.
