@@ -248,6 +248,8 @@ Unavailable machines retain Herdr's connection handling without invented live ac
 
 To stop animation, right-click a character and select **Pause animation**.
 Use **Resume animation** in the same menu to restore motion.
+The same menu lists the members of the agent's crew, so you can choose which character that agent shows.
+If another agent in that crew already shows the chosen character, the two swap.
 These controls change appearance only.
 
 ## What the mod accesses

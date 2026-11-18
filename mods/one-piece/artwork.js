@@ -47,6 +47,15 @@ export function assignCrew(workers,previous,coordinator,reserved=[]) {
   return assigned;
 }
 
+// Whoever held the chosen character takes the one given up, so a crew never shows two of the same.
+export function chooseCharacter(characters, key, name) {
+  const mine = characters[key], art = `crew-${name}`;
+  if (!mine || mine.art === art) return characters;
+  const holder = Object.keys(characters).find(other => characters[other].owner === mine.owner && characters[other].art === art);
+  return {...characters, [key]:{...mine, art, number:null},
+    ...(holder ? {[holder]:{...characters[holder], art:mine.art, number:mine.number}} : {})};
+}
+
 export function selectDefaultCrews(terminals, captains, selected, machines, preferences = {}) {
   const assigned = {...selected};
   for (const [key, captain] of Object.entries(captains)) {

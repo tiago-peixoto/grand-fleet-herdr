@@ -241,3 +241,28 @@ test('fleet crews persist for retained spaces and are released for spaces that a
   const result = selectFleetCrews(['new'], selected, [], id => id === 'led' || id === 'offline');
   assert.deepEqual(result, {led:'kid', offline:'heart', new:'strawhat'});
 });
+
+test('choosing a held character swaps it with its holder and survives reassignment',async()=>{
+  const {assignCrew,chooseCharacter}=await import('../mods/one-piece/artwork.js');
+  const fleet={terminal:'space:s',created:0,crew:'strawhat'}, workers=['t20','t21','t22'].map(terminal);
+  const assigned=assignCrew(workers,{},fleet);
+  assert.deepEqual(Object.values(assigned).map(a=>a.art),['crew-chopper','crew-franky','crew-zoro']);
+  const swapped=chooseCharacter(assigned,'t20:12','zoro');
+  assert.deepEqual(Object.values(swapped).map(a=>a.art),['crew-zoro','crew-franky','crew-chopper']);
+  assert.deepEqual(assignCrew([...workers,terminal('t23')],swapped,fleet)['t23:12'].art,'crew-nami','a newcomer takes the next free character');
+  assert.deepEqual(Object.values(assignCrew(workers,swapped,fleet)).map(a=>a.art),['crew-zoro','crew-franky','crew-chopper']);
+  const free=chooseCharacter(assigned,'t20:12','robin');
+  assert.equal(free['t20:12'].art,'crew-robin');
+  assert.equal(assignCrew([terminal('t23')],free,fleet)['t23:12'].art,'crew-chopper','the character given up becomes free');
+  const other=assignCrew([terminal('t30')],assigned,{terminal:'space:x',created:0,crew:'strawhat'});
+  assert.equal(chooseCharacter(other,'t30:12','franky')['t21:12'].art,'crew-franky','another fleet keeps its own character');
+  const pirates=assignCrew(Array.from({length:10},(_,i)=>terminal(`p${i}`)),{},fleet);
+  const promoted=chooseCharacter(pirates,'p9:12','chopper');
+  assert.deepEqual([promoted['p9:12'].number,promoted['p0:12'].number,promoted['p0:12'].art],[null,1,'crew-pirate-blue']);
+});
+
+test('every character a captain can choose has artwork',async()=>{
+  const {crews}=await import('../mods/one-piece/artwork.js');
+  for(const crew of Object.values(crews)) for(const name of crew.workers)
+    assert.ok(existsSync(new URL(`../mods/one-piece/assets/crew-${name}-idle.gif`,import.meta.url)),name);
+});
