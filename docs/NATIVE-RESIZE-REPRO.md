@@ -10,7 +10,7 @@ Executing `pane.zoom` for the panel removed both labels from native window captu
 Clicking the rectangle restored the static label, but the interactive label remained absent in the observed capture.
 The test did not use the last-frame `herdr-app shot` command.
 The private evidence includes `.task-notes/grand-fleet-release-20261117/resize-missing.png` in the workspace.
-[Issue 2](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) remains open because this reproduction rules out closing the release check.
+[Issue 2](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/2) remains open because this reproduction rules out closing the release check.
 The observation does not identify the rendering cause or independently establish physical-display behavior.
 
 ## Historical observations

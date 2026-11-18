@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tiago-peixoto/herdr-one-piece/actions/workflows/ci.yml"><img src="https://github.com/tiago-peixoto/herdr-one-piece/actions/workflows/ci.yml/badge.svg" alt="Automated tests"></a>
+  <a href="https://github.com/tiago-peixoto/grand-fleet-herdr/actions/workflows/ci.yml"><img src="https://github.com/tiago-peixoto/grand-fleet-herdr/actions/workflows/ci.yml/badge.svg" alt="Automated tests"></a>
   <a href="https://herdr.dev"><img src="https://img.shields.io/badge/Herdr-native_mod-29454c" alt="Native Herdr mod"></a>
   <a href="#compatibility"><img src="https://img.shields.io/badge/status-experimental-e8bd70" alt="Experimental"></a>
 </p>
@@ -67,7 +67,7 @@ The [tested versions and limitations](#compatibility) appear below.
 
 Copy this request into your coding agent:
 
-> Read https://github.com/tiago-peixoto/herdr-one-piece/blob/main/RECIPE.md and install Grand Fleet into an initialized, separate Herdr test configuration.
+> Read https://github.com/tiago-peixoto/grand-fleet-herdr/blob/main/RECIPE.md and install Grand Fleet into an initialized, separate Herdr test configuration.
 
 The [recipe](RECIPE.md) gives your agent the installation steps, permissions, and verification requirements.
 
@@ -76,8 +76,8 @@ The [recipe](RECIPE.md) gives your agent the installation steps, permissions, an
 Clone the repository:
 
 ```sh
-git clone https://github.com/tiago-peixoto/herdr-one-piece.git
-cd herdr-one-piece
+git clone https://github.com/tiago-peixoto/grand-fleet-herdr.git
+cd grand-fleet-herdr
 ```
 
 An **app home** is Herdr's configuration directory.
@@ -313,7 +313,7 @@ Legacy installations also have [specific shortcut cleanup rules](docs/INSTALL.md
 ## Contribute
 
 Start with [VISION.md](VISION.md), the project's acceptance policy, then [AGENTS.md](AGENTS.md) and the [thin presentation design](docs/THIN-MOD.md).
-[Open an issue](https://github.com/tiago-peixoto/herdr-one-piece/issues/new) with your Herdr version, reproduction steps, and a screenshot when appearance matters.
+[Open an issue](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/new) with your Herdr version, reproduction steps, and a screenshot when appearance matters.
 Remove private terminal content before sharing screenshots or logs.
 
 Use Node.js 22, Python 3.13, and ImageMagick, the image processing tools, to match the automated workflow.

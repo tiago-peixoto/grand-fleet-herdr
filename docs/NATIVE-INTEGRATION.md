@@ -29,19 +29,19 @@ Herdr displayed an unavailable machine and reconnecting terminal, then recovered
 The terminal briefly reported 200 by 120 cells before automatically returning to its original 113 by 36 cells.
 The recovered native capture showed correctly wrapped output, and subsequent typing returned `ACK REMOTE_RECOVERED_1117`.
 The terminal identity, shell process, foreground process, parent, and lifetime settings remained unchanged.
-Native recovery passed for this single trial, but [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3) stays open.
+Native recovery passed for this single trial, but [issue 3](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/3) stays open.
 The historical two-viewer reproduction was intermittent, so one passing trial cannot show that the ordering defect is fixed.
 Clean Core v0.1.21 still collects relayed attachments without sorting, marks returning viewers resumed, and starts them without activity timestamps.
 That source comparison is a reason for further regression testing, not a fresh reproduction of the failure.
 
 The clean upstream Core v0.1.21 checkout was `1b0393f80c35b1dae34f37934d33d0144a8fc8d7`.
 Using Zig 0.16.0, `cargo test --locked -p herdr-core --test foreground -- --test-threads=1` passed all seven tests.
-This resolves the current baseline check in [issue 4](https://github.com/tiago-peixoto/herdr-one-piece/issues/4), without identifying the historical failure's cause or testing the full Core suite.
+This resolves the current baseline check in [issue 4](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/4), without identifying the historical failure's cause or testing the full Core suite.
 
 The [minimal resize probe](NATIVE-RESIZE-REPRO.md#signed-release-reproduction-2026-11-17) reproduced missing text in the signed application without One Piece artwork.
 Both labels disappeared after pane zoom while the yellow rectangle remained visible in native window capture.
 The last-frame `herdr-app shot` command was not used for this observation.
-[Issue 2](https://github.com/tiago-peixoto/herdr-one-piece/issues/2) therefore remains a release blocker.
+[Issue 2](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/2) therefore remains a release blocker.
 
 After backing up the daily home, the installer refreshed `~/.config/herdr-app` from the merged revision.
 All 979 owned files matched the installation receipt, and all 975 copied source files matched the checkout.
@@ -1816,7 +1816,7 @@ Its size selection therefore cannot preserve their previous activity ordering wh
 The resulting tie depends on attachment order.
 A correction must also preserve the existing rule that a returning viewer cannot displace a viewer active during the outage.
 The native output still requires verification after correcting size ownership.
-The investigation is tracked in [issue 3](https://github.com/tiago-peixoto/herdr-one-piece/issues/3).
+The investigation is tracked in [issue 3](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/3).
 
 ### Isolated core correction
 
@@ -1841,7 +1841,7 @@ A fixed-window comparison is still required to establish visual recovery.
 Running the core suite serially passed all 157 library tests, with one ignored test.
 That run later failed two foreground-status tests, each receiving no status instead of working.
 Both foreground-status failures also reproduce on unchanged v0.1.20 code.
-They are tracked separately in [issue 4](https://github.com/tiago-peixoto/herdr-one-piece/issues/4).
+They are tracked separately in [issue 4](https://github.com/tiago-peixoto/grand-fleet-herdr/issues/4).
 The remaining integration suites finished with 265 passing tests, one failure, and two ignored tests.
 The failure came from a disposable Git repository inheriting commit signing without its fixture identity's signing key.
 Disabling signing only in the test process passed all six command execution tests on both unchanged and candidate code.
