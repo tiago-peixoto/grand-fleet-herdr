@@ -24,7 +24,14 @@ for character, start, limit in [('chopper', 0, 44), ('franky', 12, 56), ('pirate
             'prototype/flow/assets/worker-states-v1.png', 64, limit,
             list(range(start+offset, start+offset+4)), [delay]*4)
 
-APPROVED_PORTRAITS = {'crew-shanks': (19, 4), 'crew-kaido': (20, 5), 'crew-jozu': (16, 5), 'crew-lucky-roux': (18, 7)}
+APPROVED_PORTRAITS = {
+    'crew-shanks': (19, 4), 'crew-kaido': (20, 5), 'crew-lucky-roux': (18, 7),
+    'crew-jozu': (18, 4),
+    'crew-brook': (24, 15), 'crew-compote': (26, 18), 'crew-jack': (28, 8),
+    'crew-black-maria': (28, 12), 'crew-atmos': (24, 10), 'crew-oden': (26, 9),
+    'crew-petermoo': (24, 11), 'crew-mr-momora': (22, 13), 'crew-amande': (21, 13),
+    'crew-perospero': (23, 13), 'crew-mont-d-or': (23, 10), 'crew-smoothie': (28, 12),
+}
 
 
 def im(*args):
@@ -145,6 +152,17 @@ class ArtworkTests(unittest.TestCase):
                         pixels = alpha[frame*64*64:(frame+1)*64*64]
                         rows = [y for y in range(64) if any(pixels[y*64:(y+1)*64])]
                         self.assertEqual(rows, list(range(rows[0], 61)))
+
+    def test_crew_chopper_keeps_the_original_smaller_scale(self):
+        for state in ('idle', 'working', 'blocked'):
+            alpha = im(ASSETS / f'crew-chopper-{state}.gif', '-coalesce',
+                       '-alpha', 'extract', '-depth', '8', 'gray:-')
+            for frame in range(len(alpha)//4096):
+                with self.subTest(state=state, frame=frame):
+                    pixels = alpha[frame*4096:(frame+1)*4096]
+                    occupied = [(i % 64, i // 64) for i, a in enumerate(pixels) if a]
+                    self.assertLessEqual(max(x for x, _ in occupied)-min(x for x, _ in occupied)+1, 44)
+                    self.assertLessEqual(max(y for _, y in occupied)-min(y for _, y in occupied)+1, 44)
 
     def test_rejects_missing_worker_bands_and_empty_cells(self):
         self.assertTrue(SCRIPT.is_file(), 'native artwork exporter is missing')

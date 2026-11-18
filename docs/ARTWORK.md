@@ -11,6 +11,7 @@ Historical game sprites and illustrated ships remain archived for reference, not
 | Luffy | `prototype/custom-trial/assets/luffy.png` | Four idle and four working frames from the initial trial |
 | Worker states | `prototype/flow/assets/worker-states-v1.png` | Three designs, three states each, four frames per state |
 | Straw Hat flag | `prototype/flow/assets/straw-hat-flag.png` | Four flag frames |
+| Machine islands | `prototype/flow/assets/machine-islands-v1.png` | Eight 32 × 32 islands, clear above fog, not yet shown by any heading |
 
 The worker atlas contains Chopper, Franky, and a generic Pirate.
 Its rows contain Chopper sleeping, walking, and sitting, followed by the same states for Franky and Pirate.
@@ -27,7 +28,7 @@ There is no complete Straw Hat crew or alternate ship catalog in the selected cu
 ## Source prompts and references
 
 `prototype/custom-trial/prompts.json` records the initial ship and character prompts.
-`prototype/flow/art-prompts.json` records the refined Franky and flag prompts.
+`prototype/flow/art-prompts.json` records the refined Franky, flag, and machine island prompts.
 `prototype/flow/worker-states-prompt.json` records the worker atlas prompt and reference files.
 The initial Chopper, Franky, and Pirate sheets remain in the trial assets as style evidence.
 The refined `franky-v2.png` remains an atlas reference, not the current worker animation source.

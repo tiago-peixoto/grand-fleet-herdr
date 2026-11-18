@@ -7,6 +7,12 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / 'mods/one-piece/assets'
+PORTRAIT_ORIGINS = {
+    'brook': (24, 15), 'compote': (26, 18), 'jack': (28, 8),
+    'black-maria': (28, 12), 'atmos': (24, 10), 'oden': (26, 9),
+    'petermoo': (24, 11), 'mr-momora': (22, 13), 'amande': (21, 13),
+    'perospero': (23, 13), 'mont-d-or': (23, 10), 'smoothie': (28, 12),
+}
 
 
 def im(*args):
@@ -128,19 +134,24 @@ def build(output):
         animations = [(f'crew-{name}', range(4), [52]*4)] if ship else [
             (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
             for row, (state, delay) in enumerate([('idle', 85), ('working', 22), ('blocked', 70)])]
-        export(sheet, boxes, 128 if ship else 64, 116 if ship else 56, animations, output)
+        limit = 116 if ship else 44 if name == 'chopper' else 56
+        export(sheet, boxes, 128 if ship else 64, limit, animations, output)
         if not ship:
-            portrait(output / f'crew-{name}-working.png', output / f'portrait-crew-{name}.png')
+            portrait(output / f'crew-{name}-working.png', output / f'portrait-crew-{name}.png',
+                     origin=PORTRAIT_ORIGINS.get(name))
 
 
-def portrait(sprite, output, side=28):
-    # Standing sprites put the head at the top, so a 28px crop there reads as a 14pt face at 2x.
-    alpha = im(sprite, '-alpha', 'extract', '-depth', '8', 'gray:-')
-    opaque = [(i % 64, i // 64) for i, a in enumerate(alpha) if a]
-    top = min(y for _, y in opaque)
-    band = [x for x, y in opaque if y < top+22]
-    x = min(max(round((min(band)+max(band))/2 - side/2), 0), 64-side)
-    im(sprite, '-crop', f'{side}x{side}+{x}+{max(top-1, 0)}', '+repage',
+def portrait(sprite, output, side=28, origin=None):
+    # Tall hats and hair need measured crops to keep the face inside the portrait.
+    if origin is None:
+        alpha = im(sprite, '-alpha', 'extract', '-depth', '8', 'gray:-')
+        opaque = [(i % 64, i // 64) for i, a in enumerate(alpha) if a]
+        top = min(y for _, y in opaque)
+        band = [x for x, y in opaque if y < top+22]
+        x = min(max(round((min(band)+max(band))/2 - side/2), 0), 64-side)
+        origin = x, max(top-1, 0)
+    x, y = origin
+    im(sprite, '-crop', f'{side}x{side}+{x}+{y}', '+repage',
        '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{output}')
 
 

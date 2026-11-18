@@ -1,0 +1,1031 @@
+{
+  "date": "2026-11-18",
+  "scope": "Polish 50 characters, redraw 8 characters, and polish 4 ships from the visual audit. Chopper and Oden use export corrections only.",
+  "reference_policy": "Edit the previous source for each subject. Match character style to the existing Luffy sheet and ship style to the original Sunny sheet.",
+  "sources": {
+    "amande": {
+      "source": "prototype/crew-artwork/amande-study-v1.png",
+      "action": "redraw",
+      "finding": "The huge hat leaves a very small face and a thin body. At 24 pixels, the seated and walking poses retain nearly identical upright outlines.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, amande. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: The huge hat leaves a very small face and a thin body. At 24 pixels, the seated and walking poses retain nearly identical upright outlines. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/amande-study-v1.png",
+          "sha256": "e054afd1e0ab3210bf44f2f581005f1abfe5a48831d86ec05098c4dbdc54346f"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "694df3be46b990e91576f504bff56ed70481508d0f350627a3a9d2ee88843624"
+    },
+    "atmos": {
+      "source": "prototype/crew-artwork/atmos-study-v1.png",
+      "action": "polish",
+      "finding": "The horns dominate the portrait while the face moves toward its edge. Recenter the crop and simplify dark armor details.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, atmos. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The horns dominate the portrait while the face moves toward its edge. Recenter the crop and simplify dark armor details. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Broad muscular man with long black mane and beard, two square upward tusk-like teeth, gray helmet with curved buffalo horns, gray and gold sleeveless armor, purple Whitebeard tattoo on upper arms, dark trousers and boots",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/atmos-study-v1.png",
+          "sha256": "0be4f0fa01b88c0e50110501f0d5d13cbdd08e988c0f4a329f77535306715850"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "117b9d302a477ea46a6f5703d028bf9b5399569a7c7ec0fe9f4ba25a1e653a3c"
+    },
+    "black-maria": {
+      "source": "prototype/crew-artwork/black-maria-study-v1.png",
+      "action": "polish",
+      "finding": "The tall hair ornaments shrink the visible face in the portrait. Simplify the ornament cluster and use a dedicated face crop.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, black maria. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The tall hair ornaments shrink the visible face in the portrait. Simplify the ornament cluster and use a dedicated face crop. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Black Maria from One Piece. Tall blonde woman with elaborate geisha hairstyle, two red horns and sword-shaped hairpins. Blue eyes and red lips. Fully closed black kimono with blue and yellow flowers, turquoise obi sash, white socks and black sandals with red straps. Neutral human form, no spider body, no exposed chest. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/black-maria-study-v1.png",
+          "sha256": "f2e242ff1df7c42ac641eb7d8a974b5119b6fe4c72e3c9a32edd2fc35e8ab224"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "65f5ad7900e219877c9ec90b38670f6f8bef9ee37ac67f8e82eed47da41d1b2f"
+    },
+    "brook": {
+      "source": "prototype/crew-artwork/brook-study-v1.png",
+      "action": "polish",
+      "finding": "The dark afro and suit disappear against the sidebar. The portrait favors the afro and leaves the face small and off-center.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, brook. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The dark afro and suit disappear against the sidebar. The portrait favors the afro and leaves the face small and off-center. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/brook-study-v1.png",
+          "sha256": "7e79b4fc348eddc9be6e97fe9c48c1b7fb13ea1568beccdeed722dea71c01112"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "9e899700b7fbe91e6a6524735ab9d155d7fd28155396ce7f6062a4483e9cd4c0"
+    },
+    "brulee": {
+      "source": "prototype/crew-artwork/brulee-study-v1.png",
+      "action": "polish",
+      "finding": "Fine hair and dress shading weaken the outline. Make the seated body broader and lower so it reads without relying on detail.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, brulee. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Fine hair and dress shading weaken the outline. Make the seated body broader and lower so it reads without relying on detail. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Brulee from One Piece. Tall thin gray-skinned witch-like woman, lavender hair with outward hooked locks, huge red hooked nose, diagonal face scar. Whitish long frilled gown with red roses and moss-green feathered sleeveless coat. No hat. Sitting with legs tucked under gown. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/brulee-study-v1.png",
+          "sha256": "5b4a75f0a20c4a9389c7e4413d2f4eaf53d9b132fef326bb2c80cd3415f60cb6"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "13073c8d1a84c6b7af0e29bf6e47bf242e80d95aa876ea8ea6e0f118a801fc5c"
+    },
+    "building-snake": {
+      "source": "prototype/crew-artwork/building-snake-study-v1.png",
+      "action": "polish",
+      "finding": "Hair, glasses, and clothing break into many thin marks. Simplify the face and brighten the body separation.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, building snake. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair, glasses, and clothing break into many thin marks. Simplify the face and brighten the body separation. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Building Snake from One Piece. Massive muscular man with long wavy dark brown hair, narrow dark sunglasses, red dragon tattoo on right chest and neck. Open blue vest, light lavender cape, white trousers, green sash and two sheathed swords. Sitting cross-legged. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/building-snake-study-v1.png",
+          "sha256": "28d11b522d625d383e95fdc33e33946456a75df535ecde99571777f350f66344"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "988b37a4e91b5397fe21eb08c3436f6e5b82982d9ea013592f10af7cc247739a"
+    },
+    "cb-gallant": {
+      "source": "prototype/crew-artwork/cb-gallant-study-v1.png",
+      "action": "polish",
+      "finding": "Hat, hair, and beard compete within the head. Simplify their texture and make the face more prominent.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, cb gallant. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hat, hair, and beard compete within the head. Simplify their texture and make the face more prominent. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Large very muscular man with broad shoulders, long arms and very short legs. Large square jaw, small eyes, short beard. Dark vest, spiked shoulder plates, pale gloves, pale skirt armor and pale shoes, pale helmet with large forward-curving plume.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/cb-gallant-study-v1.png",
+          "sha256": "42a020da490442ad37ccf8ec28d31344f8c47a195212bb48954a0f9a961a2430"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "854772e97308e49f52c3f08bbbee9af3888aac51884ab5bb387b6077b2ef5ec1"
+    },
+    "compote": {
+      "source": "prototype/crew-artwork/compote-study-v1.png",
+      "action": "polish",
+      "finding": "The fruit crown occupies the portrait while the face falls below it. The skirt also weakens the distinction between walking and sitting.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, compote. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The fruit crown occupies the portrait while the face falls below it. The skirt also weakens the distinction between walking and sitting. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Compote from One Piece. Heavyset woman with large nose and prominent lips, long bushy teal hair, light purple frilly full-length dress and a bowl of colorful fruit parfait balanced on her head. Sitting with legs tucked under dress. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/compote-study-v1.png",
+          "sha256": "2222a4ad99bd8ea1d43a4d3cd3b1163178d15bccd46717c305e8a8fba707d3e2"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "a21add6dd774d6cb0b2cdb76e9a999ad3b89df1793d62e197657309e02dd4657"
+    },
+    "cracker": {
+      "source": "prototype/crew-artwork/cracker-study-v1.png",
+      "action": "polish",
+      "finding": "The purple hair identifies him, but armor and thin limbs become noisy at 24 pixels. Broaden the main body shapes.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, cracker. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The purple hair identifies him, but armor and thin limbs become noisy at 24 pixels. Broaden the main body shapes. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/cracker-study-v1.png",
+          "sha256": "56ff56f46aa2d192b737fa6283126c06404ce337bd9f17f9ff8300cf9baae3f8"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "308b1140acda5b92b1dc70f8eaa57e011a296cbee5acda962f1f2b4a2885dc6d"
+    },
+    "dive": {
+      "source": "prototype/crew-artwork/dive-study-v1.png",
+      "action": "polish",
+      "finding": "Long red hair and small costume accents crowd the body. Simplify the lower silhouette and keep the hair as one strong shape.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, dive. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Long red hair and small costume accents crowd the body. Simplify the lower silhouette and keep the hair as one strong shape. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Short adult woman with thick braided pigtails, lipstick and round sunglasses pushed up on forehead. Tattered dark shirt, necklace, dark stockings and high heels. Punk appearance, no pirate hat.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/dive-study-v1.png",
+          "sha256": "f8f4451d7ebaccf7565f988a657cd7113ba37488da88d07c874b1e9c99427861"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "6c5d206680ec40f171eeb4d70c2d1110d0191574e3626c2b226664111052a3a6"
+    },
+    "doringo": {
+      "source": "prototype/crew-artwork/doringo-study-v1.png",
+      "action": "redraw",
+      "finding": "The body and limbs are unusually thin for this set. Rebuild the proportions so the face and poses survive at 24 pixels.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, doringo. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: The body and limbs are unusually thin for this set. Rebuild the proportions so the face and poses survive at 24 pixels. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Short man with spiky hair, long limbs and wide smile. Dark two-tone jacket with light stripe down each sleeve, small batlike wings attached to jacket, pale bandanna, dark shorts, single sheath holding two swords.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/doringo-study-v1.png",
+          "sha256": "9c5e7ba635260d99589755cb7fc01ec91683e8f15b82d9cd4c955a90a22674d7"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "99e79cab4546e7b214ce47ff5b4e0f9d8fa30cc43abba09346af613475e41328"
+    },
+    "emma": {
+      "source": "prototype/crew-artwork/emma-study-v1.png",
+      "action": "redraw",
+      "finding": "Thin limbs and numerous pale hair spikes read as a detailed miniature. Rebuild the proportions and reduce the small marks.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, emma. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: Thin limbs and numerous pale hair spikes read as a detailed miniature. Rebuild the proportions and reduce the small marks. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Tall adult woman with pale hair in central mohawk and two loose strands beside cheeks. Open dark coat, fitted top, layered ruffled skirt and tall heeled boots.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/emma-study-v1.png",
+          "sha256": "5c1c7ddc66454d7af1f7417559f4ffcd03ed0c9d1c7b492ff4c02f598457eb2c"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "669390dac3fdc733322a317147e3681fe685195b436313cb1c4aa814b89a703f"
+    },
+    "galette": {
+      "source": "prototype/crew-artwork/galette-study-v1.png",
+      "action": "polish",
+      "finding": "Pink hair reads clearly, but the dark feathered clothing merges with the sidebar. Strengthen the body outline and leg separation.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, galette. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Pink hair reads clearly, but the dark feathered clothing merges with the sidebar. Strengthen the body outline and leg separation. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Galette from One Piece. Pale woman with shoulder-length curled fuchsia hair, bangs over right side, yellow eyes. Two small black arrow-shaped hair accessories, red-violet dress with modest neckline, dark purple feather coat, magenta gloves and dark shoes. Neutral nonsexual pose. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/galette-study-v1.png",
+          "sha256": "6171ada70649b03f7bc76ef08f8a8d306dc644361c23a48c54b8f2c67da3f3ed"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "c321b7700a650ec901b65378e2e373acd3071613a64ebe7768d6b37dc0012dd5"
+    },
+    "ginrummy": {
+      "source": "prototype/crew-artwork/ginrummy-study-v1.png",
+      "action": "polish",
+      "finding": "Pink hair is readable, but costume details and narrow legs become fragile at 24 pixels. Simplify the lower body.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, ginrummy. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Pink hair is readable, but costume details and narrow legs become fragile at 24 pixels. Simplify the lower body. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Ginrummy from One Piece. Young adult woman with long pink hair, pale blue eyes, small black horns and gold hoop earrings. Red-violet fitted armor, black cloak with white fur collar, black gloves and calf-high boots. Neutral fully clothed pose, human baseline form. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/ginrummy-study-v1.png",
+          "sha256": "fce45e84632ffd3dd7362fb246bee5909e177d06ae86f3265477043f1831a2ba"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "b87417d9adf0d8e87f88d3f24f2dd127666bcec3433d8276d9ff44cc47b5dee8"
+    },
+    "hip": {
+      "source": "prototype/crew-artwork/hip-study-v1.png",
+      "action": "polish",
+      "finding": "Pale hair and face merge at small sizes. Add a clearer boundary and simplify the small clothing accents.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, hip. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Pale hair and face merge at small sizes. Add a clearer boundary and simplify the small clothing accents. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Slender adult woman with short light hair, black short-sleeved shirt beneath a pale tank top, dark trousers and boots. Small restrained lettering on tank, no hat, punk look.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/hip-study-v1.png",
+          "sha256": "fc30ea31bb8249305fd5637d07b96bc210008f87afaf9e91d8a710e9e752b635"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "158a220b4fe21852539eae67c2e43aa65e631c805dd7ca06f8b37c9f7ea67648"
+    },
+    "hop": {
+      "source": "prototype/crew-artwork/hop-study-v1.png",
+      "action": "polish",
+      "finding": "Pale hair and thin limbs become fragile at small sizes. Consolidate the hair and broaden the body shapes.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, hop. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Pale hair and thin limbs become fragile at small sizes. Consolidate the hair and broaden the body shapes. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Slender adult woman with long light hair gathered into high ponytail. Open dark jacket over fitted top, dark skirt and boots, sword at her waist. Punk crew member, no hat.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/hop-study-v1.png",
+          "sha256": "278a2f28179e665041fc990552a48fe37ec499067ec4eddbf726e7c288dbf8fe"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "c4b644d38ed0eda56d6f420c5c253b63dd5e6e549393580d41441d0a94c10f69"
+    },
+    "house": {
+      "source": "prototype/crew-artwork/house-study-v1.png",
+      "action": "polish",
+      "finding": "White hair and fine clothing details create a busy edge. Simplify the hair and strengthen the body outline.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, house. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: White hair and fine clothing details create a busy edge. Simplify the hair and strengthen the body outline. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Adult woman with wild pale hair forming two small hornlike bunches above head, opaque round glasses. Dark knee-length dress with open shirt collar, pale cross printed on front and pale circles near hem, sturdy dark boots.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/house-study-v1.png",
+          "sha256": "c2e05f085897312f97cc2b02307687a0dd06be68e9b6b799523afdd57c7e01f7"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "0f88525b06b0be443a923062f3aae9fc7761fa6dc1ef51ae91902cacdc903c03"
+    },
+    "howling-gab": {
+      "source": "prototype/crew-artwork/howling-gab-study-v1.png",
+      "action": "polish",
+      "finding": "Dark hair, beard, and clothes merge into one mass. Add broader light areas around the face and hands.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, howling gab. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Dark hair, beard, and clothes merge into one mass. Add broader light areas around the face and hands. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Howling Gab from One Piece. Very large broad dark-skinned man with a shaggy dark brown lion-like mane, short beard and sharp teeth. Brown cape over a white shirt, dark trousers and boots. Oversized head and thick torso, shaggy hair, not an animal. Sitting cross-legged. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/howling-gab-study-v1.png",
+          "sha256": "9b6f079778683b037608164caaf6564663013b074f63af332a4d363a7450bcaf"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "745c340fb0cf8857354b4da2821d893c8e7bbdf9239fcb5b7b40cd23d100b628"
+    },
+    "islewan": {
+      "source": "prototype/crew-artwork/islewan-study-v1.png",
+      "action": "redraw",
+      "finding": "Dense beige hair, skin, and clothing details form a grainy mass. Rebuild the face and torso with clearer color blocks.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, islewan. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: Dense beige hair, skin, and clothing details form a grainy mass. Rebuild the face and torso with clearer color blocks. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/islewan-study-v1.png",
+          "sha256": "b1b91892c78546282f0c8bfd939ab47c80ed0c47886eda07266acd3ca2e3d0b1"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "22639bd2511aa29a5023c6e0880be39cdd59434bdc4ed9738256f0eef92e526e"
+    },
+    "jack": {
+      "source": "prototype/crew-artwork/jack-study-v1.png",
+      "action": "polish",
+      "finding": "Horn, hair, and armor details crowd the face. Simplify their texture and recenter the portrait around the face.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, jack. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Horn, hair, and armor details crowd the face. Simplify their texture and recenter the portrait around the face. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/jack-study-v1.png",
+          "sha256": "c825beeba74588d5074d5a8ea21c448e6b952fe64ea7795ac3a082267c97c55f"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "cacb8c953a4f8e94910d7b2124f839f03cf1f036889c1973823fed07f302fa2c"
+    },
+    "jacksonbanner": {
+      "source": "prototype/crew-artwork/jacksonbanner-study-v1.png",
+      "action": "polish",
+      "finding": "Pale curls and skin blend together in the small view. Strengthen the hair-face boundary and simplify the curls.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, jacksonbanner. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Pale curls and skin blend together in the small view. Strengthen the hair-face boundary and simplify the curls. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Tall slim man with long arms, slight hunch and curly light hair. Open dark short-sleeved shirt, baggy pale trousers, diagonal strap across chest, belt and boots.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/jacksonbanner-study-v1.png",
+          "sha256": "bc58883af789144fc81742507406e2a281c813d114a49b3920ea840ee000d2d4"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "79baa01957de2e2633b62043a3c9be6456a1b8816a004711f7300b553bf4d7e3"
+    },
+    "jaguar": {
+      "source": "prototype/crew-artwork/jaguar-study-v1.png",
+      "action": "polish",
+      "finding": "Dense blond hair strands compete with the small face. Reduce the texture and strengthen the face outline.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, jaguar. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Dense blond hair strands compete with the small face. Reduce the texture and strengthen the face outline. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Large muscular man with light tousled hair, boxing gloves and shorts. Tank top split into dark half and pale half with dark spots, a small panda design at its center. Heavy dark shoes.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/jaguar-study-v1.png",
+          "sha256": "12603caf5a11bd504f20facec3d5b77248bf246e0b46eb0790bb5bf5ca1eac0b"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "fab5074992ede1f11bd84c7f9fec5b0a741c833fb91541381253fbe778930632"
+    },
+    "jean-bart": {
+      "source": "prototype/crew-artwork/jean-bart-study-v1.png",
+      "action": "polish",
+      "finding": "Numerous skin and clothing shades make the figure grainier than the reference. Simplify the large torso and face.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, jean bart. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Numerous skin and clothing shades make the figure grainier than the reference. Simplify the large torso and face. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Very broad muscular bearded man with a long dark mane, flame-shaped forehead tattoos, strong sideburns and full beard, fierce face, Heart Pirates off-white boiler suit with crew emblem, brown boots. Preserve his massive build in chibi proportions",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/jean-bart-study-v1.png",
+          "sha256": "3264345880dfac31c96ad1102e9ded3e0d5886b3d6b65a864261251c5c5f227f"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "82a55971c947e039bca2ce8892871a4e11f66160466152b5935bcb6cbe047146"
+    },
+    "jozu": {
+      "source": "prototype/crew-artwork/jozu-study-v1.png",
+      "action": "polish",
+      "finding": "Brown skin, armor, and dark clothing merge at small sizes. Separate the face and torso with broader light areas.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, jozu. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Brown skin, armor, and dark clothing merge at small sizes. Separate the face and torso with broader light areas. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Extremely broad muscular dark-skinned man with short segmented black hair and beard stripes, rusty red cuirass, studded dark shoulder armor, green skirt with gold trim, large gold belt, black studded trousers and boots. Both arms intact, no diamond transformation",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/jozu-study-v1.png",
+          "sha256": "98b81cb573d137885bcf851cb44a2d6faaf07e2ee941ad7ebe001eca7c6cb54f"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "1215ea3e3d6566ce65ba14e6284b38d064e3c10771a6f1f095bcfc2f77f54f2e"
+    },
+    "king": {
+      "source": "prototype/crew-artwork/king-study-v1.png",
+      "action": "polish",
+      "finding": "The black costume and wings lose separation against the sidebar. Preserve the dark identity with broader, lighter edge accents.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, king. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The black costume and wings lose separation against the sidebar. Preserve the dark identity with broader, lighter edge accents. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/king-study-v1.png",
+          "sha256": "bc834120f2427ab633994dfbf0e3162c5de4fcc5bfa7067a5cc97e6b782fd609"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "985bfa98e54072e43f965a48a6ed8615ecfd57a7097cf1143de89b914ef77f1a"
+    },
+    "kingdew": {
+      "source": "prototype/crew-artwork/kingdew-study-v1.png",
+      "action": "polish",
+      "finding": "Hair texture and gold details produce scattered highlights. Simplify the hair and create clearer torso shading.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, kingdew. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair texture and gold details produce scattered highlights. Simplify the hair and create clearer torso shading. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Muscular tan man with short blond hair, hollow cheeks, bare chest with blue Whitebeard tattoo on right, long blue armored gauntlets, brown cape, blue sash, black and gold vertically striped pants and boots",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/kingdew-study-v1.png",
+          "sha256": "1bbc1aaf83e469e74f386ef2d92c187691e6ef1c46764726c664ae51a1a5c8f6"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "95af65cd35dc3e6a4575149d33ad58e8453f9ca27652f2605917301d95f418c4"
+    },
+    "limejuice": {
+      "source": "prototype/crew-artwork/limejuice-study-v1.png",
+      "action": "polish",
+      "finding": "Hair strands and narrow accessories crowd the face. Consolidate them into broader shapes for the small view.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, limejuice. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair strands and narrow accessories crowd the face. Consolidate them into broader shapes for the small view. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Production animation sprite sheet of Limejuice from One Piece, Red Hair Pirates. Slim muscular man with waist-length blond hair, black nut-shaped cap bearing a small skull emblem, dark sunglasses, white gloves, pale cape over his shoulders, red V-neck shirt, light pants, sash, staff. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/limejuice-study-v1.png",
+          "sha256": "ed2d10afad0b2ac9b0d53aaf94d72b3227edfba04afbfe6e1e615c010d3710c7"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "94578a91eb329758218777fc182c2cc898293abbb17f19a1eb4fb512706dc860"
+    },
+    "millet-pine": {
+      "source": "prototype/crew-artwork/millet-pine-study-v1.png",
+      "action": "redraw",
+      "finding": "Dense gold and brown texture obscures the face and body. Replace small highlights with broad, separated shapes.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, millet pine. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: Dense gold and brown texture obscures the face and body. Replace small highlights with broad, separated shapes. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/millet-pine-study-v1.png",
+          "sha256": "7a7170f085b6fdcd2b652f14d66cd5d9c5dccbd65fa1b1100d2c28dbb426900a"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "5eb828fe4086bfbb4dfa488cddfddb546443d5238e0bb2396fd16b1b16445dbd"
+    },
+    "moai": {
+      "source": "prototype/crew-artwork/moai-study-v1.png",
+      "action": "polish",
+      "finding": "Hair and skin texture make the broad body grainy. Simplify the large surfaces while preserving the silhouette.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, moai. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair and skin texture make the broad body grainy. Simplify the large surfaces while preserving the silhouette. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Large man with pale hair in ponytail, dotted bandanna, beaded necklace, tattered pale tank top, beaded belt and low-hanging dark trousers, dark boots.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/moai-study-v1.png",
+          "sha256": "8db447e835e24419e79731202b77eaec084302dde0a0dcd9b8acba6f7d105e74"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "8bc966e0000a6de8b4e640846a9d2434bf9c318c7dd0b2f3abeacb8d474cbb29"
+    },
+    "moby-dick": {
+      "source": "prototype/crew-artwork/moby-dick-study-v1.png",
+      "action": "polish",
+      "finding": "The whale bow reads exceptionally well. Its smooth shading and rounded contour look more illustrated than Sunny. Flatten the shading while preserving the silhouette.",
+      "prompt": "Edit IMAGE 1, the moby-dick sprite sheet. IMAGE 2 is Thousand Sunny, a style reference only. Preserve the existing ship, identity, angle, silhouette, colors, mast count, and emblems of IMAGE 1. Apply this targeted correction: The whale bow reads exceptionally well. Its smooth shading and rounded contour look more illustrated than Sunny. Flatten the shading while preserving the silhouette. Use the crisp, bold pixel clusters, strong dark outlines, flat color regions, and restrained shading of Sunny. Make tiny rigging, windows, teeth and ornaments fewer and broader, without removing the defining ship features. Keep it readable at 32 pixels. Identity constraints: Whitebeard's large whale-shaped flagship with a large friendly white whale head forming the bow, broad dark hull with blue bands, four wooden masts with cream-white square sails and Whitebeard Pirates emblem, rows of side cannons. Whale bow is the defining feature.  Output exactly FOUR columns and ONE row, four frames of the SAME ship with subtle sail or flag movement and small bobbing changes. Same scale, viewpoint and baseline in every cell, generous transparent gutters, no clipping. Transparent background. No ocean, water, ground, cast shadow, checkerboard, captions, text, labels or additional objects. Do not copy Sunny's lion figurehead or Straw Hat emblem.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/moby-dick-study-v1.png",
+          "sha256": "44a78d3d8ed835a2c68f2b47c6a78a76cb098012157dbe3285bdde9b081f9377"
+        },
+        {
+          "path": "prototype/custom-trial/assets/sunny.png",
+          "sha256": "06521243bd0b85c9086dc13f6fae6bd3b1317f3b1e0bfaabfa5e8f8a7cfdfbbc"
+        }
+      ],
+      "sha256": "37b10f5f3cb3f50c719f2923482c3672570c9d40b661c7dc6824c8ce9db4c4dd"
+    },
+    "mont-d-or": {
+      "source": "prototype/crew-artwork/mont-d-or-study-v1.png",
+      "action": "polish",
+      "finding": "The top hat reads, but thin legs and striped clothing disappear on reduction. Thicken the limbs and simplify the torso.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, mont d or. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The top hat reads, but thin legs and striped clothing disappear on reduction. Thicken the limbs and simplify the torso. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Mont-d'Or from One Piece. Lanky pale man with thin long limbs, stocky abdomen, blond hair flaring outward, long pointed nose and protruding chin. Black top hat with pink band, black jumpsuit printed with white skeleton bones, dark lipstick and vertical black lines over eyes. Sitting cross-legged. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/mont-d-or-study-v1.png",
+          "sha256": "02d6d52b0d12c595b64e9a2be2373640c914d0b58ab0d41c2adab4bfdd96ced2"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "82d451e800928052da60b7aed04c936dec315f0023541f1602d6aa0e231151a6"
+    },
+    "moon-isaac-jr": {
+      "source": "prototype/crew-artwork/moon-isaac-jr-study-v1.png",
+      "action": "polish",
+      "finding": "The long nose reads, but clothing details compete with it. Simplify the coat and keep the face as the focal point.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, moon isaac jr. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The long nose reads, but clothing details compete with it. Simplify the coat and keep the face as the focal point. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Rotund man with extremely long beaklike nose, short slicked-back brown hair and dark moustache. Tan shirt, gold cape, striped trousers, black boots, a sheathed rapier.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/moon-isaac-jr-study-v1.png",
+          "sha256": "e854570cf3870f2a9fb805d6cbf904b16fe2fb56b1a27d3ebaf5df349253ff8e"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "236af29f633448fcccb6de7dddc306d3791f73f02a22af91939cee97c045dba2"
+    },
+    "mr-momora": {
+      "source": "prototype/crew-artwork/mr-momora-study-v1.png",
+      "action": "polish",
+      "finding": "The wide hat and pale hair obscure a small face. Simplify the hair and choose a face-centered portrait crop.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, mr momora. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The wide hat and pale hair obscure a small face. Simplify the hair and choose a face-centered portrait crop. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Very tall thin man with long bushy light hair, pointed nose and chin. Large dark long-billed cap with pale marking, dark short-sleeved shirt, light trousers and belt, simple shoes.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/mr-momora-study-v1.png",
+          "sha256": "74ef0e35702cb12be180eeb387d6be40ab70263b5debdb3297a4a934d88e89a7"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "bd24df81fb023e9fe87cf280759e144bdf07935d71bf285e90adde8bafdf059e"
+    },
+    "oro-jackson": {
+      "source": "prototype/crew-artwork/oro-jackson-study-v1.png",
+      "action": "polish",
+      "finding": "Red sails and a gold hull remain distinct. The ornate gold bow becomes a bright texture patch. Simplify it into a few larger shapes.",
+      "prompt": "Edit IMAGE 1, the oro-jackson sprite sheet. IMAGE 2 is Thousand Sunny, a style reference only. Preserve the existing ship, identity, angle, silhouette, colors, mast count, and emblems of IMAGE 1. Apply this targeted correction: Red sails and a gold hull remain distinct. The ornate gold bow becomes a bright texture patch. Simplify it into a few larger shapes. Use the crisp, bold pixel clusters, strong dark outlines, flat color regions, and restrained shading of Sunny. Make tiny rigging, windows, teeth and ornaments fewer and broader, without removing the defining ship features. Keep it readable at 32 pixels. Identity constraints: Gol D. Roger's red and dark wood ship, three masts with red vertically striped sails and Roger Pirates skull emblem, pair of golden mermaid figureheads flanking a forward-facing cannon, large pale polka-dotted egg on the middle deck. Elegant gold trim. The Roger skull has a bare white skull and a large curled handlebar mustache. It must not wear a straw hat. Output exactly FOUR columns and ONE row, four frames of the SAME ship with subtle sail or flag movement and small bobbing changes. Same scale, viewpoint and baseline in every cell, generous transparent gutters, no clipping. Transparent background. No ocean, water, ground, cast shadow, checkerboard, captions, text, labels or additional objects. Do not copy Sunny's lion figurehead or Straw Hat emblem.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/oro-jackson-study-v1.png",
+          "sha256": "a53013f7dd721a10b77a6cc92deb5afcfca4c0a1c56b2f84c2451078646e8c0d"
+        },
+        {
+          "path": "prototype/custom-trial/assets/sunny.png",
+          "sha256": "06521243bd0b85c9086dc13f6fae6bd3b1317f3b1e0bfaabfa5e8f8a7cfdfbbc"
+        }
+      ],
+      "sha256": "df3c5ddc9214d999a6a4aade9a7193e878e24c2ae1ada66b86c5157ef3d1f632"
+    },
+    "page-one": {
+      "source": "prototype/crew-artwork/page-one-study-v1.png",
+      "action": "polish",
+      "finding": "The hat is clear, but hair and clothing have weak separation. Increase the contrast between those larger shapes.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, page one. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The hat is clear, but hair and clothing have weak separation. Increase the contrast between those larger shapes. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Page One from One Piece. Young adult man with purple side-shaved hair long on right, green eyes, small horns and two-tone white-and-green bucket hat. White-and-black mouth mask, white cape with lavender lining and purple hem. White shirt, gray tie and gloves, green suspenders and baggy knee-length green pants, green high boots. Human form. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/page-one-study-v1.png",
+          "sha256": "5c2012af2f6d42503031ab9439f176fd38c6ea370345223336a5479467d2a922"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "915d8d38952588c32323245ae6957fcb9f8cc54282d3edd4406a21ff45d97da2"
+    },
+    "perospero": {
+      "source": "prototype/crew-artwork/perospero-study-v1.png",
+      "action": "redraw",
+      "finding": "The hat, face, cane, and striped outfit compete within a thin body. Simplify the design and make the seated pose unmistakable.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, perospero. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: The hat, face, cane, and striped outfit compete within a thin body. Simplify the design and make the seated pose unmistakable. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/perospero-study-v1.png",
+          "sha256": "bf21bdb7b2ab56d16c2125396bfee3c15df4ee4a2978f58b079d0e3fffa307dc"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "0d31c7804ab5629432d797a99dac4fa59763bd000623d779035206eb67178091"
+    },
+    "petermoo": {
+      "source": "prototype/crew-artwork/petermoo-study-v1.png",
+      "action": "polish",
+      "finding": "The oversized hat and beard crowd a small face. Simplify the head details and recenter the portrait.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, petermoo. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The oversized hat and beard crowd a small face. Simplify the head details and recenter the portrait. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Short egg-shaped man with thin legs, shoulder-length light curly hair like a colonial wig, dark moustache and beard. Wide-brimmed dark hat with plume, burgundy suit jacket, pale kerchief, high-waist cream trousers, spiral belt buckle, boots.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/petermoo-study-v1.png",
+          "sha256": "b1d851bf08e3662a0611b2a14f23b53401600b7e15a2ffdbab226996f21eda3d"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "63f36fe6dcbcc6e18ba5d736a784446548967c8c18a2bdeb4bd6aebfaafb311e"
+    },
+    "pirate-cyan": {
+      "source": "prototype/crew-artwork/pirate-cyan-study-v1.png",
+      "action": "polish",
+      "finding": "The compact body and poses match. Reduce the very bright bandana saturation to sit more quietly beside the original palette.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, pirate cyan. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The compact body and poses match. Reduce the very bright bandana saturation to sit more quietly beside the original palette. Change only the bandana color: reduce its saturation by roughly a quarter, retaining its violet/cyan identity. Preserve the exact drawing, proportions, outlines and all poses. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/pirate-cyan-study-v1.png",
+          "sha256": "f78e5f511cf3037d088184af0b32005f93361abee5809a205f81a9985a44932a"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "f6c921c536dd926b01c7f26531a7f36225940ab5fc623399847336348d0aecd1"
+    },
+    "pirate-violet": {
+      "source": "prototype/crew-artwork/pirate-violet-study-v1.png",
+      "action": "polish",
+      "finding": "The compact body and poses match. Reduce the very bright bandana saturation to sit more quietly beside the original palette.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, pirate violet. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The compact body and poses match. Reduce the very bright bandana saturation to sit more quietly beside the original palette. Change only the bandana color: reduce its saturation by roughly a quarter, retaining its violet/cyan identity. Preserve the exact drawing, proportions, outlines and all poses. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/pirate-violet-study-v1.png",
+          "sha256": "de2ffd6ff6ead859db28f15889574b29b8c57991c8d0a5d66fb95ddec02c4c2a"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "be0275c08540da0a34c9a4bc08130e6fecfec887b2e1eaff6149316b881aeb84"
+    },
+    "polar-tang": {
+      "source": "prototype/crew-artwork/polar-tang-study-v1.png",
+      "action": "polish",
+      "finding": "The yellow submarine is recognizable. Simplify the many portholes and tall mast details that become scattered pixels at 32 pixels.",
+      "prompt": "Edit IMAGE 1, the polar-tang sprite sheet. IMAGE 2 is Thousand Sunny, a style reference only. Preserve the existing ship, identity, angle, silhouette, colors, mast count, and emblems of IMAGE 1. Apply this targeted correction: The yellow submarine is recognizable. Simplify the many portholes and tall mast details that become scattered pixels at 32 pixels. Use the crisp, bold pixel clusters, strong dark outlines, flat color regions, and restrained shading of Sunny. Make tiny rigging, windows, teeth and ornaments fewer and broader, without removing the defining ship features. Keep it readable at 32 pixels. Identity constraints: Yellow metal submarine with light green underside, rounded prow, circular windows, wooden upper decks, central conning structure, two slim masts with their sails furled, Heart Pirates smiling emblem, exterior lamps. Submarine silhouette without open sails.  Output exactly FOUR columns and ONE row, four frames of the SAME ship with subtle sail or flag movement and small bobbing changes. Same scale, viewpoint and baseline in every cell, generous transparent gutters, no clipping. Transparent background. No ocean, water, ground, cast shadow, checkerboard, captions, text, labels or additional objects. Do not copy Sunny's lion figurehead or Straw Hat emblem.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/polar-tang-study-v1.png",
+          "sha256": "b0afc503b94c36cc6ba96fd7758ec6dfdc19c4e0651cf3faceed8851858c11d6"
+        },
+        {
+          "path": "prototype/custom-trial/assets/sunny.png",
+          "sha256": "06521243bd0b85c9086dc13f6fae6bd3b1317f3b1e0bfaabfa5e8f8a7cfdfbbc"
+        }
+      ],
+      "sha256": "88b5e3bfc1bfdddb1507ee0685fe26a78c3c1410079e6a38eeecee99d6f812b8"
+    },
+    "pudding": {
+      "source": "prototype/crew-artwork/pudding-study-v1.png",
+      "action": "polish",
+      "finding": "The face and outfit fit the style. At 24 pixels, the seated pose still reads upright. Broaden the seated outline to make the state clear.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, pudding. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The face and outfit fit the style. At 24 pixels, the seated pose still reads upright. Broaden the seated outline to make the state clear. Change only the four seated poses in the bottom row. Preserve the first eight source poses as closely as possible. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Charlotte Pudding from One Piece. Young woman with light brown pigtails and a third eye centered on her forehead. Canonical patisserie outfit: pink chef hat, pink blouse and knee-length pink skirt, white apron and simple shoes. All three eyes visible. Fully clothed neutral nonsexual pose. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/pudding-study-v1.png",
+          "sha256": "61c6c92a2c23e26d31807ba6cc26a7e79f72c93a9b14b14741bba99520a5260e"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "fd49e587e4d4d6ebdd7dd16adb359a4c548681abbf8f1bed593b4aede5266ca9"
+    },
+    "rakuyo": {
+      "source": "prototype/crew-artwork/rakuyo-study-v1.png",
+      "action": "polish",
+      "finding": "Hair and costume textures compete at 24 pixels. Simplify the yellow hair into a few larger clusters.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, rakuyo. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair and costume textures compete at 24 pixels. Simplify the yellow hair into a few larger clusters. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Man with blond dreadlocks, thin mustache angled up on both sides, yellow-purple bandanna with Whitebeard emblem, yellow coat green edging, green vest, pale green sash, checked trousers, boots, compact spiked ball and chain",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/rakuyo-study-v1.png",
+          "sha256": "5d5708ce390d112ee17429e0e1c85c326737245b4ff5a4717e2123de3d83b87d"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "b70301ec7e83dbc5a1642d515dca4656d06cc38070907fccebb87090f9be49b2"
+    },
+    "rayleigh": {
+      "source": "prototype/crew-artwork/rayleigh-study-v1.png",
+      "action": "polish",
+      "finding": "Fine pale hair and facial shading soften the face at small sizes. Simplify the hair and strengthen the facial outline.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, rayleigh. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Fine pale hair and facial shading soften the face at small sizes. Simplify the hair and strengthen the facial outline. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Mature muscular man with strawberry-blond swept-back hair, short striped blond beard, round glasses and scar over right eye. Orange shirt, light spotted shorts, silver cloak and sandals, sheathed sword. His hair is blond, never elderly white.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/rayleigh-study-v1.png",
+          "sha256": "bd6d345b0ce345fd35513d2a01d220f6e175bf3d467746c0c9c085e836785dd6"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "7cf2d55ba4473ccb88f18d360058d28d628e67dd2a1fec5513d1ae1f52350df3"
+    },
+    "rockstar": {
+      "source": "prototype/crew-artwork/rockstar-study-v1.png",
+      "action": "polish",
+      "finding": "The red hair is strong, but small costume accents compete with it. Simplify the torso and reduce scattered highlights.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, rockstar. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The red hair is strong, but small costume accents compete with it. Simplify the torso and reduce scattered highlights. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Rockstar from One Piece. Burly dark-skinned man with vivid red liberty-spike hair. Dark purple double-breasted coat, light orange wide-collar shirt, red neckerchief, yellow double-sided sash, light blue trousers, brown boots and a sheathed green-hilt saber. Sitting cross-legged. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/rockstar-study-v1.png",
+          "sha256": "4e3eac3fddc7be5e978cdf37f46c799c7db2eb1a00bfe0a67df4a88004114fca"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "47b438c2ccbdb397b5c7f491a9e97dcaf2850f0399d26a7bec11ba782142a076"
+    },
+    "sasaki": {
+      "source": "prototype/crew-artwork/sasaki-study-v1.png",
+      "action": "polish",
+      "finding": "The hat and hair carry his identity, but fine armor texture competes with them. Reduce internal detail around the face and chest.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, sasaki. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The hat and hair carry his identity, but fine armor texture competes with them. Reduce internal detail around the face and chest. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Sasaki from One Piece. Portly pale fish-man with long yellow-green hair, two prominent lower tusks and blue eyes. Extra-wide puffy white military cap with black visor and gold horns. White-and-orange flame-hem cape, bare tattooed chest, beige-and-orange buttoned hakama trousers, gold belt, brown gloves and wooden sandals. Human fish-man form. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/sasaki-study-v1.png",
+          "sha256": "5e1d2ef526b7cc3412268b839abc0d99b8c88f486cef99b50db207c29ddf63d0"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "1f048fb9865e57d763e8318226ea4d165df5c45a24884d91f61d60e0be9253bb"
+    },
+    "smoothie": {
+      "source": "prototype/crew-artwork/smoothie-study-v1.png",
+      "action": "redraw",
+      "finding": "Soft shading, fine hair strands, and slender limbs drift from the original chunky style. Rebuild the same design with fewer, larger shapes.",
+      "prompt": "Use case: style-transfer. Asset: production character animation sprite sheet for the Grand Fleet sidebar. Image 1 is the edit target, Smoothie. Image 2, Luffy, is the pixel-art style and pose-grid reference only. Redraw Smoothie with the same identity, white beret, white hair covering one eye, warm brown skin, cream scarf, magenta costume, boots and sword. Correct the audit finding: soft shading, fine hair strands and slender limbs make her look like a detailed miniature. Match Luffy's compact oversized-head proportions, thick crisp dark pixel outlines, broad flat color clusters and restrained two-level shading. Simplify hair into a few broad locks and remove scattered surface highlights. Keep face large and readable when the whole sprite is 24 pixels tall. Preserve clothing coverage and identifying colors. EXACTLY four equal columns by three equal rows, twelve complete separate sprites, transparent alpha background, landscape 4:3. Row 1 four sleeping-on-side breathing frames. Row 2 four different walking-right cycle frames, legs alternate visibly. Row 3 four distinctly low and broad cross-legged sitting frames, blinking and subtle head motion. Sitting must be clearly lower and wider than walking at tiny size. Consistent scale, camera and character design across all cells. Every sprite centered horizontally and bottom-aligned in its own cell with generous transparent gutters. No clipping, no text, no labels, no grid lines, no ground, no shadows, no extra characters. Do not copy Luffy's features. Deliver only the Smoothie sheet.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/smoothie-study-v1.png",
+          "sha256": "ad9f8f433e74b69f4c183cd868060f1781688cdb72d65f6aa46b49534aa42268"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "223760f6d70e5e7c5ccfd0cf2ec111c621894ce90d35b6d80db1309057cfedff"
+    },
+    "solitaire": {
+      "source": "prototype/crew-artwork/solitaire-study-v1.png",
+      "action": "polish",
+      "finding": "Multiple arms, curls, and accessories create excessive small marks. Preserve the silhouette while simplifying the interior.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, solitaire. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Multiple arms, curls, and accessories create excessive small marks. Preserve the silhouette while simplifying the interior. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Solitaire from One Piece. Young adult woman with short mint-green wing-shaped hair, magenta aviator helmet with blue visor and small horns. Orange one-piece jacket dress with four sleeves and six frilled shoulder pads. Exactly SIX arms, lower pair bare, magenta gloves and boots, long monkey tail. Fully clothed neutral pose, six hands visible in sitting frames. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/solitaire-study-v1.png",
+          "sha256": "9cb1d366243d6c2b3db5f8549ead1b107aa2d60fd17b027cb87dc529ad9fed8a"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "e74e5cf463ebfb703e187a53e8a53055b23adca26b7fcd04caa95ff7c0879704"
+    },
+    "speed": {
+      "source": "prototype/crew-artwork/speed-study-v1.png",
+      "action": "polish",
+      "finding": "The horse body is distinctive, but small legs and striped details become scattered pixels. Broaden those shapes for the sidebar.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, speed. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The horse body is distinctive, but small legs and striped details become scattered pixels. Broaden those shapes for the sidebar. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Speed from One Piece. Woman-horse centaur with human upper body, horse lower body with exactly FOUR horse legs. Hair split white on her right and dark blue on left, matching split horse tail, horse ears, pink goggles. White-and-blue fitted jacket, dark blue shoulder armor, dark feather cape, pink bead necklace, white gloves, saddle and small longbow. Sleeping with all horse legs folded, sitting with horse body resting and legs folded, never replace horse body with human legs. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/speed-study-v1.png",
+          "sha256": "1b244d3d791dcaaa40659478e75a14252677afca8fae944b76ddcbd7c4f21038"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "4ba91b27adef3adf66bed9685620dce0d8b65dd10bdcf5859380be37b5da5933"
+    },
+    "sunbell": {
+      "source": "prototype/crew-artwork/sunbell-study-v1.png",
+      "action": "polish",
+      "finding": "Numerous small skin and costume marks fragment the body. Keep the pale head silhouette and simplify the interior.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, sunbell. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Numerous small skin and costume marks fragment the body. Keep the pale head silhouette and simplify the interior. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Large stout blue-green fish-man with fin on head, prominent lips, webbed hands, dark head and arm tattoos. Open red Hawaiian shirt with pale flowers, light trousers and sandals. Clearly fish-man, never human.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/sunbell-study-v1.png",
+          "sha256": "3b3e523c98672b9fb9fe94f4bb330c7d2f0485f895624aef3d3c99d4b46c6782"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "b281c3bd6a3cbb931f84b3363e9fd315eebbea47ededa735cd0375afc7e7559f"
+    },
+    "toki": {
+      "source": "prototype/crew-artwork/toki-study-v1.png",
+      "action": "polish",
+      "finding": "Fine green hair strands and kimono detail are denser than the original style. Consolidate the hair and simplify the clothing folds.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, toki. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Fine green hair strands and kimono detail are denser than the original style. Consolidate the hair and simplify the clothing folds. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Woman with long mint-green hair tied high at back, pink short kimono with pale crescent patterns, dark purple obi, sandals, small sword at waist. Voyage-era appearance",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/toki-study-v1.png",
+          "sha256": "9a8f56722094286945f1da6e1b6d84a57a7ac9d5d321621f166bdf5c6881bae4"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "de9ebc4818fff4efe0745b15fdc0392b4d8f9f6027fb09e5cd854d01a7074764"
+    },
+    "ulti": {
+      "source": "prototype/crew-artwork/ulti-study-v1.png",
+      "action": "polish",
+      "finding": "The blue hair is distinctive, but thin limbs and layered curls read as illustration detail. Simplify the hair and broaden the body.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, ulti. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The blue hair is distinctive, but thin limbs and layered curls read as illustration detail. Simplify the hair and broaden the body. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Ulti from One Piece. Young adult woman with very long blue hair streaked pink, curved white horns, pink scalloped face mask edged white. White long-sleeve pleated upper dress with blue bow, pink skirt, dark blue cape and dark shoes. Fully clothed neutral human form. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/ulti-study-v1.png",
+          "sha256": "24a7890f54ae1635a1632ea52cd4611c9eec47b03e33338d35aa28bd21023ebc"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "87b4a5a2c6576af66e10be74861833fe94b9f86f0c471bc353120d439af6f8b9"
+    },
+    "uni": {
+      "source": "prototype/crew-artwork/uni-study-v1.png",
+      "action": "polish",
+      "finding": "Spiky hair and fine uniform details crowd a narrow body. Reduce hair texture and simplify the chest.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, uni. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Spiky hair and fine uniform details crowd a narrow body. Reduce hair texture and simplify the chest. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Tall man with very puffy dark brown hair and a long gray face covering patterned with vertical black stripes, covering nose and mouth down to his upper chest, only eyes exposed. White Heart Pirates boiler suit with emblem on left chest, brown boots",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/uni-study-v1.png",
+          "sha256": "9818051cd19b2793bf253b3189b9e762d08400bdf259b971b39fff10d8bd223f"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "eebcf1f03a4da67c264318f0b504dc7fa31e9802bcb451dc84893f3b6463e3e5"
+    },
+    "victoria-punk": {
+      "source": "prototype/crew-artwork/victoria-punk-study-v1.png",
+      "action": "polish",
+      "finding": "The skeletal bow and orange sails are recognizable. Fine teeth, ribs, and rigging create more noise than Sunny at small sizes.",
+      "prompt": "Edit IMAGE 1, the victoria-punk sprite sheet. IMAGE 2 is Thousand Sunny, a style reference only. Preserve the existing ship, identity, angle, silhouette, colors, mast count, and emblems of IMAGE 1. Apply this targeted correction: The skeletal bow and orange sails are recognizable. Fine teeth, ribs, and rigging create more noise than Sunny at small sizes. Use the crisp, bold pixel clusters, strong dark outlines, flat color regions, and restrained shading of Sunny. Make tiny rigging, windows, teeth and ornaments fewer and broader, without removing the defining ship features. Keep it readable at 32 pixels. Identity constraints: Eustass Kid's orange heavy-metal skeleton-themed pirate ship, enormous yellow dinosaur skull figurehead, dinosaur ribs along underside, TWO masts, black main sail with flame design and Kid Pirates skull emblem, smaller orange sails, jagged punk rock details.  Output exactly FOUR columns and ONE row, four frames of the SAME ship with subtle sail or flag movement and small bobbing changes. Same scale, viewpoint and baseline in every cell, generous transparent gutters, no clipping. Transparent background. No ocean, water, ground, cast shadow, checkerboard, captions, text, labels or additional objects. Do not copy Sunny's lion figurehead or Straw Hat emblem.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/victoria-punk-study-v1.png",
+          "sha256": "46933b3d049626f025e996d52ee6c3598f15c62bba7d5a0f7844342cf341b0a6"
+        },
+        {
+          "path": "prototype/custom-trial/assets/sunny.png",
+          "sha256": "06521243bd0b85c9086dc13f6fae6bd3b1317f3b1e0bfaabfa5e8f8a7cfdfbbc"
+        }
+      ],
+      "sha256": "8969adf6a2e3328f5cced10fbf575979d2613c023d4e445ee53db7360dd16718"
+    },
+    "whos-who": {
+      "source": "prototype/crew-artwork/whos-who-study-v1.png",
+      "action": "polish",
+      "finding": "The red silhouette reads, but straps and tiny highlights crowd the body. Keep the helmet and broader clothing blocks dominant.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, whos who. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The red silhouette reads, but straps and tiny highlights crowd the body. Keep the helmet and broader clothing blocks dominant. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of Who's-Who from One Piece. Lean muscular man with waist-length wavy pink hair. Red horned mask with yellow eye circles, open red suit over black shirt, black gloves, purple belt with round golden buckle, black shoes. Eye-shaped tattoo on chest and a sheathed sword. Human form. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/whos-who-study-v1.png",
+          "sha256": "5910ed38d5d395d36d405c6e3d06de1e63a6eb39e9a9638b9ca83fdca40e4d16"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "5a3fc438f711b6ff911e1c79316945c3759f64a7991fdc71c0c60096601172a0"
+    },
+    "wire": {
+      "source": "prototype/crew-artwork/wire-study-v1.png",
+      "action": "polish",
+      "finding": "The dark hat and coat merge against the sidebar. Strengthen the face and limb separation without changing the silhouette.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, wire. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The dark hat and coat merge against the sidebar. Strengthen the face and limb separation without changing the silhouette. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Very tall lanky man with drooping eyes, dark brown hooded cloak with five spikes on top. Fishnet shirt and stockings, black shorts, looped gold belt, necklace of tiny axe blades. Pale skin and dark boots, slim long silhouette.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/wire-study-v1.png",
+          "sha256": "0ee02723780e0add5c9751ef975e57bae9d172ec02172f6cf879d0afaace4ec2"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "23540d5f278458887b1205b55784f0a21c9d1e7b1583b572b9af53a3b2ef69e2"
+    },
+    "x-drake": {
+      "source": "prototype/crew-artwork/x-drake-study-v1.png",
+      "action": "polish",
+      "finding": "Orange hair reads well, while dark costume details merge. Clarify the torso and boots with larger light-dark blocks.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, x drake. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Orange hair reads well, while dark costume details merge. Clarify the torso and boots with larger light-dark blocks. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Use case: stylized-concept. Create a production animation sprite sheet of X Drake from One Piece. Post-timeskip human form with short light orange fauxhawk, brush-like sideburns and X-shaped chin scar. Black slanted headband and eye mask, no bicorne hat. Black leather outfit with X-shaped exposed chest, black cape red lining white fur collar, armored long gloves and knee-high boots, round belt buckle, sheathed sword and axe at hip. ",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/x-drake-study-v1.png",
+          "sha256": "ff07ac2f9d99cb8e1e243019354c9f71be312863af4ca8178b928c9ee261234b"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "361416646ce62bade963a4ac7ec500764ec5fa41d3ef4b2058f105ce04b662d4"
+    },
+    "yamon": {
+      "source": "prototype/crew-artwork/yamon-study-v1.png",
+      "action": "redraw",
+      "finding": "Hair, skin, and clothing share nearly the same pale range. Separate them into distinct color blocks before refining detail.",
+      "prompt": "Use case: style-transfer. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, yamon. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Redraw this same character in the original compact chunky pixel-art style. Specific correction: Hair, skin, and clothing share nearly the same pale range. Separate them into distinct color blocks before refining detail. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Slim man with long light hair and thin limbs, pale furry top, light shorts and sandals, short spear strapped diagonally across back.",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/yamon-study-v1.png",
+          "sha256": "483e8eaf2678e8eaa2519c1e7a8467c2a7237e77f413bbd8cbb8743bbe687fe6"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "4de2d64417d2f3216e127addbae5d63232b8432ee83fb7ca7acbb500204fa99d"
+    },
+    "young-epoida": {
+      "source": "prototype/crew-artwork/young-epoida-study-v1.png",
+      "action": "polish",
+      "finding": "Hair texture and shirt spots compete for attention. Reduce the spots and use larger orange hair shapes.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, young epoida. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Hair texture and shirt spots compete for attention. Reduce the spots and use larger orange hair shapes. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Huge rotund man with long curly orange hair hiding eyes, round orange-pink nose, white brimmed hat, polka-dotted shirt and dark trousers, thin arms and boots. Whitebeard crew era before own captainship",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/young-epoida-study-v1.png",
+          "sha256": "38abca85dbeacc0d2145ab216edd18e4978ea46988d7dca43249064c1fd17bb9"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "1d7795f0bf5c63e7d93c734bc0cb4384b3e23eaf40cdcac645ebec7e19ccdfc4"
+    },
+    "young-nekomamushi": {
+      "source": "prototype/crew-artwork/young-nekomamushi-study-v1.png",
+      "action": "polish",
+      "finding": "The yellow silhouette reads, but many isolated hair spikes create noise. Keep a few broader fur clusters.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, young nekomamushi. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: The yellow silhouette reads, but many isolated hair spikes create noise. Keep a few broader fur clusters. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Young orange-yellow cat mink with wavy thick fur, pointed ears, whiskers and striped tail, purple kimono and dark sash, both hands intact, no gun prosthesis. Roger voyage-era apprentice",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/young-nekomamushi-study-v1.png",
+          "sha256": "53e72f96633615d8675cf2f36b988a9ec9b531fb7e0ffc38b6d5f6630d7fe10e"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "0aaad8b638c0087d6fecefc0678734a0b12d3f2ae5616e620d8a7b71d332b53a"
+    },
+    "young-whitey-bay": {
+      "source": "prototype/crew-artwork/young-whitey-bay-study-v1.png",
+      "action": "polish",
+      "finding": "Blue curls and hat trim create fine detail around a small face. Simplify those shapes while preserving the blue silhouette.",
+      "prompt": "Use case: precise-object-edit. Asset: Grand Fleet production character sprite sheet. Image 1 is the edit target, young whitey bay. Image 2 is Luffy, STYLE AND GRID REFERENCE ONLY. Polish the existing drawing, preserving its identity, proportions and costume except where the specific correction requires a change. Specific correction: Blue curls and hat trim create fine detail around a small face. Simplify those shapes while preserving the blue silhouette. Preserve every identifying feature, hair color, skin tone, clothing color, hat and accessory from image 1. Never import Luffy's features. Use clear dark pixel outlines, broad flat color clusters and restrained shadows. Remove fine strands, soft gradients and scattered highlights where they obscure the character. Enlarge important face and body shapes enough to remain recognizable when displayed at 24 pixels. Keep dark costumes dark with readable light accents. EXACTLY 4 equal columns by 3 equal rows, 12 separate full-body sprites, landscape 4:3, true transparent alpha background. Row 1: four sleeping-on-side breathing frames. Row 2: four distinct walking-right cycle frames with visibly alternating legs. Row 3: four visibly lower and broader seated poses, blinking and subtle head motion. Use cross-legged sitting for human characters and preserve nonhuman anatomy where present. Consistent costume and scale across all cells. Center each sprite horizontally and bottom-align within its cell with generous transparent gutters. No text, labels, grid lines, ground, shadows, checkerboard, extra characters or cropped limbs. Deliver only the edited target sheet. Identity details from the existing artwork record, adapted to the compact style: Young adult woman with long blue hair, striped long-sleeved cropped shirt and short striped skirt, polka-dot bandanna and small pale blue pirate hat, boots. Whitebeard crew era before commanding her own ship",
+      "references": [
+        {
+          "path": "prototype/crew-artwork/young-whitey-bay-study-v1.png",
+          "sha256": "ccd8c7273fc8625a61e8f477d2e597541fa200a4ffecba84d02cdf86eca76482"
+        },
+        {
+          "path": "prototype/crew-artwork/luffy-study-v1.png",
+          "sha256": "706b309f94e10e4bd26d6d40ba57c56b427c9c89ccbba2a2c34909f132cc0aa2"
+        }
+      ],
+      "sha256": "39b587e36daca7d8d5f9f391df97d0d3b17d68a4b11fabc9ea83be9513831e87"
+    }
+  },
+  "export_corrections": {
+    "chopper": "Keep the existing source and restore the original maximum artwork dimension of 44 pixels on the 64-pixel canvas.",
+    "portraits": "Use measured face crops for tall hats and hair. Coordinates live in tools/build-artwork.py and are checked independently in tests/test_artwork.py."
+  }
+}
