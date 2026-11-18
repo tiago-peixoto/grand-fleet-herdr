@@ -344,10 +344,26 @@ const captainless = (view, art) => {
   const row=descendants(ships.nodes.get('space-personal'));
   assert.ok(row.some(n=>n.path===`mods/one-piece/assets/${fleet.crews[crew].ship}.gif`),'a worker Space flies its captain ship');
   assert.ok(row.some(n=>n.kids.includes('Personal')),'a worker Space keeps its own name and row');
+  const stale=host(true);
+  stale.context.agents()[1].space='personal';
+  stale.state.set('one-piece.art',{...structuredClone(art),spaceCrews:{personal:'heart'}});
+  stale.controller.render(stale.cx);
+  assert.equal(stale.state.get('one-piece.art').spaceCrews?.personal,undefined,'a stored crew is dropped once its Space follows a captain');
+  assert.equal(stale.state.get('one-piece.art').characters['t3:3'].owner,`t1:1:${crew}`,'a stored crew does not outrank the captain roster');
   ships.state.set('one-piece.art',{...structuredClone(art),spaceCrews:{personal:'heart'}});
   ships.nodes.clear();
   ships.controller.render(ships.cx);
-  assert.ok(descendants(ships.nodes.get('space-personal')).some(n=>n.path?.endsWith('/crew-polar-tang.gif')),'a flag raised by hand on a worker Space outranks its captain');
+  const raise=host(true,'priority',310,{flag:{space:'personal'},overlay:'flag'});
+  raise.context.agents()[1].space='personal';
+  raise.nodes.clear(); raise.root=raise.controller.render(raise.cx);
+  raise.nodes.get('flag-heart').click(null,raise.cx);
+  raise.nodes.clear(); raise.root=raise.controller.render(raise.cx);
+  raise.nodes.get('set-sail').click();
+  assert.equal(raise.state.get('one-piece.art').crews['t1:1'],'heart','a flag raised on a worker Space changes its captain crew');
+  assert.equal(raise.state.get('one-piece.art').spaceCrews?.personal,undefined,'a flag raised on a worker Space stores no crew for it');
+  const followed=descendants(ships.nodes.get('space-personal'));
+  assert.ok(followed.some(n=>n.path===`mods/one-piece/assets/${fleet.crews[crew].ship}.gif`),'a stored crew does not outrank the captain ship');
+  assert.ok(!followed.some(n=>n.path?.endsWith(`/${fleet.crews.heart.ship}.gif`)),'a worker Space ignores its stored crew while it follows');
 }
 const waiting = host(true);
 waiting.controller.pendingCaptains = new Set(['t9:9']);

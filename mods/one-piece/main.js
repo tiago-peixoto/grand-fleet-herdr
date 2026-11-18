@@ -17,9 +17,6 @@ const appearance = () => shared('one-piece.art') ?? { crews: {}, characters: {},
 const captainLinks = () => ({...(shared('one-piece.captains') ?? {}), ...(shared('one-piece.discovered') ?? {})});
 const save = patch => setShared('one-piece.art', { ...appearance(), ...patch });
 const crewFor = terminal => crews[appearance().crews[identity(terminal)]] ?? crews.strawhat;
-// A flag raised by hand on a worker Space outranks the captain it would otherwise follow.
-const fleetCrew = space => appearance().spaceCrews?.[space] ??
-  (captain => captain && appearance().crews[identity(captain)])(followedCaptains(terminals(), agents(), captainLinks()).get(space));
 const live = address => terminals().find(terminal => terminal.address === address && terminal.state === 'live');
 // The crewmember test from fleet.js, applied to one terminal so each icon avoids copying the terminal list.
 const art = terminal => !terminal || !(terminal.program?.agent || agents().some(agent => agent.address === terminal.address)) ? null :
@@ -113,7 +110,9 @@ class OnePieceSpaces extends Spaces {
   ship(space) {
     const captain = this.captain(space);
     if (captain) return crewFor(captain);
-    return this.fleet(space) ? crews[fleetCrew(space.id)] : null;
+    const leader = followedCaptains(terminals(), agents(), captainLinks()).get(space.id);
+    if (leader) return crewFor(leader);
+    return this.fleet(space) ? crews[appearance().spaceCrews?.[space.id]] : null;
   }
 
   portrait(terminal, art, label, t) {
@@ -332,13 +331,16 @@ export default class OnePieceAgents extends Agents {
 
   flagMenu() {
     const t = theme(), flag = props().flag, ids = Object.keys(crews);
-    const captain = flag.captain && terminals().find(terminal => identity(terminal) === flag.captain && terminal.state === 'live');
-    const valid = captain ? captainLinks()[flag.captain] : genericFleets(terminals(), agents(), captainLinks()).has(flag.space);
+    // A Space that follows a captain flies the captain's flag, so its flag menu changes the captain's crew.
+    const captain = flag.captain ? terminals().find(terminal => identity(terminal) === flag.captain && terminal.state === 'live') :
+      followedCaptains(terminals(), agents(), captainLinks()).get(flag.space);
+    const captainKey = captain && identity(captain);
+    const valid = captain ? captainLinks()[captainKey] : genericFleets(terminals(), agents(), captainLinks()).has(flag.space);
     const shell = v_flex().size_full().bg(t.popover).text_color(t.foreground).text_size(13);
     if (!valid) return shell.p(16).child(flag.captain ? 'This captain is no longer available.' : 'This space no longer has a fleet without a captain.');
     const spaceId = captain ? agents().find(agent => agent.address === captain.address)?.space : flag.space;
     const spaceName = spaces().find(space => space.id === spaceId)?.name ?? 'this fleet';
-    const flying = captain ? ids.find(id => crews[id] === crewFor(captain)) : fleetCrew(flag.space);
+    const flying = captain ? ids.find(id => crews[id] === crewFor(captain)) : appearance().spaceCrews?.[flag.space];
     const captainCrews = crewmembers(terminals(), agents()).filter(terminal => captainLinks()[identity(terminal)])
       .map(terminal => appearance().crews[identity(terminal)]).filter(Boolean);
     // Generic fleets give the Straw Hats to Firstmate captains, the same rule selectFleetCrews applies.
@@ -354,7 +356,7 @@ export default class OnePieceAgents extends Agents {
       if (captain) {
         const characters = assignCrew(managedCrew(captain, terminals(), agents(), captainLinks()), appearance().characters,
           {terminal:captain.address, created:captain.created_ms, crew:id});
-        save({crews:{...appearance().crews, [flag.captain]:id}, manualCrews:{...appearance().manualCrews, [flag.captain]:true}, characters});
+        save({crews:{...appearance().crews, [captainKey]:id}, manualCrews:{...appearance().manualCrews, [captainKey]:true}, characters});
       } else save({spaceCrews:{...appearance().spaceCrews, [flag.space]:id}});
       const crew = crews[id];
       notify({title:`The ${crew.title} sets sail`, body:`${crew.name} now fly over ${spaceName}`,
@@ -464,7 +466,7 @@ export default class OnePieceAgents extends Agents {
       this.checkedCaptains?.has(key) || Date.now() - (this.firstChecks?.get(key) ?? Date.now()) >= 5000);
     const followed = followedCaptains(terminals(), agents(), captainLinks());
     const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()].filter(id => !followed.has(id)) : [], appearance().spaceCrews ?? {}, captainCrews,
-      id => followed.has(id) || retained(id));
+      id => !followed.has(id) && retained(id));
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
     for (const [id, fleet] of fleets) {
@@ -472,7 +474,7 @@ export default class OnePieceAgents extends Agents {
     }
     for (const captain of members.filter(terminal => captainLinks()[identity(terminal)] && appearance().crews[identity(terminal)])) {
       // Workers in a following Space draw from the captain's roster, so both Spaces never show one character twice.
-      const workers = [...fleets].filter(([id]) => !spaceCrews[id] && followed.has(id) && identity(followed.get(id)) === identity(captain)).flatMap(([, fleet]) => fleet);
+      const workers = [...fleets].filter(([id]) => followed.has(id) && identity(followed.get(id)) === identity(captain)).flatMap(([, fleet]) => fleet);
       characters = assignCrew([...managedCrew(captain, terminals(), agents(), captainLinks()), ...workers], characters,
         {terminal:captain.address, created:captain.created_ms, crew:appearance().crews[identity(captain)]});
     }
