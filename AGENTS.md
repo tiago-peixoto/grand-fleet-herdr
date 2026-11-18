@@ -6,7 +6,7 @@ It extends firstmate's governing vision and is the authoritative local acceptanc
 ## What exists
 
 The prototype and artwork live under prototype/.
-The native-flow reference is /Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html and its Lavish session 0782435952d24d57.
+The native-flow reference is ~/Workspace/.lavish/grand-fleet-native-prototype/index.html and its Lavish session 0782435952d24d57.
 The browser simulation is generated from prototype/flow/app.js and prototype/flow/screen.html.
 Rebuild it with `python3 prototype/flow/build.py` rather than editing prototype/index.html.
 The docs directory contains the prototype inventory, artwork coverage, and historical specification.

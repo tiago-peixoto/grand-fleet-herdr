@@ -934,7 +934,7 @@ This verifies live state-to-art selection for Chopper, not every character or ev
 
 Clicking Restore layout opened the list of missing personal terminals in Grand Fleet Lab.
 The dialog explained that restoration creates new shells without resuming commands or conversations.
-Clicking Create new shell for the isolated op-remote-lab/t5 record created op-remote-lab/t9 in /Users/tiago.
+Clicking Create new shell for the isolated op-remote-lab/t5 record created op-remote-lab/t9 in the home folder.
 The completed record disappeared from the list and a success notification identified the new terminal.
 Comparing hc ls --all before and after showed exactly one added terminal and no changed existing terminal records.
 This verifies native restoration through the local command transport, not SSH or recovery after physical machine failure.
@@ -1697,7 +1697,7 @@ Grand Fleet Render Lab and the ordinary Herdr application were not modified.
 ### Fresh delegation through the native firstmate workspace
 
 The same isolated primary then created native-fresh-flow through fm-brief.sh and fm-spawn.sh on 2026-11-13.
-Firstmate launched the scout in terminal t33 with its own worktree at /Users/tiago/.treehouse/project-671758/2/project.
+Firstmate launched the scout in terminal t33 with its own worktree at ~/.treehouse/project-671758/2/project.
 The scout read the fixture README, wrote its report, and opened fresh-native-checkpoint.
 The mod discovered Worker · fm-native-fresh-flow without another registration or records connection.
 Its attention entry remained separate from Independent · independent-probe.
@@ -2523,7 +2523,7 @@ The shell printed existing mise trust warnings, which did not prevent command ex
 No trust settings were changed.
 
 The repository's imported prototype is older than the approved native-flow prototype.
-The approved reference is `/Users/tiago/Workspace/.lavish/grand-fleet-native-prototype/index.html`.
+The approved reference is `~/Workspace/.lavish/grand-fleet-native-prototype/index.html`.
 It keeps machine headings visible and scrolls crewmates beneath ships and captains.
 The earlier comparison against the imported prototype did not establish fidelity to that reference.
 

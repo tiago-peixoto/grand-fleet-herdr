@@ -78,7 +78,7 @@ The new illustrations match the existing Shanks reference and use the project's 
 Stylized details and interpreted colors are not official color references.
 This is an expanded selection, not a claim to include every canonical member established by the story or official references.
 
-The Lavish catalog remains outside the repository at `/Users/tiago/Workspace/.lavish/grand-fleet-crew-catalog/index.html`.
+The Lavish catalog remains outside the repository at `~/Workspace/.lavish/grand-fleet-crew-catalog/index.html`.
 Its review surface includes all eight crews, search, three pose controls, animation playback, and visible NEW badges.
 
 Verification on 2026-11-17 passed `npm test` with 26 JavaScript tests.

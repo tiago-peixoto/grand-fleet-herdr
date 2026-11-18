@@ -9,7 +9,7 @@ Keep native navigation and saved character assignments intact.
 
 **Tech Stack:** Native Herdr JavaScript, Python standard library, and installed ImageMagick.
 
-**Spec:** VISION.md and the approved crew research at /Users/tiago/Workspace/.lavish/grand-fleet-crew-research/index.html.
+**Spec:** VISION.md and the approved crew research at ~/Workspace/.lavish/grand-fleet-crew-research/index.html.
 
 ## Global constraints
 
