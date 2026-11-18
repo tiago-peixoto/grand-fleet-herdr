@@ -72,7 +72,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
     theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
     setAgentOrder:order=>calls.push(['order',order]),run:(name,args)=>calls.push([name,args]),
-    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),
+    openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),setBadge:text=>state.set('test.badge',text),nextCommand:()=>new Promise(()=>{}),
     settings:()=>({zoom:1}),home:()=>'/home/pirate',
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
   runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
@@ -206,6 +206,18 @@ for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy
   assert.ok(!nodes.some(n=>n.path==='icons/claude.svg'),`${props.region} drops the program icon for a crewmember`);
   if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title keeps its native name');
   assert.equal(view.state.get('one-piece.art').characters['t2:2'],undefined,`${props.region} copies leave crew bookkeeping to the Agents list`);
+}
+{
+  const view=host(true);
+  assert.equal(view.state.get('test.badge'),null,'the Dock badge is clear while no agent is blocked');
+  view.controller.attend();
+  assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['agent.focus',{terminal:'t6'}]),'with no blocked agent, the attention key shows the finished one');
+  const waiting=view.context.agents();
+  waiting[1].status='blocked';waiting[2].status='blocked';
+  view.controller.render(view.cx);
+  assert.equal(view.state.get('test.badge'),'2','the Dock badge counts blocked agents');
+  view.controller.attend();
+  assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['agent.focus',{terminal:'remote/t1'}]),'the attention key shows the blocked agent that changed most recently');
 }
 {
   const view=host(true,'grouped',310,{region:'brand'}), nodes=descendants(view.root);

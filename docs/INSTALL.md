@@ -79,6 +79,8 @@ Only a legacy version 2 receipt authorizes shortcut cleanup, as described below.
 After installation, open the destination's Herdr window and select One Piece through Herdr's layout selector.
 Use Herdr's existing Spaces, Agents, menus, and terminal controls.
 Every live Herdr agent appears in Agents with crewmember artwork.
+To jump to the crewmate who needs you, add a key such as `"cmd-j": "one-piece.attention"` to the `global` section of `keys.json` yourself.
+The installer never adds that key.
 Crewmember artwork needs no Firstmate labels, worker metadata, or captain ownership.
 Personal terminals that are not agents keep their native presentation.
 The mod requires no mod-specific Firstmate patches or hooks.
