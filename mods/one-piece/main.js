@@ -488,7 +488,7 @@ export default class OnePieceAgents extends Agents {
       id => !followed.has(id) && retained(id));
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
     const islands = assignIslands(appearance().islands ?? {}, machines().map(machine => machine.name ?? ''));
-    if (islands !== appearance().islands) save({islands});
+    if (JSON.stringify(islands) !== JSON.stringify(appearance().islands ?? {})) save({islands});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
     for (const [id, fleet] of fleets) {
       if (spaceCrews[id]) characters = assignCrew(fleet, characters, {terminal:`space:${id}`, created:0, crew:spaceCrews[id]});
