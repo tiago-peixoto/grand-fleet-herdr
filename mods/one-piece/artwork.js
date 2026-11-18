@@ -98,11 +98,16 @@ export function selectFleetCrews(fleets, selected, captainCrews, retained) {
   return assigned;
 }
 
+// A machine named `constructor` reads an inherited value from a plain object, so only a whole number counts as an island.
+export const islandOf = (islands, name) => Number.isInteger(islands?.[name]) ? islands[name] : null;
+
 // Each machine keeps its island for good, so a machine that is away keeps its place on the map.
 export function assignIslands(islands, names) {
   let result = islands;
   for (const name of [...new Set(names)].sort()) {
-    if (result[name] != null) continue;
+    // A name every object already has, such as `constructor`, stays without an island:
+    // Herdr cannot read back a shared value that holds such a key, and then no view of the mod renders.
+    if (name in result) continue;
     const used = Object.values(result);
     const count = index => used.filter(island => island === index).length;
     result = {...result, [name]:[0, 1, 2, 3, 4, 5, 6, 7].reduce((best, index) => count(index) < count(best) ? index : best)};

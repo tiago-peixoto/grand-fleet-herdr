@@ -6,7 +6,7 @@ The isolated home ran Herdr App 0.1.16 with private Core 0.1.21.
 `herdr-app check` and `node tools/check-parity.mjs` passed against that home for each revision of the mod.
 Two more private Cores on the same computer, added with `hc machine add --via`, served as the machines `wano` and `dressrosa`.
 The first eight rows used revision `e5feea3` of pull request 24.
-The last three rows used the later revision in which the island keeps the box of Herdr's own icon.
+The rows after those used later revisions of the same pull request.
 
 | Check | Result |
 | --- | --- |
@@ -21,10 +21,14 @@ The last three rows used the later revision in which the island keeps the box of
 | Wide sidebar after the fix | A 536 × 440 pixel capture of the sidebar equalled the same capture from `main` without islands in every pixel outside the three island squares |
 | Islands after the fix | Each island square, centered on the place of Herdr's icon, equalled the exported image with no differing pixel |
 | Narrow rail after the fix | At 76 pixels, the rail differed from the rail without islands only inside the island artwork, and Herdr's status badge kept its own position over the island's corner |
+| Fog after the fix | With `dressrosa` away again, its fog island equalled the exported image with no differing pixel, and every machine name kept its position |
+| Machine named `constructor` | A third added machine with that name showed no icon at all, because the mod read a built-in object property as its island |
+| Saving an island for it | Giving that machine a saved island stopped every view of the mod from rendering, because `shared()` raised `'constructor' is read-only` on each read |
+| Machine named `constructor` after the fix | The machine kept Herdr's server icon, the saved islands gained no key for it, and the mod logged no error |
 
-All three machines were Cores on one computer over a command transport, so no SSH host took part.
+Every machine was a Core on one computer over a command transport, so no SSH host took part.
 No heading control was clicked during this check.
-The fog island was not captured again after the fix, which moves the island and does not change which image it draws.
+For the machine named `constructor`, Herdr's own Spaces code raised `'constructor' is read-only` every 250 milliseconds, in the `main` layout too, and that is outside this mod.
 A ninth machine, which shares an island, appears only in the unit tests.
 A machine that Herdr's `machines()` list never reports keeps Herdr's own icon, and only the simulated parity check covers that case.
 Screenshots remain outside this repository under `.task-notes/grand-fleet-islands-20261118/` in the workspace.

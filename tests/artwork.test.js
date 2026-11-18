@@ -268,7 +268,11 @@ test('every character a captain can choose has artwork',async()=>{
 });
 
 test('each machine keeps its island, and new machines take the least-used one',async()=>{
-  const {assignIslands}=await import('../mods/one-piece/artwork.js');
+  const {assignIslands,islandOf}=await import('../mods/one-piece/artwork.js');
+  const reserved=assignIslands({},['constructor','__proto__','toString','vps']);
+  assert.deepEqual(Object.entries(reserved),[['vps',0]],'a machine named like a built-in object property is never saved');
+  assert.equal(islandOf(reserved,'constructor'),null,'and it keeps the native icon');
+  assert.equal(islandOf(reserved,'vps'),0);
   const first=assignIslands({},['vps','','mac-mini']);
   assert.deepEqual(first,{'':0,'mac-mini':1,vps:2});
   assert.equal(assignIslands(first,['vps','']),first,'known machines change nothing, so nothing is saved');

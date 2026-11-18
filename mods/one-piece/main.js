@@ -7,7 +7,7 @@ import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
-import { identity, crews, assignCrew, assignIslands, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
+import { identity, crews, assignCrew, assignIslands, islandOf, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from './fleet.js';
 
@@ -93,7 +93,7 @@ class FleetMenu extends Menu {
 
 class OnePieceSpaces extends Spaces {
   machineIcon(m, connected) {
-    const island = appearance().islands?.[m ?? ''];
+    const island = islandOf(appearance().islands, m ?? '');
     // The margin keeps the 13 point box of Herdr's own icon, so the machine name and the rail's status badge stay where Herdr puts them.
     return island == null ? super.machineIcon(m, connected) :
       image(`mods/one-piece/assets/island-${island}${connected ? '' : '-fog'}.png`).size(16).m(-1.5).flex_none();
