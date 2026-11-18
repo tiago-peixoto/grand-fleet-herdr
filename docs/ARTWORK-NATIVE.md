@@ -78,7 +78,9 @@ The crop bottom sits three pixels above the canvas bottom.
 Transparent source pixels at the crop edge can leave additional visible space after downsampling.
 
 Each crew character also receives a static 28 × 28 `portrait-crew-<name>.png`.
-The portrait crops the top of the static working frame, centered on the opaque pixels in its top 22 rows.
+The default portrait crops the top of the static working frame, centered on the opaque pixels in its top 22 rows.
+Twelve characters with tall hats or hair use measured crop origins to keep their faces visible.
+The exporter records those origins, and the portrait tests check them against independent crop coordinates.
 At twice the display density, it reads as a 14-point face in tabs and pane titles.
 
 [ImageMagick documents `-sample`](https://imagemagick.org/command-line-options/#sample) as direct pixel sampling without introducing new colors.
@@ -153,7 +155,8 @@ Oden, Toki, young Inuarashi, and young Nekomamushi share artwork between the Whi
 Every character sheet has four columns and three rows: sleeping, walking, then sitting.
 Every ship sheet has four columns and one row.
 The exporter uses 64-pixel character canvases and 128-pixel ship canvases.
-Character artwork fits within 56 pixels, and ship artwork fits within 116 pixels.
+Character artwork fits within 56 pixels, except Chopper uses the original smaller limit of 44 pixels.
+Ship artwork fits within 116 pixels.
 Sleeping frames last 850 milliseconds, walking frames last 220 milliseconds, and sitting frames last 700 milliseconds.
 Ship frames last 520 milliseconds.
 
@@ -175,3 +178,23 @@ The 38 new sheets produce 228 exports through the existing exporter.
 The canvas sizes, pose order, timing, and assignment logic are unchanged.
 
 The [expansion record](EMPEROR-CREW-EXPANSION.md) lists every addition, provenance, historical affiliation, and verification result.
+
+## Sprite refinement, 2026-11-18
+
+The visual audit selected 50 characters for polish, eight characters for redraw, and four ships for polish.
+The changes replace 56 character source sheets and four ship source sheets.
+Chopper keeps his source drawing and returns to the original smaller export scale.
+Oden keeps his source drawing and body exports, with only his portrait crop corrected.
+The 97 characters and four ships rated as matching the original benchmark remain unchanged.
+
+The redraws cover Smoothie, Perospero, Amande, Islewan, Millet Pine, Doringo, Yamon, and Emma.
+The ship refinements cover Polar Tang, Moby Dick, Oro Jackson, and Victoria Punk.
+The revised drawings use broader color shapes, clearer dark outlines, and lower seated poses.
+Twelve measured portrait crops keep faces visible beneath tall hats and hair.
+The [refinement prompt record](../prototype/crew-artwork/refinement-prompts.json) preserves the exact prompts and source hashes.
+
+Runtime assets are generated with the existing exporter.
+Canvas sizes, frame counts, playback timing, crew membership, and assignment behavior remain unchanged.
+The comparison board includes all changed characters and ships at display size and enlarged.
+That board and its review images remain outside this repository.
+Native Herdr playback and display-density behavior still require an integration check.
