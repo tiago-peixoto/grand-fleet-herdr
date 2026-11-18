@@ -32,7 +32,10 @@ export default class Spaces extends View {
   render() {}
   row() {}
   compact() {}
-  grouped() {}
+  grouped(m, connected) {
+    const icon = svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none();
+    return icon;
+  }
   gitTail() {}
   menu() {}
 }
@@ -48,7 +51,10 @@ class CompatibilityTests(unittest.TestCase):
 
     def test_preserves_two_sidebar_regions_and_native_sources(self):
         files = compat.generate(SOURCE, self.layout, SPACES_SOURCE)
-        self.assertEqual(files['mods/one-piece/herdr-spaces.js'].decode(), SPACES_SOURCE)
+        # Only the machine icon is routed through a method; every other native line is kept.
+        generated = files['mods/one-piece/herdr-spaces.js'].decode().splitlines()
+        self.assertEqual(len(set(generated) - set(SPACES_SOURCE.splitlines())), 2)
+        self.assertEqual(len(set(SPACES_SOURCE.splitlines()) - set(generated)), 1)
         layout = json.loads(files['layouts/one-piece.json'])
         self.assertEqual(len(layout['children']), 3)
         for index, region in enumerate(('spaces', 'agents')):
@@ -148,6 +154,21 @@ class PortraitCompatibilityTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             compat.generate(SOURCE.replace('icon(k.program', 'icon(k.other'), {'children': [
                 {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}, SPACES_SOURCE)
+
+    LAYOUT = {'children': [{'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}
+
+    def test_machine_header_icon_can_be_replaced(self):
+        spaces = compat.generate(SOURCE, self.LAYOUT, SPACES_SOURCE)['mods/one-piece/herdr-spaces.js'].decode()
+        script = spaces.replace('import { View } from "gpui-kit";', 'class View {}').replace('export default ', '').replace('export ', '') + '''
+const svg = path => ({size: () => ({flex_none: () => path})});
+class Islands extends Spaces { machineIcon(m, connected) { return connected ? 'island' : super.machineIcon(m, connected); } }
+console.log(JSON.stringify([new Islands().grouped('vps', true), new Islands().grouped('vps', false), new Spaces().grouped(null, true)]));
+'''
+        result = subprocess.run(['node', '-e', script], capture_output=True, text=True, check=True)
+        self.assertEqual(json.loads(result.stdout),
+                         ['island', 'mods/workspace-chrome/server.svg', 'mods/workspace-chrome/monitor.svg'])
+        with self.assertRaises(ValueError):
+            compat.generate(SOURCE, self.LAYOUT, SPACES_SOURCE.replace('.size(13)', '.size(14)'))
 
     CHROME = ('import { View } from "gpui-kit";\n'
               'export default class WorkspaceChrome extends View {\n'

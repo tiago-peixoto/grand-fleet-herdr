@@ -139,6 +139,17 @@ def build(output):
         if not ship:
             portrait(output / f'crew-{name}-working.png', output / f'portrait-crew-{name}.png',
                      origin=PORTRAIT_ORIGINS.get(name))
+    islands(ROOT / 'prototype/flow/assets/machine-islands-v1.png', output)
+
+
+def islands(sheet, output):
+    if im('identify', '-format', '%w %h', sheet).split() != [b'256', b'64']:
+        raise ValueError(f'Expected a 256x64 island sheet: {sheet}')
+    for index in range(8):
+        for row, suffix in enumerate(('', '-fog')):
+            # The sheet carries a stray 32x32 canvas entry that would crop every cell to the first island.
+            im(sheet, '+repage', '-crop', f'32x32+{index*32}+{row*32}', '+repage',
+               '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{output}/island-{index}{suffix}.png')
 
 
 def portrait(sprite, output, side=28, origin=None):

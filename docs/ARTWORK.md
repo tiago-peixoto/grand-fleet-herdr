@@ -11,7 +11,7 @@ Historical game sprites and illustrated ships remain archived for reference, not
 | Luffy | `prototype/custom-trial/assets/luffy.png` | Four idle and four working frames from the initial trial |
 | Worker states | `prototype/flow/assets/worker-states-v1.png` | Three designs, three states each, four frames per state |
 | Straw Hat flag | `prototype/flow/assets/straw-hat-flag.png` | Four flag frames |
-| Machine islands | `prototype/flow/assets/machine-islands-v1.png` | Eight 32 × 32 islands, clear above fog, not yet shown by any heading |
+| Machine islands | `prototype/flow/assets/machine-islands-v1.png` | Eight 32 × 32 islands, clear above fog, shown beside each machine name |
 
 The worker atlas contains Chopper, Franky, and a generic Pirate.
 Its rows contain Chopper sleeping, walking, and sitting, followed by the same states for Franky and Pirate.

@@ -88,6 +88,15 @@ class ArtworkTests(unittest.TestCase):
                     self.assertGreater(len({raw[i:i+stride] for i in range(0,len(raw),stride)}), 1)
                     for ext in ('.gif', '.png'):
                         self.assertEqual(decoded(ASSETS / (animation+ext)), decoded(output / (animation+ext)))
+            for index in range(8):
+                for row, suffix in enumerate(('', '-fog')):
+                    island = f'island-{index}{suffix}.png'
+                    expected_names.add(island)
+                    # The cell is cut from the approved sheet here, without the exporter's code.
+                    cell = im(ROOT / 'prototype/flow/assets/machine-islands-v1.png', '+repage', '-crop',
+                              f'32x32+{index*32}+{row*32}', '+repage', '-depth', '8', 'rgba:-')
+                    self.assertEqual(im(output / island, '-depth', '8', 'rgba:-'), cell)
+                    self.assertEqual((ASSETS / island).read_bytes(), (output / island).read_bytes())
             self.assertEqual({p.name for p in output.iterdir()}, expected_names)
             before = {p.name: p.read_bytes() for p in output.iterdir()}
             sources = {}

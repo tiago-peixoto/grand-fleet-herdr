@@ -97,3 +97,15 @@ export function selectFleetCrews(fleets, selected, captainCrews, retained) {
   }
   return assigned;
 }
+
+// Each machine keeps its island for good, so a machine that is away keeps its place on the map.
+export function assignIslands(islands, names) {
+  let result = islands;
+  for (const name of [...new Set(names)].sort()) {
+    if (result[name] != null) continue;
+    const used = Object.values(result);
+    const count = index => used.filter(island => island === index).length;
+    result = {...result, [name]:[0, 1, 2, 3, 4, 5, 6, 7].reduce((best, index) => count(index) < count(best) ? index : best)};
+  }
+  return result;
+}

@@ -48,7 +48,8 @@ class InstallTests(unittest.TestCase):
         self.put(home, 'mods/spaces/main.js',
                  'export function glyph() {}\nexport function tone() {}\nimport { View } from "gpui-kit";\nexport default class Spaces extends View {\n'
                  + ''.join('  ' + name + '() {}\n' for name in
-                           ('init', 'render', 'row', 'compact', 'grouped', 'menu', 'gitTail')) + '}\n')
+                           ('init', 'render', 'row', 'compact', 'menu', 'gitTail'))
+                 + '  grouped(m, connected) { const icon = svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none(); return icon; }\n}\n')
         self.put(home, 'mods/menu/main.js',
                  'export default class Menu extends View {\n'
                  '  choose() { return items(props(), this.git); }\n'
@@ -112,8 +113,11 @@ class InstallTests(unittest.TestCase):
         expected = json.loads((self.home / 'layouts/main.json').read_bytes())
         for index, region in enumerate(('spaces', 'agents')):
             expected['children'][index]['content'] = {'mod': 'one-piece', 'props': {'region': region}}
-        self.assertEqual((self.home / 'mods/one-piece/herdr-spaces.js').read_bytes(),
-                         (self.home / 'mods/spaces/main.js').read_bytes())
+        # Only the machine icon is routed through a method; every other native line is kept.
+        native = (self.home / 'mods/spaces/main.js').read_text().splitlines()
+        generated = (self.home / 'mods/one-piece/herdr-spaces.js').read_text().splitlines()
+        self.assertEqual(len(set(generated) - set(native)), 2)
+        self.assertEqual(len(set(native) - set(generated)), 1)
         actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
         self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
         self.assertEqual(actual, expected)

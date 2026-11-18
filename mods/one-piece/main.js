@@ -7,7 +7,7 @@ import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
-import { identity, crews, assignCrew, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
+import { identity, crews, assignCrew, assignIslands, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from './fleet.js';
 
@@ -92,6 +92,12 @@ class FleetMenu extends Menu {
 }
 
 class OnePieceSpaces extends Spaces {
+  machineIcon(m, connected) {
+    const island = appearance().islands?.[m ?? ''];
+    return island == null ? super.machineIcon(m, connected) :
+      image(`mods/one-piece/assets/island-${island}${connected ? '' : '-fog'}.png`).size(16).flex_none();
+  }
+
   menu(space) {
     const captain = this.captain(space);
     if (!captain && !this.fleet(space)) return super.menu(space);
@@ -481,6 +487,8 @@ export default class OnePieceAgents extends Agents {
     const spaceCrews = selectFleetCrews(settled ? [...fleets.keys()].filter(id => !followed.has(id)) : [], appearance().spaceCrews ?? {}, captainCrews,
       id => !followed.has(id) && retained(id));
     if (JSON.stringify(spaceCrews) !== JSON.stringify(appearance().spaceCrews ?? {})) save({spaceCrews});
+    const islands = assignIslands(appearance().islands ?? {}, machines().map(machine => machine.name ?? ''));
+    if (islands !== appearance().islands) save({islands});
     let characters = releaseCrew(appearance().characters, terminals(), machines());
     for (const [id, fleet] of fleets) {
       if (spaceCrews[id]) characters = assignCrew(fleet, characters, {terminal:`space:${id}`, created:0, crew:spaceCrews[id]});
