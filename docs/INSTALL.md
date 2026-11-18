@@ -57,7 +57,8 @@ It validates the Agents and Spaces classes, their overridden rendering methods, 
 The layout must contain exactly one Spaces node and one Agents node under the same parent.
 Unsupported source or layout structures stop installation before destination writes.
 
-Generated `herdr-spaces.js` and `herdr-pane.js` files preserve the installed source contents, including line endings.
+Generated `herdr-pane.js` preserves the installed source contents, including line endings.
+Generated `herdr-spaces.js` changes only the line that draws the machine icon, so the adapter can supply an island instead.
 Generated `herdr-agents.js` and `herdr-tabs.js` files change only the lines that read a program icon, so the adapter can supply a crewmember instead.
 The installer refuses a Herdr version whose source no longer contains each of those lines exactly once.
 Generated `herdr-chrome.js` changes only the logo and the name in the sidebar header, under the same rule.
