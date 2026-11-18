@@ -10,7 +10,7 @@ Explicit Firstmate labels establish display relationships without changing nativ
 
 **Tech stack:** Herdr native JavaScript views, existing custom GIF artwork, Python installation tooling, and Node tests.
 
-**Spec:** [Approved interactive prototype](http://tiagos-macbook-pro-1.tail707c05.ts.net:4387/session/0782435952d24d57) and the active goal attachment.
+**Spec:** Approved interactive prototype at `~/Workspace/.lavish/grand-fleet-native-prototype/index.html` and the active goal attachment.
 
 ## Constraints and evidence
 
