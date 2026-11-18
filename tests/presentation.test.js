@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { captainSpaces, crewmembers, genericFleets, managedCrew } from '../mods/one-piece/fleet.js';
+import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew } from '../mods/one-piece/fleet.js';
 
 const terminal = (address, extra = {}) => ({address, created_ms: 10, state: 'live', program: {agent: true}, ...extra});
 
@@ -73,4 +73,19 @@ test('a space with one or more agents and no captain is a generic fleet', () => 
   const fleets = genericFleets([solo, ...pair, captain, worker, shell, ended], agents, {'t4:10':{}});
   assert.deepEqual([...fleets], [['a', [solo]], ['b', pair]]);
   assert.deepEqual([...genericFleets([solo, ...pair, captain, worker], agents, {})].map(([id]) => id), ['a', 'b', 'c']);
+});
+
+test('a Space of workers follows the detected captain whose home tag every worker carries', () => {
+  const worker = (address, home) => terminal(address, {labels:{'firstmate.home':home, 'firstmate.task':'scout'}});
+  const captain = terminal('t1'), own = worker('t2', 'firstmate-aa'), other = worker('t3', 'firstmate-bb'), plain = terminal('t4');
+  const remote = terminal('vps/t1', {labels:{'firstmate.home':'firstmate-aa'}});
+  const captains = {'t1:10':{source:'session-lock', home:'firstmate-aa'}};
+  const follows = agents => [...followedCaptains([captain, own, other, plain, remote], agents, captains)].map(([space, leader]) => [space, leader.address]);
+  const led = {address:'t1', space:'s'};
+  assert.deepEqual(follows([led, {address:'t2', space:'fm-aa'}]), [['fm-aa', 't1']]);
+  assert.deepEqual(follows([led, {address:'t2', space:'fm-aa'}, {address:'t4', space:'fm-aa'}]), [], 'one crewmate without the tag keeps the fleet generic');
+  assert.deepEqual(follows([led, {address:'t3', space:'fm-bb'}]), [], 'another home stays a generic fleet');
+  assert.deepEqual(follows([led, {address:'vps/t1', space:'vps/fm-aa'}]), [], 'the same tag on another machine is another home');
+  assert.deepEqual(follows([led, {address:'t2', space:'s'}]), [], 'the captain Space itself is not a follower');
+  assert.deepEqual([...followedCaptains([captain, own], [led, {address:'t2', space:'fm-aa'}], {'t1:10':{}})], [], 'a captain marked by hand has no home tag to match');
 });

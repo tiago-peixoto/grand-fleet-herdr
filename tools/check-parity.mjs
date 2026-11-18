@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { discoverCaptain } from '../mods/one-piece/discovery.js';
 import * as fleet from '../mods/one-piece/artwork.js';
-import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from '../mods/one-piece/fleet.js';
+import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from '../mods/one-piece/fleet.js';
 const home=process.argv[2];
 if(!home) throw new Error('Usage: node tools/check-parity.mjs HERDR_APP_HOME');
 const native=readFileSync(resolve(home,'mods/agents/main.js'),'utf8');
@@ -66,7 +66,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){},after(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
+  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,followedCaptains,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all.map(t=>({...t})),panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',active:true,tabs:[{id:'tab',name:'project',active:true}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
@@ -340,6 +340,43 @@ const captainless = (view, art) => {
   view.root = view.controller.render(view.cx);
   return view;
 };
+{
+  const view=host(true);
+  view.context.agents()[1].space='personal';
+  view.controller.render(view.cx);
+  const art=view.state.get('one-piece.art'), crew=art.crews['t1:1'];
+  assert.equal(art.spaceCrews?.personal,undefined,'a worker Space stores no crew of its own while it follows its captain');
+  assert.equal(art.characters['t3:3'].owner,`t1:1:${crew}`,'workers in a following Space draw from their captain roster');
+  assert.notEqual(art.characters['t3:3'].art,art.characters['t6:7'].art,'the captain Space and its worker Space never share a character');
+  const ships=host(true,'priority',310,{region:'spaces'});
+  ships.context.agents()[1].space='personal';
+  ships.state.set('one-piece.art',structuredClone(art));
+  ships.nodes.clear();
+  ships.controller.render(ships.cx);
+  const row=descendants(ships.nodes.get('space-personal'));
+  assert.ok(row.some(n=>n.path===`mods/one-piece/assets/${fleet.crews[crew].ship}.gif`),'a worker Space flies its captain ship');
+  assert.ok(row.some(n=>n.kids.includes('Personal')),'a worker Space keeps its own name and row');
+  const stale=host(true);
+  stale.context.agents()[1].space='personal';
+  stale.state.set('one-piece.art',{...structuredClone(art),spaceCrews:{personal:'heart'}});
+  stale.controller.render(stale.cx);
+  assert.equal(stale.state.get('one-piece.art').spaceCrews?.personal,undefined,'a stored crew is dropped once its Space follows a captain');
+  assert.equal(stale.state.get('one-piece.art').characters['t3:3'].owner,`t1:1:${crew}`,'a stored crew does not outrank the captain roster');
+  ships.state.set('one-piece.art',{...structuredClone(art),spaceCrews:{personal:'heart'}});
+  ships.nodes.clear();
+  ships.controller.render(ships.cx);
+  const raise=host(true,'priority',310,{flag:{space:'personal'},overlay:'flag'});
+  raise.context.agents()[1].space='personal';
+  raise.nodes.clear(); raise.root=raise.controller.render(raise.cx);
+  raise.nodes.get('flag-heart').click(null,raise.cx);
+  raise.nodes.clear(); raise.root=raise.controller.render(raise.cx);
+  raise.nodes.get('set-sail').click();
+  assert.equal(raise.state.get('one-piece.art').crews['t1:1'],'heart','a flag raised on a worker Space changes its captain crew');
+  assert.equal(raise.state.get('one-piece.art').spaceCrews?.personal,undefined,'a flag raised on a worker Space stores no crew for it');
+  const followed=descendants(ships.nodes.get('space-personal'));
+  assert.ok(followed.some(n=>n.path===`mods/one-piece/assets/${fleet.crews[crew].ship}.gif`),'a stored crew does not outrank the captain ship');
+  assert.ok(!followed.some(n=>n.path?.endsWith(`/${fleet.crews.heart.ship}.gif`)),'a worker Space ignores its stored crew while it follows');
+}
 const waiting = host(true);
 waiting.controller.pendingCaptains = new Set(['t9:9']);
 captainless(waiting);

@@ -26,6 +26,7 @@ A space without a captain is a generic fleet whose agents are all crewmates.
 Every agent is a crewmember, and captain artwork appears only for detected or manually marked Firstmate instances.
 Retain native grouping, sorting, pinning, workspace menus, and terminal navigation.
 Do not reintroduce custom workspace ownership, worker associations, or task polling.
+The one exception changes artwork only: a Space of one detected captain's workers flies that captain's flag, matched through the `firstmate.home` label.
 The mod must work with unmodified firstmate.
 Do not infer coordinator identity from terminal names, folders, or process parents.
 Do not require firstmate.home.path, firstmate.role, or any Firstmate patch.
