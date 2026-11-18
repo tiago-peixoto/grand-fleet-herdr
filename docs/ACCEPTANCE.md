@@ -1,5 +1,29 @@
 # Native acceptance review
 
+## Machine islands in the isolated lab, 2026-11-18
+
+The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and the mod from revision `e5feea3` of pull request 24.
+`herdr-app check` and `node tools/check-parity.mjs` passed against that home.
+Two more private Cores on the same computer, added with `hc machine add --via`, served as the machines `wano` and `dressrosa`.
+
+| Check | Result |
+| --- | --- |
+| This computer and one machine | The headings showed the windmill island beside This computer and the palm island beside `wano` |
+| Exact pixels | At twice the display density, every 32 × 32 island capture, including the fog one, equalled the exported image on the sidebar color, with no differing pixel |
+| Native heading | The machine name, add button, status dot, and fold chevron stayed visible beside each island, and every row below a heading sat at the same position as in Herdr's own `main` layout |
+| Third machine | `dressrosa` received the third island, and the two earlier machines kept theirs |
+| Machine away | Blocking the transport of `dressrosa` and ending its connection showed its island in fog, beside Herdr's `unreachable` text and grey dot |
+| Narrow rail | At 76 pixels, each machine showed its island, and both machines other than this computer carried Herdr's status badge |
+| App restart | Reopening the app while `dressrosa` was still away kept all three islands, with `dressrosa` still in fog |
+| Reconnection | After the transport returned, the fog cleared at Herdr's next machine refresh, which runs every 15 seconds |
+| Idle state | `shared.json` kept one modification time for seven minutes after the last island was assigned, through the app restart and the reconnection |
+
+All three machines were Cores on one computer over a command transport, so no SSH host took part.
+No heading control was clicked during this check.
+A ninth machine, which shares an island, appears only in the unit tests.
+A machine that Herdr's `machines()` list never reports keeps Herdr's own icon, and only the simulated parity check covers that case.
+Screenshots remain outside this repository under `.task-notes/grand-fleet-islands-20261118/` in the workspace.
+
 ## Generic fleets in the isolated lab, 2026-11-17
 
 The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable probe agents.

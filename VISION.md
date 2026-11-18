@@ -19,6 +19,7 @@ The extension remains optional, and removing it leaves firstmate's contracts and
 The primary path leads to firstmate, which carries the captain's direction and gathers worker reports.
 Herdr supplies terminal attention, focus, writable previews, and session management.
 The fleet sidebar retains native machine identities and grouping.
+Each machine heading shows an island beside the machine's name, in fog while Herdr reports that machine as not connected.
 Every Herdr agent is a crewmember, regardless of who started it.
 The mod automatically identifies running Firstmate instances as captains from existing session evidence.
 Every space containing at least one live agent displays ship artwork and remains an ordinary Herdr workspace.

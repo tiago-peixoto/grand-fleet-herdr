@@ -37,6 +37,7 @@ Without Firstmate, every Space with an agent still becomes a small fleet with a 
 - **One click to your work:** ships select existing workspaces, while characters use native agent navigation and writable terminal previews.
 - **Your terminals stay familiar:** keep native tab behavior, splits, resizing, pinning, sorting, workspace menus, and direct typing into worker and personal terminals.
 - **A calm sidebar:** Spaces and Agents each retain one scrolling list, with native machine identities and optional animation.
+- **An island for each machine:** each machine heading shows its own island, which sits in fog while the machine is away.
 
 Firstmate owns delegation and work records.
 Grand Fleet supplies the artwork and sidebar presentation.
