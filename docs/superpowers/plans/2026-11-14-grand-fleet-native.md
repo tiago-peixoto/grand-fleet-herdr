@@ -10,7 +10,7 @@ Explicit Firstmate labels establish display relationships without changing nativ
 
 **Tech stack:** Herdr native JavaScript views, existing custom GIF artwork, Python installation tooling, and Node tests.
 
-**Spec:** [Approved interactive prototype](http://tiagos-macbook-pro-1.tail707c05.ts.net:4387/session/0782435952d24d57) and the active goal attachment.
+**Spec:** Approved interactive prototype at `~/Workspace/.lavish/grand-fleet-native-prototype/index.html` and the active goal attachment.
 
 ## Constraints and evidence
 
@@ -117,7 +117,7 @@ The installed mod passed the native check.
 The inspected `/tmp/grand-fleet-narrow-after.png` screenshot shows ships and characters inside the narrow rail without clipping.
 The inspected `/tmp/grand-fleet-aligned.png` screenshot shows the restored 268-pixel sidebar with aligned rows.
 The isolated lab is back at its original sidebar width.
-The Firstmate producer implementation is in `/Users/tiago/Workspace/firstmate-hc-home-registration` on branch `hc-home-registration`.
+The Firstmate producer implementation is in `~/Workspace/firstmate-hc-home-registration` on branch `hc-home-registration`.
 Its changes and tests are still in progress and are not yet accepted as verified integration evidence.
 
 ## Native palette verification

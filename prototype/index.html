@@ -51,7 +51,7 @@ function openPane(id){saveScroll();const target=get(id);if(!target)return;
  if(target.kind==='worker')get(target.owner).expanded=true;else if(target.kind==='coordinator')target.expanded=true;
  focused=id;maximized=null;$('#body').classList.remove('nav-open');$('#menu').setAttribute('aria-expanded','false');render();document.querySelector(`[data-input="${id}"]`)?.focus({preventScroll:true});
 }
-function runCommand(s,text){if(text==='clear'){s.lines=[];return}const outputs={help:'Demo commands: pwd, ls, hostname, git status, clear, help\nCommands are simulated. Nothing runs on either machine.',hostname:s.host,pwd:(s.host==='local'?'/Users/tiago':'/home/tiago')+s.path.slice(1),ls:'artemis/   firstmate/   trade-tool/','git status':'On branch prototype\nNothing to commit, working tree clean (sample)'};s.lines.push({command:text,output:outputs[text]??'Preview only: this command was not executed. Type help for sample commands.'})}
+function runCommand(s,text){if(text==='clear'){s.lines=[];return}const outputs={help:'Demo commands: pwd, ls, hostname, git status, clear, help\nCommands are simulated. Nothing runs on either machine.',hostname:s.host,pwd:(s.host==='local'?'/Users/captain':'/home/captain')+s.path.slice(1),ls:'artemis/   firstmate/   trade-tool/','git status':'On branch prototype\nNothing to commit, working tree clean (sample)'};s.lines.push({command:text,output:outputs[text]??'Preview only: this command was not executed. Type help for sample commands.'})}
 document.addEventListener('click',event=>{
  const b=event.target.closest('button');if(!b)return;
  if(b.dataset.open)openPane(b.dataset.open);
