@@ -28,6 +28,11 @@ def generate(agents_source, main_layout, spaces_source):
                          {'icon(a.program, 16, t.foreground)': 'this.icon(a, 16, t.foreground)',
                           'icon(k.program, 14, t.foreground)': 'this.icon(k, 14, t.foreground)'},
                          'Unsupported Herdr Agents icons; keep the existing installation and update the One Piece adapter.')
+    spaces_source = hook(spaces_source, 'export default class Spaces extends View {',
+                         'machineIcon(m, connected) { return svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none(); }',
+                         {'const icon = svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none();':
+                          'const icon = this.machineIcon(m, connected);'},
+                         'Unsupported Herdr machine headers; keep the existing installation and update the One Piece adapter.')
     layout = copy.deepcopy(main_layout)
     layout['colors'] = {
         'background': '#101f25', 'canvas': '#102128', 'chrome': '#14272d',

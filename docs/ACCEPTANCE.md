@@ -1,5 +1,38 @@
 # Native acceptance review
 
+## Machine islands in the isolated lab, 2026-11-18
+
+The isolated home ran Herdr App 0.1.16 with private Core 0.1.21.
+`herdr-app check` and `node tools/check-parity.mjs` passed against that home for each revision of the mod.
+Two more private Cores on the same computer, added with `hc machine add --via`, served as the machines `wano` and `dressrosa`.
+The first eight rows used revision `e5feea3` of pull request 24.
+The rows after those used later revisions of the same pull request.
+
+| Check | Result |
+| --- | --- |
+| This computer and one machine | The headings showed the windmill island beside This computer and the palm island beside `wano` |
+| Third machine | `dressrosa` received the third island, and the two earlier machines kept theirs |
+| Exact pixels | At twice the display density, every 32 × 32 island capture, including the fog one, equalled the exported image on the sidebar color, with no differing pixel |
+| Machine away | Blocking the transport of `dressrosa` and ending its connection showed its island in fog, beside Herdr's `unreachable` text and grey dot |
+| App restart | Reopening the app while `dressrosa` was still away kept all three islands, with `dressrosa` still in fog |
+| Reconnection | After the transport returned, the fog cleared at Herdr's next machine refresh, which runs every 15 seconds |
+| Idle state | `shared.json` kept one modification time for seven minutes after the last island was assigned, through the app restart and the reconnection |
+| Icon box defect | The island was laid out at 16 points where Herdr lays out a 13 point icon, so each machine name sat 3 points further right than without islands, and the rail's status badge sat 1.5 points lower and further right |
+| Wide sidebar after the fix | A 536 × 440 pixel capture of the sidebar equalled the same capture from `main` without islands in every pixel outside the three island squares |
+| Islands after the fix | Each island square, centered on the place of Herdr's icon, equalled the exported image with no differing pixel |
+| Narrow rail after the fix | At 76 pixels, the rail differed from the rail without islands only inside the island artwork, and Herdr's status badge kept its own position over the island's corner |
+| Fog after the fix | With `dressrosa` away again, its fog island equalled the exported image with no differing pixel, and every machine name kept its position |
+| Machine named `constructor` | A third added machine with that name showed no icon at all, because the mod read a built-in object property as its island |
+| Saving an island for it | Giving that machine a saved island stopped every view of the mod from rendering, because `shared()` raised `'constructor' is read-only` on each read |
+| Machine named `constructor` after the fix | The machine kept Herdr's server icon, the saved islands gained no key for it, and the mod logged no error |
+
+Every machine was a Core on one computer over a command transport, so no SSH host took part.
+No heading control was clicked during this check.
+For the machine named `constructor`, Herdr's own Spaces code raised `'constructor' is read-only` every 250 milliseconds, in the `main` layout too, and that is outside this mod.
+A ninth machine, which shares an island, appears only in the unit tests.
+A machine that Herdr's `machines()` list never reports keeps Herdr's own icon, and only the simulated parity check covers that case.
+Screenshots remain outside this repository under `.task-notes/grand-fleet-islands-20261118/` in the workspace.
+
 ## Generic fleets in the isolated lab, 2026-11-17
 
 The isolated home ran Herdr App 0.1.16 with private Core 0.1.21 and disposable probe agents.

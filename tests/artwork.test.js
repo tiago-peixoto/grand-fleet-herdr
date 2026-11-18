@@ -266,3 +266,17 @@ test('every character a captain can choose has artwork',async()=>{
   for(const crew of Object.values(crews)) for(const name of crew.workers)
     assert.ok(existsSync(new URL(`../mods/one-piece/assets/crew-${name}-idle.gif`,import.meta.url)),name);
 });
+
+test('each machine keeps its island, and new machines take the least-used one',async()=>{
+  const {assignIslands,islandOf}=await import('../mods/one-piece/artwork.js');
+  const reserved=assignIslands({},['constructor','__proto__','toString','vps']);
+  assert.deepEqual(Object.entries(reserved),[['vps',0]],'a machine named like a built-in object property is never saved');
+  assert.equal(islandOf(reserved,'constructor'),null,'and it keeps the native icon');
+  assert.equal(islandOf(reserved,'vps'),0);
+  const first=assignIslands({},['vps','','mac-mini']);
+  assert.deepEqual(first,{'':0,'mac-mini':1,vps:2});
+  assert.equal(assignIslands(first,['vps','']),first,'known machines change nothing, so nothing is saved');
+  assert.deepEqual(assignIslands(first,['alpha']),{...first,alpha:3},'a later machine never moves an earlier one');
+  const full=assignIslands({},['a','b','c','d','e','f','g','h','i']);
+  assert.deepEqual(Object.values(full).sort(),[0,0,1,2,3,4,5,6,7],'a ninth machine shares the least-used island');
+});

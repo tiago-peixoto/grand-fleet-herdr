@@ -76,7 +76,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     settings:()=>({zoom:1}),home:()=>'/home/pirate',
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
   runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
-  runInNewContext(compile(nativeSpaces,'Spaces'),context);
+  runInNewContext(compile(decorated?generated('herdr-spaces.js'):nativeSpaces,'Spaces'),context);
   if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane'],[nativeChrome,'Chrome']]) runInNewContext(compile(source,name),context);
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':overlayProps.region==='spaces'?'Spaces':'Agents']();
@@ -329,6 +329,28 @@ for (const source of ['session-lock', 'manual']) {
   assert.equal(view.calls.length, 1);
   assert.equal(view.calls[0][0], 'agent.focus');
   assert.equal(view.calls[0][1].terminal, 't3');
+}
+
+{
+  const fleetView = host(true);
+  fleetView.controller.render(fleetView.cx);
+  const art = fleetView.state.get('one-piece.art');
+  assert.deepEqual(art.islands, {'':0, remote:1}, 'each machine receives its own island');
+  for (const [width, connected] of [[310, true], [310, false], [120, true]]) {
+    const view = host(true, 'priority', width, {region:'spaces'});
+    view.state.set('one-piece.art', structuredClone(art));
+    view.controller.spacesView.machines = [{name:'remote', state:connected ? 'connected' : 'asleep'}];
+    view.nodes.clear();
+    view.controller.render(view.cx);
+    const island = id => descendants(view.nodes.get(id)).filter(n => n.path?.includes('/island-')).map(n => n.path);
+    assert.deepEqual(island('machine-local'), ['mods/one-piece/assets/island-0.png'], 'this computer shows its island');
+    assert.deepEqual(island('machine-remote'), [`mods/one-piece/assets/island-1${connected ? '' : '-fog'}.png`], 'a machine that is away sits in fog');
+    assert.ok(!descendants(view.nodes.get('machine-remote')).some(n => n.path?.endsWith('server.svg')), 'the island replaces the native machine icon');
+    view.state.set('one-piece.art', {...structuredClone(art), islands:undefined});
+    view.nodes.clear();
+    view.controller.render(view.cx);
+    assert.ok(descendants(view.nodes.get('machine-remote')).some(n => n.path?.endsWith('server.svg')), 'a machine without an island keeps the native icon');
+  }
 }
 
 console.log('Native parity passed: two scroll regions, ship selection, ordinary spaces, captain and crewmember artwork, agent focus/preview, pinning, sorting, compact view, and appearance settings.');

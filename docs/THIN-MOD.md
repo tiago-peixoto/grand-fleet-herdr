@@ -8,6 +8,15 @@ Herdr owns terminal processes, workspaces, input, arrangement, and reconnection.
 
 Each sidebar region retains one native scrolling list.
 Machine groups share the Spaces scroll, and native agent groups share the Agents scroll.
+Each machine heading shows an island in place of Herdr's computer or server icon.
+The island draws at 16 points, where its 32 pixel artwork stays sharp, inside the 13 point box Herdr lays out for its own icon.
+The machine name and the status badge of the narrow rail therefore keep Herdr's positions.
+The mod gives each machine the least-used of eight islands and saves that choice, so a machine keeps its island across restarts and while it is away.
+A machine that is not connected shows its island in fog, following the same state as Herdr's own status dot.
+A machine whose name is also a built-in property of every JavaScript object, such as `constructor`, keeps Herdr's icon.
+Herdr cannot read back a shared value that holds such a key, so the mod never saves one.
+The installer routes only that icon through a method and refuses a Herdr version whose machine heading no longer contains it exactly once.
+Herdr draws machine headings only when at least one remote machine exists.
 No machine or ship introduces a nested scroll container.
 Every live Herdr agent receives crewmember artwork without Firstmate worker metadata or captain ownership.
 Personal terminals retain ordinary native presentation.

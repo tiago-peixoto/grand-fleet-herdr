@@ -88,6 +88,16 @@ class ArtworkTests(unittest.TestCase):
                     self.assertGreater(len({raw[i:i+stride] for i in range(0,len(raw),stride)}), 1)
                     for ext in ('.gif', '.png'):
                         self.assertEqual(decoded(ASSETS / (animation+ext)), decoded(output / (animation+ext)))
+            # The whole approved sheet is decoded once and sliced here, so the expected cell shares no crop rule with the exporter.
+            sheet = im(ROOT / 'prototype/flow/assets/machine-islands-v1.png', '-depth', '8', 'rgba:-')
+            self.assertEqual(len(sheet), 256*64*4)
+            for index in range(8):
+                for row, suffix in enumerate(('', '-fog')):
+                    island = f'island-{index}{suffix}.png'
+                    expected_names.add(island)
+                    cell = b''.join(sheet[((row*32+y)*256+index*32)*4:((row*32+y)*256+index*32+32)*4] for y in range(32))
+                    self.assertEqual(im(output / island, '-depth', '8', 'rgba:-'), cell)
+                    self.assertEqual((ASSETS / island).read_bytes(), (output / island).read_bytes())
             self.assertEqual({p.name for p in output.iterdir()}, expected_names)
             before = {p.name: p.read_bytes() for p in output.iterdir()}
             sources = {}

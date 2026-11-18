@@ -83,6 +83,10 @@ Twelve characters with tall hats or hair use measured crop origins to keep their
 The exporter records those origins, and the portrait tests check them against independent crop coordinates.
 At twice the display density, it reads as a 14-point face in tabs and pane titles.
 
+The exporter cuts `prototype/flow/assets/machine-islands-v1.png` into `island-<0..7>.png` and `island-<0..7>-fog.png`, one 32 × 32 cell each.
+The sheet carries a stray 32 × 32 canvas entry, so the exporter resets it before cropping and leaves the sheet itself unchanged.
+At twice the display density, each island reads as a 16-point machine icon.
+
 [ImageMagick documents `-sample`](https://imagemagick.org/command-line-options/#sample) as direct pixel sampling without introducing new colors.
 This matches the prototype's request for unsmoothed pixel artwork, although browser sampling can differ at fractional boundaries.
 [ImageMagick's animation options](https://imagemagick.org/command-line-options/#delay) express delays in hundredths of a second by default.
