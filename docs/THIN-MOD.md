@@ -30,6 +30,9 @@ Set sail posts a notification that names the ship and the Space.
 The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
 Fleet cards have six pixels of bottom spacing.
+The sidebar header shows the Straw Hat flag and the name Grand Fleet in place of Herdr's logo and name.
+The flag is drawn at 32 pixels, its artwork size, and keeps the native search and fold buttons beside it.
+The Dock icon, the welcome screen, and Settings keep Herdr's own logo, because no mod can change them.
 A space containing a captain shows that crew's ship.
 An agent's crewmember takes the program icon's place in the Agents row, its tab, and its pane title.
 The narrow sidebar rail has no icon column, so there the crewmember stays in the status cell.

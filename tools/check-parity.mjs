@@ -13,7 +13,7 @@ const nativeSpaces=readFileSync(resolve(home,'mods/spaces/main.js'),'utf8');
 // The decorated host runs the copies the installer generated, so their hooks are exercised too.
 const generated=name=>readFileSync(resolve(home,`mods/one-piece/${name}`),'utf8');
 const nativeMenu=generated('herdr-menu.js'), hookedAgents=generated('herdr-agents.js');
-const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js');
+const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js'), nativeChrome=generated('herdr-chrome.js');
 const adapter=readFileSync(new URL('../mods/one-piece/main.js',import.meta.url),'utf8');
 const compile=(source,name)=>'(()=>{'+source.replace(/^import .*;\n/gm,'').replace(/export default class \w+/,`globalThis.${name} = class ${name}`).replace(/export function (\w+)/g,'globalThis.$1 = function $1')+'})();';
 
@@ -77,7 +77,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     localStorage:{getItem:()=>null,setItem(){},removeItem(){}},Date,Set,Map,JSON};
   runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
   runInNewContext(compile(nativeSpaces,'Spaces'),context);
-  if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane']]) runInNewContext(compile(source,name),context);
+  if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane'],[nativeChrome,'Chrome']]) runInNewContext(compile(source,name),context);
   if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
   const controller=new context[decorated?'OnePieceAgents':overlayProps.region==='spaces'?'Spaces':'Agents']();
   const discover=controller.discover;
@@ -206,6 +206,13 @@ for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy
   assert.ok(!nodes.some(n=>n.path==='icons/claude.svg'),`${props.region} drops the program icon for a crewmember`);
   if (name) assert.ok(nodes.some(n=>n.kids.includes(name)),'the pane title keeps its native name');
   assert.equal(view.state.get('one-piece.art').characters['t2:2'],undefined,`${props.region} copies leave crew bookkeeping to the Agents list`);
+}
+{
+  const view=host(true,'grouped',310,{region:'brand'}), nodes=descendants(view.root);
+  assert.ok(nodes.some(n=>n.path==='mods/one-piece/assets/flag.gif'),'the sidebar header flies the Straw Hat flag');
+  assert.ok(nodes.some(n=>n.kids.includes('Grand Fleet'))&&!nodes.some(n=>n.kids.includes('Herdr')),'the sidebar header names the fleet');
+  assert.ok(!nodes.some(n=>n.path==='frame/welcome/herdr.png'),'the Herdr logo leaves the sidebar header');
+  assert.ok(['search','sidebar-toggle'].every(id=>view.nodes.has(id)),'the header keeps its native search and fold buttons');
 }
 {
   const view=host(true,'grouped',310,{region:'pane', pane:'p3', terminal:'t6'});

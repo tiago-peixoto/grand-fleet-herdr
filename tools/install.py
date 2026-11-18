@@ -156,8 +156,9 @@ def source_files(repo, home):
     menu = home / 'mods/menu/main.js'
     tabs = home / 'mods/tabs/main.js'
     pane = home / 'mods/pane/main.js'
+    chrome = home / 'mods/workspace-chrome/main.js'
     layout = home / 'layouts/main.json'
-    for path in (agents, spaces, menu, tabs, pane, layout):
+    for path in (agents, spaces, menu, tabs, pane, chrome, layout):
         check_parents(path.parent)
         inventory(path)
     try:
@@ -167,6 +168,7 @@ def source_files(repo, home):
         raise ValueError('Unsupported Herdr main layout; preserving installation') from error
     files['mods/one-piece/herdr-menu.js'] = compat.generate_menu(menu.read_text())
     files.update(compat.generate_portraits(tabs.read_text(), pane.read_text()))
+    files.update(compat.generate_brand(chrome.read_text()))
     return files
 
 

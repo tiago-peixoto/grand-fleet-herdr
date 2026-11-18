@@ -1,4 +1,5 @@
 import Agents from './herdr-agents.js';
+import Chrome from './herdr-chrome.js';
 import Menu from './herdr-menu.js';
 import Pane from './herdr-pane.js';
 import Spaces, { glyph, tone } from './herdr-spaces.js';
@@ -45,6 +46,12 @@ class OnePiecePane extends Pane {
     const pane = super.me();
     return pane && {...pane, program:portraitProgram(pane)};
   }
+}
+
+class OnePieceChrome extends Chrome {
+  // 32 px is the artwork's own size, so every source pixel stays a whole square.
+  logo() { return image(`mods/one-piece/assets/flag.${appearance().paused ? 'png' : 'gif'}`).size(32).flex_none(); }
+  title() { return 'Grand Fleet'; }
 }
 
 function sidebarWidth(node = layout()) {
@@ -197,10 +204,11 @@ export default class OnePieceAgents extends Agents {
       this.spacesView.init(p, cx);
       return;
     }
-    const Portraits = {tabs:OnePieceTabs, pane:OnePiecePane}[props()?.region];
+    const Portraits = {tabs:OnePieceTabs, pane:OnePiecePane, brand:OnePieceChrome}[props()?.region];
     if (Portraits) {
       this.portraitView = new Portraits();
-      this.portraitView.init(p, cx);
+      // Herdr's workspace chrome has no init.
+      this.portraitView.init?.(p, cx);
       return;
     }
     if (props()?.appearance || props()?.setup || props()?.flag) {

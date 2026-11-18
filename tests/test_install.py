@@ -57,6 +57,9 @@ class InstallTests(unittest.TestCase):
                  'export default class Tabs extends View {\n  render() { const program = lead?.program; }\n}\n')
         self.put(home, 'mods/pane/main.js',
                  'export default class Pane extends View {\n  me() {}\n  render() { const p = this.me(); }\n}\n')
+        self.put(home, 'mods/workspace-chrome/main.js',
+                 'export default class WorkspaceChrome extends View {\n  render() {\n'
+                 '    return [image("frame/welcome/herdr.png").size(20).rounded(5)].child("Herdr"); }\n}\n')
         self.put(home, 'layouts/main.json', json.dumps({'children': [
             {'content': {'mod': 'spaces'}}, {'content': {'mod': 'agents'}}]}))
 

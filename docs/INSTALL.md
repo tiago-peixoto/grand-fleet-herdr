@@ -60,6 +60,8 @@ Unsupported source or layout structures stop installation before destination wri
 Generated `herdr-spaces.js` and `herdr-pane.js` files preserve the installed source contents, including line endings.
 Generated `herdr-agents.js` and `herdr-tabs.js` files change only the lines that read a program icon, so the adapter can supply a crewmember instead.
 The installer refuses a Herdr version whose source no longer contains each of those lines exactly once.
+Generated `herdr-chrome.js` changes only the logo and the name in the sidebar header, under the same rule.
+The sidebar footer keeps Herdr's own module.
 The adapter subclasses these local modules to retain native behavior.
 The generated `layouts/one-piece.json` retains both sidebar nodes, the tab bar, and the pane header, and assigns their presentation through region properties.
 It adds the approved palette defaults while preserving explicit source color overrides.
