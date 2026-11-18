@@ -218,6 +218,14 @@ for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy
   assert.equal(view.state.get('test.badge'),'2','the Dock badge counts blocked agents');
   view.controller.attend();
   assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['agent.focus',{terminal:'remote/t1'}]),'the attention key shows the blocked agent that changed most recently');
+  await view.controller.close();
+  assert.equal(view.state.get('test.badge'),null,'closing the Agents list clears the Dock badge it set');
+}
+for (const region of ['tabs','pane','brand','spaces']) {
+  const view=host(true,'grouped',310,{region});
+  view.state.set('test.badge','2');
+  await view.controller.close();
+  assert.equal(view.state.get('test.badge'),'2',`closing the ${region} copy leaves the Agents list's Dock badge alone`);
 }
 {
   const view=host(true,'grouped',310,{region:'brand'}), nodes=descendants(view.root);

@@ -36,6 +36,8 @@ The Dock icon, the welcome screen, and Settings keep Herdr's own logo, because n
 The macOS Dock badge shows how many agents Herdr reports as blocked, and clears at zero.
 The `one-piece.attention` command shows the unfocused blocked agent that changed most recently, or else the newest finished one.
 It runs Herdr's native `agent.focus` and does nothing when no agent waits.
+The Dock badge and the `one-piece.attention` command work only while the One Piece layout is shown, because the Agents list owns both.
+Switching to another layout closes that list, which clears the badge.
 A space containing a captain shows that crew's ship.
 An agent's crewmember takes the program icon's place in the Agents row, its tab, and its pane title.
 The narrow sidebar rail has no icon column, so there the crewmember stays in the status cell.

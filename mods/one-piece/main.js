@@ -225,6 +225,10 @@ export default class OnePieceAgents extends Agents {
     cx.timer.every(10000, cx => this.discover(cx));
   }
 
+  async close() {
+    if (this.badge) setBadge(null);
+  }
+
   attend() {
     const newest = status => agents().filter(agent => agent.status === status && !agent.focused).sort((a, b) => b.seq - a.seq)[0];
     const agent = newest('blocked') ?? newest('done');
