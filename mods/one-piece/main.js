@@ -7,7 +7,7 @@ import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
-import { identity, crews, assignCrew, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
+import { identity, crews, assignCrew, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, genericFleets, managedCrew, machineOf } from './fleet.js';
 
@@ -318,8 +318,21 @@ export default class OnePieceAgents extends Agents {
         .child('This agent runs Firstmate')
         .on_click(() => { setShared('one-piece.captains', {...(shared('one-piece.captains') ?? {}), [key]:{}}); closeOverlay(props().overlay); }));
     }
-    return menu.child(Button.new('motion').flex_none().accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
+    menu.child(Button.new('motion').flex_none().accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
       .on_click(() => { save({paused:!appearance().paused}); closeOverlay(props().overlay); }));
+    const mine = appearance().characters[key];
+    const crew = !captainLinks()[key] && mine?.owner && crews[mine.owner.split(':').pop()];
+    if (!crew) return menu;
+    menu.child(div().flex_none().px(7).pt(8).text_size(11).text_color(t.dim).child(`${crew.name} · choose a character`));
+    for (const name of crew.workers) {
+      const current = mine.art === `crew-${name}`;
+      menu.child(Button.new(`character-${name}`).flex_none().tab_index(0).px(7).py(3).rounded(5)
+        .accessibility_label(`${displayName(name)}${current ? ', current character' : ''}`)
+        .when(current, el => el.bg(t.selected)).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
+        .on_click(() => { save({characters:chooseCharacter(appearance().characters, key, name)}); closeOverlay(props().overlay); })
+        .child(h_flex().gap(8).items_center().child(sprite(`crew-${name}`, 'idle', 24)).child(displayName(name))));
+    }
+    return menu;
   }
 
   spaceHasCaptain(terminal) {

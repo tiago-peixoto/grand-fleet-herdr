@@ -70,7 +70,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all.map(t=>({...t})),panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',active:true,tabs:[{id:'tab',name:'project',active:true}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
-    theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
+    theme:()=>({blocked:'#ff0000',done:'#00ff00',dim:'#888888',selected:'#selected'}),shared:key=>state.get(key),setShared:(key,value)=>state.set(key,value),
     setAgentOrder:order=>calls.push(['order',order]),run:(name,args)=>calls.push([name,args]),
     openOverlay:args=>calls.push(['overlay',args]),closeOverlay:id=>calls.push(['closeOverlay',id]),notify:args=>calls.push(['notify',args]),setBadge:text=>state.set('test.badge',text),nextCommand:()=>new Promise(()=>{}),
     settings:()=>({zoom:1}),home:()=>'/home/pirate',
@@ -198,6 +198,18 @@ for (const width of [310, 120]) {
   const failed=descendants(decorated.nodes.get('sub-t7')).find(n=>n.path?.includes('crew-'));
   assert.ok(failed.path.endsWith('-blocked.gif'),'a failed subagent needs attention like the native blocked row');
   assert.ok(descendants(decorated.nodes.get('sub-t8')).some(n=>typeof n.tip==='string'&&n.tip.endsWith(' · idle')),'a finished subagent reads idle like the native row');
+}
+{
+  const view=host(true,'grouped',310,{appearance:'t3:3'});
+  const owner='space:s:0:strawhat';
+  view.state.set('one-piece.art',{crews:{},characters:{'t3:3':{art:'crew-chopper',number:null,owner},'t6:7':{art:'crew-franky',number:null,owner}},paused:false});
+  view.state.delete('one-piece.captains');
+  view.nodes.clear();
+  view.controller.render(view.cx);
+  assert.equal(view.nodes.get('character-chopper').background,'#selected','the menu marks the current character');
+  view.nodes.get('character-franky').click({},view.cx);
+  const chosen=view.state.get('one-piece.art').characters;
+  assert.deepEqual([chosen['t3:3'].art,chosen['t6:7'].art],['crew-franky','crew-chopper'],'choosing a held character swaps the two crewmates');
 }
 for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Claude']]) {
   const view=host(true,'grouped',310,props);

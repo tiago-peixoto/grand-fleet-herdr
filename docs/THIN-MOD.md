@@ -29,6 +29,9 @@ For a generic fleet, the Straw Hats show as reserved while a Firstmate captain i
 Set sail posts a notification that names the ship and the Space.
 The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
+Right-click a crewmate to choose its character from the other members of its fleet's crew.
+If another crewmate of that fleet holds the chosen character, the two swap, so a fleet never shows the same character twice.
+The choice lasts while the terminal lives and returns when the fleet flies that crew again.
 Fleet cards have six pixels of bottom spacing.
 The sidebar header shows the Straw Hat flag and the name Grand Fleet in place of Herdr's logo and name.
 The flag is drawn at 32 pixels, its artwork size, and keeps the native search and fold buttons beside it.
