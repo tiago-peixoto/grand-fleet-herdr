@@ -501,16 +501,26 @@ class InstallTests(unittest.TestCase):
         self.assertEqual(outside.read_text(), 'private')
         self.assertEqual((self.repo / 'mods/one-piece/main.js').read_text(), 'version one')
 
+    def test_install_adopts_receipt_from_before_rename(self):
+        self.run_cli()
+        path = self.home / '.one-piece-install.json'
+        receipt = json.loads(path.read_bytes())
+        path.write_text(json.dumps({**receipt, 'owner': 'herdr-one-piece'}))
+        self.run_cli()
+        self.assertEqual(json.loads(path.read_bytes())['owner'], 'grand-fleet-herdr')
+        self.run_cli('uninstall')
+        self.assertFalse(path.exists())
+
     def test_corrupt_receipt_cannot_authorize_removal(self):
         self.run_cli()
         receipt = self.home / '.one-piece-install.json'
-        for value in ('{', '[]', '{"owner":"someone else"}',
-                      json.dumps({'owner': 'herdr-one-piece', 'version': 1,
+        for value in ('{', '[]', '{"owner":"someone else"}', '{"owner":[]}',
+                      json.dumps({'owner': 'grand-fleet-herdr', 'version': 1,
                                   'files': {'../settings.json': '0' * 64}})):
             receipt.write_text(value)
             before = self.files(self.home)
-            self.run_cli('uninstall', ok=False)
-            self.run_cli(ok=False)
+            for action in ('uninstall', 'install'):
+                self.assertTrue(self.run_cli(action, ok=False).stderr.startswith('Error: '))
             self.assertEqual(self.files(self.home), before)
 
     def test_no_action_and_help_do_not_write_default_home(self):

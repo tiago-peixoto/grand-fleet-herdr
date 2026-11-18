@@ -2515,7 +2515,7 @@ Selecting Shanks opened the remote captain fixture with process 1988054.
 
 The native plus menu opened a regular zsh terminal in the current `thin-mod-check` workspace.
 Its new tab was `tb384bb52af3d105c47cf8d462cb033f95`.
-Direct input printed `FLEET_PERSONAL_SHELL` and the inherited folder `/Users/tiago/Workspace/herdr-one-piece-native`.
+Direct input printed `FLEET_PERSONAL_SHELL` and the inherited folder `<checkout>-native`, a separate worktree of this repository.
 The personal terminal retained Herdr's ordinary shell header without character artwork.
 Selecting the crewmate's native tab returned to terminal `t4d`, its original tab, and its original focused pane.
 Native status reported no errors after both transitions.
