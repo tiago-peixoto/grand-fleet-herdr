@@ -184,7 +184,9 @@ The primary Firstmate defaults to the Straw Hats.
 Secondmates, delegated Firstmate coordinators, receive unused secondary crews before crews repeat.
 Your manual crew selections take priority over automatic discovery.
 When several captains share a Space, the primary and then the oldest terminal supply its ship.
-Firstmate places its workers in their own Space, so they sail as a separate fleet without a captain.
+Firstmate places its workers in their own Space, which flies their captain's flag with crewmates from the captain's roster.
+Raising a flag on that Space changes the captain's crew.
+A captain you marked by hand has no Firstmate home label, so its workers' Space stays a separate fleet without a captain.
 Extra agents receive numbered generic Pirates after a crew's named artwork runs out.
 Your fleet can grow beyond the named roster.
 
