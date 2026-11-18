@@ -16,7 +16,8 @@ MOD = Path('mods/one-piece')
 LAYOUT = Path('layouts/one-piece.json')
 RECEIPT = Path('.one-piece-install.json')
 WORK = '.one-piece-install-work'
-OWNER = 'herdr-one-piece'
+OWNER = 'grand-fleet-herdr'
+OWNERS = {OWNER, 'herdr-one-piece'}  # installs made before the repository rename
 KEYS = Path('keys.json')
 KEY_SECTION = 'layout:one-piece'
 BINDINGS = {'cmd-w': 'one-piece.close-tab', 'cmd-shift-w': 'one-piece.close-pane'}
@@ -110,7 +111,7 @@ def read_receipt(home):
         return None
     data = strict_json(path.read_bytes())
     if (not isinstance(data, dict)
-            or data.get('owner') != OWNER or type(data.get('version')) is not int
+            or data.get('owner') not in OWNERS or type(data.get('version')) is not int
             or data['version'] not in (1, 2, 3)
             or set(data) != ({'owner', 'version', 'files'} if data['version'] != 2
                              else {'owner', 'version', 'files', 'keys'})
