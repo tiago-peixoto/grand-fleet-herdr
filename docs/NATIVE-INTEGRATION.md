@@ -1392,6 +1392,7 @@ After reopening and switching to `one-piece`, the native fleet and existing grid
 A second comparison confirmed that all 39 original live terminals still retained their process identity and placement.
 The before, removed, and reinstalled inventories are stored in `.superpowers/native/removal-*.json`.
 The installation guide now explains the required backup step when generated editor files remain after removal.
+Since 2026-11-19 the installer accepts a folder that holds only those editor files, so that backup step is no longer needed for them.
 
 ## Actual firstmate worker launch and inspection
 

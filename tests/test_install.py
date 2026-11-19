@@ -459,6 +459,31 @@ class InstallTests(unittest.TestCase):
         self.assertEqual(self.files(self.home), self.original)
         self.assertFalse((self.home / 'mods/one-piece').exists())
 
+    def test_reinstall_after_removal_keeps_herdr_editor_files(self):
+        self.run_cli()
+        first = self.files(self.home)
+        editor = {'mods/one-piece/jsconfig.json': b'{"written": "by Herdr"}',
+                  'mods/one-piece/gpui-kit.d.ts': b'declare module "gpui-kit";'}
+        for name, content in editor.items():
+            self.put(self.home, name, content)
+        self.run_cli('uninstall')
+        self.assertEqual(self.files(self.home), dict(self.original, **editor))
+        self.run_cli('uninstall')
+        self.run_cli()
+        # The receipt is part of the comparison, so adopting an editor file would fail here.
+        self.assertEqual(self.files(self.home), dict(first, **editor))
+
+    def test_editor_files_do_not_excuse_other_unknown_content(self):
+        for extra in ('notes.txt', 'types/gpui-kit.d.ts'):
+            with self.subTest(extra=extra):
+                self.put(self.home, 'mods/one-piece/jsconfig.json', '{}')
+                self.put(self.home, 'mods/one-piece/' + extra, 'unknown')
+                before = self.files(self.home)
+                self.run_cli(ok=False)
+                self.run_cli('uninstall', ok=False)
+                self.assertEqual(self.files(self.home), before)
+                shutil.rmtree(self.home / 'mods/one-piece')
+
     def test_unknown_content_is_never_adopted(self):
         for target in ('mods/one-piece/main.js', 'layouts/one-piece.json'):
             with self.subTest(target=target):

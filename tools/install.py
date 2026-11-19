@@ -97,6 +97,11 @@ def inventory(path):
     raise ValueError(f'Refusing symlink or special file: {path}')
 
 
+def editor_file(name):
+    """Editor files that Herdr itself writes into a mod folder."""
+    return name == 'jsconfig.json' or name.endswith('.d.ts')
+
+
 def check_parents(path):
     for parent in (path, *path.parents):
         if parent.is_symlink():
@@ -142,7 +147,7 @@ def source_files(repo, home):
     for path in sorted(mod.rglob('*')):
         relative = path.relative_to(mod)
         if (any(p.startswith('.') or p in ('node_modules', '__pycache__') for p in relative.parts)
-                or path.name == 'jsconfig.json' or path.name.endswith('.d.ts')):
+                or editor_file(path.name)):
             continue
         if path.is_file():
             files[path.relative_to(repo).as_posix()] = path.read_bytes()
@@ -187,7 +192,11 @@ def apply(action, home, repo):
               or (home / p).is_symlink() else None for p in targets}
     receipt = read_receipt(home)
     owned = receipt['files'] if receipt else None
-    if owned is None and any(before[str(p)] is not None for p in (MOD, LAYOUT)):
+    mod = before[str(MOD)]
+    # Removal leaves Herdr's editor files behind, so a folder holding only those is not a foreign mod.
+    remnant = isinstance(mod, dict) and all(
+        isinstance(digest, str) and editor_file(name) for name, digest in mod.items())
+    if owned is None and (before[str(LAYOUT)] is not None or mod is not None and not remnant):
         raise ValueError('Unknown existing One Piece content; no ownership receipt, refusing changes')
     for name, digest in (owned or {}).items():
         path = home / name
