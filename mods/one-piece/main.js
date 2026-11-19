@@ -287,7 +287,7 @@ export default class OnePieceAgents extends Agents {
   icon(agent, size, color) {
     const terminal = live(agent.address), face = art(terminal);
     if (!face) return super.icon(agent, size, color);
-    const status = statusOf(terminal, this.listed?.get(agent.address)), label = describe(terminal, status);
+    const status = statusOf(terminal, this.listed?.get(agent.address) ?? agent.status), label = describe(terminal, status);
     // The crewmember is drawn larger than the program icon it replaces so its pose stays readable.
     // The label keeps the status a screen reader used to get from Herdr's status mark.
     return div().flex_none().tooltip(label).accessibility_label(label)

@@ -247,7 +247,8 @@ Session labels remain visible, so you can identify agents even when characters r
 | Idle agents sleep | Working agents walk | Finished agents rest with their chin up | Blocked agents fold their arms | Agents with an error hold their face |
 
 **Done** is Herdr's word for an agent that finished while you were not looking.
-It turns idle once you look at that agent.
+An agent with a pane turns idle once you look at it.
+A finished sub-agent without a pane keeps its done pose, because it has no pane to look at.
 The pose replaces Herdr's status mark at the end of the row, and its tooltip names the status.
 Unavailable machines retain Herdr's connection handling without invented live activity.
 

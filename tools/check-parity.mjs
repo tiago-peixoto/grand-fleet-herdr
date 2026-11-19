@@ -223,6 +223,13 @@ for (const width of [310, 120]) {
   assert.ok(descendants(view.nodes.get('portrait-t6:7')).some(n=>n.path?.endsWith('crew-franky-idle.gif')),'a finished crewmember someone has seen rests in its Space too');
 }
 {
+  const view=host(true,'grouped',310);
+  view.context.agents().find(a=>a.address==='t6').status='idle';
+  view.nodes.clear();
+  view.controller.render(view.cx);
+  assert.equal(descendants(view.nodes.get('agent-fold-t6')).find(n=>n.path).path,'mods/one-piece/assets/crew-franky-idle.gif','a finished crewmember someone has seen sleeps in its Agents row');
+}
+{
   const view=host(true,'grouped',310,{appearance:'t3:3'});
   const owner='space:s:0:strawhat';
   view.state.set('one-piece.art',{crews:{},characters:{'t3:3':{art:'crew-chopper',number:null,owner},'t6:7':{art:'crew-franky',number:null,owner}},paused:false});
