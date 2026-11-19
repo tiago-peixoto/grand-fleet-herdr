@@ -363,10 +363,9 @@ Review boards and author verdict transcripts stay outside this repository.
 
 Built on [Herdr](https://herdr.dev) and [Firstmate](https://github.com/kunchenguid/firstmate), with custom One Piece pixel artwork.
 The installed artwork lives in [mods/one-piece/assets](mods/one-piece/assets/).
-Archived third-party reference artwork is not installed.
 
 One Piece was created by Eiichiro Oda.
 Grand Fleet is an unofficial fan project, unaffiliated with One Piece's rights holders.
-This repository does not grant rights to One Piece characters or archived third-party artwork.
+This repository does not grant rights to One Piece characters.
 
 <p align="center"><img src="mods/one-piece/assets/flag.gif" width="32" height="32" alt="Straw Hat flag"></p>

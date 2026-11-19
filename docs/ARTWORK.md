@@ -1,7 +1,6 @@
 # Artwork inventory
 
 The selected direction is the custom One Piece pixel artwork used by the current preview.
-Historical game sprites and illustrated ships remain archived for reference, not as the selected production assets.
 
 ## Current preview sources
 
@@ -40,11 +39,9 @@ Animation quality, pixel alignment, and every native asset-loading path remain t
 
 ## Historical references
 
-`prototype/assets/` includes game sprite sheets, cropped characters, and ship illustrations explored before custom artwork was selected.
-`prototype/sprite-options.html` and `prototype/sourced-art-prototype.html` retain their comparison context and source links.
-Their historical completeness, availability, and pricing claims were not reverified during repository creation.
-No blanket license is asserted for these reference files.
+Game sprite sheets, cropped characters, and ship illustrations were explored before custom artwork was selected.
+Those reference files and the two pages that compared them were removed from the repository on 2026-11-18.
+They were not part of the installed mod, and the repository asserted no license for them.
 One Piece character rights remain with their respective owners.
 The author approved publishing this repository on 2026-11-16.
 Only `mods/one-piece/assets/` supplies the installed artwork.
-Historical reference files are not part of the installed mod.

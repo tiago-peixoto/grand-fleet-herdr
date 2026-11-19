@@ -1,7 +1,9 @@
 # Prototype inventory
 
-The repository preserves all 61 files from the prototype tree, excluding the separate specification review board.
-The import manifest records each file's original SHA-256 checksum before repository maintenance changes.
+The repository imported all 61 files from the prototype tree, excluding the separate specification review board.
+It keeps 20 of them.
+The 39 sourced reference images and the two pages that compared them were removed on 2026-11-18.
+The import manifest records the original SHA-256 checksum of each kept file before repository maintenance changes.
 The original Lavish workspace remains untouched.
 
 ## Current experience
@@ -44,10 +46,7 @@ The specification snapshot records proposed rules and acceptance checks for thes
 | --- | --- | --- |
 | `prototype/functional-v1.html` | Earlier custom-art fleet, worker lifecycle, and status controls | Historical behavior reference |
 | `prototype/custom-trial/index.html` | First custom artwork comparison | Selected visual direction, older interface |
-| `prototype/sourced-art-prototype.html` | Ship and crew composition using sourced assets | Superseded art direction |
-| `prototype/sprite-options.html` | Sprite collection comparisons | Historical research, claims may be stale |
 | `prototype/preview.png` | Earlier static reference | Historical visual reference |
-| `prototype/assets/` | Sourced ship and character references | Archive only |
 | `prototype/custom-trial/assets/` | Initial custom sheets | Current Sunny and Luffy plus worker style references |
 | `prototype/flow/assets/` | Refined custom sheets | Current worker atlas and flag, plus Franky reference |
 
