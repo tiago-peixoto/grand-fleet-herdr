@@ -97,7 +97,7 @@ Complete Firstmate fleets need the generic hc support available in the tested fo
 This is not a promise that every Firstmate revision supports hc fleets.
 The verified setup used Herdr 0.1.16, local Core 0.1.21, and remote Linux Core 0.1.20.
 Physical testing used an isolated app identity with equivalent executable code and resources.
-The historical prototype and third-party reference assets are not installed by the mod.
+The historical prototype is not installed by the mod.
 This is an unofficial fan project and does not grant rights to One Piece characters.
 
 ## Done when
