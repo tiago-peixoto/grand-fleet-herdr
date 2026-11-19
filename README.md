@@ -47,8 +47,9 @@ Grand Fleet supplies the artwork and sidebar presentation.
 <p align="center">
   <a href="preview.png"><img src="preview.png" width="765" alt="Grand Fleet in a Herdr window: an island beside each of three machines in Spaces, a captain's ship and two other fleets with their crews, six agents with character artwork grouped by status, and crewmember faces on the tabs and pane titles"></a>
   <br>
-  <sub>Click the screenshot to view it at full size.
-  The scene is staged in an isolated test window, where each agent is a stand-in program that reports a status.</sub>
+  <sub>Click the screenshot to view it at full size.</sub>
+  <br>
+  <sub>The scene is staged in an isolated test window, where each agent is a stand-in program that reports a status.</sub>
 </p>
 
 </details>
