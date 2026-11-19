@@ -198,7 +198,7 @@ test('expanded crews assign every named member before generic pirates and retain
     const selected=crewOf(coordinator);
     for(const ext of ['gif','png']) {
       assert.ok(existsSync(new URL(`../mods/one-piece/assets/${selected.ship}.${ext}`,import.meta.url)),`${crew} ship ${ext}`);
-      for(const name of [selected.captain,...selected.workers]) for(const state of ['idle','working','blocked']) {
+      for(const name of [selected.captain,...selected.workers]) for(const state of ['idle','working','blocked','error','done']) {
         assert.ok(existsSync(new URL(`../mods/one-piece/assets/crew-${name}-${state}.${ext}`,import.meta.url)),`${name} ${state} ${ext}`);
       }
     }

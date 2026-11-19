@@ -10,6 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / 'tools/build-artwork.py'
 ASSETS = ROOT / 'mods/one-piece/assets'
+STATES = ('idle', 'working', 'blocked', 'error', 'done')
 BANDS = [(41, 175), (218, 404), (447, 610), (653, 793), (820, 1029),
          (1051, 1246), (1298, 1435), (1467, 1667), (1694, 1868)]
 RECIPES = {
@@ -36,6 +37,10 @@ APPROVED_PORTRAITS = {
 
 def im(*args):
     return subprocess.check_output(['magick', *map(str, args)])
+
+
+def opaque(rgba):
+    return b''.join(rgba[i:i+4] if rgba[i+3] else bytes(4) for i in range(0, len(rgba), 4))
 
 
 def decoded(path):
@@ -72,7 +77,7 @@ class ArtworkTests(unittest.TestCase):
                 name = sheet.name.removesuffix('-study-v1.png')
                 ship = name in ('red-force', 'queen-mama-chanter', 'mammoth',
                                 'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
-                names = [f'crew-{name}'] if ship else [f'crew-{name}-{state}' for state in ('idle', 'working', 'blocked')]
+                names = [f'crew-{name}'] if ship else [f'crew-{name}-{state}' for state in STATES]
                 if not ship:
                     portrait = f'portrait-crew-{name}.png'
                     expected_names.add(portrait)
@@ -140,6 +145,30 @@ class ArtworkTests(unittest.TestCase):
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
             self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
 
+    def test_gestures_keep_the_approved_pixels(self):
+        sheets = sorted((ROOT / 'prototype/crew-artwork').glob('*-gestures-v1.png'))
+        self.assertEqual(len(sheets), 155)
+        for sheet in sheets:
+            name = sheet.name.removesuffix('-gestures-v1.png')
+            # The sheet is decoded whole and sliced here, so the expected cells share no crop rule with the exporter.
+            raw = im(sheet, '-depth', '8', 'rgba:-')
+            self.assertEqual(len(raw), 256*256*4)
+            cell = lambda row, col: b''.join(raw[((row*64+y)*256+col*64)*4:((row*64+y)*256+col*64+64)*4] for y in range(64))
+            for row, (state, delay) in enumerate([('blocked', 70), ('error', 70), ('done', 85), ('idle', 85)]):
+                with self.subTest(name=name, state=state):
+                    gif = ASSETS / f'crew-{name}-{state}.gif'
+                    self.assertEqual(im('identify', '-format', '%w %h %T %D\n', gif).decode().splitlines(),
+                                     [f'64 64 {delay} Background']*4)
+                    frames = im(gif, '-coalesce', '-depth', '8', 'rgba:-')
+                    for col in range(4):
+                        actual = frames[col*64*64*4:(col+1)*64*64*4]
+                        self.assertEqual(actual[3::4], cell(row, col)[3::4])
+                        # A GIF frame holds 256 colors, so only the idle row, approved from the shipped GIF, keeps every color.
+                        if state == 'idle':
+                            self.assertEqual(opaque(actual), opaque(cell(row, col)))
+                    if state != 'idle':
+                        self.assertEqual(im(ASSETS / f'crew-{name}-{state}.png', '-depth', '8', 'rgba:-'), cell(row, 0))
+
     def test_portraits_match_the_approved_head_crops(self):
         # Crop origins measured for the reviewed mock; a changed crop rule moves these faces.
         for name, (x, y) in APPROVED_PORTRAITS.items():
@@ -152,7 +181,7 @@ class ArtworkTests(unittest.TestCase):
         # next row under sleeping sprites and lift them off the baseline.
         for sheet in sorted((ROOT / 'prototype/crew-artwork').glob('*-study-v1.png')):
             name = sheet.name.removesuffix('-study-v1.png')
-            for state in ('idle', 'working', 'blocked'):
+            for state in STATES:
                 gif = ASSETS / f'crew-{name}-{state}.gif'
                 if not gif.exists():
                     continue
@@ -164,7 +193,7 @@ class ArtworkTests(unittest.TestCase):
                         self.assertEqual(rows, list(range(rows[0], 61)))
 
     def test_crew_chopper_keeps_the_original_smaller_scale(self):
-        for state in ('idle', 'working', 'blocked'):
+        for state in STATES:
             alpha = im(ASSETS / f'crew-chopper-{state}.gif', '-coalesce',
                        '-alpha', 'extract', '-depth', '8', 'gray:-')
             for frame in range(len(alpha)//4096):
