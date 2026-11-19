@@ -24,10 +24,16 @@ def generate(agents_source, main_layout, spaces_source):
     if any(name not in ('herdr', 'gpui-kit', 'gpui-base') for name in imports):
         raise ValueError('Herdr Spaces has new module dependencies; update the One Piece adapter before installing.')
     agents_source = hook(agents_source, 'export default class Agents extends View {',
-                         'icon(agent, size, color) { return icon(agent.program, size, color); }',
+                         'icon(agent, size, color) { return icon(agent.program, size, color); }\n'
+                         '  showsStatus(agent) { return true; }',
                          {'icon(a.program, 16, t.foreground)': 'this.icon(a, 16, t.foreground)',
-                          'icon(k.program, 14, t.foreground)': 'this.icon(k, 14, t.foreground)'},
-                         'Unsupported Herdr Agents icons; keep the existing installation and update the One Piece adapter.')
+                          'icon(k.program, 14, t.foreground)': 'this.icon(k, 14, t.foreground)',
+                          # A skipped child, not an empty one, so the row's gap does not leave space at its end.
+                          '.child(this.status(t, a, byPriority && !isPinned))':
+                          '.when(this.showsStatus(a), el => el.child(this.status(t, a, byPriority && !isPinned)))',
+                          '.child(this.status(t, { status: st }, compact))':
+                          '.when(this.showsStatus(k), el => el.child(this.status(t, { status: st }, compact)))'},
+                         'Unsupported Herdr Agents rows; keep the existing installation and update the One Piece adapter.')
     spaces_source = hook(spaces_source, 'export default class Spaces extends View {',
                          'machineIcon(m, connected) { return svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none(); }',
                          {'const icon = svg(`mods/workspace-chrome/${m ? "server" : "monitor"}.svg`).size(13).flex_none();':

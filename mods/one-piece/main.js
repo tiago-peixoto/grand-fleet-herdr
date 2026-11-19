@@ -6,7 +6,7 @@ import Spaces, { glyph, tone } from './herdr-spaces.js';
 import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
-import { agents, terminals, machines, spaces, layout, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
+import { agents, terminals, machines, spaces, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
 import { identity, crews, assignCrew, assignIslands, islandOf, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from './fleet.js';
@@ -28,9 +28,12 @@ function crewName(terminal) {
 }
 
 function describe(terminal, status) {
-  const state = status === 'blocked' || status === 'error' ? 'Needs you' : status === 'done' ? 'Done' : status ?? 'Unknown';
+  const state = status === 'blocked' ? 'Needs you' : status === 'error' ? 'Error' : status === 'done' ? 'Done' : status ?? 'Unknown';
   return `${crewName(terminal)}${captainLinks()[identity(terminal)] ? ' · Firstmate captain' : ''} · ${state}`;
 }
+
+// Herdr's agents() reports an agent's own error as blocked, so only the terminal's word tells the two apart.
+const statusOf = (terminal, listed) => terminal.status === 'error' ? 'error' : listed ?? terminal.status;
 
 function portraitProgram(pane) {
   const face = art(live(pane?.terminal));
@@ -54,17 +57,8 @@ class OnePieceChrome extends Chrome {
   title() { return 'Grand Fleet'; }
 }
 
-function sidebarWidth(node = layout()) {
-  if (node?.id === 'sidebar') return node.size?.px ?? Infinity;
-  for (const child of node?.children ?? []) {
-    const width = sidebarWidth(child);
-    if (width !== Infinity) return width;
-  }
-  return Infinity;
-}
-
 function sprite(name, status, size, ship = false) {
-  const state = status === 'working' ? 'working' : status === 'blocked' || status === 'error' ? 'blocked' : 'idle';
+  const state = ['working', 'blocked', 'error', 'done'].includes(status) ? status : 'idle';
   return image(`mods/one-piece/assets/${name}${ship ? '' : `-${state}`}.${appearance().paused ? 'png' : 'gif'}`)
     .w(size).h(size).flex_none();
 }
@@ -122,19 +116,20 @@ class OnePieceSpaces extends Spaces {
     return this.fleet(space) ? crews[appearance().spaceCrews?.[space.id]] : null;
   }
 
-  portrait(terminal, art, label, t) {
+  portrait(terminal, art, label, t, listed) {
     return Button.new(`portrait-${identity(terminal)}`).tab_index(0).w(24).h(24).flex_none().rounded(4)
       .accessibility_label(`Open ${label}`).tooltip(label)
       .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
       .on_mouse_down('left', (_e, cx) => cx.stop_propagation())
       .on_mouse_up('left', (_e, cx) => cx.stop_propagation())
       .on_click((_e, cx) => { cx.stop_propagation(); run('agent.focus', {terminal:terminal.address}); })
-      .child(sprite(art, terminal.status, 24));
+      .child(sprite(art, statusOf(terminal, listed.get(terminal.address)), 24));
   }
 
   row(info, t) {
     const {w, i, g, tree} = info, captain = this.captain(w);
     const live = new Map(terminals().filter(terminal => terminal.state === 'live').map(terminal => [terminal.address, terminal]));
+    const listed = new Map(agents().map(agent => [agent.address, agent.status]));
     const members = captain ? managedCrew(captain, terminals(), agents(), captainLinks()) : [...(this.fleet(w) ?? [])];
     if (captain) {
       for (const agent of agents()) {
@@ -150,7 +145,7 @@ class OnePieceSpaces extends Spaces {
     for (const terminal of members) {
       const face = art(terminal);
       if (face) portraits.child(this.portrait(terminal, face,
-        `${displayName(face.replace(/^crew-/, ''))} · ${terminal.title || terminal.address}`, t));
+        `${displayName(face.replace(/^crew-/, ''))} · ${terminal.title || terminal.address}`, t, listed));
     }
     const fromIndex = this.pressed === null ? -1 : spaces().findIndex(space => space.id === this.pressed);
     return v_flex().id(`space-${w.id}`).relative().px(8).h(64).mb(6).flex_none().justify_center().rounded(8)
@@ -181,7 +176,7 @@ class OnePieceSpaces extends Spaces {
         .when(Boolean(crew), el => el.child(sprite(crew.ship, 'idle', 48, true)))
         .child(v_flex().flex_1().min_w(0).gap(2)
           .child(h_flex().items_center().gap(8)
-            .child(captain ? this.portrait(captain, `crew-${crew.captain}`, `${displayName(crew.captain)} · ${w.name}`, t) :
+            .child(captain ? this.portrait(captain, `crew-${crew.captain}`, `${displayName(crew.captain)} · ${w.name}`, t, listed) :
               div().flex_initial().min_w(48).truncate().text_color(t.foreground).child(w.name))
             .child(g ? this.gitTail(g, tree, w.name, t) : div().flex_1()))
           .child(portraits)));
@@ -292,23 +287,25 @@ export default class OnePieceAgents extends Agents {
   icon(agent, size, color) {
     const terminal = live(agent.address), face = art(terminal);
     if (!face) return super.icon(agent, size, color);
-    const listed = this.listed?.get(agent.address) ?? agent.status;
-    const status = agent.pane == null && listed === 'done' ? 'idle' : listed;
+    const status = statusOf(terminal, this.listed?.get(agent.address)), label = describe(terminal, status);
     // The crewmember is drawn larger than the program icon it replaces so its pose stays readable.
-    return div().flex_none().tooltip(describe(terminal, status))
+    // The label keeps the status a screen reader used to get from Herdr's status mark.
+    return div().flex_none().tooltip(label).accessibility_label(label)
       .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
       .child(sprite(face, status, size + 12));
   }
 
+  showsStatus(agent) { return !art(live(agent.address)); }
+
   status(t, agent, compact = false) {
-    // The rail has no icon column, so only there the crewmember stands in for the status mark.
-    const terminal = sidebarWidth() < 160 && live(agent.address), face = art(terminal);
+    // Only the rail, which has no icon column, still asks a crewmember's row for its mark, so there the crewmember is the mark.
+    const terminal = live(agent.address), face = art(terminal);
     if (!face) return super.status(t, agent, compact);
-    return h_flex().flex_none().items_center().relative()
-      .tooltip(describe(terminal, agent.status))
+    const status = statusOf(terminal, agent.status), label = describe(terminal, status);
+    return h_flex().flex_none().items_center()
+      .tooltip(label).accessibility_label(label)
       .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
-      .child(sprite(face, agent.status, 14))
-      .when(agent.status === 'done', el => el.child(div().absolute().top(0).right(0).size(6).rounded(3).bg(t.done)));
+      .child(sprite(face, status, 14));
   }
 
   appearanceMenu() {

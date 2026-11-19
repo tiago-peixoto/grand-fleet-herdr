@@ -29,6 +29,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
         if(key==='tooltip') target.tip=args[0];
         if(key==='text_color') target.color=args[0];
         if(key==='bg') target.background=args[0];
+        if(key==='border') target.ring=true;
         if(key==='w') target.width=args[0];
         if(key==='overflow_y_scrollbar') target.scrolls=true;
         if(key==='flex_1') target.grows=true;
@@ -90,6 +91,8 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
 const descendants = node => !node || typeof node !== 'object' ? [] : [node, ...node.kids.flatMap(descendants)];
 const paths = host => descendants(host.root).map(node => node.path).filter(Boolean);
 const scrolls = host => descendants(host.root).filter(node => node.scrolls).length;
+// Herdr's status marks: the working spinner, the Needs you pill and its ! form, the idle ring, and the done dot.
+const marks = node => descendants(node).filter(n => n.path?.endsWith('spinner.svg') || n.kids.includes('Needs you') || n.kids.includes('!') || n.ring === true || n.background === '#00ff00');
 const sameCall = (left,right) => assert.equal(JSON.stringify(left.calls.at(-1)), JSON.stringify(right.calls.at(-1)));
 
 for (const width of [310, 120]) {
@@ -98,13 +101,12 @@ for (const width of [310, 120]) {
     assert.equal(scrolls(standard),1);
     assert.equal(scrolls(decorated),1,'Agents must retain one scrolling list');
     if (width === 120) assert.ok(descendants(decorated.root).filter(n => n.path?.includes('crew-')).every(n => n.width <= 14), 'compact characters must fit native status slots');
-    if (width === 120) {
-      const cells = descendants(decorated.root).filter(n => n.kids.some(kid => kid?.path?.includes('crew-')));
-      const doneDot = cell => cell.kids.some(kid => kid?.background === '#00ff00');
-      assert.ok(descendants(standard.root).some(n => n.background === '#00ff00'), 'native rail shows done');
-      assert.equal(cells.filter(doneDot).length, 1, 'compact rail keeps the done indicator only for the done crewmember');
-      assert.ok(cells.filter(doneDot).every(cell => cell.kids.some(kid => kid?.path?.endsWith('-idle.gif'))), 'done crewmember keeps its artwork');
-    }
+    if (width === 120) assert.ok(descendants(decorated.nodes.get('ag-t6')).some(n => n.path?.endsWith('crew-franky-done.gif')), 'the rail shows the done crewmember in its done pose');
+    const rows = [...decorated.nodes.keys()].filter(id => /^(ag-t|ag-remote|sub-)/.test(id));
+    const crewRows = rows.filter(id => descendants(decorated.nodes.get(id)).some(n => n.path?.includes('crew-')));
+    assert.ok(crewRows.length >= (width === 310 ? 7 : 4), `crewmember rows found: ${crewRows}`);
+    assert.ok(marks(standard.root).length >= 4, 'native rows show their status marks');
+    for (const id of crewRows) assert.deepEqual(marks(decorated.nodes.get(id)), [], `${id} leaves its status to the crewmember's pose`);
     for (const id of ['ag-t1','ag-remote/t1', ...(width===310 ? ['sub-t2','sub-t3'] : ['ag-t3'])]) {
       assert.ok(decorated.nodes.has(id),`missing native agent ${id}`);
       standard.nodes.get(id).click(null,standard.cx);
@@ -135,7 +137,7 @@ for (const width of [310, 120]) {
       const row = descendants(ships.nodes.get(rowId));
       assert.ok(row.some(n => n.path?.endsWith('crew-luffy-working.gif')));
       assert.ok(row.some(n => n.path?.endsWith('crew-chopper-idle.gif')));
-      assert.ok(row.some(n => n.path?.endsWith('crew-franky-idle.gif')), 'every agent in the captain Space is its crew');
+      assert.ok(row.some(n => n.path?.endsWith('crew-franky-done.gif')), 'every agent in the captain Space is its crew, in its own pose');
       assert.ok(!row.some(n => n.kids.includes('project')), 'captain replaces the visible Space name');
       const strip = row.find(n => n.kids.includes(ships.nodes.get('portrait-t3:3')));
       assert.ok(!descendants(strip).some(n => n.path?.includes('crew-luffy')), 'captain is above the crew strip');
@@ -186,18 +188,39 @@ for (const width of [310, 120]) {
   const nativeIcon=descendants(standard.nodes.get('agent-fold-t6')).find(n=>n.path);
   assert.equal(nativeIcon.path,'icons/claude.svg');
   const icon=descendants(decorated.nodes.get('agent-fold-t6')).find(n=>n.path);
-  assert.equal(icon.path,'mods/one-piece/assets/crew-franky-idle.gif','the animated crewmember takes the program icon slot');
+  assert.equal(icon.path,'mods/one-piece/assets/crew-franky-done.gif','the animated crewmember takes the program icon slot in its done pose');
   assert.equal(icon.width,28);
   const row=descendants(decorated.nodes.get('ag-t6'));
   assert.equal(row.filter(n=>n.path?.includes('crew-')).length,1,'no second crewmember at the end of the row');
-  assert.ok(row.some(n=>n.background==='#00ff00'),'the native done mark stays at the end of the row');
+  assert.deepEqual(marks(decorated.nodes.get('ag-t6')),[],'the done pose replaces the native done mark');
   row.find(n=>n.kids.includes(icon)).right();
   assert.equal(JSON.stringify(decorated.calls.at(-1)[1].props),JSON.stringify({appearance:'t6:7'}),'right-clicking the crewmember opens its appearance menu');
   const sub=descendants(decorated.nodes.get('sub-t2')).find(n=>n.path?.includes('crew-'));
   assert.ok(sub.path.endsWith('-blocked.gif')&&sub.width===26,'a subagent row shows its crewmember in the icon slot');
   const failed=descendants(decorated.nodes.get('sub-t7')).find(n=>n.path?.includes('crew-'));
-  assert.ok(failed.path.endsWith('-blocked.gif'),'a failed subagent needs attention like the native blocked row');
-  assert.ok(descendants(decorated.nodes.get('sub-t8')).some(n=>typeof n.tip==='string'&&n.tip.endsWith(' · idle')),'a finished subagent reads idle like the native row');
+  assert.ok(failed.path.endsWith('-error.gif'),'a subagent that reports an error shows its error pose');
+  const finished=descendants(decorated.nodes.get('sub-t8'));
+  assert.ok(finished.find(n=>n.path?.includes('crew-')).path.endsWith('-done.gif'),'a finished subagent without a pane shows its done pose');
+  assert.ok(finished.some(n=>typeof n.tip==='string'&&n.tip.endsWith(' · Done')),'a finished subagent reads done');
+}
+{
+  // Herdr lists an agent that reports an error as blocked; the terminal keeps the word it reported.
+  const view=host(true,'grouped',310);
+  view.all.find(t=>t.address==='t6').status='error';
+  view.context.agents().find(a=>a.address==='t6').status='blocked';
+  view.nodes.clear();
+  view.controller.render(view.cx);
+  const icon=descendants(view.nodes.get('agent-fold-t6')).find(n=>n.path);
+  assert.equal(icon.path,'mods/one-piece/assets/crew-franky-error.gif','an agent that reports an error shows its error pose');
+  assert.ok(descendants(view.nodes.get('agent-fold-t6')).some(n=>typeof n.label==='string'&&n.label.endsWith(' · Error')),'a screen reader hears the error');
+}
+{
+  // Herdr turns done into idle once someone looks, while the terminal keeps the word it reported.
+  const view=host(true,'grouped',310,{region:'spaces'});
+  view.context.agents().find(a=>a.address==='t6').status='idle';
+  view.nodes.clear();
+  view.controller.render(view.cx);
+  assert.ok(descendants(view.nodes.get('portrait-t6:7')).some(n=>n.path?.endsWith('crew-franky-idle.gif')),'a finished crewmember someone has seen rests in its Space too');
 }
 {
   const view=host(true,'grouped',310,{appearance:'t3:3'});
