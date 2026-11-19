@@ -363,6 +363,7 @@ Review boards and author verdict transcripts stay outside this repository.
 
 Built on [Herdr](https://herdr.dev) and [Firstmate](https://github.com/kunchenguid/firstmate), with custom One Piece pixel artwork.
 The installed artwork lives in [mods/one-piece/assets](mods/one-piece/assets/).
+The code is available under the [MIT License](LICENSE), which covers the code only, not the artwork or One Piece characters.
 
 One Piece was created by Eiichiro Oda.
 Grand Fleet is an unofficial fan project, unaffiliated with One Piece's rights holders.
