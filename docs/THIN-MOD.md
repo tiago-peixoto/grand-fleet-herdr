@@ -85,8 +85,14 @@ Spaces without agents retain native presentation.
 Selecting a crewmember retains native focus or writable preview behavior.
 Native sorting, pinning, grouping, terminal creation, tabs, splits, and panels remain available.
 Character assignments remain stable for surviving sessions.
-Idle characters sleep, working characters walk, and blocked characters sit.
-Done characters sleep beside Herdr's done label, or under its done dot in the collapsed sidebar.
+Idle characters sleep, working characters walk, and done characters rest with their chin up.
+Blocked characters sit with folded arms, and characters that report an error sit with a hand to the face.
+Herdr's `agents()` lists an error as blocked, so the mod reads the terminal's own status word for the error pose.
+Space portraits read the status from `agents()`, so a finished agent rests there once someone has looked at it, as in Agents.
+A crewmember's row and sub-agent row leave out Herdr's status mark, because the pose already shows the status.
+The installer routes both of those status calls through a `showsStatus` method and refuses a Herdr version where either call changed.
+The collapsed sidebar keeps the crewmember in its status cell, without a done dot.
+Agents without a crewmember, and folded group headers, keep Herdr's marks.
 Appearance settings can pause animation without changing session state.
 The picker supports eight crews and scrolls when its choices exceed the available height.
 [The crew catalog](CREW-CATALOG.md) lists the expanded rosters and historical membership.

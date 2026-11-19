@@ -22,9 +22,11 @@ Defaults include background `#101f25`, selected `#29454c`, foreground `#dce6e3`,
 
 ## How it behaves
 
-Working characters walk, idle characters sleep, and blocked characters sit beside the native attention indication.
-Done characters use the resting pose with Herdr's Done label or compact completion dot.
-Other statuses retain native labels and a resting pose.
+Working characters walk, idle characters sleep, and done characters rest with their chin up.
+Blocked characters sit with folded arms, and characters that report an error sit with a hand to the face.
+Herdr lists an error as blocked, so the mod reads the terminal's own status word to tell them apart.
+Crewmember rows show no Herdr status mark: no working spinner, idle ring, Needs you cue, or done dot.
+Other statuses use the sleeping pose.
 Ships animate without changing session state.
 Pause animation selects static PNG frames instead of GIF animation.
 Clicking a ship selects its existing Space.
@@ -108,6 +110,6 @@ This is an unofficial fan project and does not grant rights to One Piece charact
 - Clicking a ship selects its Space, while clicking a portrait reaches that character's existing writable terminal.
 - A real Firstmate is detected without manual registration, and secondary captains receive distinct default crews.
 - User crew choices survive discovery and app reopening.
-- Sleeping, walking, sitting, and Done presentations match the actual native statuses.
+- Idle, working, done, blocked, and error poses match the actual native statuses, and crewmember rows show no status mark.
 - App reopening and remote transport reconnection preserve running terminal identities and accept fresh typed input.
 - Ordinary personal terminals, native menus, Settings, and Add machine remain available.
