@@ -26,20 +26,17 @@
 </p>
 
 Grand Fleet is a One Piece mod for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
-Every agent becomes a crewmember in Herdr's sidebar.
-[Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains to the ships of their workspaces.
-Without Firstmate, every Space with an agent still becomes a small fleet with a ship and crewmates.
+Every agent becomes a crewmember, and every Space, Herdr's name for a workspace, with a live agent gets a ship.
+[Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains.
+Firstmate is optional: independent agents sail together without a captain.
 
-- **Ships for your Spaces:** every Herdr workspace with an agent displays a ship, and a captain boards only when Firstmate runs there.
-- **Characters for your agents:** familiar faces keep their assignments beside actual session labels as other agents arrive or leave.
-- **Faces where you look:** each agent's crewmember replaces the program icon in its tab, its pane title, and its Agents row.
-- **Raise your flag:** a gallery of eight pirate crews, each with its animated ship and crew, chooses who sails a Space.
-- **One click to your work:** ships select existing workspaces, while characters use native agent navigation and writable terminal previews.
-- **Your terminals stay familiar:** keep native tab behavior, splits, resizing, pinning, sorting, workspace menus, and direct typing into worker and personal terminals.
-- **A calm sidebar:** Spaces and Agents each retain one scrolling list, with native machine identities and optional animation.
+- **155 characters, five poses each:** see idle, working, done, blocked, and error states in the crew's artwork.
+- **Eight pirate crews:** choose a ship and crew with **Raise a new flag…**.
+- **Faces where you work:** character portraits replace program icons in tabs and pane titles, with animated crewmembers in Agents.
+- **Native navigation:** ships select workspaces, and characters open agents through Herdr's usual navigation and writable previews.
+- **Familiar terminals:** keep native splits, resizing, pinning, sorting, workspace menus, and direct typing into every terminal.
 
-Firstmate owns delegation and work records.
-Grand Fleet supplies the artwork and sidebar presentation.
+Grand Fleet changes presentation, not delegation or work records.
 
 <details>
 <summary><strong>See Grand Fleet in Herdr</strong> · Native window screenshot</summary>
@@ -49,7 +46,10 @@ Grand Fleet supplies the artwork and sidebar presentation.
   <br>
   <sub>Click the screenshot to view it at full size.</sub>
   <br>
-  <sub>The scene is staged in an isolated test window, where each agent is a stand-in program that reports a status.</sub>
+  <sub>Staged with stand-in agents in an isolated test window.</sub>
+  <br>
+  <sub>This earlier capture still shows row status marks and the old done pose.
+  Current crewmember rows use only the five poses shown below.</sub>
 </p>
 
 </details>
@@ -101,8 +101,9 @@ See [Installation](docs/INSTALL.md) for custom destinations, ownership conflicts
 
 ## Meet the fleet
 
-Eight ships, eight captains, and 139 distinct named crewmembers accompany your agents.
-These animations use the same artwork shipped with the mod.
+Choose from eight ships and 155 crew characters: eight captains, 139 distinct named crewmembers, and eight generic Pirate variants.
+Every character has idle, working, done, blocked, and error poses.
+The animations below are shipped with the mod.
 
 <table>
   <tr>
@@ -184,15 +185,10 @@ Whitebeard and Roger share four historical characters, so their rosters overlap.
 
 The primary Firstmate defaults to the Straw Hats.
 Secondmates, delegated Firstmate coordinators, receive unused secondary crews before crews repeat.
-Your manual crew selections take priority over automatic discovery.
-When several captains share a Space, the primary and then the oldest terminal supply its ship.
-Firstmate places its workers in their own Space, which flies their captain's flag with crewmates from the captain's roster.
-Raising a flag on that Space changes the captain's crew.
-A captain you marked by hand has no Firstmate home label, so its workers' Space stays a separate fleet without a captain.
-Extra agents receive numbered generic Pirates after a crew's named artwork runs out.
-Your fleet can grow beyond the named roster.
-
-The crew strip reflects existing Space membership without moving terminals or assigning work.
+Manual crew selections take priority.
+A Space containing only one detected captain's workers shares that captain's flag, matched through Firstmate's existing `firstmate.home` terminal label.
+This changes artwork without moving terminals or assigning work.
+Extra agents receive numbered generic Pirates when the named roster runs out.
 
 ## Raise your flag
 
@@ -203,26 +199,25 @@ Right-click a Space with a ship and select **Raise a new flag…**.
   <img src="docs/images/raise-your-flag.png" width="765" alt="The Raise your flag dialog: eight crew cards, each with an animated ship over the sea, its captain and three crewmembers lined up in front, and the Straw Hat Pirates marked Flying now">
 </p>
 
-Each card shows the crew's ship riding the waves, with the captain and three crewmembers lined up in front.
-**Flying now** marks the current crew, and a count shows how many other fleets already fly each flag.
+Each card previews a ship, its captain, and three crewmembers.
+**Flying now** marks your current crew.
 Choose a card with the pointer or the arrow keys, then press **Set sail** or Enter.
 Press Esc to stay with your current crew.
 
-Setting sail changes the ship, its captain if one is aboard, and every crewmember in that Space together.
-A notification announces the departure, for example: *The Red Force sets sail. Red Hair Pirates now fly over Docs.*
+**Set sail** applies the crew and announces the change.
+For a Space following a detected captain, this changes the captain's crew too.
 
-A Space without a captain receives the least-used crew automatically.
-While a Firstmate captain is running, the Straw Hats stay **Reserved for the captain** in Spaces without one.
+An independent fleet receives the least-used eligible crew automatically.
+While a captain is active, an independent fleet's flag picker marks the Straw Hats **Reserved for the captain**.
 Right-clicking a captain's character in Agents also offers **Raise a new flag…** for that captain's crew.
 
 ## Read the crew
 
-Every agent wears its crewmember's face where you look for it.
-The tab and the pane title show a pixel portrait in place of the program icon.
-In Agents, the full animated crewmember takes the icon's place.
-
 <p align="center">
   <img src="docs/images/crew-faces.png" width="575" alt="Chopper's face on a Claude Code tab and in its Claude Code pane title, with sleeping Chopper sprites in two Agents rows">
+  <br>
+  <sub>Portrait placement in an earlier capture.
+  The right-side row status marks are no longer shown.</sub>
 </p>
 
 <p align="center">
@@ -246,13 +241,13 @@ Session labels remain visible, so you can identify agents even when characters r
 | <img src="mods/one-piece/assets/crew-chopper-idle.gif" width="64" height="64" alt="Chopper sleeping"> | <img src="mods/one-piece/assets/crew-chopper-working.gif" width="64" height="64" alt="Chopper walking"> | <img src="mods/one-piece/assets/crew-chopper-done.gif" width="64" height="64" alt="Chopper resting with his chin up"> | <img src="mods/one-piece/assets/crew-chopper-blocked.gif" width="64" height="64" alt="Chopper sitting with folded hooves"> | <img src="mods/one-piece/assets/crew-chopper-error.gif" width="64" height="64" alt="Chopper sitting with his hooves to his face"> |
 | Idle agents sleep | Working agents walk | Finished agents rest with their chin up | Blocked agents fold their arms | Agents with an error hold their face |
 
-**Done** is Herdr's word for an agent that finished while you were not looking.
-An agent with a pane turns idle once you look at it.
-A finished sub-agent without a pane keeps its done pose, because it has no pane to look at.
-The pose replaces Herdr's status mark at the end of the row, and its tooltip names the status.
+**Done** means the agent finished while you were not looking.
+It keeps its done pose until you view its terminal, then shows idle.
+A finished sub-agent without a terminal pane keeps its done pose.
+Crewmember rows have no separate right-side status marks: the pose shows the state, and its tooltip names it.
 Unavailable machines retain Herdr's connection handling without invented live activity.
 
-To stop animation, right-click a character and select **Pause animation**.
+To stop animation throughout the mod, right-click a character and select **Pause animation**.
 Use **Resume animation** in the same menu to restore motion.
 Choose **Crew lookup…** from a ship's menu, a character's menu, or a miniature's menu.
 The **Crew** button also offers the selected fleet's lookup and each agent's appearance menu.
@@ -297,8 +292,9 @@ It reads discovery files without executing them.
 It does not issue task commands or change Firstmate's work records.
 Native terminal controls retain Herdr's normal behavior, including ending processes when you close terminals.
 
-If discovery cannot read a captain's evidence, open **Crew**, choose the agent, and select **This agent runs Firstmate**.
-Manual designation applies to that terminal's identity and never transfers to a replacement session.
+If discovery misses Firstmate, open **Crew** and choose its agent.
+Select **This agent runs Firstmate**, available when the Space has no captain.
+Manual designation applies only to that terminal's identity.
 See the [recipe](RECIPE.md#built-from) for the complete integration details.
 
 ## Compatibility
@@ -311,16 +307,14 @@ These are tested versions, not a promise of support for every newer release.
 | Herdr app | 0.1.16 on macOS, using an isolated app identity |
 | Herdr Core, the component that runs terminal sessions | Official macOS ARM64 0.1.21 locally and Linux x86_64 0.1.20 remotely |
 | Firstmate | [Tested fork revision `653744e`](https://github.com/tiago-peixoto/firstmate/commit/653744ef90aad29eb4c65e3cbba59827b2d1690e), followed by recorded updates to `00311fe` |
-| Destination layout | Compatible Spaces, Agents, and Menu modules, with one Spaces slot and one Agents slot under the same parent |
+| Destination layout | Compatible Spaces, Agents, Menu, Tabs, Pane, and Workspace Chrome modules, with one Spaces slot and one Agents slot under the same parent |
 
-Ships, crews, and character artwork work without Firstmate.
-Complete Firstmate fleets need compatible support for `hc`, the Herdr Core command-line tool.
-The [Firstmate acceptance record](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16) identifies the tested integration.
-
-Recorded checks cover local and remote navigation, direct worker input, crew choices, app reopening, and remote reconnection in isolated sessions.
-The [generic fleet checks](docs/ACCEPTANCE.md#generic-fleets-in-the-isolated-lab-2026-11-17) cover Spaces without a captain.
-The [acceptance review](docs/ACCEPTANCE.md#current-release-verification-2026-11-17) records remaining limits, including the open native rendering blocker and the untested multiple-viewer recovery regression.
-See [Core build details](docs/INSTALL.md#core-build-used-for-current-recovery-verification) for the tested executables and recovery limitations.
+Complete Firstmate fleets need compatible `hc` support, as recorded in the [Firstmate acceptance record](docs/THIN-MOD.md#fork-main-acceptance-2026-11-16).
+Recorded checks cover local and remote navigation, direct worker input, crew choices, reopening, and reconnection in isolated sessions.
+Later [acceptance records](docs/ACCEPTANCE.md) cover generic fleets and machine islands.
+These historical checks do not establish full acceptance of the current release.
+The [release verification record](docs/ACCEPTANCE.md#current-release-verification-2026-11-17) documents native text loss after pane zoom and an untested multiple-viewer recovery regression.
+See [Core build details](docs/INSTALL.md#core-build-used-for-current-recovery-verification) for recovery limitations.
 
 ### Update or remove
 
@@ -370,18 +364,14 @@ Complete native interaction checks in the isolated Grand Fleet Lab as described 
 | Guide | What you will find |
 | --- | --- |
 | [Installation](docs/INSTALL.md) | Setup, refresh, ownership, removal, and recovery |
-| [Agent recipe](RECIPE.md) | Interface, permissions, and installation acceptance checks |
-| [Vision](VISION.md) | Approved behavior and Firstmate's governing role |
-| [Thin presentation design](docs/THIN-MOD.md) | Current sidebar contract and integration evidence |
 | [Acceptance review](docs/ACCEPTANCE.md) | Verified scenarios and remaining release limits |
 | [Native verification](docs/NATIVE-INTEGRATION.md) | Detailed current and historical interaction checks |
-| [Crew catalog](docs/CREW-CATALOG.md) | Complete named rosters, historical companions, and canonical sources |
+| [Crew catalog](docs/CREW-CATALOG.md) | Named rosters, historical companions, and canonical sources |
 | [Artwork inventory](docs/ARTWORK.md) | Original artwork sources and historical references |
 
 The [browser prototype](prototype/index.html) preserves an earlier design with simulated terminals and replies.
 Its behavior is historical and is superseded by the current vision.
 See the [prototype guide](docs/PROTOTYPE.md) for its editable sources and rebuild script.
-Review boards and author verdict transcripts stay outside this repository.
 
 ## Credits
 
