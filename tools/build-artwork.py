@@ -208,6 +208,4 @@ def portrait(sprite, output, side=28, origin=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=OUTPUT)
-    parser.add_argument('--previews-only', action='store_true', help='Extract lookup sheets from existing GIFs without rebuilding artwork')
-    args = parser.parse_args()
-    (previews if args.previews_only else build)(args.output)
+    build(parser.parse_args().output)

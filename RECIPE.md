@@ -67,7 +67,6 @@ The native module reads `agents`, `terminals`, `machines`, `spaces`, `layout`, a
 It stores appearance and captain choices through `shared` and `setShared`.
 It uses `openOverlay` and `closeOverlay` for native menus and the centered Crew lookup dialog.
 `lookup.js` validates assignments against the current snapshot, and `lookup-view.js` draws the dialog.
-`tools/build-artwork.py --previews-only` extracts held-frame sheets from existing GIFs without rebuilding artwork.
 Navigation uses native `agent.focus`, `space.select`, and `space.move` commands.
 The retired view fallback can use native `terminal.peek`.
 Inherited Spaces and Agents controls retain their shipped behavior.

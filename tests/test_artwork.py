@@ -162,17 +162,6 @@ class ArtworkTests(unittest.TestCase):
                         doubled = b''.join(b''.join(frame[(y*64+x)*4:(y*64+x+1)*4]*2 for x in range(64))*2 for y in range(64))
                         self.assertEqual(cell, doubled)
 
-    def test_previews_only_preserves_existing_artwork_and_rebuilds_identically(self):
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory)
-            originals = {f'crew-chopper-{state}.gif': (ASSETS / f'crew-chopper-{state}.gif').read_bytes() for state in STATES}
-            for name, content in originals.items():
-                (output / name).write_bytes(content)
-            for _ in range(2):
-                subprocess.run([sys.executable, str(SCRIPT), '--previews-only', '--output', directory], check=True)
-                self.assertEqual((output / 'lookup/crew-chopper.png').read_bytes(), (ASSETS / 'lookup/crew-chopper.png').read_bytes())
-                self.assertEqual({name: (output / name).read_bytes() for name in originals}, originals)
-
     def test_gestures_keep_the_approved_pixels(self):
         sheets = sorted((ROOT / 'prototype/crew-artwork').glob('*-gestures-v1.png'))
         self.assertEqual(len(sheets), 155)

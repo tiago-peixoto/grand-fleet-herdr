@@ -97,7 +97,6 @@ This prevents transparent regions from retaining previous poses.
 ## Crew lookup frames
 
 `tools/build-artwork.py` also writes `assets/lookup/crew-<name>.png` from the exported GIFs.
-Run `python3 tools/build-artwork.py --previews-only` to extract these sheets without rebuilding any existing artwork.
 Each sheet has four columns and five rows ordered Idle, Working, Done, Blocked, and Error.
 The cells are 128 × 128 pixels, made by exact two-by-two duplication of each decoded 64-pixel GIF frame.
 Herdr 0.1.16's native 64-to-128 scaling softened the held frames in the isolated Linux check.
@@ -107,7 +106,7 @@ Playback still loads the existing GIFs with their original timing and native sca
 Preview controls do not introduce animation timers.
 
 Tests compare all 3,100 extracted cells with independently doubled, decoded GIF frames, including transparency.
-The previews-only test checks deterministic rebuilding and byte-identical input GIFs.
+The full build test checks that a second build writes byte-identical sheets.
 The existing artwork remains unchanged.
 Native sampling at other zoom factors or display densities remains a separate verification requirement.
 
