@@ -202,3 +202,30 @@ Canvas sizes, frame counts, playback timing, crew membership, and assignment beh
 The comparison board includes all changed characters and ships at display size and enlarged.
 That board and its review images remain outside this repository.
 Native Herdr playback and display-density behavior still require an integration check.
+
+## Crew gestures, 2026-11-19
+
+The captain approved blocked, error, and done poses for all 155 characters on a review page kept outside this repository.
+Blocked sits facing the viewer with folded arms, error sits facing left with a hand to the face, and done faces right, relaxed and triumphant.
+Each character's approved sheet is `prototype/crew-artwork/<name>-gestures-v1.png`.
+Its bytes are the PNG the review page embeds, unchanged.
+Oden, Toki, young Inuarashi, and young Nekomamushi have one sheet each, shared by the Whitebeard and Roger rosters.
+
+Every gesture sheet is 256 × 256 pixels: four columns and four rows of 64-pixel cells.
+The rows are blocked, error, done, and idle.
+The poses are already drawn on the shipped 64-pixel canvas, on the same baseline, so the exporter cuts each cell without scaling.
+Blocked and error frames last 700 milliseconds, and done frames last 850 milliseconds, matching sitting and sleeping.
+The exporter writes `crew-<name>-blocked`, `crew-<name>-error`, and `crew-<name>-done` from these sheets.
+
+The study sheet's sitting row is no longer exported.
+It still sets the character's shared scale, so idle and working stay byte-identical.
+The approved idle row matches the shipped idle GIF frame for frame, so idle keeps its study-sheet export.
+
+Each static PNG is the approved first cell, pixel for pixel.
+Each GIF keeps the approved transparency exactly, but a GIF frame holds at most 256 colors.
+In the first frames of the 465 new GIFs, palette conversion changes opaque colors by 1.24 levels out of 255 on average, and by more than 8 levels on 0.72% of pixels.
+The first frames of the existing walking GIFs differ from their PNGs by 2.44 levels on average, so the new loss is smaller than the old.
+
+`test_gestures_keep_the_approved_pixels` decodes every sheet whole and compares its cells with the exported files.
+It checks frame delays, disposal, and transparency for all four rows, every color of the idle row, and each new PNG exactly.
+The baseline and Chopper scale tests now cover all five states.

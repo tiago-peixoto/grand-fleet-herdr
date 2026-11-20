@@ -241,13 +241,15 @@ In Agents, the full animated crewmember takes the icon's place.
 Character poses follow Herdr's actual agent status.
 Session labels remain visible, so you can identify agents even when characters repeat.
 
-| Resting | Working | Needs you |
-| :---: | :---: | :---: |
-| <img src="mods/one-piece/assets/crew-chopper-idle.gif" width="64" height="64" alt="Chopper sleeping"> | <img src="mods/one-piece/assets/crew-chopper-working.gif" width="64" height="64" alt="Chopper walking"> | <img src="mods/one-piece/assets/crew-chopper-blocked.gif" width="64" height="64" alt="Chopper sitting"> |
-| Idle agents sleep | Working agents walk | Blocked agents sit beside Herdr's attention indication |
+| Idle | Working | Done | Needs you | Error |
+| :---: | :---: | :---: | :---: | :---: |
+| <img src="mods/one-piece/assets/crew-chopper-idle.gif" width="64" height="64" alt="Chopper sleeping"> | <img src="mods/one-piece/assets/crew-chopper-working.gif" width="64" height="64" alt="Chopper walking"> | <img src="mods/one-piece/assets/crew-chopper-done.gif" width="64" height="64" alt="Chopper resting with his chin up"> | <img src="mods/one-piece/assets/crew-chopper-blocked.gif" width="64" height="64" alt="Chopper sitting with folded hooves"> | <img src="mods/one-piece/assets/crew-chopper-error.gif" width="64" height="64" alt="Chopper sitting with his hooves to his face"> |
+| Idle agents sleep | Working agents walk | Finished agents rest with their chin up | Blocked agents fold their arms | Agents with an error hold their face |
 
-**Done** agents rest beside Herdr's completion dot.
-A resting pose alone does not mean work is complete.
+**Done** is Herdr's word for an agent that finished while you were not looking.
+An agent with a pane turns idle once you look at it.
+A finished sub-agent without a pane keeps its done pose, because it has no pane to look at.
+The pose replaces Herdr's status mark at the end of the row, and its tooltip names the status.
 Unavailable machines retain Herdr's connection handling without invented live activity.
 
 To stop animation, right-click a character and select **Pause animation**.

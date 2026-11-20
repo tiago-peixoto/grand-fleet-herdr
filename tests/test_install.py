@@ -42,7 +42,8 @@ class InstallTests(unittest.TestCase):
     def upstream(self, home):
         self.put(home, 'mods/agents/main.js',
                  'import { View } from "herdr";\nexport default class Agents extends View {\n'
-                 '  render() { return [icon(a.program, 16, t.foreground), icon(k.program, 14, t.foreground)]; }\n'
+                 '  render() { return [icon(a.program, 16, t.foreground), icon(k.program, 14, t.foreground),\n'
+                 '    row.child(this.status(t, a, byPriority && !isPinned)), sub.child(this.status(t, { status: st }, compact))]; }\n'
                  + ''.join('  ' + name + '() {}\n' for name in ('status', 'subRow', 'tree'))
                  + '  init() { this.folded = new Set(); }\n}\n')
         self.put(home, 'mods/spaces/main.js',

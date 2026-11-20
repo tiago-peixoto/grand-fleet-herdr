@@ -16,7 +16,12 @@ export default class Agents extends View {
     const a = {program: 'A'}, k = {program: 'K'}, t = {foreground: '#fff'};
     return [icon(a.program, 16, t.foreground), icon(k.program, 14, t.foreground)];
   }
-  status() {}
+  rows() {
+    const a = {address: 'a'}, k = {address: 'k'}, t = {}, st = 'idle', byPriority = true, isPinned = false, compact = true;
+    const row = {marks: [], when(on, add) { return on ? add(this) : this; }, child(mark) { this.marks.push(mark); return this; }};
+    return row.child(this.status(t, a, byPriority && !isPinned)).child(this.status(t, { status: st }, compact)).marks;
+  }
+  status(t, a) { return a.address ?? a.status; }
   subRow() {}
   tree() {}
   newHerdrFeature() {}
@@ -105,7 +110,7 @@ class CompatibilityTests(unittest.TestCase):
         self.assertEqual(result['colors']['chrome'], '#14272d')
 
 
-def run_class(source, name, subclass):
+def run_class(source, name, subclass, method='render'):
     script = (
         "const vm = require('node:vm');\n"
         "const source = require('node:fs').readFileSync(0, 'utf8').replace(/^import .*;\\n/gm, '')"
@@ -113,7 +118,7 @@ def run_class(source, name, subclass):
         "const context = {View: class {}};\n"
         "vm.runInNewContext(source, context);\n"
         f"const Custom = {subclass};\n"
-        f"process.stdout.write(JSON.stringify([new context.{name}().render(), new Custom().render()]));\n")
+        f"process.stdout.write(JSON.stringify([new context.{name}().{method}(), new Custom().{method}()]));\n")
     result = subprocess.run(['node', '-e', script], input=source, capture_output=True, check=True)
     return json.loads(result.stdout)
 
@@ -135,6 +140,16 @@ class PortraitCompatibilityTests(unittest.TestCase):
                                    'class extends context.Agents { icon(agent, size) { return `portrait-${agent.program}-${size}`; } }')
         self.assertEqual(native, [['A', 16], ['K', 14]])
         self.assertEqual(custom, ['portrait-A-16', 'portrait-K-14'])
+
+    def test_agent_and_subagent_rows_can_leave_out_their_status_mark(self):
+        generated = compat.generate(SOURCE, self.LAYOUT, SPACES_SOURCE)
+        native, custom = run_class(generated['mods/one-piece/herdr-agents.js'], 'Agents',
+                                   'class extends context.Agents { showsStatus(agent) { return agent.address !== "a"; } }', 'rows')
+        self.assertEqual(native, ['a', 'idle'])
+        self.assertEqual(custom, ['idle'])
+        for changed in ('{ status: st }, compact', 'byPriority && !isPinned'):
+            with self.subTest(changed=changed), self.assertRaises(ValueError):
+                compat.generate(SOURCE.replace(changed, 'true'), self.LAYOUT, SPACES_SOURCE)
 
     def test_tab_and_pane_icons_can_be_replaced(self):
         files = compat.generate_portraits(self.TABS, self.PANE)

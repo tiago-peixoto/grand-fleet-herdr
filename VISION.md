@@ -79,8 +79,10 @@ Vendor independence does not require identical interfaces or a portable display 
 ## Artwork conveys state without creating work
 
 Custom One Piece pixel artwork provides one consistent visual language.
-Idle workers sleep, working workers walk, and workers needing attention sit.
+Idle workers sleep, working workers walk, and workers that finished while the captain looked away rest with their chin up.
+A worker needing attention sits facing the captain with folded arms, and a worker that reports an error sits with a hand to its face.
 A sitting worker indicates that its terminal needs the captain's attention.
+The pose carries the status, so a crewmember's row shows no separate status mark.
 Each character retains Herdr's actual session label beside it.
 Character assignments remain stable for surviving workers as other workers enter or leave.
 Sunny and Luffy establish the initial crew, with Chopper, Franky, and numbered generic Pirates supporting workers.

@@ -89,15 +89,36 @@ def export(sheet, boxes, size, limit, animations, output, flag=False):
                '-geometry', f'+{dx}+{dy}', '-compose', 'Over', '-composite',
                '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{frame}')
             frames.append(frame)
-        for name, order, delays in animations:
-            (output / f'{name}.png').write_bytes(frames[order[0]].read_bytes())
-            args = []
-            for index, delay in zip(order, delays, strict=True):
-                args += ['(', str(frames[index]), '-set', 'delay', str(delay), ')']
-            # GIF has binary alpha; PNG keeps the source's partial transparency.
-            im(*args, '-channel', 'A', '-threshold', '50%', '+channel',
-               '-background', 'none', '-set', 'dispose', 'Background', '+dither',
-               '-loop', '0', '-strip', output / f'{name}.gif')
+        animate(frames, animations, output)
+
+
+def animate(frames, animations, output):
+    for name, order, delays in animations:
+        (output / f'{name}.png').write_bytes(frames[order[0]].read_bytes())
+        args = []
+        for index, delay in zip(order, delays, strict=True):
+            args += ['(', str(frames[index]), '-set', 'delay', str(delay), ')']
+        # GIF has binary alpha; PNG keeps the source's partial transparency.
+        im(*args, '-channel', 'A', '-threshold', '50%', '+channel',
+           '-background', 'none', '-set', 'dispose', 'Background', '+dither',
+           '-loop', '0', '-strip', output / f'{name}.gif')
+
+
+def gestures(sheet, name, output):
+    # The approved sheets are already drawn on the 64 pixel canvas, so cells are cut without scaling.
+    if im('identify', '-format', '%w %h', sheet).split() != [b'256', b'256']:
+        raise ValueError(f'Expected a 256x256 gesture sheet: {sheet}')
+    with tempfile.TemporaryDirectory() as directory:
+        frames = []
+        for index in range(16):
+            frame = Path(directory) / f'{index}.png'
+            im(sheet, '+repage', '-crop', f'64x64+{index % 4 * 64}+{index // 4 * 64}', '+repage',
+               '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{frame}')
+            frames.append(frame)
+        # The fourth row repeats the approved idle loop, which the study sheet already exports.
+        animate(frames, [(f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
+                         for row, (state, delay) in enumerate([('blocked', 70), ('error', 70), ('done', 85)])],
+                output)
 
 
 def build(output):
@@ -131,14 +152,16 @@ def build(output):
                         'polar-tang', 'moby-dick', 'oro-jackson', 'victoria-punk')
         boxes = extract_boxes(sheet, 1) if ship else extract_boxes(
             sheet, 3, split=row_gaps(sheet, 3))
+        # The sitting row still sets the character's shared scale, but its approved gesture sheet replaces it.
         animations = [(f'crew-{name}', range(4), [52]*4)] if ship else [
             (f'crew-{name}-{state}', range(row*4, row*4+4), [delay]*4)
-            for row, (state, delay) in enumerate([('idle', 85), ('working', 22), ('blocked', 70)])]
+            for row, (state, delay) in enumerate([('idle', 85), ('working', 22)])]
         limit = 116 if ship else 44 if name == 'chopper' else 56
         export(sheet, boxes, 128 if ship else 64, limit, animations, output)
         if not ship:
             portrait(output / f'crew-{name}-working.png', output / f'portrait-crew-{name}.png',
                      origin=PORTRAIT_ORIGINS.get(name))
+            gestures(sheet.with_name(f'{name}-gestures-v1.png'), name, output)
     islands(ROOT / 'prototype/flow/assets/machine-islands-v1.png', output)
 
 
