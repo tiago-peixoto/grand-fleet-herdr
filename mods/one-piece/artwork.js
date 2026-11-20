@@ -10,7 +10,7 @@ export const crews = {
   roger:{name:'Roger Pirates',ship:'crew-oro-jackson',title:'Oro Jackson',captain:'roger',workers:['rayleigh','gaban','crocus','oden','seagull-guns-nozdon','sunbell','spencer','moon-isaac-jr','donquino','millet-pine','rowing','erio','petermoo','jacksonbanner','blumarine','max-marx','taro','doringo','ganryu','cb-gallant','mr-momora','yui','rangram','mugren','bankuro','yamon','young-shanks','young-buggy','young-inuarashi','young-nekomamushi','toki']},
   kid:{name:'Kid Pirates',ship:'crew-victoria-punk',title:'Victoria Punk',captain:'kid',workers:['killer','heat','wire','gig','dive','uk','pomp','bubblegum','reck','house','boogie','mosh','hip','papas','jaguar','quincy','moai','hop','emma','compo','disc-j']}
 };
-const pirateColors=['blue','amber','green','violet','red','cyan','pink','silver'];
+export const pirateColors=['blue','amber','green','violet','red','cyan','pink','silver'];
 export const crewOf = coordinator => crews[coordinator?.crew]??crews.strawhat;
 
 export function releaseCrew(characters,terminals,machines) {
@@ -47,11 +47,20 @@ export function assignCrew(workers,previous,coordinator,reserved=[]) {
   return assigned;
 }
 
-// Whoever held the chosen character takes the one given up, so a crew never shows two of the same.
+export function characterHolders(characters, owner, art) {
+  return Object.keys(characters).filter(key => {
+    const current = characters[key];
+    return (current.owner === owner ? current : current.history?.[owner])?.art === art;
+  });
+}
+
 export function chooseCharacter(characters, key, name) {
   const mine = characters[key], art = `crew-${name}`;
-  if (!mine || mine.art === art) return characters;
-  const holder = Object.keys(characters).find(other => characters[other].owner === mine.owner && characters[other].art === art);
+  if (!mine || !crews[mine.owner?.split(':').pop()]?.workers.includes(name) || mine.art === art) return characters;
+  const holders = characterHolders(characters, mine.owner, art).filter(other => other !== key);
+  // A saved character belongs to its returning mate, not to a swap in that mate's current fleet.
+  if (holders.length > 1 || holders.some(holder => characters[holder].owner !== mine.owner)) return characters;
+  const holder = holders[0];
   return {...characters, [key]:{...mine, art, number:null},
     ...(holder ? {[holder]:{...characters[holder], art:mine.art, number:mine.number}} : {})};
 }

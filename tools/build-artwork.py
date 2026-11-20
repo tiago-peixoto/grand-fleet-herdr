@@ -163,6 +163,22 @@ def build(output):
                      origin=PORTRAIT_ORIGINS.get(name))
             gestures(sheet.with_name(f'{name}-gestures-v1.png'), name, output)
     islands(ROOT / 'prototype/flow/assets/machine-islands-v1.png', output)
+    previews(output)
+
+
+def previews(output):
+    destination = output / 'lookup'
+    destination.mkdir(parents=True, exist_ok=True)
+    for idle in sorted(output.glob('crew-*-idle.gif')):
+        name = idle.name.removesuffix('-idle.gif')
+        args = []
+        for state in ('idle', 'working', 'done', 'blocked', 'error'):
+            gif = output / f'{name}-{state}.gif'
+            if im('identify', '-format', '%w %h\\n', gif).splitlines() != [b'64 64'] * 4:
+                raise ValueError(f'Expected four 64x64 frames: {gif}')
+            args += ['(', gif, '-coalesce', '+append', ')']
+        # Herdr smooths 64-to-128 image scaling, so held frames carry exact two-by-two source pixels.
+        im(*args, '-append', '-sample', '512x640!', '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{destination}/{name}.png')
 
 
 def islands(sheet, output):

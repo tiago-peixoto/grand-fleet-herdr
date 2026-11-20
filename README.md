@@ -254,9 +254,29 @@ Unavailable machines retain Herdr's connection handling without invented live ac
 
 To stop animation, right-click a character and select **Pause animation**.
 Use **Resume animation** in the same menu to restore motion.
-The same menu lists the members of the agent's crew, so you can choose which character that agent shows.
-If another agent in that crew already shows the chosen character, the two swap.
-These controls change appearance only.
+Choose **Crew lookup…** from a ship's menu, a character's menu, or a miniature's menu.
+The **Crew** button also offers the selected fleet's lookup and each agent's appearance menu.
+The centered dialog has fleet tabs above character tabs.
+Idle, Working, Done, Blocked, and Error each have a 128-pixel preview and a 28-pixel sidebar preview.
+Choose **1** through **4** to hold a frame across all five states, or **Play loops** to restore animation.
+The lookup initially follows your animation preference without changing it.
+
+A ship opens its catalog for browsing.
+A mate opens on its current character.
+Choose a named crewmate and review the resulting assignment before applying it.
+If another active mate in that roster holds the character, **Confirm named swap** shows both names and both resulting assignments.
+One confirmation applies both assignments together.
+A returning or unavailable mate keeps its reserved character until the ordinary assignment cleanup releases it.
+Switching fleet tabs browses that fleet without moving your mate.
+Use **Inspect** to choose for a holder in that fleet instead.
+Captain artwork stays reserved for Firstmate, including agents explicitly marked as running Firstmate.
+Use **Raise a new flag…** to change a captain's artwork.
+
+Left, Right, Home, and End select tabs within the focused tab bar.
+**Escape** or **Close** discards an unconfirmed choice.
+These controls change appearance only, never terminal status or workspace membership.
+Apply rechecks both identities, their current roster, and the expected exchange.
+If the exchange changed, review the revised result before confirming again.
 
 ## What the mod accesses
 

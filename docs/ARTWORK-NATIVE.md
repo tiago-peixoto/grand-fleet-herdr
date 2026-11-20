@@ -94,6 +94,22 @@ Every prototype duration converts exactly to those units.
 The GIF files loop indefinitely and clear each full frame before drawing the next through `Background` disposal.
 This prevents transparent regions from retaining previous poses.
 
+## Crew lookup frames
+
+`tools/build-artwork.py` also writes `assets/lookup/crew-<name>.png` from the exported GIFs.
+Each sheet has four columns and five rows ordered Idle, Working, Done, Blocked, and Error.
+The cells are 128 × 128 pixels, made by exact two-by-two duplication of each decoded 64-pixel GIF frame.
+Herdr 0.1.16's native 64-to-128 scaling softened the held frames in the isolated Linux check.
+Exporting at the displayed size avoids that interpolation for held frames at zoom 1 and display scale 1.
+The dialog clips the chosen cell without changing any source image.
+Playback still loads the existing GIFs with their original timing and native scaling.
+Preview controls do not introduce animation timers.
+
+Tests compare all 3,100 extracted cells with independently doubled, decoded GIF frames, including transparency.
+The full build test checks that a second build writes byte-identical sheets.
+The existing artwork remains unchanged.
+Native sampling at other zoom factors or display densities remains a separate verification requirement.
+
 ## Native use and limits
 
 The native mod can load these GIF files through `image(path)` and use the PNG files when motion is disabled.

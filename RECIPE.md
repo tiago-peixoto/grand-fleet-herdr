@@ -33,6 +33,15 @@ Clicking a ship selects its existing Space.
 Clicking a portrait focuses that agent's existing terminal.
 Right-click any Space with a ship to choose a ship and crew directly below Rename.
 Right-click a character or use Crew for appearance controls and manual captain designation.
+Crew lookup opens from a ship, a mate, or a miniature as a centered dialog.
+Fleet tabs sit above character tabs, with Left, Right, Home, and End navigation in each bar.
+Five equal 128-pixel tiles show Idle, Working, Done, Blocked, and Error with 28-pixel sidebar previews.
+Frame buttons hold frames 1 through 4, and Play loops uses the original GIF timing.
+A mate may apply a named character from its effective roster, but captain artwork stays exclusive to Firstmate.
+A named swap shows both mates and both resulting assignments before one confirmation saves both.
+Returning mates keep their saved characters reserved, and Apply rejects a changed or unavailable target or holder.
+Switching fleets only browses their catalogs until Inspect explicitly selects a holder.
+Escape discards an unconfirmed selection without changing assignments, live status, or workspace membership.
 A primary Firstmate defaults to Straw Hats.
 Secondmates receive unused secondary crews before crews repeat.
 A Space without a captain receives the least-used crew, and Straw Hats only while no captain is live.
@@ -56,7 +65,8 @@ It preserves ordinary settings and shortcuts.
 
 The native module reads `agents`, `terminals`, `machines`, `spaces`, `layout`, and `theme` from Herdr.
 It stores appearance and captain choices through `shared` and `setShared`.
-It uses `openOverlay` and `closeOverlay` for native menus.
+It uses `openOverlay` and `closeOverlay` for native menus and the centered Crew lookup dialog.
+`lookup.js` validates assignments against the current snapshot, and `lookup-view.js` draws the dialog.
 Navigation uses native `agent.focus`, `space.select`, and `space.move` commands.
 The retired view fallback can use native `terminal.peek`.
 Inherited Spaces and Agents controls retain their shipped behavior.
@@ -110,6 +120,8 @@ This is an unofficial fan project and does not grant rights to One Piece charact
 - Clicking a ship selects its Space, while clicking a portrait reaches that character's existing writable terminal.
 - A real Firstmate is detected without manual registration, and secondary captains receive distinct default crews.
 - User crew choices survive discovery and app reopening.
+- Crew lookup shows five 128-pixel states and four selectable frames for every catalog character.
+- A named swap updates both displayed assignments together and cannot take a returning mate's reserved character.
 - Idle, working, done, blocked, and error poses match the actual native statuses, and crewmember rows show no status mark.
 - App reopening and remote transport reconnection preserve running terminal identities and accept fresh typed input.
 - Ordinary personal terminals, native menus, Settings, and Add machine remain available.
