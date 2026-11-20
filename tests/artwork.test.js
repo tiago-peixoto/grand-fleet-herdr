@@ -261,6 +261,17 @@ test('choosing a held character swaps it with its holder and survives reassignme
   assert.deepEqual([promoted['p9:12'].number,promoted['p0:12'].number,promoted['p0:12'].art],[null,1,'crew-pirate-blue']);
 });
 
+test('a manual pick cannot take a returning mate\'s reserved character',async()=>{
+  const {assignCrew,chooseCharacter}=await import('../mods/one-piece/artwork.js');
+  const a=terminal('t1'), b=terminal('t2');
+  const home={terminal:'space:x',created:0,crew:'strawhat'}, away={...home,terminal:'space:y'};
+  let assigned=assignCrew([a,b],{},home);
+  assigned=assignCrew([b],assigned,away);
+  assigned=chooseCharacter(assigned,'t1:12','franky');
+  assigned=assignCrew([b],assigned,home);
+  assert.deepEqual([assigned['t1:12'].art,assigned['t2:12'].art],['crew-chopper','crew-franky']);
+});
+
 test('every character a captain can choose has artwork',async()=>{
   const {crews}=await import('../mods/one-piece/artwork.js');
   for(const crew of Object.values(crews)) for(const name of crew.workers)

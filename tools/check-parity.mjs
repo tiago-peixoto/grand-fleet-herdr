@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { discoverCaptain } from '../mods/one-piece/discovery.js';
 import * as fleet from '../mods/one-piece/artwork.js';
+import * as lookup from '../mods/one-piece/lookup.js';
 import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from '../mods/one-piece/fleet.js';
 const home=process.argv[2];
 if(!home) throw new Error('Usage: node tools/check-parity.mjs HERDR_APP_HOME');
@@ -15,6 +16,7 @@ const generated=name=>readFileSync(resolve(home,`mods/one-piece/${name}`),'utf8'
 const nativeMenu=generated('herdr-menu.js'), hookedAgents=generated('herdr-agents.js');
 const nativeTabs=generated('herdr-tabs.js'), nativePane=generated('herdr-pane.js'), nativeChrome=generated('herdr-chrome.js');
 const adapter=readFileSync(new URL('../mods/one-piece/main.js',import.meta.url),'utf8');
+const lookupView=readFileSync(new URL('../mods/one-piece/lookup-view.js',import.meta.url),'utf8');
 const compile=(source,name)=>'(()=>{'+source.replace(/^import .*;\n/gm,'').replace(/export default class \w+/,`globalThis.${name} = class ${name}`).replace(/export function (\w+)/g,'globalThis.$1 = function $1')+'})();';
 
 function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='ready') {
@@ -31,6 +33,10 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
         if(key==='bg') target.background=args[0];
         if(key==='border') target.ring=true;
         if(key==='w') target.width=args[0];
+        if(key==='h') target.height=args[0];
+        if(key==='left') target.leftOffset=args[0];
+        if(key==='top') target.topOffset=args[0];
+        if(key==='selected') target.selected=args[0];
         if(key==='overflow_y_scrollbar') target.scrolls=true;
         if(key==='flex_1') target.grows=true;
         if(key==='track_focus') target.focusHandle=args[0];
@@ -67,7 +73,7 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   const agents=[all[1],all[3],all[4],all[7]].map((t,i)=>({...t,pane:`p${i}`,space:i===2?'remote/s':'s',space_name:'project',tab:i===2?'remote/tab':'tab',seq:i,pinned:false}));
   const panes=agents.map(a=>({terminal:a.address,pane:a.pane,tab:a.tab,program}));
   const cx={spawn(){},notify(){},stop_propagation(){},timer:{every(){},after(){}},focus_handle:()=>({focus:()=>calls.push(['focus'])})};
-  const context={...fleet,discoverCaptain,captainSpaces,crewmembers,followedCaptains,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
+  const context={...fleet,...lookup,discoverCaptain,captainSpaces,crewmembers,followedCaptains,genericFleets,managedCrew,machineOf,View:class{},ScrollHandle:{new:()=>({scroll_to_item(){}})},Button:{new:id=>element().id(id)},div:element,image:path=>{const el=element();el.path=path;return el;},svg:path=>{const el=element();el.path=path;return el;},h_flex:element,v_flex:element,
     keys:()=>[],machines:()=>[{name:null,layout:'ready'},{name:'remote',layout:remoteLayout}],agents:()=>agents,terminals:()=>all.map(t=>({...t})),panes:()=>panes,focused:()=>({agent:'t1'}),
     spaces:()=>[{id:'s',name:'project',status:'blocked',active:true,tabs:[{id:'tab',name:'project',active:true}]},{id:'personal',name:'Personal',tabs:[]},{id:'remote/s',machine:'remote',name:'Remote project',tabs:[{id:'remote/tab',name:'remote'}]}],
     layout:()=>({id:'sidebar',size:{px:width}}),window:()=>({platform:'macos'}),props:()=>overlayProps,
@@ -79,7 +85,10 @@ function host(decorated,sort='priority',width=310,overlayProps={},remoteLayout='
   runInNewContext(compile(decorated?hookedAgents:native,'Agents'),context);
   runInNewContext(compile(decorated?generated('herdr-spaces.js'):nativeSpaces,'Spaces'),context);
   if(decorated) for (const [source,name] of [[nativeMenu,'Menu'],[nativeTabs,'Tabs'],[nativePane,'Pane'],[nativeChrome,'Chrome']]) runInNewContext(compile(source,name),context);
-  if(decorated) runInNewContext(compile(adapter,'OnePieceAgents'),context);
+  if(decorated) {
+    runInNewContext(compile(lookupView,'CrewLookup'),context);
+    runInNewContext(compile(adapter,'OnePieceAgents'),context);
+  }
   const controller=new context[decorated?'OnePieceAgents':overlayProps.region==='spaces'?'Spaces':'Agents']();
   const discover=controller.discover;
   if(discover) controller.discover=()=>{};
@@ -165,6 +174,9 @@ for (const width of [310, 120]) {
         assert.equal(stopped, 3, 'portrait events must not select or drag the containing Space');
         assert.equal(ships.calls.at(-1)[0], 'agent.focus');
         assert.equal(ships.calls.at(-1)[1].terminal, terminal);
+        portrait.right(null, cx);
+        assert.equal(stopped, 4, 'a miniature right-click does not reach the ship');
+        assert.equal(ships.calls.at(-1)[1].props.appearance, key);
       }
     }
 
@@ -193,7 +205,7 @@ for (const width of [310, 120]) {
   const row=descendants(decorated.nodes.get('ag-t6'));
   assert.equal(row.filter(n=>n.path?.includes('crew-')).length,1,'no second crewmember at the end of the row');
   assert.deepEqual(marks(decorated.nodes.get('ag-t6')),[],'the done pose replaces the native done mark');
-  row.find(n=>n.kids.includes(icon)).right();
+  row.find(n=>n.kids.includes(icon)).right(null,decorated.cx);
   assert.equal(JSON.stringify(decorated.calls.at(-1)[1].props),JSON.stringify({appearance:'t6:7'}),'right-clicking the crewmember opens its appearance menu');
   const sub=descendants(decorated.nodes.get('sub-t2')).find(n=>n.path?.includes('crew-'));
   assert.ok(sub.path.endsWith('-blocked.gif')&&sub.width===26,'a subagent row shows its crewmember in the icon slot');
@@ -230,16 +242,65 @@ for (const width of [310, 120]) {
   assert.equal(descendants(view.nodes.get('agent-fold-t6')).find(n=>n.path).path,'mods/one-piece/assets/crew-franky-idle.gif','a finished crewmember someone has seen sleeps in its Agents row');
 }
 {
-  const view=host(true,'grouped',310,{appearance:'t3:3'});
+  const menu=host(true,'grouped',310,{appearance:'t3:3'});
+  menu.nodes.get('crew-lookup').click();
+  assert.equal(JSON.stringify(menu.calls.at(-1)[1].props),JSON.stringify({lookup:{target:'t3:3'}}));
+  assert.equal(menu.calls.at(-1)[1].kind,'dialog');
+  const view=host(true,'grouped',310,{lookup:{target:'t3:3'},overlay:'lookup'});
   const owner='space:s:0:strawhat';
-  view.state.set('one-piece.art',{crews:{},characters:{'t3:3':{art:'crew-chopper',number:null,owner},'t6:7':{art:'crew-franky',number:null,owner}},paused:false});
+  view.state.set('one-piece.art',{crews:{},spaceCrews:{s:'strawhat'},characters:{'t3:3':{art:'crew-chopper',number:null,owner},'t6:7':{art:'crew-franky',number:null,owner}},paused:false});
   view.state.delete('one-piece.captains');
-  view.nodes.clear();
-  view.controller.render(view.cx);
-  assert.equal(view.nodes.get('character-chopper').background,'#selected','the menu marks the current character');
-  view.nodes.get('character-franky').click({},view.cx);
+  const render=()=>{view.nodes.clear();view.root=view.controller.render(view.cx);};
+  render();
+  assert.equal(view.nodes.get('character-tabs-chopper').selected,true,'the lookup selects the current character');
+  assert.equal(scrolls(view),1,'the lookup has one vertical scroll');
+  assert.equal(descendants(view.root).filter(n=>n.path?.endsWith('.gif')&&n.width===128&&n.height===128).length,5,'all five states have equal 128 pixel previews');
+  view.nodes.get('character-tabs-franky').click({},view.cx); render();
+  assert.equal(view.state.get('one-piece.art').characters['t3:3'].art,'crew-chopper','previewing does not save');
+  const text=descendants(view.root).flatMap(n=>n.kids.filter(k=>typeof k==='string'));
+  assert.ok(text.includes('t3: Chopper → Franky')&&text.includes('t6: Franky → Chopper'),'both named outcomes appear before Apply');
+  view.nodes.get('lookup-apply').click({},view.cx); render();
   const chosen=view.state.get('one-piece.art').characters;
-  assert.deepEqual([chosen['t3:3'].art,chosen['t6:7'].art],['crew-franky','crew-chopper'],'choosing a held character swaps the two crewmates');
+  assert.deepEqual([chosen['t3:3'].art,chosen['t6:7'].art],['crew-franky','crew-chopper'],'one confirmation swaps both crewmates');
+  for (const frame of [0,1,2,3]) {
+    view.nodes.get(`lookup-frame-${frame}`).click({},view.cx); render();
+    const sheets=descendants(view.root).filter(n=>n.path?.endsWith('lookup/crew-franky.png')&&n.width===512);
+    assert.equal(sheets.length,5);
+    assert.deepEqual(sheets.map(n=>n.leftOffset),Array(5).fill(-128*frame));
+    assert.deepEqual(sheets.map(n=>n.topOffset + 0),[0,-128,-256,-384,-512]);
+  }
+  view.nodes.get('lookup-frame-null').click({},view.cx); render();
+  assert.equal(descendants(view.root).filter(n=>n.path?.endsWith('.gif')&&n.width===128).length,5);
+  view.nodes.get('character-tabs-luffy').click({},view.cx); render();
+  assert.ok(!view.nodes.has('lookup-apply'),'captain artwork cannot be applied to a mate');
+  view.nodes.get('character-tabs').keydown({key:'right'},view.cx); render();
+  assert.equal(view.nodes.get('character-tabs-chopper').selected,true,'arrow keys move character selection');
+  const pending=view.nodes.get('lookup-apply').click;
+  view.state.get('one-piece.art').characters['t3:3'].art='crew-zoro';
+  pending({},view.cx); render();
+  assert.equal(view.state.get('one-piece.art').characters['t3:3'].art,'crew-zoro','Apply refuses a stale exchange');
+  assert.ok(descendants(view.root).some(n=>n.kids.includes('t6: Chopper → Zoro')),'the revised exchange is shown before another confirmation');
+  view.nodes.get('lookup-apply').click({},view.cx); render();
+  assert.equal(view.state.get('one-piece.art').characters['t6:7'].art,'crew-zoro');
+  view.state.get('one-piece.art').paused=true;
+  view.controller.lookup.init({},view.cx); render();
+  assert.equal(view.controller.lookup.frame,0,'the lookup inherits paused animation');
+  view.nodes.get('lookup-frame-null').click({},view.cx); render();
+  assert.equal(view.state.get('one-piece.art').paused,true,'playing previews does not resume sidebar motion');
+  view.nodes.get('lookup-close').click();
+  assert.equal(JSON.stringify(view.calls.at(-1)),JSON.stringify(['closeOverlay','lookup']));
+}
+{
+  const setup=host(true,'priority',310,{setup:true});
+  setup.nodes.get('lookup-selected-fleet').click();
+  assert.equal(JSON.stringify(setup.calls.at(-1)[1].props),JSON.stringify({lookup:{space:'s'}}),'Crew provides keyboard access to the selected fleet');
+  const browse=host(true,'priority',310,{lookup:{space:'s'}});
+  assert.equal(browse.nodes.get('character-tabs-luffy').selected,true,'a ship opens on its captain');
+  assert.ok(!browse.nodes.has('lookup-apply'),'a ship lookup cannot assign a character');
+  const changed=host(true,'priority',310,{lookup:{target:'t3:3'}});
+  changed.state.get('one-piece.art').crews['t1:1']='redhair';
+  changed.nodes.clear(); changed.controller.lookup.init({},changed.cx); changed.controller.render(changed.cx);
+  assert.equal(changed.nodes.get('character-tabs-benn-beckman').selected,true,'an assignment awaiting a crew change opens on a valid character');
 }
 for (const [props, terminal, face, name] of [[{region:'tabs'}, null, 'crew-luffy', null], [{region:'pane', pane:'p3', terminal:'t6'}, 't6', 'crew-franky', 'Claude']]) {
   const view=host(true,'grouped',310,props);
@@ -522,13 +583,16 @@ for (const git of [null, 'main', 'linked']) {
   assert.equal(items[0][0],'Rename');
   assert.equal(items[1][0],'Raise a new flag…');
   assert.equal(items.at(-1)[1],'space.close');
-  assert.equal(items.length,git==='linked'?6:git?5:3);
+  assert.equal(items[2][0],'Crew lookup…');
+  assert.equal(items.length,git==='linked'?7:git?6:4);
   controller.choose(0,fleetMenu.cx);
   assert.equal(fleetMenu.calls.at(-1)[0],'space.rename');
   controller.choose(1,fleetMenu.cx);
   assert.equal(JSON.stringify(fleetMenu.calls.at(-1)[1].props),JSON.stringify({flag:{captain:'t1:1'}}));
+  controller.choose(2,fleetMenu.cx);
+  assert.equal(JSON.stringify(fleetMenu.calls.at(-1)[1].props),JSON.stringify({lookup:{space:'s'}}));
   if (git) {
-    controller.choose(2,fleetMenu.cx);
+    controller.choose(3,fleetMenu.cx);
     assert.equal(fleetMenu.calls.at(-1)[1].mod,'worktree');
   }
 }

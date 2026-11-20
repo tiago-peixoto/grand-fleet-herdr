@@ -81,6 +81,7 @@ class ArtworkTests(unittest.TestCase):
                 if not ship:
                     portrait = f'portrait-crew-{name}.png'
                     expected_names.add(portrait)
+                    expected_names.add(f'lookup/crew-{name}.png')
                     self.assertEqual(im('identify', '-format', '%w %h', output / portrait), b'28 28')
                     self.assertEqual((ASSETS / portrait).read_bytes(), (output / portrait).read_bytes())
                 for animation in names:
@@ -103,8 +104,8 @@ class ArtworkTests(unittest.TestCase):
                     cell = b''.join(sheet[((row*32+y)*256+index*32)*4:((row*32+y)*256+index*32+32)*4] for y in range(32))
                     self.assertEqual(im(output / island, '-depth', '8', 'rgba:-'), cell)
                     self.assertEqual((ASSETS / island).read_bytes(), (output / island).read_bytes())
-            self.assertEqual({p.name for p in output.iterdir()}, expected_names)
-            before = {p.name: p.read_bytes() for p in output.iterdir()}
+            self.assertEqual({str(p.relative_to(output)) for p in output.rglob('*') if p.is_file()}, expected_names)
+            before = {str(p.relative_to(output)): p.read_bytes() for p in output.rglob('*') if p.is_file()}
             sources = {}
             for name, (source, size, limit, order, delays) in RECIPES.items():
                 with self.subTest(name=name):
@@ -143,7 +144,34 @@ class ArtworkTests(unittest.TestCase):
                     self.assertEqual(decoded(ASSETS / png.name), decoded(png))
                     self.assertEqual(decoded(ASSETS / gif.name), decoded(gif))
             subprocess.run([sys.executable, str(SCRIPT), '--output', directory], check=True)
-            self.assertEqual(before, {p.name: p.read_bytes() for p in output.iterdir()})
+            self.assertEqual(before, {str(p.relative_to(output)): p.read_bytes() for p in output.rglob('*') if p.is_file()})
+
+    def test_lookup_frames_match_every_decoded_gif_pixel(self):
+        sheets = sorted((ASSETS / 'lookup').glob('crew-*.png'))
+        self.assertEqual(len(sheets), 155)
+        for sheet in sheets:
+            raw = im(sheet, '-depth', '8', 'rgba:-')
+            self.assertEqual(len(raw), 512*640*4)
+            for row, state in enumerate(('idle', 'working', 'done', 'blocked', 'error')):
+                frames = im(ASSETS / f'{sheet.stem}-{state}.gif', '-coalesce', '-depth', '8', 'rgba:-')
+                self.assertEqual(len(frames), 4*64*64*4)
+                for col in range(4):
+                    with self.subTest(sheet=sheet.name, state=state, frame=col):
+                        cell = b''.join(raw[((row*128+y)*512+col*128)*4:((row*128+y)*512+col*128+128)*4] for y in range(128))
+                        frame = frames[col*64*64*4:(col+1)*64*64*4]
+                        doubled = b''.join(b''.join(frame[(y*64+x)*4:(y*64+x+1)*4]*2 for x in range(64))*2 for y in range(64))
+                        self.assertEqual(cell, doubled)
+
+    def test_previews_only_preserves_existing_artwork_and_rebuilds_identically(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            originals = {f'crew-chopper-{state}.gif': (ASSETS / f'crew-chopper-{state}.gif').read_bytes() for state in STATES}
+            for name, content in originals.items():
+                (output / name).write_bytes(content)
+            for _ in range(2):
+                subprocess.run([sys.executable, str(SCRIPT), '--previews-only', '--output', directory], check=True)
+                self.assertEqual((output / 'lookup/crew-chopper.png').read_bytes(), (ASSETS / 'lookup/crew-chopper.png').read_bytes())
+                self.assertEqual({name: (output / name).read_bytes() for name in originals}, originals)
 
     def test_gestures_keep_the_approved_pixels(self):
         sheets = sorted((ROOT / 'prototype/crew-artwork').glob('*-gestures-v1.png'))

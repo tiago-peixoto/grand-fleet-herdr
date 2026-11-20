@@ -38,9 +38,24 @@ For a generic fleet, the Straw Hats show as reserved while a Firstmate captain i
 Set sail posts a notification that names the ship and the Space.
 The picker changes the ship, its captain if one is aboard, and the crewmates in that Space together.
 New agents in that Space receive artwork from the selected crew.
-Right-click a crewmate to choose its character from the members of its fleet's crew.
-If another crewmate of that fleet holds the chosen character, the two swap, so a fleet never shows the same character twice.
+Right-click a ship, a crewmate, or a miniature and choose Crew lookup to open a centered dialog.
+The Crew button also provides keyboard access to the selected fleet and the mates' menus.
+Fleet tabs appear above character tabs, with Left, Right, Home, and End navigation in each bar.
+Five equal 128-pixel previews show Idle, Working, Done, Blocked, and Error above their 28-pixel sidebar previews.
+Frame buttons hold the same numbered frame across all states, and Play loops restores the existing GIF animations.
+Preview controls never change live status or the sidebar's animation preference.
+A ship opens a browsing catalog, while a mate opens on its current character.
+Switching fleets browses their catalogs without assigning another roster's character to the target.
+Inspect explicitly changes the target to a holder in that fleet.
+Captain characters remain exclusive to detected or manually designated Firstmate instances and follow their flag.
+A named swap displays both mates and both resulting assignments before one confirmation writes both changes.
+Apply rechecks live identities, machine availability, captain roles, current roster, and the expected assignments.
+If the exchange changed, the dialog shows its new result and requires confirmation again.
+A character reserved in a returning mate's history remains unavailable, preventing duplicate characters on return.
+A swap preserves the given-up Pirate's number and color together.
 The choice lasts while the terminal lives and returns when the fleet flies that crew again.
+Herdr documents last-write-wins shared storage, not conditional writes across application processes.
+The checks protect against stale dialogs within the live snapshot, not simultaneous independent app-process writes.
 Fleet cards have six pixels of bottom spacing.
 The sidebar header shows the Straw Hat flag and the name Grand Fleet in place of Herdr's logo and name.
 The flag is drawn at 32 pixels, its artwork size, and keeps the native search and fold buttons beside it.

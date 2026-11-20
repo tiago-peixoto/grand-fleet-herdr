@@ -7,7 +7,8 @@ import Tabs from './herdr-tabs.js';
 import { div, image, svg } from 'gpui-kit';
 import { Button, h_flex, v_flex } from 'gpui-base';
 import { agents, terminals, machines, spaces, shared, setShared, props, openOverlay, closeOverlay, theme, run, hc, readTextFile, notify, setBadge, nextCommand } from 'herdr';
-import { identity, crews, assignCrew, assignIslands, islandOf, chooseCharacter, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
+import { identity, crews, assignCrew, assignIslands, islandOf, releaseCrew, selectDefaultCrews, selectFleetCrews } from './artwork.js';
+import CrewLookup from './lookup-view.js';
 import { discoverCaptain } from './discovery.js';
 import { captainSpaces, crewmembers, followedCaptains, genericFleets, managedCrew, machineOf } from './fleet.js';
 
@@ -71,17 +72,23 @@ function flagDialog(flag) {
   openOverlay({mod:'one-piece', kind:'dialog', width:760, height:572, props:{flag}});
 }
 
+function lookupDialog(lookup) {
+  openOverlay({mod:'one-piece', kind:'dialog', width:1000, height:720, props:{lookup}});
+}
+
 class FleetMenu extends Menu {
   items() {
     const items = super.items();
-    items.splice(1, 0, ['Raise a new flag…', 'one-piece.appearance', {}]);
+    items.splice(1, 0, ['Raise a new flag…', 'one-piece.appearance', {}], ['Crew lookup…', 'one-piece.lookup', {}]);
     return items;
   }
 
   choose(index, cx) {
-    if (this.items()[index]?.[1] !== 'one-piece.appearance') return super.choose(index, cx);
+    const action = this.items()[index]?.[1];
+    if (!['one-piece.appearance', 'one-piece.lookup'].includes(action)) return super.choose(index, cx);
     closeOverlay(props().overlay);
-    flagDialog(props().shipSpace ? {space:props().shipSpace} : {captain:props().captain});
+    if (action === 'one-piece.lookup') lookupDialog({space:props().target.id});
+    else flagDialog(props().shipSpace ? {space:props().shipSpace} : {captain:props().captain});
   }
 }
 
@@ -122,6 +129,7 @@ class OnePieceSpaces extends Spaces {
       .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
       .on_mouse_down('left', (_e, cx) => cx.stop_propagation())
       .on_mouse_up('left', (_e, cx) => cx.stop_propagation())
+      .on_mouse_down('right', (_e, cx) => { cx.stop_propagation(); appearanceMenu(identity(terminal)); })
       .on_click((_e, cx) => { cx.stop_propagation(); run('agent.focus', {terminal:terminal.address}); })
       .child(sprite(art, statusOf(terminal, listed.get(terminal.address)), 24));
   }
@@ -198,6 +206,11 @@ class OnePieceSpaces extends Spaces {
 
 export default class OnePieceAgents extends Agents {
   init(p, cx) {
+    if (props()?.lookup) {
+      this.lookup = new CrewLookup();
+      this.lookup.init(p, cx);
+      return;
+    }
     if (props()?.fleetMenu) {
       this.fleetMenu = new FleetMenu();
       this.fleetMenu.init(p, cx);
@@ -291,7 +304,7 @@ export default class OnePieceAgents extends Agents {
     // The crewmember is drawn larger than the program icon it replaces so its pose stays readable.
     // The label keeps the status a screen reader used to get from Herdr's status mark.
     return div().flex_none().tooltip(label).accessibility_label(label)
-      .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
+      .on_mouse_down('right', (_e, cx) => { cx.stop_propagation(); appearanceMenu(identity(terminal)); })
       .child(sprite(face, status, size + 12));
   }
 
@@ -304,7 +317,7 @@ export default class OnePieceAgents extends Agents {
     const status = statusOf(terminal, agent.status), label = describe(terminal, status);
     return h_flex().flex_none().items_center()
       .tooltip(label).accessibility_label(label)
-      .on_mouse_down('right', () => appearanceMenu(identity(terminal)))
+      .on_mouse_down('right', (_e, cx) => { cx.stop_propagation(); appearanceMenu(identity(terminal)); })
       .child(sprite(face, status, 14));
   }
 
@@ -326,19 +339,10 @@ export default class OnePieceAgents extends Agents {
     }
     menu.child(Button.new('motion').flex_none().accessibility_label('Toggle animation').tab_index(0).p(7).child(appearance().paused ? 'Resume animation' : 'Pause animation')
       .on_click(() => { save({paused:!appearance().paused}); closeOverlay(props().overlay); }));
-    const mine = appearance().characters[key];
-    const crew = !captainLinks()[key] && mine?.owner && crews[mine.owner.split(':').pop()];
-    if (!crew) return menu;
-    menu.child(div().flex_none().px(7).pt(8).text_size(11).text_color(t.dim).child(`${crew.name} · choose a character`));
-    for (const name of crew.workers) {
-      const current = mine.art === `crew-${name}`;
-      menu.child(Button.new(`character-${name}`).flex_none().tab_index(0).px(7).py(3).rounded(5)
-        .accessibility_label(`${displayName(name)}${current ? ', current character' : ''}`)
-        .when(current, el => el.bg(t.selected)).hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
-        .on_click(() => { save({characters:chooseCharacter(appearance().characters, key, name)}); closeOverlay(props().overlay); })
-        .child(h_flex().gap(8).items_center().child(sprite(`crew-${name}`, 'idle', 24)).child(displayName(name))));
-    }
-    return menu;
+    return menu.child(Button.new('crew-lookup').flex_none().tab_index(0).p(7).rounded(5)
+      .when(!captainLinks()[key] && this.spaceHasCaptain(terminal), el => el.track_focus(this.menuFocus))
+      .accessibility_label('Crew lookup').child('Crew lookup…').hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
+      .on_click(() => { closeOverlay(props().overlay); lookupDialog({target:key}); }));
   }
 
   spaceHasCaptain(terminal) {
@@ -436,11 +440,17 @@ export default class OnePieceAgents extends Agents {
     const menu = v_flex().size_full().p(16).gap(8).bg(t.popover).text_color(t.foreground).text_size(13)
       .child(div().font_semibold().child('Crew appearance'))
       .child(div().child('Firstmate captains are detected automatically. Choose an agent to change its appearance.'));
+    const active = spaces().find(space => space.active);
+    const browse = active && (captainSpaces(terminals(), agents(), captainLinks()).has(active.id) || genericFleets(terminals(), agents(), captainLinks()).has(active.id));
+    if (browse) menu.child(Button.new('lookup-selected-fleet').tab_index(0).track_focus(this.menuFocus).p(8).rounded(5)
+      .accessibility_label(`Browse crew of ${active.name}`).child(`Crew lookup · ${active.name}`)
+      .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
+      .on_click(() => { closeOverlay(props().overlay); lookupDialog({space:active.id}); }));
     const list = v_flex().flex_1().min_h(0).gap(4).overflow_y_scrollbar();
     for (const [index, terminal] of crewmembers(terminals(), agents()).entries()) {
       const label = `${terminal.name || terminal.title || terminal.address} · ${machineOf(terminal) ?? 'local'}`;
       list.child(Button.new(`choose-${identity(terminal)}`).tab_index(0).p(8).rounded(5)
-        .when(index === 0, el => el.track_focus(this.menuFocus)).accessibility_label(label).child(label)
+        .when(index === 0 && !browse, el => el.track_focus(this.menuFocus)).accessibility_label(label).child(label)
         .hover(el => el.bg(t.hover)).focus(el => el.bg(t.selected))
         .on_click(() => { closeOverlay(props().overlay); appearanceMenu(identity(terminal)); }));
     }
@@ -448,6 +458,7 @@ export default class OnePieceAgents extends Agents {
   }
 
   render(cx) {
+    if (this.lookup) return this.lookup.render(cx);
     // Tab and pane copies only read the appearance, so they skip the crew bookkeeping below.
     if (this.portraitView) return this.portraitView.render(cx);
     if (!this.spacesView && !this.fleetMenu && !props()?.setup && !props()?.appearance && !props()?.flag && !props()?.view &&
