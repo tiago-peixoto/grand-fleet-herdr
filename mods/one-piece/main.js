@@ -52,7 +52,6 @@ class OnePiecePane extends Pane {
 }
 
 class OnePieceChrome extends Chrome {
-  // 32 px is the artwork's own size, so every source pixel stays a whole square.
   logo() { return image(`mods/one-piece/assets/flag.${appearance().paused ? 'png' : 'gif'}`).size(32).flex_none(); }
   title() { return 'Grand Fleet'; }
 }

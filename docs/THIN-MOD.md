@@ -43,7 +43,9 @@ If another crewmate of that fleet holds the chosen character, the two swap, so a
 The choice lasts while the terminal lives and returns when the fleet flies that crew again.
 Fleet cards have six pixels of bottom spacing.
 The sidebar header shows the Straw Hat flag and the name Grand Fleet in place of Herdr's logo and name.
-The flag is drawn at 32 pixels, its artwork size, and keeps the native search and fold buttons beside it.
+The flag draws at 32 points and keeps the native search and fold buttons beside it.
+Its 64-pixel export repeats each original pixel twice, preserving the art without enlarging the image on a 2x display at default zoom.
+This avoids sampling a neighboring image at the flag's edge in Herdr's shared image texture.
 The Dock icon, the welcome screen, and Settings keep Herdr's own logo, because no mod can change them.
 The macOS Dock badge shows how many agents Herdr reports as blocked, and clears at zero.
 The `one-piece.attention` command shows the unfocused blocked agent that changed most recently, or else the newest finished one.

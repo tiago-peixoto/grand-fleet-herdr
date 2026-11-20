@@ -76,6 +76,8 @@ Rounded dimensions preserve the prototype's calculation.
 Artwork is horizontally centered, except the flag starts two pixels from the left.
 The crop bottom sits three pixels above the canvas bottom.
 Transparent source pixels at the crop edge can leave additional visible space after downsampling.
+The flag's final export repeats each logical pixel into a two-by-two block, producing a 64 × 64 PNG or GIF.
+It still draws at 32 points, avoiding image enlargement at 2x density and default zoom.
 
 Each crew character also receives a static 28 × 28 `portrait-crew-<name>.png`.
 The default portrait crops the top of the static working frame, centered on the opaque pixels in its top 22 rows.

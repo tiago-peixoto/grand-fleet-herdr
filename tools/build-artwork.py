@@ -87,6 +87,8 @@ def export(sheet, boxes, size, limit, animations, output, flag=False):
             im('-size', f'{size}x{size}', 'xc:none', '(', sheet,
                '-crop', f'{w}x{h}+{x}+{y}', '+repage', '-sample', f'{dw}x{dh}!', ')',
                '-geometry', f'+{dx}+{dy}', '-compose', 'Over', '-composite',
+               # Keep the flag's pixel art, but avoid atlas-edge sampling when Herdr draws it at 2x.
+               *(['-sample', '200%'] if flag else []),
                '-strip', '-define', 'png:exclude-chunks=date,time', f'PNG32:{frame}')
             frames.append(frame)
         animate(frames, animations, output)
