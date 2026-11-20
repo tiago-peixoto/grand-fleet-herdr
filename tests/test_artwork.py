@@ -117,10 +117,11 @@ class ArtworkTests(unittest.TestCase):
                     scale = limit / max(max(b[0], b[1]) for b in group)
                     gif, png = output / (name+'.gif'), output / (name+'.png')
                     metadata = im('identify', '-format', '%w %h %T %D\n', gif).decode().splitlines()
-                    self.assertEqual(metadata, [f'{size} {size} {d} Background' for d in delays])
+                    pixels = size*2 if name == 'flag' else size
+                    self.assertEqual(metadata, [f'{pixels} {pixels} {d} Background' for d in delays])
                     self.assertIn(b'NETSCAPE2.0\x03\x01\x00\x00', gif.read_bytes())
                     raw = im(gif, '-coalesce', '-depth', '8', 'rgba:-')
-                    stride = size*size*4
+                    stride = pixels*pixels*4
                     frames = [raw[i:i+stride] for i in range(0, len(raw), stride)]
                     self.assertEqual(len(frames), len(order))
                     self.assertGreater(len(set(frames)), 1)
@@ -133,11 +134,15 @@ class ArtworkTests(unittest.TestCase):
                                       '-crop', f'{w}x{h}+{x}+{y}', '+repage',
                                       '-sample', f'{dw}x{dh}!', ')', '-geometry', f'+{dx}+{dy}',
                                       '-compose', 'Over', '-composite', '-depth', '8', 'rgba:-')
+                        if name == 'flag':
+                            rows = [expected[y*size*4:(y+1)*size*4] for y in range(size)]
+                            expected = b''.join(b''.join(row[x:x+4]*2 for x in range(0, len(row), 4))*2
+                                                for row in rows)
                         # A wrong row, column, scale, or disposal leaks into this silhouette.
                         self.assertEqual(frames[index][3::4], bytes(255 if a >= 128 else 0 for a in expected[3::4]))
                         self.assertIn(0, frames[index][3::4])
                         self.assertIn(255, frames[index][3::4])
-                        self.assertFalse(any(frames[index][(size-3)*size*4+3::4]))
+                        self.assertFalse(any(frames[index][(pixels-3)*pixels*4+3::4]))
                         if index == 0:
                             actual_png = im(png, '-depth', '8', 'rgba:-')
                             self.assertEqual(actual_png, expected)
