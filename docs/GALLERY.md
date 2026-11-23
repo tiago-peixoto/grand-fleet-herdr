@@ -1,7 +1,7 @@
 # Layout package verification
 
 The gallery package was generated from official Herdr App 0.1.17 with Core 0.1.22 on Linux x86_64 on 2026-11-23.
-The [recipe](../RECIPE.md#supported-snapshot) records the official archive and executable fingerprints.
+The [installation guide](INSTALL.md#supported-snapshot) records the official archive and executable fingerprints.
 The layout and six native modules come from `tools/gallery.py`, which calls the existing installer and compatibility generator.
 The checked-in snapshot is not a replacement for destination-aware installation after Herdr changes.
 
@@ -10,7 +10,8 @@ The checked-in snapshot is not a replacement for destination-aware installation 
 - `layouts/one-piece.json` retains the native layout tree with Grand Fleet's presentation regions and palette.
 - `mods/one-piece/` includes the adapter, artwork, and all six generated native modules.
 - `mods/one-piece/HERDR-LICENSE` retains Herdr's Apache-2.0 license.
-- `RECIPE.md` covers compatibility, copying, collisions, refresh, removal, and regeneration.
+- `RECIPE.md` covers compatibility, copying, collisions, and the refresh and removal cautions.
+- `docs/INSTALL.md` holds the fingerprints, the complete refresh and removal steps, and regeneration.
 - `preview.png` is the approved refined C image, copied without changing its bytes.
 
 The preview measures 2880 by 1800 pixels.
@@ -55,7 +56,7 @@ Raw logs, screenshots, and the reproducible lab script stay outside this reposit
 
 `npm test` passed all 43 JavaScript tests.
 `python3 -B -m unittest discover -s tests -v` passed all 65 Python tests with ImageMagick 7.1.2-36.
-The new tests cover snapshot generation, read-only checking, rejection before writes, complete local imports, and destination-derived installer refresh.
+The new tests cover snapshot generation, read-only checking, rejection before writes, presence of the six generated modules, and destination-derived installer refresh.
 `git diff --check` and `git diff --cached --check` passed.
 These tests complement the live trial rather than replacing it.
 

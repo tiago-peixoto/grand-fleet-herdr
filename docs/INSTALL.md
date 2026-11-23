@@ -22,10 +22,78 @@ The documented path and Core release limitations still apply.
 ## Gallery Layout package
 
 The repository also ships `layouts/one-piece.json` and all six generated `mods/one-piece/herdr-*.js` modules.
-The [Layout recipe](../RECIPE.md#install-as-a-layout) records the supported official release, fingerprints, read-only compatibility check, and copy procedure.
+The [Layout recipe](../RECIPE.md#built-from) records the supported official release, the read-only compatibility check, the copy block, and the checks after copying.
 A plain gallery copy has no ownership receipt.
-Use the recipe's separate refresh and removal procedure for that copy, not this installer's ownership commands.
+Use the [gallery refresh and removal](#gallery-refresh-and-removal) procedure for that copy, not this installer's ownership commands.
 The installer remains the destination-aware alternative and always regenerates the bundled native snapshot from the destination.
+
+Herdr's [gallery instructions](https://herdr.dev/gallery/#share) discover a public repository with the topic `herdr-layout`.
+The root-package request is `add this layout: herdr.dev/layouts/tiago-peixoto/grand-fleet-herdr`.
+Public submission and the topic change require separate approval after merge.
+Until then, use `add this layout: https://github.com/tiago-peixoto/grand-fleet-herdr/tree/main` against the reviewed revision.
+
+Before a gallery copy, read the destination's `AGENTS.md`, relevant declarations, the recipe, and the package files.
+Disclose the captain-discovery access that the recipe describes.
+Keep the downloaded revision for later comparison.
+Never assume that changing `HERDR_APP_HOME` isolates terminal sessions.
+
+### Supported snapshot
+
+The package targets official **Herdr App 0.1.17 and Core 0.1.22**, checked on Linux x86_64.
+These were the current releases when generated on 2026-11-23.
+SHA-256 values below are fingerprints of the downloaded archives and their executables.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| App Linux x86_64 archive | `2188f4d7d5cf041450dbdbf2e14649244b1a6274a1080bdd97fa7bc450e65ca1` |
+| App executable | `c94eaf8a530a33741fe548c8a8ebd818af3eda5b1633e29fcb8e8d65563999cd` |
+| Core Linux x86_64 archive | `3054ec3992ce80c5715d721caa9dcefa6056721d15dc113f4750afce763ba5df` |
+| Core executable | `b8a6ed378e1c8be04452aa23cf12ddec87f1479627d6b4f9ed7ab65abe8f619f` |
+
+If `settings.json` selects a different Core executable, check that executable instead of the `hc` found on PATH.
+Other platforms and releases need their own live verification.
+The recipe's read-only check rejects changed native modules or layouts before copying anything.
+It does not prove live compatibility or replace the version check.
+
+### Gallery refresh and removal
+
+For an unrelated One Piece folder or unknown content, stop and ask its owner before changing it.
+If `.one-piece-install.json` exists, keep using the installer for refresh and removal.
+Pasting gallery files over an installer-managed copy invalidates its ownership receipt.
+A receipt mismatch requires the [recovery procedure](#failures-and-recovery), not deletion of the receipt.
+
+Neither installer action adopts a gallery copy, even when its bytes match this repository.
+To refresh a known gallery copy:
+
+1. Select another layout, close the destination window, and run the new checkout's read-only gallery check.
+2. Back up `mods/one-piece/` and `layouts/one-piece.json` together to a new directory outside the app home.
+3. Compare the existing copy with its saved source revision and preserve any local edits before replacing it.
+4. Move both existing paths into that backup, then run the recipe's copy block with the new revision.
+5. Reopen the destination, switch to One Piece, and repeat the checks before deleting any backup.
+
+Keep `shared.json`, `view.json`, `keys.json`, settings, and Herdr's layout state unchanged.
+Saved appearance choices remain available under the same One Piece names.
+If copying or verification fails, close the window and move the failed pair aside before restoring the backed-up pair.
+Do not merge old and new mod folders.
+
+To remove a gallery copy, select another layout and close the destination window.
+Move only `mods/one-piece/` and `layouts/one-piece.json` to a backup outside the app home.
+Leave shared state and terminal records untouched.
+To convert a gallery copy to installer management, move the same pair aside first, then run the installer.
+
+### Regenerate the gallery package
+
+Maintainers initialize a clean app home with the explicitly selected official Herdr release, then close its window.
+Run the following from this checkout:
+
+```sh
+python3 -B tools/gallery.py build --app-home /absolute/path/to/source-herdr-home
+python3 -B tools/gallery.py check --app-home /absolute/path/to/source-herdr-home
+```
+
+The build writes only the six generated modules and the layout in this checkout.
+It never writes to the source app home.
+Record the new versions in the recipe and the new hashes here, retain the upstream license, and repeat isolated installation checks before publishing.
 
 ## Choose an app home
 

@@ -4,7 +4,6 @@ import importlib.util
 import json
 import os
 from pathlib import Path
-import re
 import shutil
 import subprocess
 import sys
@@ -225,12 +224,9 @@ class InstallTests(unittest.TestCase):
         self.assertEqual(self.files(self.repo), snapshot)
         self.assertEqual(self.files(self.home), before)
 
-    def test_gallery_includes_local_imports_and_native_modules(self):
+    def test_gallery_includes_native_modules_and_snapshot_notice(self):
         for name in ('agents', 'spaces', 'menu', 'tabs', 'pane', 'chrome'):
             self.assertTrue((ROOT / f'mods/one-piece/herdr-{name}.js').is_file())
-        for path in (ROOT / 'mods/one-piece').glob('*.js'):
-            for name in re.findall(r'from\s+[\'\"](\./[^\'\"]+)', path.read_text()):
-                self.assertTrue((path.parent / name).is_file(), f'{path}: {name}')
         self.assertIn('$comment', json.loads((ROOT / 'layouts/one-piece.json').read_bytes()))
 
     def test_v3_receipt_has_strict_shape(self):

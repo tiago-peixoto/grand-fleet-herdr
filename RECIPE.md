@@ -94,45 +94,16 @@ Discovery checks every ten seconds and when terminal identities change.
 Its reads verify process and terminal identity before accepting a captain.
 A manual designation is available when this evidence cannot be read.
 
-## Install as a Layout
-
-Read the destination's `AGENTS.md`, relevant declarations, this recipe, and the package files before installation.
-Disclose the captain-discovery access described above.
-Use an initialized, separate test app home, not your daily installation.
-Close only that destination window before copying files.
-Python 3.9 or newer is required for the compatibility check.
-
-Herdr's [gallery instructions](https://herdr.dev/gallery/#share) discover a public repository with the topic `herdr-layout`.
-The root-package request is `add this layout: herdr.dev/layouts/tiago-peixoto/grand-fleet-herdr`.
-Public submission and the topic change require separate approval after merge.
-Until then, use `add this layout: https://github.com/tiago-peixoto/grand-fleet-herdr/tree/main` against the reviewed revision.
-
-### Supported snapshot
-
-This package targets official **Herdr App 0.1.17 and Core 0.1.22**, checked on Linux x86_64.
+The checked-in snapshot targets official **Herdr App 0.1.17 and Core 0.1.22**, checked on Linux x86_64 and generated on 2026-11-23.
 The official [App manifest](https://releases.herdr.dev/app/0.1.17/manifest.json) and [Core manifest](https://releases.herdr.dev/core/0.1.22/manifest.json) identify the source releases.
-These were the current releases when generated on 2026-11-23.
-SHA-256 values below are fingerprints of the downloaded archives and their executables.
+[Installation](docs/INSTALL.md#supported-snapshot) records the archive and executable fingerprints.
+Check `herdr-app --version` and `hc --version` in the destination's own environment before copying.
 
-| Artifact | SHA-256 |
-| --- | --- |
-| App Linux x86_64 archive | `2188f4d7d5cf041450dbdbf2e14649244b1a6274a1080bdd97fa7bc450e65ca1` |
-| App executable | `c94eaf8a530a33741fe548c8a8ebd818af3eda5b1633e29fcb8e8d65563999cd` |
-| Core Linux x86_64 archive | `3054ec3992ce80c5715d721caa9dcefa6056721d15dc113f4750afce763ba5df` |
-| Core executable | `b8a6ed378e1c8be04452aa23cf12ddec87f1479627d6b4f9ed7ab65abe8f619f` |
-
-Check `herdr-app --version` and `hc --version` in the destination's own environment.
-If `settings.json` selects a different Core executable, check that executable instead of the `hc` found on PATH.
-Other platforms and releases need their own live verification.
-The read-only check below regenerates the seven snapshot files in memory and requires byte-for-byte agreement with the package.
-It rejects changed native modules or layouts before copying anything.
-It does not prove live compatibility or replace the version check.
-
-### Fresh gallery copy
-
-Run this block from the downloaded repository in a shell.
-Replace the app-home value with the absolute path of the initialized test configuration.
+To copy the package, close the window of an initialized, separate test app home, not your daily installation.
+Run this block from the downloaded repository, with the app-home value replaced by that home's absolute path.
 Use a destination without symbolic links, and do not edit its files during copying.
+The check needs Python 3.9 or newer.
+It regenerates the seven snapshot files in memory from the destination and requires byte-for-byte agreement with the package.
 The block refuses existing One Piece files, ownership receipts, and interrupted installer operations instead of overwriting them.
 
 ```sh
@@ -151,9 +122,8 @@ cp layouts/one-piece.json "$APP_HOME/layouts/one-piece.json"
 ```
 
 Do not copy the recipe or preview into the app home.
-Keep the downloaded revision for later comparison.
 If the check fails, do not copy the snapshot or alter the shipped files to make it pass.
-Use the destination-aware installer below if its compatibility checks accept the destination.
+Run `python3 tools/install.py install --app-home "$APP_HOME"` instead, which generates from the destination and rejects unsupported structures before writing.
 
 With the destination's display environment selected, verify the copy:
 
@@ -172,69 +142,20 @@ HERDR_APP_HOME="$APP_HOME" herdr-app status
 Require layout `one-piece`, an empty error list, and visible Spaces and Agents regions.
 Select another layout to return to the original window arrangement.
 These commands select an app home, not an isolated Core server.
-Never assume that changing `HERDR_APP_HOME` isolates terminal sessions.
-
-### Existing installation, refresh, and removal
-
-Never overwrite a name collision or rename only the mod folder.
-The mod also contains its own asset paths and persistent setting names.
-For an unrelated One Piece folder or unknown content, stop and ask its owner before changing it.
-
-If `.one-piece-install.json` exists, keep using the destination-aware installer for refresh and removal.
-Do not paste gallery files over an installer-managed copy, because that invalidates its ownership receipt.
-A receipt mismatch requires the [recovery procedure](docs/INSTALL.md#failures-and-recovery), not deletion of the receipt.
-
-A gallery copy has no installer receipt.
-Neither installer action adopts it, even when its bytes match this repository.
-To refresh a known gallery copy:
-
-1. Select another layout, close the destination window, and run the new checkout's read-only gallery check.
-2. Back up `mods/one-piece/` and `layouts/one-piece.json` together to a new directory outside the app home.
-3. Compare the existing copy with its saved source revision and preserve any local edits before replacing it.
-4. Move both existing paths into that backup, then perform the fresh-copy steps with the new revision.
-5. Reopen the destination, switch to One Piece, and repeat the checks before deleting any backup.
-
-Keep `shared.json`, `view.json`, `keys.json`, settings, and Herdr's layout state unchanged.
-Saved appearance choices remain available under the same One Piece names.
-If copying or verification fails, close the window and move the failed pair aside before restoring the backed-up pair.
-Do not merge old and new mod folders.
-
-To remove a gallery copy, select another layout and close the destination window.
-Move only `mods/one-piece/` and `layouts/one-piece.json` to a backup outside the app home.
-Leave shared state and terminal records untouched.
-To convert a gallery copy to installer management, move the same pair aside first, then run the installer.
-
-### Destination-aware installer
-
-For a fresh destination or an existing installer-managed copy, run:
-
-```sh
-python3 tools/install.py install --app-home /absolute/path/to/test-herdr-home
-```
-
-Keep `tools/install.py` and `tools/compat.py` together for later refresh or removal.
-The installer rejects unsupported source structures before writes and generates from the destination, not the bundled snapshot.
-After a Herdr update, close the destination window and rerun that installer, then repeat the rendering and parity checks.
-See [Installation](docs/INSTALL.md) for ownership, removal, and recovery.
-
-### Regenerate the package
-
-Maintainers initialize a clean app home with the explicitly selected official Herdr release, then close its window.
-Run the following from this checkout:
-
-```sh
-python3 -B tools/gallery.py build --app-home /absolute/path/to/source-herdr-home
-python3 -B tools/gallery.py check --app-home /absolute/path/to/source-herdr-home
-```
-
-The build writes only the six generated modules and the layout in this checkout.
-It never writes to the source app home.
-Record the new versions and hashes here, retain the upstream license, and repeat isolated installation checks before publishing.
+[Installation](docs/INSTALL.md#gallery-layout-package) covers the gallery request, refresh, removal, the installer, and package regeneration.
 
 ## Watch out
 
 Copy both `mods/one-piece/` and `layouts/one-piece.json`; the complete mod alone has no automatic placement.
 Do not invent replacements for missing native dependencies or overwrite an existing unknown One Piece installation.
+A gallery copy has no installer receipt, so the installer neither adopts, refreshes, nor removes it.
+Never overwrite a name collision or rename only the mod folder, because the mod contains its own asset paths and persistent setting names.
+To refresh or remove a gallery copy, select another layout and close the destination window.
+Then move `mods/one-piece/` and `layouts/one-piece.json` together to a backup outside the app home.
+For a refresh, repeat the copy block with the new revision and keep the backup until the checks pass.
+Leave `shared.json`, `view.json`, `keys.json`, settings, and terminal records untouched.
+If `.one-piece-install.json` exists, the installer manages that copy, so do not paste gallery files over it.
+[Gallery refresh and removal](docs/INSTALL.md#gallery-refresh-and-removal) gives the complete steps.
 The destination needs compatible Agents, Spaces, and Menu sources and exactly one Spaces and one Agents slot under the same parent.
 The mod never moves workers between Spaces or changes process ownership.
 It identifies captains from existing Firstmate evidence, not names or folders alone.

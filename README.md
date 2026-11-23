@@ -65,7 +65,7 @@ Copy this request into your coding agent:
 > Read the test configuration's AGENTS.md, then add this layout: https://github.com/tiago-peixoto/grand-fleet-herdr/tree/main
 > Use an initialized, separate Herdr test configuration.
 
-The [recipe](RECIPE.md#install-as-a-layout) gives your agent the Layout copy steps, permissions, compatibility check, and verification requirements.
+The [recipe](RECIPE.md#built-from) gives your agent the Layout copy steps, permissions, compatibility check, and verification requirements.
 The bundled package targets official Herdr App 0.1.17 and Core 0.1.22 on Linux x86_64.
 The destination-aware installer below also supports compatible variations.
 
@@ -90,7 +90,7 @@ Reopen that Herdr window and select **One Piece** in the layout selector.
 The installer creates the layout but does not select it.
 The usual app home is `~/.config/herdr-app`.
 
-The repository includes a complete [gallery package](RECIPE.md#fresh-gallery-copy), with a layout and six generated native modules.
+The repository includes a complete [gallery package](RECIPE.md#built-from), with a layout and six generated native modules.
 Copying only the mod does not select or place it.
 The installer regenerates those modules from your destination's Herdr files and rejects unsupported structures before changing the installation.
 It preserves shipped modules, other layouts, settings, and session records.
@@ -297,7 +297,7 @@ See the [recipe](RECIPE.md#built-from) for the complete integration details.
 ## Compatibility
 
 The gallery snapshot targets **Herdr App 0.1.17 and Core 0.1.22 on Linux x86_64**.
-The [recipe](RECIPE.md#supported-snapshot) records official archive and executable hashes.
+The [installation guide](docs/INSTALL.md#supported-snapshot) records official archive and executable hashes.
 The [gallery verification record](docs/GALLERY.md) distinguishes packaging checks from full fleet acceptance.
 
 The historical acceptance checks used the following setup on **2026-11-16**.
@@ -334,7 +334,7 @@ Removal deletes only unchanged installer-owned files and its receipt.
 Modified owned files block removal, while added files remain.
 Legacy installations also have [specific shortcut cleanup rules](docs/INSTALL.md#legacy-shortcut-cleanup).
 A gallery copy has no installer receipt.
-Follow the [gallery refresh and removal steps](RECIPE.md#existing-installation-refresh-and-removal) instead of overwriting it or invoking installer removal.
+Follow the [gallery refresh and removal steps](docs/INSTALL.md#gallery-refresh-and-removal) instead of overwriting it or invoking installer removal.
 
 ## Contribute
 
