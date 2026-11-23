@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/tiago-peixoto/grand-fleet-herdr/actions/workflows/ci.yml"><img src="https://github.com/tiago-peixoto/grand-fleet-herdr/actions/workflows/ci.yml/badge.svg" alt="Automated tests"></a>
-  <a href="https://herdr.dev"><img src="https://img.shields.io/badge/Herdr-native_mod-29454c" alt="Native Herdr mod"></a>
+  <a href="https://herdr.dev"><img src="https://img.shields.io/badge/Herdr-Layout-29454c" alt="Herdr Layout"></a>
   <a href="#compatibility"><img src="https://img.shields.io/badge/status-experimental-e8bd70" alt="Experimental"></a>
 </p>
 
@@ -25,7 +25,7 @@
   <a href="#contribute">Contribute</a>
 </p>
 
-Grand Fleet is a One Piece mod for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
+Grand Fleet is a One Piece layout for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
 Every agent becomes a crewmember, and every Space, Herdr's name for a workspace, with a live agent gets a ship.
 [Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains.
 Firstmate is optional: independent agents sail together without a captain.
@@ -38,21 +38,14 @@ Firstmate is optional: independent agents sail together without a captain.
 
 Grand Fleet changes presentation, not delegation or work records.
 
-<details>
-<summary><strong>See Grand Fleet in Herdr</strong> · Native window screenshot</summary>
-
 <p align="center">
-  <a href="preview.png"><img src="preview.png" width="765" alt="Grand Fleet in a Herdr window: an island beside each of three machines in Spaces, a captain's ship and two other fleets with their crews, six agents with character artwork grouped by status, and crewmember faces on the tabs and pane titles"></a>
+  <a href="preview.png"><img src="preview.png" width="765" alt="Grand Fleet montage: Spaces and Agents side by side, four flag cards, and five Straw Hat poses for idle, working, done, blocked, and error"></a>
   <br>
-  <sub>Click the screenshot to view it at full size.</sub>
+  <sub>Native interface captures with stand-in agents and five production poses.
+  Click to enlarge.</sub>
   <br>
-  <sub>Staged with stand-in agents in an isolated test window.</sub>
-  <br>
-  <sub>This earlier capture still shows row status marks and the old done pose.
-  Current crewmember rows use only the five poses shown below.</sub>
+  <sub>In Herdr, Agents sits below Spaces, and Raise your flag opens as a separate dialog.</sub>
 </p>
-
-</details>
 
 ## Set sail
 
@@ -69,9 +62,12 @@ The [tested versions and limitations](#compatibility) appear below.
 
 Copy this request into your coding agent:
 
-> Read https://github.com/tiago-peixoto/grand-fleet-herdr/blob/main/RECIPE.md and install Grand Fleet into an initialized, separate Herdr test configuration.
+> Read the test configuration's AGENTS.md, then add this layout: https://github.com/tiago-peixoto/grand-fleet-herdr/tree/main
+> Use an initialized, separate Herdr test configuration.
 
-The [recipe](RECIPE.md) gives your agent the installation steps, permissions, and verification requirements.
+The [recipe](RECIPE.md#install-as-a-layout) gives your agent the Layout copy steps, permissions, compatibility check, and verification requirements.
+The bundled package targets official Herdr App 0.1.17 and Core 0.1.22 on Linux x86_64.
+The destination-aware installer below also supports compatible variations.
 
 ### Install manually
 
@@ -94,8 +90,9 @@ Reopen that Herdr window and select **One Piece** in the layout selector.
 The installer creates the layout but does not select it.
 The usual app home is `~/.config/herdr-app`.
 
-**Use the installer:** copying `mods/one-piece/` alone leaves required native modules missing.
-The installer derives them from your destination's Herdr files and rejects unsupported structures before changing the installation.
+The repository includes a complete [gallery package](RECIPE.md#fresh-gallery-copy), with a layout and six generated native modules.
+Copying only the mod does not select or place it.
+The installer regenerates those modules from your destination's Herdr files and rejects unsupported structures before changing the installation.
 It preserves shipped modules, other layouts, settings, and session records.
 See [Installation](docs/INSTALL.md) for custom destinations, ownership conflicts, and recovery.
 
@@ -299,7 +296,11 @@ See the [recipe](RECIPE.md#built-from) for the complete integration details.
 
 ## Compatibility
 
-The recorded acceptance checks used the following setup on **2026-11-16**.
+The gallery snapshot targets **Herdr App 0.1.17 and Core 0.1.22 on Linux x86_64**.
+The [recipe](RECIPE.md#supported-snapshot) records official archive and executable hashes.
+The [gallery verification record](docs/GALLERY.md) distinguishes packaging checks from full fleet acceptance.
+
+The historical acceptance checks used the following setup on **2026-11-16**.
 These are tested versions, not a promise of support for every newer release.
 
 | Component | Recorded setup |
@@ -318,7 +319,8 @@ See [Core build details](docs/INSTALL.md#core-build-used-for-current-recovery-ve
 
 ### Update or remove
 
-After updating this checkout or Herdr, close the destination window and rerun the install command with the same app home.
+For an installer-managed copy, close the destination window after updating this checkout or Herdr.
+Rerun the install command with the same app home.
 This refreshes the copied native modules and generated layout.
 If compatibility checks fail, retain the existing installation and follow the [recovery guide](docs/INSTALL.md#failures-and-recovery).
 
@@ -331,6 +333,8 @@ python3 tools/install.py uninstall --app-home /absolute/path/to/test-herdr-home
 Removal deletes only unchanged installer-owned files and its receipt.
 Modified owned files block removal, while added files remain.
 Legacy installations also have [specific shortcut cleanup rules](docs/INSTALL.md#legacy-shortcut-cleanup).
+A gallery copy has no installer receipt.
+Follow the [gallery refresh and removal steps](RECIPE.md#existing-installation-refresh-and-removal) instead of overwriting it or invoking installer removal.
 
 ## Contribute
 
@@ -377,7 +381,9 @@ See the [prototype guide](docs/PROTOTYPE.md) for its editable sources and rebuil
 
 Built on [Herdr](https://herdr.dev) and [Firstmate](https://github.com/kunchenguid/firstmate), with custom One Piece pixel artwork.
 The installed artwork lives in [mods/one-piece/assets](mods/one-piece/assets/).
-The code is available under the [MIT License](LICENSE), which covers the code only, not the artwork or One Piece characters.
+Original Grand Fleet code uses the [MIT License](LICENSE).
+The bundled Herdr modules and derived layout retain Herdr's [Apache-2.0 license](mods/one-piece/HERDR-LICENSE).
+Neither code license grants rights to the artwork or One Piece characters.
 
 One Piece was created by Eiichiro Oda.
 Grand Fleet is an unofficial fan project, unaffiliated with One Piece's rights holders.

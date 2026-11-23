@@ -19,6 +19,14 @@ Both prescribed secondmate restarts completed successfully.
 Final post-restart reconciliation completed at 20:55:14 UTC with all five terminals alive, but remote file bytes were not reread.
 The documented path and Core release limitations still apply.
 
+## Gallery Layout package
+
+The repository also ships `layouts/one-piece.json` and all six generated `mods/one-piece/herdr-*.js` modules.
+The [Layout recipe](../RECIPE.md#install-as-a-layout) records the supported official release, fingerprints, read-only compatibility check, and copy procedure.
+A plain gallery copy has no ownership receipt.
+Use the recipe's separate refresh and removal procedure for that copy, not this installer's ownership commands.
+The installer remains the destination-aware alternative and always regenerates the bundled native snapshot from the destination.
+
 ## Choose an app home
 
 An app home is Herdr's configuration directory.
@@ -69,7 +77,8 @@ The generated `layouts/one-piece.json` retains both sidebar nodes, the tab bar, 
 It adds the approved palette defaults while preserving explicit source color overrides.
 Other layout values remain unchanged, but serialization changes formatting.
 The installer does not read a repository `layouts/one-piece.json`.
-The generated files exist only in the destination installation.
+The gallery package also checks in a snapshot generated with `tools/gallery.py` through the same installer and compatibility code.
+That snapshot does not override the destination-derived files during installation.
 
 Installation never selects a layout or changes shipped mods, other layouts, settings, or session records.
 New installations never read, edit, or add bindings to `keys.json`.
@@ -167,7 +176,7 @@ Preserve unrelated custom bindings.
 ## Ownership and removal
 
 The installer records owned paths and SHA-256 hashes, fingerprints of file contents, in `<app-home>/.one-piece-install.json`.
-Version 3 includes both generated files alongside the copied adapter files.
+Version 3 includes the generated layout and native modules alongside the copied adapter files.
 Keep this receipt with the installation.
 Older installers cannot interpret version 3 receipts.
 
