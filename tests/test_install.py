@@ -29,6 +29,7 @@ class InstallTests(unittest.TestCase):
         self.put(self.repo, 'mods/one-piece/mod.json', '{"place":"none"}')
         self.put(self.repo, 'mods/one-piece/assets/image.png', b'\x00\xffPNG')
         shutil.copyfile(ROOT / 'tools/compat.py', self.repo / 'tools/compat.py')
+        shutil.copyfile(ROOT / 'tools/gallery.py', self.repo / 'tools/gallery.py')
         for name in ('settings.json', 'shared.json', 'view.json', 'sessions.json'):
             self.put(self.home, name, 'keep ' + name)
         self.upstream(self.home)
@@ -186,6 +187,47 @@ class InstallTests(unittest.TestCase):
         actual = json.loads((self.home / 'layouts/one-piece.json').read_bytes())
         self.assertEqual(actual.pop('colors')['accent'], '#e8bd70')
         self.assertEqual(actual, layout)
+
+    def run_gallery(self, action, ok=True):
+        result = subprocess.run([sys.executable, '-B', str(self.repo / 'tools/gallery.py'), action,
+                                 '--app-home', str(self.home)], capture_output=True, text=True)
+        self.assertEqual(result.returncode == 0, ok, result.stdout + result.stderr)
+        return result
+
+    def test_gallery_build_check_and_destination_refresh(self):
+        self.run_gallery('check', ok=False)
+        self.assertEqual(self.files(self.home), self.original)
+        self.run_gallery('build')
+        self.run_gallery('check')
+        self.assertEqual(self.files(self.home), self.original)
+        snapshot = self.files(self.repo)
+        native = self.home / 'mods/agents/main.js'
+        native.write_bytes(native.read_bytes() + b'// destination update\n')
+        before = self.files(self.home)
+        self.assertIn('herdr-agents.js', self.run_gallery('check', ok=False).stderr)
+        self.assertEqual(self.files(self.home), before)
+        self.assertEqual(self.files(self.repo), snapshot)
+        self.run_cli()
+        self.assertTrue((self.home / 'mods/one-piece/herdr-agents.js').read_bytes()
+                        .endswith(b'// destination update\n'))
+        self.assertNotIn('$comment', json.loads((self.home / 'layouts/one-piece.json').read_bytes()))
+        self.run_cli()
+        self.run_cli('uninstall')
+        self.assertEqual(self.files(self.home), before)
+
+    def test_gallery_rejects_unsupported_source_before_writing(self):
+        self.run_gallery('build')
+        snapshot = self.files(self.repo)
+        self.put(self.home, 'mods/agents/main.js', 'unsupported Herdr')
+        before = self.files(self.home)
+        self.run_gallery('build', ok=False)
+        self.assertEqual(self.files(self.repo), snapshot)
+        self.assertEqual(self.files(self.home), before)
+
+    def test_gallery_includes_native_modules_and_snapshot_notice(self):
+        for name in ('agents', 'spaces', 'menu', 'tabs', 'pane', 'chrome'):
+            self.assertTrue((ROOT / f'mods/one-piece/herdr-{name}.js').is_file())
+        self.assertIn('$comment', json.loads((ROOT / 'layouts/one-piece.json').read_bytes()))
 
     def test_v3_receipt_has_strict_shape(self):
         self.run_cli()

@@ -4,7 +4,10 @@ Turn Herdr's Spaces and Agents sidebar into a One Piece fleet with animated ship
 Every agent has a character, and running Firstmate instances become captains automatically.
 Keep ordinary terminals, machine grouping, and native navigation.
 
-![Grand Fleet](preview.png)
+![Grand Fleet montage: Spaces and Agents beside four flag choices and five Straw Hat status poses](preview.png)
+
+The preview combines native interface captures and production artwork.
+In the app, Agents sits below Spaces, and Raise your flag opens as a separate dialog.
 
 ## What you see
 
@@ -54,12 +57,23 @@ No shortcut bindings are required.
 
 ## Built from
 
-The source folder is `mods/one-piece/` with `mod.json` declaring `place: none`.
-There is no distributable `layouts/` folder because the installer derives the layout from the destination Herdr installation.
-The module uses the `region: spaces` and `region: agents` properties in the two native sidebar slots.
-`tools/install.py` and `tools/compat.py` generate copies of the destination's Spaces, Agents, and Menu modules.
+The gallery package contains `layouts/one-piece.json` and the complete `mods/one-piece/`, including six generated `herdr-*.js` modules.
+`mod.json` declares `place: none`, so copying the mod does not dock it into the current layout.
+The layout's root row contains a 268-pixel sidebar and the remaining work area.
+The sidebar contains the 46-pixel brand, one column holding Spaces above Agents, and the 69-pixel native footer.
+The work area contains 42-pixel tabs, the active tab with 30-pixel pane headers, an optional Files/Changes panel, and a 28-pixel status bar.
+The module's `region` property selects `brand`, `spaces`, `agents`, `tabs`, or `pane` in those blocks.
+The layout retains shipped `workspace-chrome` for its footer, plus `files`, `changes`, and `workspace-status`.
+Other menus and terminal controls remain native.
+
+`tools/gallery.py` uses `tools/install.py` and `tools/compat.py` to generate the snapshot from an initialized Herdr home.
+The six copies come from Herdr's Spaces, Agents, Menu, Tabs, Pane, and Workspace Chrome modules.
 The mod subclasses those copies instead of replacing Herdr's terminal system.
-The installer generates a separate `layouts/one-piece.json` and records ownership for refresh and removal.
+The generated files carry modification notices, with Herdr's Apache-2.0 license in `mods/one-piece/HERDR-LICENSE`.
+Do not hand-edit generated files.
+
+The destination-aware installer remains available for compatible variations and later Herdr releases.
+It regenerates all six modules and the layout, ignoring the bundled snapshot, and records ownership for refresh and removal.
 It never selects the layout, changes shipped modules, or starts terminal sessions.
 It preserves ordinary settings and shortcuts.
 
@@ -80,40 +94,87 @@ Discovery checks every ten seconds and when terminal identities change.
 Its reads verify process and terminal identity before accepting a captain.
 A manual designation is available when this evidence cannot be read.
 
-## Install
+The checked-in snapshot targets official **Herdr App 0.1.17 and Core 0.1.22**, checked on Linux x86_64 and generated on 2026-11-23.
+The official [App manifest](https://releases.herdr.dev/app/0.1.17/manifest.json) and [Core manifest](https://releases.herdr.dev/core/0.1.22/manifest.json) identify the source releases.
+[Installation](docs/INSTALL.md#supported-snapshot) records the archive and executable fingerprints.
+Check `herdr-app --version` and `hc --version` in the destination's own environment before copying.
 
-Read the destination's `~/.config/herdr-app/AGENTS.md` and inspect this repository before installing.
-Close only the destination Herdr application before replacing installation files.
-Use Python 3.9 or newer and run from the downloaded repository:
+To copy the package, close the window of an initialized, separate test app home, not your daily installation.
+Run this block from the downloaded repository, with the app-home value replaced by that home's absolute path.
+Use a destination without symbolic links, and do not edit its files during copying.
+The check needs Python 3.9 or newer.
+It regenerates the seven snapshot files in memory from the destination and requires byte-for-byte agreement with the package.
+The block refuses existing One Piece files, ownership receipts, and interrupted installer operations instead of overwriting them.
 
 ```sh
-python3 tools/install.py install --app-home ~/.config/herdr-app
+set -eu
+APP_HOME=/absolute/path/to/test-herdr-home
+python3 -B tools/gallery.py check --app-home "$APP_HOME"
+for path in "$APP_HOME/mods/one-piece" "$APP_HOME/layouts/one-piece.json" \
+            "$APP_HOME/.one-piece-install.json" "$APP_HOME/.one-piece-install-work"; do
+  if [ -e "$path" ] || [ -L "$path" ]; then
+    printf 'Refusing existing path: %s\n' "$path" >&2
+    exit 1
+  fi
+done
+cp -R mods/one-piece "$APP_HOME/mods/one-piece"
+cp layouts/one-piece.json "$APP_HOME/layouts/one-piece.json"
 ```
 
-Open Herdr and select One Piece in the layout selector.
-For a custom app home, substitute its absolute path explicitly.
-The compatibility check must pass before any destination files change.
-Keep `tools/install.py` and `tools/compat.py` together for later refresh or removal.
-See [Installation](docs/INSTALL.md) for ownership conflicts, removal, and recovery.
-Use the same installer after a Herdr update to refresh the copied native modules.
+Do not copy the recipe or preview into the app home.
+If the check fails, do not copy the snapshot or alter the shipped files to make it pass.
+Run `python3 tools/install.py install --app-home "$APP_HOME"` instead, which generates from the destination and rejects unsupported structures before writing.
+
+With the destination's display environment selected, verify the copy:
+
+```sh
+HERDR_APP_HOME="$APP_HOME" herdr-app check "$APP_HOME/mods/one-piece"
+node tools/check-parity.mjs "$APP_HOME"
+```
+
+Open that destination window, then select One Piece in the layout selector or run:
+
+```sh
+HERDR_APP_HOME="$APP_HOME" herdr-app do layout.switch '{"name":"one-piece"}'
+HERDR_APP_HOME="$APP_HOME" herdr-app status
+```
+
+Require layout `one-piece`, an empty error list, and visible Spaces and Agents regions.
+Select another layout to return to the original window arrangement.
+These commands select an app home, not an isolated Core server.
+[Installation](docs/INSTALL.md#gallery-layout-package) covers the gallery request, refresh, removal, the installer, and package regeneration.
 
 ## Watch out
 
-Copying only `mods/one-piece/` is insufficient because the native base modules are generated during installation.
+Copy both `mods/one-piece/` and `layouts/one-piece.json`; the complete mod alone has no automatic placement.
 Do not invent replacements for missing native dependencies or overwrite an existing unknown One Piece installation.
+A gallery copy has no installer receipt, so the installer neither adopts, refreshes, nor removes it.
+Never overwrite a name collision or rename only the mod folder, because the mod contains its own asset paths and persistent setting names.
+To refresh or remove a gallery copy, select another layout and close the destination window.
+Then move `mods/one-piece/` and `layouts/one-piece.json` together to a backup outside the app home.
+For a refresh, repeat the copy block with the new revision and keep the backup until the checks pass.
+Leave `shared.json`, `view.json`, `keys.json`, settings, and terminal records untouched.
+If `.one-piece-install.json` exists, the installer manages that copy, so do not paste gallery files over it.
+[Gallery refresh and removal](docs/INSTALL.md#gallery-refresh-and-removal) gives the complete steps.
 The destination needs compatible Agents, Spaces, and Menu sources and exactly one Spaces and one Agents slot under the same parent.
 The mod never moves workers between Spaces or changes process ownership.
 It identifies captains from existing Firstmate evidence, not names or folders alone.
 Ships, crews, and character artwork work without Firstmate.
 Complete Firstmate fleets need the generic hc support available in the tested fork revision documented in [Acceptance](docs/ACCEPTANCE.md).
 This is not a promise that every Firstmate revision supports hc fleets.
-The verified setup used Herdr 0.1.16, local Core 0.1.21, and remote Linux Core 0.1.20.
-Physical testing used an isolated app identity with equivalent executable code and resources.
+Historical fleet acceptance used Herdr 0.1.16, local Core 0.1.21, and remote Linux Core 0.1.20.
+The gallery snapshot's isolated Linux checks do not establish remote recovery, terminal adoption, or macOS behavior.
+The native rendering check exercises initial rendering only.
+The preview is a montage, not a single window or a promise of a side-by-side sidebar.
 The historical prototype is not installed by the mod.
 This is an unofficial fan project and does not grant rights to One Piece characters.
 
 ## Done when
 
+- The gallery snapshot matches its declared Herdr release and passes the read-only destination check.
+- A fresh copy and a refreshed gallery copy both switch to One Piece without errors.
+- An existing installation blocks a fresh copy without changing any files.
+- Refresh and removal preserve unrelated files and retain backups of unknown or modified content.
 - The installer rejects unsupported source or layout structures before changing the destination.
 - The installed mod passes `herdr-app check` and the repository's native parity check.
 - Spaces and Agents scroll independently and show agents on their actual machines.
