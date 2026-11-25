@@ -29,7 +29,8 @@
   <img src="docs/media/grand-fleet-sidebar.gif" width="268" height="751" alt="Grand Fleet sidebar in Herdr: four Spaces named api, docs, web, and infra, each with an animated pirate ship and its crewmembers, above an Agents list where six agents move between Needs you, Done, and Working while their crew poses change">
   <br>
   <sub>One continuous 15-second recording of the native sidebar on Linux, at real speed, looping.
-  Six scripted stand-in agents report their states.</sub>
+  Six scripted stand-in agents report their states.
+  The author uses Grand Fleet daily on macOS with <a href="https://github.com/tiago-peixoto/firstmate">a personal Firstmate fork</a>, and it is also tested on Linux.</sub>
 </p>
 
 Grand Fleet is a One Piece layout for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
