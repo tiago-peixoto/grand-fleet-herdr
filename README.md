@@ -25,10 +25,20 @@
   <a href="#contribute">Contribute</a>
 </p>
 
+<p align="center">
+  <img src="docs/media/grand-fleet-sidebar.gif" width="268" height="751" alt="Grand Fleet sidebar in Herdr: four Spaces named api, docs, web, and infra, each with an animated pirate ship and its crewmembers, above an Agents list where six agents move between Needs you, Done, and Working while their crew poses change">
+  <br>
+  <sub>One continuous 15-second recording of the native sidebar on Linux, at real speed, looping.
+  Six scripted stand-in agents report their states.
+  The author uses Grand Fleet daily on macOS with <a href="https://github.com/tiago-peixoto/firstmate">a personal Firstmate fork</a>, and it is also tested on Linux.</sub>
+</p>
+
 Grand Fleet is a One Piece layout for [Herdr](https://herdr.dev), a desktop app for terminals and coding agents.
 Every agent becomes a crewmember, and every Space, Herdr's name for a workspace, with a live agent gets a ship.
 [Firstmate](https://github.com/kunchenguid/firstmate), a tool that coordinates coding agents, adds automatically detected captains.
 Firstmate is optional: independent agents sail together without a captain.
+Ships, crewmembers, and poses need no Firstmate, and captain detection and workers on Firstmate's `hc` backend, which runs them in Herdr terminals, do not need the author's [Firstmate fork](https://github.com/tiago-peixoto/firstmate): upstream Firstmate was checked for those two by reading its code, not by running it.
+Secondmates, delegated Firstmate coordinators, on the `hc` backend need the fork until upstream pull request [#8100](https://github.com/kunchenguid/firstmate/pull/8100), [#8340](https://github.com/kunchenguid/firstmate/pull/8340), or [#8586](https://github.com/kunchenguid/firstmate/pull/8586) merges.
 
 - **155 characters, five poses each:** see idle, working, done, blocked, and error states in the crew's artwork.
 - **Eight pirate crews:** choose a ship and crew with **Raise a new flag…**.
@@ -182,6 +192,7 @@ Whitebeard and Roger share four historical characters, so their rosters overlap.
 
 The primary Firstmate defaults to the Straw Hats.
 Secondmates, delegated Firstmate coordinators, receive unused secondary crews before crews repeat.
+Secondmates on the `hc` backend need the author's [Firstmate fork](https://github.com/tiago-peixoto/firstmate) until upstream Firstmate supports them.
 Manual crew selections take priority.
 A Space containing only one detected captain's workers shares that captain's flag, matched through Firstmate's existing `firstmate.home` terminal label.
 This changes artwork without moving terminals or assigning work.
