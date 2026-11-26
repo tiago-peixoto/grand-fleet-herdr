@@ -247,3 +247,18 @@ The first frames of the existing walking GIFs differ from their PNGs by 2.44 lev
 `test_gestures_keep_the_approved_pixels` decodes every sheet whole and compares its cells with the exported files.
 It checks frame delays, disposal, and transparency for all four rows, every color of the idle row, and each new PNG exactly.
 The baseline and Chopper scale tests now cover all five states.
+
+## Luffy and Ace done poses, 2026-11-26
+
+The done rows of `luffy-gestures-v1.png` and `ace-gestures-v1.png` were redrawn on 2026-11-26 with generated art.
+Luffy's earlier done pose looked larger than his other states, and Ace's earlier done pose had oversized arms.
+The captain picked the replacements on review pages kept outside this repository.
+Luffy's widest done frame shrank from 52 × 56 to 36 × 47 opaque pixels, and his face now has a compact grin.
+Ace's widest done frame shrank from 45 × 53 to 36 × 47 opaque pixels, with smaller arms.
+Both now sit close to their blocked poses, which measure 35 pixels wide.
+The generated frames had soft edges, so their transparency was cut at 50%, like every other gesture sheet.
+That matches the animated GIFs the captain picked, pixel for pixel.
+Only the done row of each sheet changed, so these two sheets no longer match the 2026-11-19 review page in that row.
+The other rows, frame size, frame count, and 850-millisecond timing are unchanged.
+The exporter regenerated `crew-luffy-done`, `crew-ace-done`, and the two lookup sheets from the edited source sheets.
+Native Herdr rendering of the new poses has not been checked.
